@@ -1,0 +1,51 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+= Jik-Ting Api Specification
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:author: Cupid
+:email: piq2255@gmail.com
+
+== Common Responses
+=== Common Status Codes
+```java
+# 성공
+status code: 200
+```
+
+=== Common Exceptions
+
+```java
+# 클라이언트 입력 예외
+status code: 400
+
+# 인증 예외
+status code: 401
+
+# 권한 예외
+status code: 403
+
+# NotFound 예외
+status code: 404
+
+# 서버 내부 예외
+status code: 500
+```
+
+== 기능
+
+=== 회원 관련 기능
+==== 회원가입
+----
+/api/v1/members
+----
+===== 성공
+.request
+include::{snippets}/signup-success/http-request.adoc[]
+
+.response
+include::{snippets}/signup-success/http-response.adoc[]
