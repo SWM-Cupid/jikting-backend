@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(MemberController.class)
 public class MemberControllerTest extends ApiDocument {
 
-    public static final String CONTEXT_PATH = "/api/v1";
+    private static final String CONTEXT_PATH = "/api/v1";
     private static final String USERNAME = "아이디";
     private static final String PASSWORD = "비밀번호";
     private static final String NAME = "이름";
