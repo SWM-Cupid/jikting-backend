@@ -2,11 +2,15 @@ package com.cupid.jikting.member.controller;
 
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.member.dto.SignupRequest;
+import com.cupid.jikting.member.service.MemberService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,15 +24,25 @@ public class MemberControllerTest extends ApiDocument {
     private static final String NAME = "이름";
     private static final String PHONE = "전화번호";
 
-    @Test
-    void 회원가입_성공() throws Exception {
-        // given
-        SignupRequest signupRequest = SignupRequest.builder()
+    private SignupRequest signupRequest;
+
+    @MockBean
+    private MemberService memberService;
+
+    @BeforeEach
+    void setUp() {
+        signupRequest = SignupRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD)
                 .name(NAME)
                 .phone(PHONE)
                 .build();
+    }
+
+    @Test
+    void 회원가입_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).signup(any(SignupRequest.class));
         // when
         ResultActions resultActions = 회원가입_요청(signupRequest);
         // then
