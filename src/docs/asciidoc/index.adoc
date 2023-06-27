@@ -49,3 +49,9 @@ include::{snippets}/signup-success/http-request.adoc[]
 
 .response
 include::{snippets}/signup-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/signup-fail/http-request.adoc[]
+
+.response
+include::{snippets}/signup-fail/http-response.adoc[]
