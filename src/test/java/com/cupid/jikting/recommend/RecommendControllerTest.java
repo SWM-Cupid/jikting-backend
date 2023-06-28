@@ -78,30 +78,42 @@ public class RecommendControllerTest extends ApiDocument {
                 .build();
     }
 
-	@Test
-	void 추천팀_조회_성공() throws Exception {
-	    //given
-		willReturn(recommendedTeamResponse).given(recommendService).getRecommendedTeam(anyLong());
-	    //when
-		ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + "/meetings/recommended-teams/1")
-			.contextPath(CONTEXT_PATH));
-	    //then
-		resultActions.andExpect(status().isOk())
-			.andExpect(content().json(toJson(recommendedTeamResponse)))
-			.andDo(print())
-			.andDo(toDocument("get-recommended-team-success"));
-	}
+    @Test
+    void 추천팀_조회_성공() throws Exception {
+        //given
+        willReturn(recommendedTeamResponse).given(recommendService).getRecommendedTeam(anyLong());
+        //when
+        ResultActions resultActions = 추천팀_조회_요청();
+        //then
+        추천팀_조회_요청_성공(resultActions);
+    }
 
-	@Test
-	void 추천팀_조회_실패() throws Exception {
-	    //given
-		willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(recommendService).getRecommendedTeam(anyLong());
-	    //when
-		ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + "/meetings/recommended-teams/1")
-			.contextPath(CONTEXT_PATH));
-	    //then
-		resultActions.andExpect(status().isBadRequest())
-			.andDo(print())
-			.andDo(toDocument("get-recommended-team-fail"));
-	}
+    @Test
+    void 추천팀_조회_실패() throws Exception {
+        //given
+        willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(recommendService).getRecommendedTeam(anyLong());
+        //when
+        ResultActions resultActions = 추천팀_조회_요청();
+        //then
+        추천팀_조회_요청_실패(resultActions);
+    }
+
+    private ResultActions 추천팀_조회_요청() throws Exception {
+        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + "/recommends/1")
+                .contextPath(CONTEXT_PATH));
+        return resultActions;
+    }
+
+    private void 추천팀_조회_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk())
+                        .andExpect(content().json(toJson(recommendedTeamResponse))),
+                "get-recommended-team-success");
+    }
+
+    private void 추천팀_조회_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest()),
+                "get-recommended-team-fail");
+    }
 }
