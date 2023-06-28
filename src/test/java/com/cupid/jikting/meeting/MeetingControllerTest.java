@@ -1,22 +1,6 @@
 package com.cupid.jikting.meeting;
 
 import static org.mockito.BDDMockito.*;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.ResultActions;
-
-import com.cupid.jikting.ApiDocument;
-import com.cupid.jikting.meeting.controller.MeetingController;
-import com.cupid.jikting.meeting.dto.HobbyResponse;
-import com.cupid.jikting.meeting.dto.ImageResponse;
-import com.cupid.jikting.meeting.dto.MemberResponse;
-import com.cupid.jikting.meeting.dto.PersonalityResponse;
-import com.cupid.jikting.meeting.dto.RecommendedTeamResponse;
-import com.cupid.jikting.meeting.service.MeetingService;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -25,6 +9,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.ResultActions;
+
+import com.cupid.jikting.ApiDocument;
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.meeting.controller.MeetingController;
+import com.cupid.jikting.meeting.dto.HobbyResponse;
+import com.cupid.jikting.meeting.dto.ImageResponse;
+import com.cupid.jikting.meeting.dto.MemberResponse;
+import com.cupid.jikting.meeting.dto.PersonalityResponse;
+import com.cupid.jikting.meeting.dto.RecommendedTeamResponse;
+import com.cupid.jikting.meeting.service.MeetingService;
 
 @WebMvcTest(MeetingController.class)
 public class MeetingControllerTest extends ApiDocument {
@@ -43,11 +44,13 @@ public class MeetingControllerTest extends ApiDocument {
 				.hobby("취미" + n)
 				.build())
 			.collect(Collectors.toList());
+
 		List<PersonalityResponse> personalityResponseList = IntStream.rangeClosed(1, 3)
 			.mapToObj(n -> PersonalityResponse.builder()
 				.personality("성격" + n)
 				.build())
 			.collect(Collectors.toList());
+
 		List<ImageResponse> imageResponseList = LongStream.rangeClosed(1, 3)
 			.mapToObj(n -> ImageResponse.builder()
 				.isMain(true)
@@ -55,7 +58,8 @@ public class MeetingControllerTest extends ApiDocument {
 				.url("http://사진"+n+"-url")
 				.build())
 			.collect(Collectors.toList());
-		List<MemberResponse> memberResponseList = IntStream.rangeClosed(1, 3)
+
+		List<MemberResponse> memberResponseList = IntStream.rangeClosed(1, 2)
 				.mapToObj(n -> MemberResponse.builder()
 					.age(1)
 					.company("line")
