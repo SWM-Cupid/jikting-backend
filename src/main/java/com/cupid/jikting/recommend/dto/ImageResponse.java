@@ -1,4 +1,4 @@
-package com.cupid.jikting.meeting.dto;
+package com.cupid.jikting.recommend.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HobbyResponse {
+public class ImageResponse {
 
-	private String hobby;
+	private boolean isMain;
+	private Long memberId;
+	private String url;
 }

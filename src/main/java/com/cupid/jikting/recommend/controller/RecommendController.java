@@ -1,4 +1,4 @@
-package com.cupid.jikting.meeting.controller;
+package com.cupid.jikting.recommend.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -6,21 +6,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cupid.jikting.meeting.dto.RecommendedTeamResponse;
-import com.cupid.jikting.meeting.service.MeetingService;
+import com.cupid.jikting.recommend.dto.RecommendedTeamResponse;
+import com.cupid.jikting.recommend.service.RecommendService;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/meetings")
-public class MeetingController {
+@RequestMapping("/recommends")
+public class RecommendController {
 
-	private final MeetingService meetingService;
+	private final RecommendService recommendService;
 
-	@GetMapping("/recommended-teams/{teamId}")
+	@GetMapping("/{teamId}")
 	public ResponseEntity<RecommendedTeamResponse> getRecommendedTeam(@PathVariable Long teamId) {
-		return ResponseEntity.ok().body(meetingService.getRecommendedTeam(teamId));
+		return ResponseEntity.ok().body(recommendService.getRecommendedTeam(teamId));
 	}
-
 }

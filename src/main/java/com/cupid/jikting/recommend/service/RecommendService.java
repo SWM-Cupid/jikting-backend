@@ -1,11 +1,11 @@
-package com.cupid.jikting.meeting.service;
+package com.cupid.jikting.recommend.service;
 
 import org.springframework.stereotype.Service;
 
-import com.cupid.jikting.meeting.dto.RecommendedTeamResponse;
+import com.cupid.jikting.recommend.dto.RecommendedTeamResponse;
 
 @Service
-public class MeetingService {
+public class RecommendService {
 
 	public RecommendedTeamResponse getRecommendedTeam(Long teamId) {
 		return null;

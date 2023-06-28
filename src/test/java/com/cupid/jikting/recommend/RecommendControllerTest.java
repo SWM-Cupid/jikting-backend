@@ -1,41 +1,37 @@
-package com.cupid.jikting.meeting;
+package com.cupid.jikting.recommend;
 
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
-
+import com.cupid.jikting.ApiDocument;
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.recommend.controller.RecommendController;
+import com.cupid.jikting.recommend.dto.*;
+import com.cupid.jikting.recommend.service.RecommendService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.cupid.jikting.ApiDocument;
-import com.cupid.jikting.common.error.ApplicationError;
-import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.meeting.controller.MeetingController;
-import com.cupid.jikting.meeting.dto.HobbyResponse;
-import com.cupid.jikting.meeting.dto.ImageResponse;
-import com.cupid.jikting.meeting.dto.MemberResponse;
-import com.cupid.jikting.meeting.dto.PersonalityResponse;
-import com.cupid.jikting.meeting.dto.RecommendedTeamResponse;
-import com.cupid.jikting.meeting.service.MeetingService;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
-@WebMvcTest(MeetingController.class)
-public class MeetingControllerTest extends ApiDocument {
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(RecommendController.class)
+public class RecommendControllerTest extends ApiDocument {
 
 	private final String CONTEXT_PATH = "/api/v1";
 
 	private RecommendedTeamResponse recommendedTeamResponse;
 
 	@MockBean
-	private MeetingService meetingService;
+	private RecommendService recommendService;
 
 	@BeforeEach
 	void setUp() {
@@ -80,7 +76,7 @@ public class MeetingControllerTest extends ApiDocument {
 	@Test
 	void 추천팀_조회_성공() throws Exception {
 	    //given
-		willReturn(recommendedTeamResponse).given(meetingService).getRecommendedTeam(anyLong());
+		willReturn(recommendedTeamResponse).given(recommendService).getRecommendedTeam(anyLong());
 	    //when
 		ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + "/meetings/recommended-teams/1")
 			.contextPath(CONTEXT_PATH));
@@ -94,7 +90,7 @@ public class MeetingControllerTest extends ApiDocument {
 	@Test
 	void 추천팀_조회_실패() throws Exception {
 	    //given
-		willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(meetingService).getRecommendedTeam(anyLong());
+		willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(recommendService).getRecommendedTeam(anyLong());
 	    //when
 		ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + "/meetings/recommended-teams/1")
 			.contextPath(CONTEXT_PATH));

@@ -1,4 +1,6 @@
-package com.cupid.jikting.meeting.dto;
+package com.cupid.jikting.recommend.dto;
+
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,7 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PersonalityResponse {
+public class RecommendedTeamResponse {
 
-	String personality;
+	private Long teamId;
+	private List<MemberResponse> members;
+	private List<PersonalityResponse> personalities;
 }
