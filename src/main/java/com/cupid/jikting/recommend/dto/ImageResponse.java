@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ImageResponse {
 
-	private boolean isMain;
-	private Long memberId;
-	private String url;
+    private boolean isMain;
+    private Long memberId;
+    private String url;
 }

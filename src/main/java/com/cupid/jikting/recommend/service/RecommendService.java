@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RecommendService {
 
-	public RecommendedTeamResponse getRecommendedTeam(Long teamId) {
-		return null;
-	}
+    public RecommendedTeamResponse getRecommendedTeam(Long teamId) {
+        return null;
+    }
 }
