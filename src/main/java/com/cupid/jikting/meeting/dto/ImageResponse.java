@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ImageResponse {
+
 	private boolean isMain;
 	private Long memberId;
 	private String url;
