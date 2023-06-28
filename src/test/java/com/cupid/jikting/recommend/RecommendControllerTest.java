@@ -37,10 +37,10 @@ public class RecommendControllerTest extends ApiDocument {
     private final int age = 20;
     private final int HEIGHT = 180;
 
-	private RecommendedTeamResponse recommendedTeamResponse;
+    private RecommendedTeamResponse recommendedTeamResponse;
 
-	@MockBean
-	private RecommendService recommendService;
+    @MockBean
+    private RecommendService recommendService;
 
     @BeforeEach
     void setUp() {
