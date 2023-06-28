@@ -4,7 +4,9 @@ import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.recommend.controller.RecommendController;
-import com.cupid.jikting.recommend.dto.*;
+import com.cupid.jikting.recommend.dto.ImageResponse;
+import com.cupid.jikting.recommend.dto.MemberResponse;
+import com.cupid.jikting.recommend.dto.RecommendedTeamResponse;
 import com.cupid.jikting.recommend.service.RecommendService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +21,6 @@ import java.util.stream.LongStream;
 
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
