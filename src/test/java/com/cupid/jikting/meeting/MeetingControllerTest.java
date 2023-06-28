@@ -90,4 +90,17 @@ public class MeetingControllerTest extends ApiDocument {
 			.andDo(print())
 			.andDo(toDocument("get-recommended-team-success"));
 	}
+
+	@Test
+	void 추천팀_조회_실패() throws Exception {
+	    //given
+		willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(meetingService).getRecommendedTeam(anyLong());
+	    //when
+		ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + "/meetings/recommended-teams/1")
+			.contextPath(CONTEXT_PATH));
+	    //then
+		resultActions.andExpect(status().isBadRequest())
+			.andDo(print())
+			.andDo(toDocument("get-recommended-team-fail"));
+	}
 }
