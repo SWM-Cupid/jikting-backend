@@ -10,9 +10,11 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @EnableMockMvc
 @AutoConfigureRestDocs
@@ -24,8 +26,13 @@ public class ApiDocument {
     @Autowired
     private ObjectMapper objectMapper;
 
-    protected RestDocumentationResultHandler toDocument(String title) {
+    private RestDocumentationResultHandler toDocument(String title) {
         return document(title, getDocumentRequest(), getDocumentResponse());
+    }
+
+    protected void printAndMakeSnippet(ResultActions resultActions, String snippetTitle) throws Exception {
+        resultActions.andDo(print())
+                .andDo(toDocument(snippetTitle));
     }
 
     protected String toJson(Object object) {
