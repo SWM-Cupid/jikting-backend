@@ -47,11 +47,9 @@ public class RecommendControllerTest extends ApiDocument {
         List<String> hobbies = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> HOBBY + n)
                 .collect(Collectors.toList());
-
         List<String> personalities = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> PERSONALITY + n)
                 .collect(Collectors.toList());
-
         List<ImageResponse> imageResponses = LongStream.rangeClosed(1, 3)
                 .mapToObj(n -> ImageResponse.builder()
                         .isMain(true)
@@ -59,7 +57,6 @@ public class RecommendControllerTest extends ApiDocument {
                         .url(URL + n)
                         .build())
                 .collect(Collectors.toList());
-
         List<MemberResponse> memberResponses = IntStream.rangeClosed(1, 2)
                 .mapToObj(n -> MemberResponse.builder()
                         .age(age)
@@ -71,7 +68,6 @@ public class RecommendControllerTest extends ApiDocument {
                         .images(imageResponses)
                         .build())
                 .collect(Collectors.toList());
-
         recommendedTeamResponse = RecommendedTeamResponse.builder()
                 .teamId(1L)
                 .members(memberResponses)
@@ -100,9 +96,8 @@ public class RecommendControllerTest extends ApiDocument {
     }
 
     private ResultActions 추천팀_조회_요청() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + "/recommends/1")
+        return mockMvc.perform(get(CONTEXT_PATH + "/recommends/1")
                 .contextPath(CONTEXT_PATH));
-        return resultActions;
     }
 
     private void 추천팀_조회_요청_성공(ResultActions resultActions) throws Exception {
