@@ -59,7 +59,7 @@ public class RecommendControllerTest extends ApiDocument {
                 .collect(Collectors.toList());
         List<MemberResponse> memberResponses = IntStream.rangeClosed(1, 2)
                 .mapToObj(n -> MemberResponse.builder()
-                        .age(age)
+                        .age(AGE)
                         .company(COMPANY)
                         .description(DESCRIPTION)
                         .drinkStatus(DRINK_STATUS)
