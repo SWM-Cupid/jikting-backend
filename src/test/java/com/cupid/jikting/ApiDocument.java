@@ -26,9 +26,9 @@ public class ApiDocument {
     @Autowired
     private ObjectMapper objectMapper;
 
-    protected void printAndMakeSnippet(ResultActions resultActions, String snippetTitle) throws Exception {
+    protected void printAndMakeSnippet(ResultActions resultActions, String title) throws Exception {
         resultActions.andDo(print())
-                .andDo(toDocument(snippetTitle));
+                .andDo(toDocument(title));
     }
 
     protected String toJson(Object object) {
