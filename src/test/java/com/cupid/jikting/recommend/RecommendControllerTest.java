@@ -42,45 +42,41 @@ public class RecommendControllerTest extends ApiDocument {
 	@MockBean
 	private RecommendService recommendService;
 
-	@BeforeEach
-	void setUp() {
-		List<HobbyResponse> hobbyResponseList = IntStream.rangeClosed(1, 3)
-			.mapToObj(n -> HobbyResponse.builder()
-				.hobby("취미" + n)
-				.build())
-			.collect(Collectors.toList());
+    @BeforeEach
+    void setUp() {
+        List<String> hobbyList = IntStream.rangeClosed(1, 3)
+                .mapToObj(n -> HOBBY + n)
+                .collect(Collectors.toList());
 
-		List<PersonalityResponse> personalityResponseList = IntStream.rangeClosed(1, 3)
-			.mapToObj(n -> PersonalityResponse.builder()
-				.personality("성격" + n)
-				.build())
-			.collect(Collectors.toList());
+        List<String> personalityList = IntStream.rangeClosed(1, 3)
+                .mapToObj(n -> PERSONALITY + n)
+                .collect(Collectors.toList());
 
-		List<ImageResponse> imageResponseList = LongStream.rangeClosed(1, 3)
-			.mapToObj(n -> ImageResponse.builder()
-				.isMain(true)
-				.memberId(n)
-				.url("http://사진"+n+"-url")
-				.build())
-			.collect(Collectors.toList());
+        List<ImageResponse> imageResponseList = LongStream.rangeClosed(1, 3)
+                .mapToObj(n -> ImageResponse.builder()
+                        .isMain(true)
+                        .memberId(n)
+                        .url(URL + n)
+                        .build())
+                .collect(Collectors.toList());
 
-		List<MemberResponse> memberResponseList = IntStream.rangeClosed(1, 2)
-				.mapToObj(n -> MemberResponse.builder()
-					.age(1)
-					.company("line")
-					.description("description")
-					.drinkStatus("안마심")
-					.height(180)
-					.hobbies(hobbyResponseList)
-					.images(imageResponseList)
-					.build())
-					.collect(Collectors.toList());
-		recommendedTeamResponse = RecommendedTeamResponse.builder()
-			.teamId(1L)
-			.members(memberResponseList)
-			.personalities(personalityResponseList)
-			.build();
-	}
+        List<MemberResponse> memberResponseList = IntStream.rangeClosed(1, 2)
+                .mapToObj(n -> MemberResponse.builder()
+                        .age(age)
+                        .company(COMPANY)
+                        .description(DESCRIPTION)
+                        .drinkStatus(DRINK_STATUS)
+                        .height(HEIGHT)
+                        .hobbies(hobbyList)
+                        .images(imageResponseList)
+                        .build())
+                .collect(Collectors.toList());
+        recommendedTeamResponse = RecommendedTeamResponse.builder()
+                .teamId(1L)
+                .members(memberResponseList)
+                .personalities(personalityList)
+                .build();
+    }
 
 	@Test
 	void 추천팀_조회_성공() throws Exception {
