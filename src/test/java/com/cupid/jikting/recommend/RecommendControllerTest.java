@@ -36,7 +36,7 @@ public class RecommendControllerTest extends ApiDocument {
     private static final String DRINK_STATUS = "안마심";
     private static final int AGE = 20;
     private static final int HEIGHT = 180;
-    private static final long TEAM_ID = 1L;
+    private static final Long TEAM_ID = 1L;
     private static final boolean TRUE = true;
 
     private RecommendedTeamResponse recommendedTeamResponse;
