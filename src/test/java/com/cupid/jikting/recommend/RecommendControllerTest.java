@@ -44,15 +44,15 @@ public class RecommendControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
-        List<String> hobbyList = IntStream.rangeClosed(1, 3)
+        List<String> hobbies = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> HOBBY + n)
                 .collect(Collectors.toList());
 
-        List<String> personalityList = IntStream.rangeClosed(1, 3)
+        List<String> personalities = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> PERSONALITY + n)
                 .collect(Collectors.toList());
 
-        List<ImageResponse> imageResponseList = LongStream.rangeClosed(1, 3)
+        List<ImageResponse> imageResponses = LongStream.rangeClosed(1, 3)
                 .mapToObj(n -> ImageResponse.builder()
                         .isMain(true)
                         .memberId(n)
@@ -60,21 +60,22 @@ public class RecommendControllerTest extends ApiDocument {
                         .build())
                 .collect(Collectors.toList());
 
-        List<MemberResponse> memberResponseList = IntStream.rangeClosed(1, 2)
+        List<MemberResponse> memberResponses = IntStream.rangeClosed(1, 2)
                 .mapToObj(n -> MemberResponse.builder()
                         .age(age)
                         .company(COMPANY)
                         .description(DESCRIPTION)
                         .drinkStatus(DRINK_STATUS)
                         .height(HEIGHT)
-                        .hobbies(hobbyList)
-                        .images(imageResponseList)
+                        .hobbies(hobbies)
+                        .images(imageResponses)
                         .build())
                 .collect(Collectors.toList());
+
         recommendedTeamResponse = RecommendedTeamResponse.builder()
                 .teamId(1L)
-                .members(memberResponseList)
-                .personalities(personalityList)
+                .members(memberResponses)
+                .personalities(personalities)
                 .build();
     }
 
