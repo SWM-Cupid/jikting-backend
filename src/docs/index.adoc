@@ -51,7 +51,7 @@ include::{snippets}/get-recommended-team-success/http-request.adoc[]
 include::{snippets}/get-recommended-team-success/http-response.adoc[]
 ===== 실패
 .request
-include::{snippets}/get-recommended-team-success/http-request.adoc[]
+include::{snippets}/get-recommended-team-fail/http-request.adoc[]
 
 .response
-include::{snippets}/get-recommended-team-success/http-response.adoc[]
+include::{snippets}/get-recommended-team-fail/http-response.adoc[]
