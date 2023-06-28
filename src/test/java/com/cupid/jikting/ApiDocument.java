@@ -26,10 +26,6 @@ public class ApiDocument {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private RestDocumentationResultHandler toDocument(String title) {
-        return document(title, getDocumentRequest(), getDocumentResponse());
-    }
-
     protected void printAndMakeSnippet(ResultActions resultActions, String snippetTitle) throws Exception {
         resultActions.andDo(print())
                 .andDo(toDocument(snippetTitle));
@@ -43,6 +39,10 @@ public class ApiDocument {
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("직렬화 오류");
         }
+    }
+
+    private RestDocumentationResultHandler toDocument(String title) {
+        return document(title, getDocumentRequest(), getDocumentResponse());
     }
 
     private OperationRequestPreprocessor getDocumentRequest() {
