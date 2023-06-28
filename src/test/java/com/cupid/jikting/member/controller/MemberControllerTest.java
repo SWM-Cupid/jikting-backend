@@ -16,7 +16,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemberController.class)
@@ -71,14 +70,14 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private void 회원가입_요청_성공(ResultActions resultActions) throws Exception {
-        resultActions.andExpect(status().isOk())
-                .andDo(print())
-                .andDo(toDocument("signup-success"));
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "signup-success");
     }
 
     private void 회원가입_요청_실패(ResultActions resultActions) throws Exception {
-        resultActions.andExpect(status().isBadRequest())
-                .andDo(print())
-                .andDo(toDocument("signup-fail"));
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest()),
+                "signup-fail");
     }
 }
