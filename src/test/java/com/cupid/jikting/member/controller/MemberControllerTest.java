@@ -5,6 +5,7 @@ import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.member.dto.MemberUpdateRequest;
 import com.cupid.jikting.member.dto.SignupRequest;
 import com.cupid.jikting.member.service.MemberService;
@@ -83,6 +84,17 @@ public class MemberControllerTest extends ApiDocument {
         회원수정_요청_성공(resultActions);
     }
 
+    @Test
+    void 회원수정_실패() throws Exception {
+        // given
+        NotFoundException memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
+        willThrow(memberNotFoundException).given(memberService).update(any(MemberUpdateRequest.class));
+        // when
+        ResultActions resultActions = 회원수정_요청(memberUpdateRequest);
+        // then
+        회원수정_요청_실패(resultActions, memberNotFoundException);
+    }
+
     private ResultActions 회원가입_요청(SignupRequest signupRequest) throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + "/members")
                 .contextPath(CONTEXT_PATH)
@@ -114,5 +126,12 @@ public class MemberControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
                 "update-member-success");
+    }
+
+    private void 회원수정_요청_실패(ResultActions resultActions, ApplicationException memberNotFoundException) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "update-member-fail");
     }
 }
