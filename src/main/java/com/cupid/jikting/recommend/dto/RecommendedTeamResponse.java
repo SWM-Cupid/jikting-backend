@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RecommendedTeamResponse {
 
-	private Long teamId;
-	private List<MemberResponse> members;
-	private List<PersonalityResponse> personalities;
+    private Long teamId;
+    private List<MemberResponse> members;
+    private List<String> personalities;
 }
