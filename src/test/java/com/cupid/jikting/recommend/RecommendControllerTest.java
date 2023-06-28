@@ -27,7 +27,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(RecommendController.class)
 public class RecommendControllerTest extends ApiDocument {
 
-	private final String CONTEXT_PATH = "/api/v1";
+    private final String CONTEXT_PATH = "/api/v1";
+    private final String HOBBY = "취미";
+    private final String PERSONALITY = "성격";
+    private final String URL = "http://test-url";
+    private final String COMPANY = "회사";
+    private final String DESCRIPTION = "소개";
+    private final String DRINK_STATUS = "안마심";
+    private final int age = 20;
+    private final int HEIGHT = 180;
 
 	private RecommendedTeamResponse recommendedTeamResponse;
 
