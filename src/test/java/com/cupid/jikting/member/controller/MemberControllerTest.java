@@ -1,7 +1,9 @@
 package com.cupid.jikting.member.controller;
 
 import com.cupid.jikting.ApiDocument;
+import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.member.dto.SignupRequest;
 import com.cupid.jikting.member.service.MemberService;
@@ -16,6 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemberController.class)
@@ -55,11 +58,12 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원가입_실패() throws Exception {
         // given
-        willThrow(new BadRequestException(ApplicationError.INVALID_FORMAT)).given(memberService).signup(any(SignupRequest.class));
+        BadRequestException invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
+        willThrow(invalidFormatException).given(memberService).signup(any(SignupRequest.class));
         // when
         ResultActions resultActions = 회원가입_요청(signupRequest);
         // then
-        회원가입_요청_실패(resultActions);
+        회원가입_요청_실패(resultActions, invalidFormatException);
     }
 
     private ResultActions 회원가입_요청(SignupRequest signupRequest) throws Exception {
@@ -75,9 +79,10 @@ public class MemberControllerTest extends ApiDocument {
                 "signup-success");
     }
 
-    private void 회원가입_요청_실패(ResultActions resultActions) throws Exception {
+    private void 회원가입_요청_실패(ResultActions resultActions, ApplicationException invalidFormatException) throws Exception {
         printAndMakeSnippet(resultActions
-                        .andExpect(status().isBadRequest()),
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(invalidFormatException)))),
                 "signup-fail");
     }
 }
