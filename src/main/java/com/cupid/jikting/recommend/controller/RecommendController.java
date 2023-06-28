@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/recommends")
 public class RecommendController {
 
-	private final RecommendService recommendService;
+    private final RecommendService recommendService;
 
-	@GetMapping("/{teamId}")
-	public ResponseEntity<RecommendedTeamResponse> getRecommendedTeam(@PathVariable Long teamId) {
-		return ResponseEntity.ok().body(recommendService.getRecommendedTeam(teamId));
-	}
+    @GetMapping("/{teamId}")
+    public ResponseEntity<RecommendedTeamResponse> getRecommendedTeam(@PathVariable Long teamId) {
+        return ResponseEntity.ok().body(recommendService.getRecommendedTeam(teamId));
+    }
 }
