@@ -36,7 +36,7 @@ public class RecommendControllerTest extends ApiDocument {
     private static final String DRINK_STATUS = "안마심";
     private static final int AGE = 20;
     private static final int HEIGHT = 180;
-    private static final Long TEAM_ID = 1L;
+    private static final Long MEETING_RECOMMENDATION_ID = 1L;
     private static final boolean TRUE = true;
 
     private RecommendedTeamResponse recommendedTeamResponse;
@@ -71,7 +71,7 @@ public class RecommendControllerTest extends ApiDocument {
                         .build())
                 .collect(Collectors.toList());
         recommendedTeamResponse = RecommendedTeamResponse.builder()
-                .teamId(TEAM_ID)
+                .meetingRecommendationId(MEETING_RECOMMENDATION_ID)
                 .members(memberResponses)
                 .personalities(personalities)
                 .build();
