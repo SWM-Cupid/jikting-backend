@@ -13,8 +13,8 @@ public class RecommendController {
 
     private final RecommendService recommendService;
 
-    @GetMapping("/{teamId}")
-    public ResponseEntity<RecommendedTeamResponse> getRecommendedTeam(@PathVariable Long teamId) {
+    @GetMapping("/teams/{teamId}")
+    public ResponseEntity<List<RecommendedTeamResponse>> getRecommendedTeam(@PathVariable Long teamId) {
         return ResponseEntity.ok().body(recommendService.getRecommendedTeam(teamId));
     }
 

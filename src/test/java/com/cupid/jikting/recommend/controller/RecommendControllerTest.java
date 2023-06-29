@@ -124,7 +124,7 @@ public class RecommendControllerTest extends ApiDocument {
     }
 
     private ResultActions 추천팀_조회_요청() throws Exception {
-        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + SLASH + ID)
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/teams" + SLASH + ID)
                 .contextPath(CONTEXT_PATH));
     }
 
