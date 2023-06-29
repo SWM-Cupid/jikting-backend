@@ -68,6 +68,23 @@ include::{snippets}/get-member-success/http-request.adoc[]
 include::{snippets}/get-member-success/http-response.adoc[]
 ===== 실패
 .request
+include::{snippets}/get-member-fail/http-request.adoc[]
+
+.response
+include::{snippets}/get-member-fail/http-response.adoc[]
+
+==== 회원수정
+----
+/api/v1/members
+----
+===== 성공
+.request
+include::{snippets}/update-member-success/http-request.adoc[]
+
+.response
+include::{snippets}/update-member-success/http-response.adoc[]
+===== 실패
+.request
 include::{snippets}/update-member-fail/http-request.adoc[]
 
 .response
