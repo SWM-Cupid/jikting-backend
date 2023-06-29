@@ -56,17 +56,16 @@ include::{snippets}/signup-fail/http-request.adoc[]
 .response
 include::{snippets}/signup-fail/http-response.adoc[]
 
-==== 회원수정
-===== 회원정보 수정
+==== 회원조회
 ----
 /api/v1/members
 ----
 ===== 성공
 .request
-include::{snippets}/update-member-success/http-request.adoc[]
+include::{snippets}/get-member-success/http-request.adoc[]
 
 .response
-include::{snippets}/update-member-success/http-response.adoc[]
+include::{snippets}/get-member-success/http-response.adoc[]
 ===== 실패
 .request
 include::{snippets}/update-member-fail/http-request.adoc[]
