@@ -43,7 +43,7 @@ public class RecommendControllerTest extends ApiDocument {
     private static final Long ID = 1L;
     private static final boolean TRUE = true;
 
-    private RecommendedTeamResponse recommendedTeamResponse;
+    private List<RecommendedTeamResponse> recommendedTeamResponses;
     private ApplicationException teamNotFoundException;
 
     @MockBean
@@ -75,18 +75,21 @@ public class RecommendControllerTest extends ApiDocument {
                         .images(imageResponses)
                         .build())
                 .collect(Collectors.toList());
-        recommendedTeamResponse = RecommendedTeamResponse.builder()
+        RecommendedTeamResponse recommendedTeamResponse = RecommendedTeamResponse.builder()
                 .recommendId(ID)
                 .members(memberResponses)
                 .personalities(personalities)
                 .build();
+        recommendedTeamResponses = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> recommendedTeamResponse)
+                .collect(Collectors.toList());
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
     }
 
     @Test
     void 추천팀_조회_성공() throws Exception {
         //given
-        willReturn(recommendedTeamResponse).given(recommendService).getRecommendedTeam(anyLong());
+        willReturn(recommendedTeamResponses).given(recommendService).getRecommendedTeam(anyLong());
         //when
         ResultActions resultActions = 추천팀_조회_요청();
         //then
@@ -131,7 +134,7 @@ public class RecommendControllerTest extends ApiDocument {
     private void 추천팀_조회_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
-                        .andExpect(content().json(toJson(recommendedTeamResponse))),
+                        .andExpect(content().json(toJson(recommendedTeamResponses))),
                 "get-recommended-team-success");
     }
 
