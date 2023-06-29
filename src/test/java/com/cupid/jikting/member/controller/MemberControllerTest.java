@@ -6,6 +6,7 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.member.dto.MemberResponse;
 import com.cupid.jikting.member.dto.MemberUpdateRequest;
 import com.cupid.jikting.member.dto.SignupRequest;
 import com.cupid.jikting.member.service.MemberService;
@@ -34,9 +35,13 @@ public class MemberControllerTest extends ApiDocument {
     private static final String NAME = "이름";
     private static final String PHONE = "전화번호";
     private static final String NICKNAME = "닉네임";
+    private static final String COMPANY = "직장";
+    private static final String IMAGE_URL = "사진 URL";
 
     private SignupRequest signupRequest;
     private MemberUpdateRequest memberUpdateRequest;
+    private MemberResponse memberResponse;
+    private ApplicationException memberNotFoundException;
 
     @MockBean
     private MemberService memberService;
@@ -49,9 +54,15 @@ public class MemberControllerTest extends ApiDocument {
                 .name(NAME)
                 .phone(PHONE)
                 .build();
+        memberResponse = MemberResponse.builder()
+                .nickname(NICKNAME)
+                .company(COMPANY)
+                .imageUrl(IMAGE_URL)
+                .build();
         memberUpdateRequest = MemberUpdateRequest.builder()
                 .nickname(NICKNAME)
                 .build();
+        memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
     }
 
     @Test
@@ -73,6 +84,16 @@ public class MemberControllerTest extends ApiDocument {
         ResultActions resultActions = 회원가입_요청(signupRequest);
         // then
         회원가입_요청_실패(resultActions, invalidFormatException);
+    }
+
+    @Test
+    void 회원조회_성공() throws Exception {
+        // given
+        willReturn(memberResponse).given(memberService).get(anyLong());
+        // when
+        ResultActions resultActions = 회원조회_요청();
+        // then
+        회원조회_요청_성공(resultActions);
     }
 
     @Test
@@ -114,6 +135,18 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(invalidFormatException)))),
                 "signup-fail");
+    }
+
+    private ResultActions 회원조회_요청() throws Exception {
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH)
+                .contextPath(CONTEXT_PATH));
+    }
+
+    private void 회원조회_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk())
+                        .andExpect(content().json(toJson(memberResponse))),
+                "get-member-success");
     }
 
     private ResultActions 회원수정_요청(MemberUpdateRequest memberUpdateRequest) throws Exception {
