@@ -55,3 +55,38 @@ include::{snippets}/signup-fail/http-request.adoc[]
 
 .response
 include::{snippets}/signup-fail/http-response.adoc[]
+
+=== 추천 관련 기능
+==== 추천 팀 조회
+----
+/api/v1/recommends/{teamId}
+----
+===== 성공
+.request
+include::{snippets}/get-recommended-team-success/http-request.adoc[]
+
+.response
+include::{snippets}/get-recommended-team-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/get-recommended-team-fail/http-request.adoc[]
+
+.response
+include::{snippets}/get-recommended-team-fail/http-response.adoc[]
+
+==== 호감 보내기
+----
+/api/v1/recommends/{recommendMeetingId}/like
+----
+===== 성공
+.request
+include::{snippets}/send-like-success/http-request.adoc[]
+
+.response
+include::{snippets}/send-like-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/send-like-fail/http-request.adoc[]
+
+.response
+include::{snippets}/send-like-fail/http-response.adoc[]
