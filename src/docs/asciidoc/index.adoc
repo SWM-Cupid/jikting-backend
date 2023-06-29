@@ -76,7 +76,7 @@ include::{snippets}/get-recommended-team-fail/http-response.adoc[]
 
 ==== 호감 보내기
 ----
-/api/v1/recommends/{meetingRecommendationId}/like
+/api/v1/recommends/{recommendId}/like
 ----
 ===== 성공
 .request

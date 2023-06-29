@@ -18,9 +18,9 @@ public class RecommendController {
         return ResponseEntity.ok().body(recommendService.getRecommendedTeam(teamId));
     }
 
-    @PostMapping("/{meetingRecommendationId}/like")
-    public ResponseEntity<Void> sendLike(@PathVariable Long meetingRecommendationId) {
-        recommendService.sendLike(meetingRecommendationId);
+    @PostMapping("/{recommendId}/like")
+    public ResponseEntity<Void> sendLike(@PathVariable Long recommendId) {
+        recommendService.sendLike(recommendId);
         return ResponseEntity.ok().build();
     }
 }

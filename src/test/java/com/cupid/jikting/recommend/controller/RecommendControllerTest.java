@@ -76,7 +76,7 @@ public class RecommendControllerTest extends ApiDocument {
                         .build())
                 .collect(Collectors.toList());
         recommendedTeamResponse = RecommendedTeamResponse.builder()
-                .meetingRecommendationId(ID)
+                .recommendId(ID)
                 .members(memberResponses)
                 .personalities(personalities)
                 .build();

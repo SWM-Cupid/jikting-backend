@@ -10,6 +10,6 @@ public class RecommendService {
         return null;
     }
 
-    public void sendLike(Long meetingRecommendationId) {
+    public void sendLike(Long recommendId) {
     }
 }
