@@ -9,4 +9,7 @@ public class RecommendService {
     public RecommendedTeamResponse getRecommendedTeam(Long teamId) {
         return null;
     }
+
+    public void sendLike(Long meetingRecommendId) {
+    }
 }
