@@ -40,6 +40,7 @@ public class MemberControllerTest extends ApiDocument {
     private SignupRequest signupRequest;
     private MemberUpdateRequest memberUpdateRequest;
     private MemberResponse memberResponse;
+    private ApplicationException invalidFormatException;
     private ApplicationException memberNotFoundException;
 
     @MockBean
@@ -61,6 +62,7 @@ public class MemberControllerTest extends ApiDocument {
         memberUpdateRequest = MemberUpdateRequest.builder()
                 .nickname(NICKNAME)
                 .build();
+        invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
     }
 
@@ -77,12 +79,11 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원가입_실패() throws Exception {
         // given
-        BadRequestException invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         willThrow(invalidFormatException).given(memberService).signup(any(SignupRequest.class));
         // when
         ResultActions resultActions = 회원가입_요청(signupRequest);
         // then
-        회원가입_요청_실패(resultActions, invalidFormatException);
+        회원가입_요청_실패(resultActions);
     }
 
     @Test
@@ -118,12 +119,11 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원수정_실패() throws Exception {
         // given
-        NotFoundException memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         willThrow(memberNotFoundException).given(memberService).update(any(MemberUpdateRequest.class));
         // when
         ResultActions resultActions = 회원수정_요청(memberUpdateRequest);
         // then
-        회원수정_요청_실패(resultActions, memberNotFoundException);
+        회원수정_요청_실패(resultActions);
     }
 
     private ResultActions 회원가입_요청(SignupRequest signupRequest) throws Exception {
@@ -139,7 +139,7 @@ public class MemberControllerTest extends ApiDocument {
                 "signup-success");
     }
 
-    private void 회원가입_요청_실패(ResultActions resultActions, ApplicationException invalidFormatException) throws Exception {
+    private void 회원가입_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(invalidFormatException)))),
@@ -178,7 +178,7 @@ public class MemberControllerTest extends ApiDocument {
                 "update-member-success");
     }
 
-    private void 회원수정_요청_실패(ResultActions resultActions, ApplicationException memberNotFoundException) throws Exception {
+    private void 회원수정_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
