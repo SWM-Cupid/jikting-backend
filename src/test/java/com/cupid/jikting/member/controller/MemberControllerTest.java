@@ -18,10 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.BDDMockito.willThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -97,6 +96,16 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
+    void 회원조회_실패() throws Exception {
+        // given
+        willThrow(memberNotFoundException).given(memberService).get(anyLong());
+        // when
+        ResultActions resultActions = 회원조회_요청();
+        // then
+        회원조회_요청_실패(resultActions);
+    }
+
+    @Test
     void 회원수정_성공() throws Exception {
         // given
         willDoNothing().given(memberService).update(any(MemberUpdateRequest.class));
@@ -147,6 +156,13 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(memberResponse))),
                 "get-member-success");
+    }
+
+    private void 회원조회_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "get-member-fail");
     }
 
     private ResultActions 회원수정_요청(MemberUpdateRequest memberUpdateRequest) throws Exception {
