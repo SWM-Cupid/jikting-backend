@@ -30,6 +30,7 @@ public class RecommendControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/recommends";
+    private static final String SLASH = "/";
     private static final String HOBBY = "취미";
     private static final String PERSONALITY = "성격";
     private static final String URL = "http://test-url";
@@ -38,7 +39,7 @@ public class RecommendControllerTest extends ApiDocument {
     private static final String DRINK_STATUS = "안마심";
     private static final int AGE = 20;
     private static final int HEIGHT = 180;
-    private static final Long MEETING_RECOMMENDATION_ID = 1L;
+    private static final Long ID = 1L;
     private static final boolean TRUE = true;
     private static final NotFoundException TEAM_NOT_FOUND_EXCEPTION = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
 
@@ -74,7 +75,7 @@ public class RecommendControllerTest extends ApiDocument {
                         .build())
                 .collect(Collectors.toList());
         recommendedTeamResponse = RecommendedTeamResponse.builder()
-                .meetingRecommendationId(MEETING_RECOMMENDATION_ID)
+                .meetingRecommendationId(ID)
                 .members(memberResponses)
                 .personalities(personalities)
                 .build();
@@ -121,7 +122,7 @@ public class RecommendControllerTest extends ApiDocument {
     }
 
     private ResultActions 추천팀_조회_요청() throws Exception {
-        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/1")
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + SLASH + ID)
                 .contextPath(CONTEXT_PATH));
     }
 
@@ -140,7 +141,7 @@ public class RecommendControllerTest extends ApiDocument {
     }
 
     private ResultActions 호감_보내기_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/1/like")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + SLASH + ID + "/like")
                 .contextPath(CONTEXT_PATH));
     }
 
