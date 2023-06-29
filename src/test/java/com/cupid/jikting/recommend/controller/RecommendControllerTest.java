@@ -3,6 +3,7 @@ package com.cupid.jikting.recommend.controller;
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.recommend.dto.ImageResponse;
 import com.cupid.jikting.recommend.dto.MemberResponse;
@@ -42,7 +43,7 @@ public class RecommendControllerTest extends ApiDocument {
     private static final Long ID = 1L;
     private static final boolean TRUE = true;
 
-    private NotFoundException teamNotFoundException;
+    private ApplicationException teamNotFoundException;
     private RecommendedTeamResponse recommendedTeamResponse;
 
     @MockBean
@@ -80,6 +81,7 @@ public class RecommendControllerTest extends ApiDocument {
                 .members(memberResponses)
                 .personalities(personalities)
                 .build();
+        teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
     }
 
     @Test
