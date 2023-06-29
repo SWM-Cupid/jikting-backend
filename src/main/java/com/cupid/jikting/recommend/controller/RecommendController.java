@@ -1,6 +1,6 @@
 package com.cupid.jikting.recommend.controller;
 
-import com.cupid.jikting.recommend.dto.RecommendedTeamResponse;
+import com.cupid.jikting.recommend.dto.RecommendResponse;
 import com.cupid.jikting.recommend.service.RecommendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class RecommendController {
     private final RecommendService recommendService;
 
     @GetMapping("/teams/{teamId}")
-    public ResponseEntity<List<RecommendedTeamResponse>> getRecommendedTeam(@PathVariable Long teamId) {
+    public ResponseEntity<List<RecommendResponse>> getRecommendedTeam(@PathVariable Long teamId) {
         return ResponseEntity.ok().body(recommendService.getRecommendedTeam(teamId));
     }
 

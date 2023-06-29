@@ -1,6 +1,6 @@
 package com.cupid.jikting.recommend.service;
 
-import com.cupid.jikting.recommend.dto.RecommendedTeamResponse;
+import com.cupid.jikting.recommend.dto.RecommendResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public class RecommendService {
 
-    public List<RecommendedTeamResponse> getRecommendedTeam(Long teamId) {
+    public List<RecommendResponse> getRecommendedTeam(Long teamId) {
         return null;
     }
 
