@@ -108,3 +108,20 @@ include::{snippets}/send-like-fail/http-request.adoc[]
 
 .response
 include::{snippets}/send-like-fail/http-response.adoc[]
+
+==== 받은 호감 목록 조회
+----
+/api/v1/meetings/likes/received
+----
+===== 성공
+.request
+include::{snippets}/get-received-likes-success/http-request.adoc[]
+
+.response
+include::{snippets}/get-received-likes-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/get-received-likes-fail/http-request.adoc[]
+
+.response
+include::{snippets}/get-received-likes-fail/http-response.adoc[]
