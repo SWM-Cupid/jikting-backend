@@ -43,8 +43,8 @@ public class RecommendControllerTest extends ApiDocument {
     private static final Long ID = 1L;
     private static final boolean TRUE = true;
 
-    private ApplicationException teamNotFoundException;
     private RecommendedTeamResponse recommendedTeamResponse;
+    private ApplicationException teamNotFoundException;
 
     @MockBean
     private RecommendService recommendService;
