@@ -4,10 +4,7 @@ import com.cupid.jikting.recommend.dto.RecommendedTeamResponse;
 import com.cupid.jikting.recommend.service.RecommendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,5 +16,11 @@ public class RecommendController {
     @GetMapping("/{teamId}")
     public ResponseEntity<RecommendedTeamResponse> getRecommendedTeam(@PathVariable Long teamId) {
         return ResponseEntity.ok().body(recommendService.getRecommendedTeam(teamId));
+    }
+
+    @PostMapping("/{recommendId}/like")
+    public ResponseEntity<Void> sendLike(@PathVariable Long recommendId) {
+        recommendService.sendLike(recommendId);
+        return ResponseEntity.ok().build();
     }
 }

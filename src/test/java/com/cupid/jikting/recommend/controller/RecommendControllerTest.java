@@ -1,9 +1,10 @@
-package com.cupid.jikting.recommend;
+package com.cupid.jikting.recommend.controller;
 
 import com.cupid.jikting.ApiDocument;
+import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.recommend.controller.RecommendController;
 import com.cupid.jikting.recommend.dto.ImageResponse;
 import com.cupid.jikting.recommend.dto.MemberResponse;
 import com.cupid.jikting.recommend.dto.RecommendedTeamResponse;
@@ -21,6 +22,7 @@ import java.util.stream.LongStream;
 
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,6 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RecommendControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
+    private static final String DOMAIN_ROOT_PATH = "/recommends";
+    private static final String SLASH = "/";
     private static final String HOBBY = "취미";
     private static final String PERSONALITY = "성격";
     private static final String URL = "http://test-url";
@@ -36,10 +40,11 @@ public class RecommendControllerTest extends ApiDocument {
     private static final String DRINK_STATUS = "안마심";
     private static final int AGE = 20;
     private static final int HEIGHT = 180;
-    private static final Long TEAM_ID = 1L;
+    private static final Long ID = 1L;
     private static final boolean TRUE = true;
 
     private RecommendedTeamResponse recommendedTeamResponse;
+    private ApplicationException teamNotFoundException;
 
     @MockBean
     private RecommendService recommendService;
@@ -71,10 +76,11 @@ public class RecommendControllerTest extends ApiDocument {
                         .build())
                 .collect(Collectors.toList());
         recommendedTeamResponse = RecommendedTeamResponse.builder()
-                .teamId(TEAM_ID)
+                .recommendId(ID)
                 .members(memberResponses)
                 .personalities(personalities)
                 .build();
+        teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
     }
 
     @Test
@@ -90,15 +96,35 @@ public class RecommendControllerTest extends ApiDocument {
     @Test
     void 추천팀_조회_실패() throws Exception {
         //given
-        willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(recommendService).getRecommendedTeam(anyLong());
+        willThrow(teamNotFoundException).given(recommendService).getRecommendedTeam(anyLong());
         //when
         ResultActions resultActions = 추천팀_조회_요청();
         //then
         추천팀_조회_요청_실패(resultActions);
     }
 
+    @Test
+    void 호감_보내기_성공() throws Exception {
+        //given
+        willDoNothing().given(recommendService).sendLike(anyLong());
+        //when
+        ResultActions resultActions = 호감_보내기_요청();
+        //then
+        호감_보내기_요청_성공(resultActions);
+    }
+
+    @Test
+    void 호감_보내기_실패() throws Exception {
+        //given
+        willThrow(teamNotFoundException).given(recommendService).sendLike(anyLong());
+        //when
+        ResultActions resultActions = 호감_보내기_요청();
+        //then
+        호감_보내기_요청_실패(resultActions);
+    }
+
     private ResultActions 추천팀_조회_요청() throws Exception {
-        return mockMvc.perform(get(CONTEXT_PATH + "/recommends/1")
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + SLASH + ID)
                 .contextPath(CONTEXT_PATH));
     }
 
@@ -111,7 +137,26 @@ public class RecommendControllerTest extends ApiDocument {
 
     private void 추천팀_조회_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
-                        .andExpect(status().isBadRequest()),
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
                 "get-recommended-team-fail");
+    }
+
+    private ResultActions 호감_보내기_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + SLASH + ID + "/like")
+                .contextPath(CONTEXT_PATH));
+    }
+
+    private void 호감_보내기_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "send-like-success");
+    }
+
+    private void 호감_보내기_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
+                "send-like-fail");
     }
 }

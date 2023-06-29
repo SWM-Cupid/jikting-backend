@@ -74,7 +74,7 @@ include::{snippets}/update-member-fail/http-request.adoc[]
 .response
 include::{snippets}/update-member-fail/http-response.adoc[]
 
-=== 미팅 관련 기능
+=== 추천 관련 기능
 ==== 추천 팀 조회
 ----
 /api/v1/recommends/{teamId}
@@ -91,3 +91,20 @@ include::{snippets}/get-recommended-team-fail/http-request.adoc[]
 
 .response
 include::{snippets}/get-recommended-team-fail/http-response.adoc[]
+
+==== 호감 보내기
+----
+/api/v1/recommends/{recommendId}/like
+----
+===== 성공
+.request
+include::{snippets}/send-like-success/http-request.adoc[]
+
+.response
+include::{snippets}/send-like-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/send-like-fail/http-request.adoc[]
+
+.response
+include::{snippets}/send-like-fail/http-response.adoc[]
