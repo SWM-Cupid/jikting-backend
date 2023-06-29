@@ -40,9 +40,9 @@ public class RecommendControllerTest extends ApiDocument {
     private static final int HEIGHT = 180;
     private static final Long MEETING_RECOMMENDATION_ID = 1L;
     private static final boolean TRUE = true;
+    private static final NotFoundException TEAM_NOT_FOUND_EXCEPTION = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
 
     private RecommendedTeamResponse recommendedTeamResponse;
-    private NotFoundException teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
 
     @MockBean
     private RecommendService recommendService;
@@ -93,7 +93,7 @@ public class RecommendControllerTest extends ApiDocument {
     @Test
     void 추천팀_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(recommendService).getRecommendedTeam(anyLong());
+        willThrow(TEAM_NOT_FOUND_EXCEPTION).given(recommendService).getRecommendedTeam(anyLong());
         //when
         ResultActions resultActions = 추천팀_조회_요청();
         //then
@@ -113,7 +113,7 @@ public class RecommendControllerTest extends ApiDocument {
     @Test
     void 호감_보내기_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(recommendService).sendLike(anyLong());
+        willThrow(TEAM_NOT_FOUND_EXCEPTION).given(recommendService).sendLike(anyLong());
         //when
         ResultActions resultActions = 호감_보내기_요청();
         //then
@@ -135,7 +135,7 @@ public class RecommendControllerTest extends ApiDocument {
     private void 추천팀_조회_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
-                        .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
+                        .andExpect(content().json(toJson(ErrorResponse.from(TEAM_NOT_FOUND_EXCEPTION)))),
                 "get-recommended-team-fail");
     }
 
@@ -153,7 +153,7 @@ public class RecommendControllerTest extends ApiDocument {
     private void 호감_보내기_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
-                        .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
+                        .andExpect(content().json(toJson(ErrorResponse.from(TEAM_NOT_FOUND_EXCEPTION)))),
                 "send-like-fail");
     }
 }
