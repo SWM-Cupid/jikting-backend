@@ -77,7 +77,7 @@ include::{snippets}/update-member-fail/http-response.adoc[]
 === 추천 관련 기능
 ==== 추천 팀 조회
 ----
-/api/v1/recommends/{teamId}
+/api/v1/recommends/teams/{teamId}
 ----
 ===== 성공
 .request
