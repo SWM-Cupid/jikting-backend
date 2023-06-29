@@ -51,7 +51,6 @@ public class RecommendControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
-        teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
         List<String> hobbies = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> HOBBY + n)
                 .collect(Collectors.toList());
