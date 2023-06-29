@@ -81,16 +81,16 @@ include::{snippets}/update-member-fail/http-response.adoc[]
 ----
 ===== 성공
 .request
-include::{snippets}/get-recommended-team-success/http-request.adoc[]
+include::{snippets}/get-recommends-success/http-request.adoc[]
 
 .response
-include::{snippets}/get-recommended-team-success/http-response.adoc[]
+include::{snippets}/get-recommends-success/http-response.adoc[]
 ===== 실패
 .request
-include::{snippets}/get-recommended-team-fail/http-request.adoc[]
+include::{snippets}/get-recommends-fail/http-request.adoc[]
 
 .response
-include::{snippets}/get-recommended-team-fail/http-response.adoc[]
+include::{snippets}/get-recommends-fail/http-response.adoc[]
 
 ==== 호감 보내기
 ----
