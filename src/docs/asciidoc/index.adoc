@@ -107,6 +107,40 @@ include::{snippets}/update-member-fail/http-request.adoc[]
 .response
 include::{snippets}/update-member-fail/http-response.adoc[]
 
+=== 팀 관련 기능
+==== 받은 호감 목록 조회
+----
+/api/v1/teams/{teamId}/likes/received
+----
+===== 성공
+.request
+include::{snippets}/get-received-likes-success/http-request.adoc[]
+
+.response
+include::{snippets}/get-received-likes-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/get-received-likes-fail/http-request.adoc[]
+
+.response
+include::{snippets}/get-received-likes-fail/http-response.adoc[]
+==== 보낸 호감 목록 조회
+----
+/api/v1/teams/{teamId}/likes/sent
+----
+===== 성공
+.request
+include::{snippets}/get-sent-likes-success/http-request.adoc[]
+
+.response
+include::{snippets}/get-sent-likes-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/get-sent-likes-fail/http-request.adoc[]
+
+.response
+include::{snippets}/get-sent-likes-fail/http-response.adoc[]
+
 === 추천 관련 기능
 ==== 추천 팀 조회
 ----
@@ -142,19 +176,3 @@ include::{snippets}/send-like-fail/http-request.adoc[]
 .response
 include::{snippets}/send-like-fail/http-response.adoc[]
 
-==== 받은 호감 목록 조회
-----
-/api/v1/meetings/likes/received
-----
-===== 성공
-.request
-include::{snippets}/get-received-likes-success/http-request.adoc[]
-
-.response
-include::{snippets}/get-received-likes-success/http-response.adoc[]
-===== 실패
-.request
-include::{snippets}/get-received-likes-fail/http-request.adoc[]
-
-.response
-include::{snippets}/get-received-likes-fail/http-response.adoc[]
