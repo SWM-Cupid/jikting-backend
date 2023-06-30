@@ -73,6 +73,17 @@ include::{snippets}/get-member-fail/http-request.adoc[]
 .response
 include::{snippets}/get-member-fail/http-response.adoc[]
 
+==== 회원 프로필 조회
+----
+/api/v1/members/profile
+----
+===== 성공
+.request
+include::{snippets}/get-member-profile-success/http-request.adoc[]
+
+.response
+include::{snippets}/get-member-profile-success/http-response.adoc[]
+
 ==== 회원수정
 ----
 /api/v1/members
