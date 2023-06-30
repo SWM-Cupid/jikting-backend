@@ -125,6 +125,7 @@ include::{snippets}/send-like-fail/http-request.adoc[]
 .response
 include::{snippets}/send-like-fail/http-response.adoc[]
 
+=== 미팅 관련 기능
 ==== 받은 호감 목록 조회
 ----
 /api/v1/meetings/likes/received
@@ -141,3 +142,19 @@ include::{snippets}/get-received-likes-fail/http-request.adoc[]
 
 .response
 include::{snippets}/get-received-likes-fail/http-response.adoc[]
+==== 보낸 호감 목록 조회
+----
+/api/v1/meetings/likes/sent
+----
+===== 성공
+.request
+include::{snippets}/get-sent-likes-success/http-request.adoc[]
+
+.response
+include::{snippets}/get-sent-likes-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/get-sent-likes-fail/http-request.adoc[]
+
+.response
+include::{snippets}/get-sent-likes-fail/http-response.adoc[]
