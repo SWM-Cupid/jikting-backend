@@ -117,6 +117,12 @@ include::{snippets}/update-member-profile-success/http-request.adoc[]
 
 .response
 include::{snippets}/update-member-profile-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/update-member-profile-fail/http-request.adoc[]
+
+.response
+include::{snippets}/update-member-profile-fail/http-response.adoc[]
 
 === 팀 관련 기능
 ==== 받은 호감 목록 조회
