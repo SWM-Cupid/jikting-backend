@@ -134,9 +134,8 @@ public class RecommendControllerTest extends ApiDocument {
     private void 추천팀_조회_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
-                        .andExpect(content().json(toJson(recommendedTeamResponse))),
-                "get-recommends-success");
                         .andExpect(content().json(toJson(recommendResponses))),
+                "get-recommends-success");
     }
 
     private void 추천팀_조회_요청_실패(ResultActions resultActions) throws Exception {
