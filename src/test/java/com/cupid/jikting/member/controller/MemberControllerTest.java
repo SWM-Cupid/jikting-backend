@@ -112,7 +112,7 @@ public class MemberControllerTest extends ApiDocument {
         // given
         willDoNothing().given(memberService).signup(any(SignupRequest.class));
         // when
-        ResultActions resultActions = 회원가입_요청(signupRequest);
+        ResultActions resultActions = 회원가입_요청();
         // then
         회원가입_요청_성공(resultActions);
     }
@@ -122,7 +122,7 @@ public class MemberControllerTest extends ApiDocument {
         // given
         willThrow(invalidFormatException).given(memberService).signup(any(SignupRequest.class));
         // when
-        ResultActions resultActions = 회원가입_요청(signupRequest);
+        ResultActions resultActions = 회원가입_요청();
         // then
         회원가입_요청_실패(resultActions);
     }
@@ -172,7 +172,7 @@ public class MemberControllerTest extends ApiDocument {
         // given
         willDoNothing().given(memberService).update(any(MemberUpdateRequest.class));
         // when
-        ResultActions resultActions = 회원수정_요청(memberUpdateRequest);
+        ResultActions resultActions = 회원수정_요청();
         // then
         회원수정_요청_성공(resultActions);
     }
@@ -182,12 +182,12 @@ public class MemberControllerTest extends ApiDocument {
         // given
         willThrow(memberNotFoundException).given(memberService).update(any(MemberUpdateRequest.class));
         // when
-        ResultActions resultActions = 회원수정_요청(memberUpdateRequest);
+        ResultActions resultActions = 회원수정_요청();
         // then
         회원수정_요청_실패(resultActions);
     }
 
-    private ResultActions 회원가입_요청(SignupRequest signupRequest) throws Exception {
+    private ResultActions 회원가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -245,7 +245,7 @@ public class MemberControllerTest extends ApiDocument {
                 "get-member-profile-fail");
     }
 
-    private ResultActions 회원수정_요청(MemberUpdateRequest memberUpdateRequest) throws Exception {
+    private ResultActions 회원수정_요청() throws Exception {
         return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
