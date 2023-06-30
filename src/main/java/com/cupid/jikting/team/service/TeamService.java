@@ -8,11 +8,11 @@ import java.util.List;
 @Service
 public class TeamService {
 
-    public List<TeamProfileResponse> getReceivedLikes() {
+    public List<TeamProfileResponse> getReceivedLikes(Long teamId) {
         return null;
     }
 
-    public List<TeamProfileResponse> getSentLikes() {
+    public List<TeamProfileResponse> getSentLikes(Long teamId) {
         return null;
     }
 }

@@ -31,6 +31,8 @@ public class TeamControllerTest extends ApiDocument {
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/teams";
     private static final String LIKE_PATH = "/likes";
+    private static final String SLASH = "/";
+    private static final String ID = "1";
     private static final String KEYWORD = "키워드";
     private static final String URL = "http://test-url";
     private static final String NAME = "팀명";
@@ -63,7 +65,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 받은_호감_목록_조회_성공() throws Exception {
         //given
-        willReturn(teamProfileResponses).given(meetingService).getReceivedLikes();
+        willReturn(teamProfileResponses).given(teamService).getReceivedLikes(anyLong());
         //when
         ResultActions resultActions = 받은_호감_목록_조회_요청();
         //then
@@ -73,7 +75,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 받은_호감_목록_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(meetingService).getReceivedLikes();
+        willThrow(teamNotFoundException).given(teamService).getReceivedLikes(anyLong());
         //when
         ResultActions resultActions = 받은_호감_목록_조회_요청();
         //then
@@ -83,7 +85,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 보낸_호감_목록_조회_성공() throws Exception {
         //given
-        willReturn(teamProfileResponses).given(meetingService).getSentLikes();
+        willReturn(teamProfileResponses).given(teamService).getSentLikes(anyLong());
         //when
         ResultActions resultActions = 보낸_호감_목록_조회_요청();
         //then
@@ -93,7 +95,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 보낸_호감_목록_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(meetingService).getSentLikes();
+        willThrow(teamNotFoundException).given(teamService).getSentLikes(anyLong());
         //when
         ResultActions resultActions = 보낸_호감_목록_조회_요청();
         //then

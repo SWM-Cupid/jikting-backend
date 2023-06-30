@@ -18,13 +18,13 @@ public class TeamController {
 
     private final TeamService teamService;
 
-    @GetMapping("/likes/received")
-    public ResponseEntity<List<TeamProfileResponse>> getReceivedLikes() {
-        return ResponseEntity.ok().body(meetingService.getReceivedLikes());
+    @GetMapping("/{teamId}/likes/received")
+    public ResponseEntity<List<TeamProfileResponse>> getReceivedLikes(@PathVariable Long teamId) {
+        return ResponseEntity.ok().body(teamService.getReceivedLikes(teamId));
     }
 
-    @GetMapping("/likes/sent")
-    public ResponseEntity<List<TeamProfileResponse>> getSentLikes() {
-        return ResponseEntity.ok().body(meetingService.getSentLikes());
+    @GetMapping("/{teamId}/likes/sent")
+    public ResponseEntity<List<TeamProfileResponse>> getSentLikes(@PathVariable Long teamId) {
+        return ResponseEntity.ok().body(teamService.getSentLikes(teamId));
     }
 }
