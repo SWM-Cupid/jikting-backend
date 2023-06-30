@@ -1,9 +1,6 @@
 package com.cupid.jikting.member.service;
 
-import com.cupid.jikting.member.dto.MemberProfileResponse;
-import com.cupid.jikting.member.dto.MemberResponse;
-import com.cupid.jikting.member.dto.MemberUpdateRequest;
-import com.cupid.jikting.member.dto.SignupRequest;
+import com.cupid.jikting.member.dto.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,5 +18,8 @@ public class MemberService {
     }
 
     public void update(MemberUpdateRequest memberUpdateRequest) {
+    }
+
+    public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
     }
 }
