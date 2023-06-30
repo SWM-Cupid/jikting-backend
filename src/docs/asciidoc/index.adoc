@@ -164,6 +164,9 @@ include::{snippets}/update-member-image-not-found-member-fail/http-request.adoc[
 .response - 회원을 찾을 수 없음
 include::{snippets}/update-member-image-not-found-member-fail/http-response.adoc[]
 
+.response - 파일 형식 미지원
+include::{snippets}/update-member-image-invalid-file-extension-fail/http-response.adoc[]
+
 === 팀 관련 기능
 ==== 받은 호감 목록 조회
 ----
