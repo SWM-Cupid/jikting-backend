@@ -108,157 +108,157 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 회원가입_성공() throws Exception {
+    void 회원_가입_성공() throws Exception {
         // given
         willDoNothing().given(memberService).signup(any(SignupRequest.class));
         // when
-        ResultActions resultActions = 회원가입_요청(signupRequest);
+        ResultActions resultActions = 회원_가입_요청(signupRequest);
         // then
-        회원가입_요청_성공(resultActions);
+        회원_가입_요청_성공(resultActions);
     }
 
     @Test
-    void 회원가입_실패() throws Exception {
+    void 회원_가입_실패() throws Exception {
         // given
         willThrow(invalidFormatException).given(memberService).signup(any(SignupRequest.class));
         // when
-        ResultActions resultActions = 회원가입_요청(signupRequest);
+        ResultActions resultActions = 회원_가입_요청(signupRequest);
         // then
-        회원가입_요청_실패(resultActions);
+        회원_가입_요청_실패(resultActions);
     }
 
     @Test
-    void 회원조회_성공() throws Exception {
+    void 회원_조회_성공() throws Exception {
         // given
         willReturn(memberResponse).given(memberService).get(anyLong());
         // when
-        ResultActions resultActions = 회원조회_요청();
+        ResultActions resultActions = 회원_조회_요청();
         // then
-        회원조회_요청_성공(resultActions);
+        회원_조회_요청_성공(resultActions);
     }
 
     @Test
-    void 회원조회_실패() throws Exception {
+    void 회원_조회_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).get(anyLong());
         // when
-        ResultActions resultActions = 회원조회_요청();
+        ResultActions resultActions = 회원_조회_요청();
         // then
-        회원조회_요청_실패(resultActions);
+        회원_조회_요청_실패(resultActions);
     }
 
     @Test
-    void 회원프로필조회_성공() throws Exception {
+    void 회원_프로필_조회_성공() throws Exception {
         // given
         willReturn(memberProfileResponse).given(memberService).getProfile(anyLong());
         // when
-        ResultActions resultActions = 회원프로필조회_요청();
+        ResultActions resultActions = 회원_프로필_조회_요청();
         // then
-        회원프로필조회_요청_성공(resultActions);
+        회원_프로필_조회_요청_성공(resultActions);
     }
 
     @Test
-    void 회원프로필조회_실패() throws Exception {
+    void 회원_프로필_조회_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).getProfile(anyLong());
         // when
-        ResultActions resultActions = 회원프로필조회_요청();
+        ResultActions resultActions = 회원_프로필_조회_요청();
         // then
-        회원프로필조회_요청_실패(resultActions);
+        회원_프로필_조회_요청_실패(resultActions);
     }
 
     @Test
-    void 회원수정_성공() throws Exception {
+    void 회원_수정_성공() throws Exception {
         // given
         willDoNothing().given(memberService).update(any(MemberUpdateRequest.class));
         // when
-        ResultActions resultActions = 회원수정_요청(memberUpdateRequest);
+        ResultActions resultActions = 회원_수정_요청(memberUpdateRequest);
         // then
-        회원수정_요청_성공(resultActions);
+        회원_수정_요청_성공(resultActions);
     }
 
     @Test
-    void 회원수정_실패() throws Exception {
+    void 회원_수정_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).update(any(MemberUpdateRequest.class));
         // when
-        ResultActions resultActions = 회원수정_요청(memberUpdateRequest);
+        ResultActions resultActions = 회원_수정_요청(memberUpdateRequest);
         // then
-        회원수정_요청_실패(resultActions);
+        회원_수정_요청_실패(resultActions);
     }
 
-    private ResultActions 회원가입_요청(SignupRequest signupRequest) throws Exception {
+    private ResultActions 회원_가입_요청(SignupRequest signupRequest) throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(signupRequest)));
     }
 
-    private void 회원가입_요청_성공(ResultActions resultActions) throws Exception {
+    private void 회원_가입_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
                 "signup-success");
     }
 
-    private void 회원가입_요청_실패(ResultActions resultActions) throws Exception {
+    private void 회원_가입_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(invalidFormatException)))),
                 "signup-fail");
     }
 
-    private ResultActions 회원조회_요청() throws Exception {
+    private ResultActions 회원_조회_요청() throws Exception {
         return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH));
     }
 
-    private void 회원조회_요청_성공(ResultActions resultActions) throws Exception {
+    private void 회원_조회_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(memberResponse))),
                 "get-member-success");
     }
 
-    private void 회원조회_요청_실패(ResultActions resultActions) throws Exception {
+    private void 회원_조회_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
                 "get-member-fail");
     }
 
-    private ResultActions 회원프로필조회_요청() throws Exception {
+    private ResultActions 회원_프로필_조회_요청() throws Exception {
         return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/profile")
                 .contextPath(CONTEXT_PATH));
     }
 
-    private void 회원프로필조회_요청_성공(ResultActions resultActions) throws Exception {
+    private void 회원_프로필_조회_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(memberProfileResponse))),
                 "get-member-profile-success");
     }
 
-    private void 회원프로필조회_요청_실패(ResultActions resultActions) throws Exception {
+    private void 회원_프로필_조회_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
                 "get-member-profile-fail");
     }
 
-    private ResultActions 회원수정_요청(MemberUpdateRequest memberUpdateRequest) throws Exception {
+    private ResultActions 회원_수정_요청(MemberUpdateRequest memberUpdateRequest) throws Exception {
         return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(memberUpdateRequest)));
     }
 
-    private void 회원수정_요청_성공(ResultActions resultActions) throws Exception {
+    private void 회원_수정_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
                 "update-member-success");
     }
 
-    private void 회원수정_요청_실패(ResultActions resultActions) throws Exception {
+    private void 회원_수정_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
