@@ -2,6 +2,7 @@ package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.member.dto.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MemberService {
@@ -24,5 +25,8 @@ public class MemberService {
     }
 
     public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
+    }
+
+    public void updateImage(MultipartFile multipartFile) {
     }
 }
