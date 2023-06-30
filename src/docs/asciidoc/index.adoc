@@ -39,7 +39,7 @@ status code: 500
 == 기능
 
 === 회원 관련 기능
-==== 회원가입
+==== 회원 가입
 ----
 /api/v1/members
 ----
@@ -56,7 +56,7 @@ include::{snippets}/signup-fail/http-request.adoc[]
 .response
 include::{snippets}/signup-fail/http-response.adoc[]
 
-==== 회원조회
+==== 회원 조회
 ----
 /api/v1/members
 ----
@@ -84,7 +84,7 @@ include::{snippets}/get-member-profile-success/http-request.adoc[]
 .response
 include::{snippets}/get-member-profile-success/http-response.adoc[]
 
-==== 회원수정
+==== 회원 수정
 ----
 /api/v1/members
 ----
