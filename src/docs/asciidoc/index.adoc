@@ -83,6 +83,12 @@ include::{snippets}/get-member-profile-success/http-request.adoc[]
 
 .response
 include::{snippets}/get-member-profile-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/get-member-profile-fail/http-request.adoc[]
+
+.response
+include::{snippets}/get-member-profile-fail/http-response.adoc[]
 
 ==== 회원 수정
 ----
