@@ -57,6 +57,7 @@ public class MemberControllerTest extends ApiDocument {
     private ApplicationException invalidFormatException;
     private ApplicationException memberNotFoundException;
     private ApplicationException passwordNotEqualException;
+    private ApplicationException wrongFormException;
 
     @MockBean
     private MemberService memberService;
@@ -110,6 +111,7 @@ public class MemberControllerTest extends ApiDocument {
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         passwordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
+        wrongFormException = new WrongFromException(ApplicationError.INVALID_FORMAT);
     }
 
     @Test
@@ -222,6 +224,16 @@ public class MemberControllerTest extends ApiDocument {
         회원_비밀번호_수정_요청_비밀번호불일치_실패(resultActions);
     }
 
+    @Test
+    void 회원_비밀번호_수정_비밀번호양식불일치_실패() throws Exception {
+        // given
+        willThrow(wrongFormException).given(memberService).updatePassword(any(MemberPasswordUpdateRequest.class));
+        // when
+        ResultActions resultActions = 회원_비밀번호_수정_요청();
+        // then
+        회원_비밀번호_수정_요청_비밀번호양식불일치_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청(SignupRequest signupRequest) throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -325,5 +337,12 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(passwordNotEqualException)))),
                 "update-member-password-not-equal-fail");
+    }
+
+    private void 회원_비밀번호_수정_요청_비밀번호양식불일치_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
+                "update-member-password-wrong-form-fail");
     }
 }
