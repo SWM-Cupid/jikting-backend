@@ -81,6 +81,9 @@ public class MemberControllerTest extends ApiDocument {
                 .name(NAME)
                 .phone(PHONE)
                 .build();
+        memberUpdateRequest = MemberUpdateRequest.builder()
+                .nickname(NICKNAME)
+                .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
                 .company(COMPANY)
