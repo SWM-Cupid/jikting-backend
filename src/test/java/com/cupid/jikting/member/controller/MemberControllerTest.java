@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +50,10 @@ public class MemberControllerTest extends ApiDocument {
     private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
     private static final String SEQUENCE = "순서";
     private static final String NEW_PASSWORD = "새 비밀번호";
+    private static final String FILE_HEADER = "file";
+    private static final String ORIGINAL_FILENAME = "image.png";
+    private static final String CONTENT_TYPE = "image/png";
+    private static final String IMAGE_FILE = "이미지 파일";
 
     private SignupRequest signupRequest;
     private NicknameUpdateRequest nicknameUpdateRequest;
@@ -269,6 +275,16 @@ public class MemberControllerTest extends ApiDocument {
         회원_비밀번호_수정_요청_비밀번호양식불일치_실패(resultActions);
     }
 
+    @Test
+    void 회원_이미지_수정_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).updateImage(any(MultipartFile.class));
+        // when
+        ResultActions resultActions = 회원_이미지_수정_요청();
+        // then
+        회원_이미지_수정_요청_성공(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -399,5 +415,18 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
                 "update-member-password-wrong-form-fail");
+    }
+
+    private ResultActions 회원_이미지_수정_요청() throws Exception {
+        return mockMvc.perform(multipart(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/image")
+                .file(new MockMultipartFile(FILE_HEADER, ORIGINAL_FILENAME, CONTENT_TYPE, IMAGE_FILE.getBytes()))
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.MULTIPART_FORM_DATA));
+    }
+
+    private void 회원_이미지_수정_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "update-member-image-success");
     }
 }
