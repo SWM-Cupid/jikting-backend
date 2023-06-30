@@ -466,7 +466,8 @@ public class MemberControllerTest extends ApiDocument {
 
     private void 회원_이미지_수정_요청_회원정보찾기_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
-                        .andExpect(status().isBadRequest()),
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
                 "update-member-image-not-found-member-fail");
     }
 
