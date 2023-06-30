@@ -155,6 +155,16 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
+    void 회원프로필조회_실패() throws Exception {
+        // given
+        willThrow(memberNotFoundException).given(memberService).getProfile(anyLong());
+        // when
+        ResultActions resultActions = 회원프로필조회_요청();
+        // then
+        회원프로필조회_요청_실패(resultActions);
+    }
+
+    @Test
     void 회원수정_성공() throws Exception {
         // given
         willDoNothing().given(memberService).update(any(MemberUpdateRequest.class));
@@ -223,6 +233,13 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(memberProfileResponse))),
                 "get-member-profile-success");
+    }
+
+    private void 회원프로필조회_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "get-member-profile-fail");
     }
 
     private ResultActions 회원수정_요청(MemberUpdateRequest memberUpdateRequest) throws Exception {
