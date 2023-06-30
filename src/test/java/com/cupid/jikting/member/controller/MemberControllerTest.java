@@ -53,6 +53,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private SignupRequest signupRequest;
     private MemberUpdateRequest memberUpdateRequest;
+    private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private ApplicationException invalidFormatException;
@@ -83,6 +84,20 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         memberUpdateRequest = MemberUpdateRequest.builder()
                 .nickname(NICKNAME)
+                .build();
+        memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
+                .images(images)
+                .age(AGE)
+                .height(HEIGHT)
+                .gender(GENDER)
+                .address(ADDRESS)
+                .mbti(MBTI)
+                .drinkStatus(DRINK_STATUS)
+                .isSmoke(IS_SMOKE)
+                .college(COLLEGE)
+                .personalities(personalities)
+                .hobbies(hobbies)
+                .description(DESCRIPTION)
                 .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
@@ -187,6 +202,16 @@ public class MemberControllerTest extends ApiDocument {
         회원수정_요청_실패(resultActions);
     }
 
+    @Test
+    void 회원_프로필_수정_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).updateProfile(any(MemberProfileUpdateRequest.class));
+        // when
+        ResultActions resultActions = 회원_프로필_수정_요청();
+        // then
+        회원_프로필_수정_요청_성공(resultActions);
+    }
+
     private ResultActions 회원가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -263,5 +288,18 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
                 "update-member-fail");
+    }
+
+    private ResultActions 회원_프로필_수정_요청() throws Exception {
+        return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/profile")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(memberProfileUpdateRequest)));
+    }
+
+    private void 회원_프로필_수정_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "update-member-profile-success");
     }
 }
