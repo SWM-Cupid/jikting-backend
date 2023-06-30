@@ -107,6 +107,17 @@ include::{snippets}/update-member-fail/http-request.adoc[]
 .response
 include::{snippets}/update-member-fail/http-response.adoc[]
 
+==== 회원 프로필 수정
+----
+/api/v1/members/profile
+----
+===== 성공
+.request
+include::{snippets}/update-member-profile-success/http-request.adoc[]
+
+.response
+include::{snippets}/update-member-profile-success/http-response.adoc[]
+
 === 팀 관련 기능
 ==== 받은 호감 목록 조회
 ----
