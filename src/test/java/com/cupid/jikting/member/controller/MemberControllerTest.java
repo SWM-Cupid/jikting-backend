@@ -51,7 +51,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private SignupRequest signupRequest;
     private MemberUpdateRequest memberUpdateRequest;
-    private MemberPasswordUpdateRequest memberPasswordUpdateRequest;
+    private PasswordUpdateRequest passwordUpdateRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private ApplicationException invalidFormatException;
@@ -85,7 +85,7 @@ public class MemberControllerTest extends ApiDocument {
         memberUpdateRequest = MemberUpdateRequest.builder()
                 .nickname(NICKNAME)
                 .build();
-        memberPasswordUpdateRequest = MemberPasswordUpdateRequest.builder()
+        passwordUpdateRequest = PasswordUpdateRequest.builder()
                 .password(PASSWORD)
                 .newPassword(NEW_PASSWORD)
                 .build();
@@ -197,7 +197,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_비밀번호_수정_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).updatePassword(any(MemberPasswordUpdateRequest.class));
+        willDoNothing().given(memberService).updatePassword(any(PasswordUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_비밀번호_수정_요청();
         // then
@@ -207,7 +207,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_비밀번호_수정_회원정보찾기_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).updatePassword(any(MemberPasswordUpdateRequest.class));
+        willThrow(memberNotFoundException).given(memberService).updatePassword(any(PasswordUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_비밀번호_수정_요청();
         // then
@@ -217,7 +217,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_비밀번호_수정_비밀번호불일치_실패() throws Exception {
         // given
-        willThrow(passwordNotEqualException).given(memberService).updatePassword(any(MemberPasswordUpdateRequest.class));
+        willThrow(passwordNotEqualException).given(memberService).updatePassword(any(PasswordUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_비밀번호_수정_요청();
         // then
@@ -227,7 +227,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_비밀번호_수정_비밀번호양식불일치_실패() throws Exception {
         // given
-        willThrow(wrongFormException).given(memberService).updatePassword(any(MemberPasswordUpdateRequest.class));
+        willThrow(wrongFormException).given(memberService).updatePassword(any(PasswordUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_비밀번호_수정_요청();
         // then
@@ -316,7 +316,7 @@ public class MemberControllerTest extends ApiDocument {
         return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/password")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(memberPasswordUpdateRequest)));
+                .content(toJson(passwordUpdateRequest)));
     }
 
     private void 회원_비밀번호_수정_요청_성공(ResultActions resultActions) throws Exception {

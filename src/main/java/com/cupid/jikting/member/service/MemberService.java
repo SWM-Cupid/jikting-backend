@@ -20,6 +20,6 @@ public class MemberService {
     public void update(MemberUpdateRequest memberUpdateRequest) {
     }
 
-    public void updatePassword(MemberPasswordUpdateRequest memberPasswordUpdateRequest) {
+    public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
     }
 }

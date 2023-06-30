@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberPasswordUpdateRequest {
+public class PasswordUpdateRequest {
 
     private String password;
     private String newPassword;
