@@ -21,5 +21,4 @@ public class MeetingController {
     public ResponseEntity<List<TeamProfileResponse>> getReceivedLikes() {
         return ResponseEntity.ok().body(meetingService.getReceivedLikes());
     }
-
 }
