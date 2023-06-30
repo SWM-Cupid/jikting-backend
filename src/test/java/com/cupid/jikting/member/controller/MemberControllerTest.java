@@ -65,6 +65,7 @@ public class MemberControllerTest extends ApiDocument {
     private ApplicationException memberNotFoundException;
     private ApplicationException passwordNotEqualException;
     private ApplicationException wrongFormException;
+    private ApplicationException wrongFileExtensionException;
 
     @MockBean
     private MemberService memberService;
@@ -133,6 +134,7 @@ public class MemberControllerTest extends ApiDocument {
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         passwordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
         wrongFormException = new WrongFromException(ApplicationError.INVALID_FORMAT);
+        wrongFileExtensionException = new WrongFromException(ApplicationError.INVALID_FILE_EXTENSION);
     }
 
     @Test
@@ -295,6 +297,16 @@ public class MemberControllerTest extends ApiDocument {
         회원_이미지_수정_요청_회원정보찾기_실패(resultActions);
     }
 
+    @Test
+    void 회원_이미지_수정_파일형식미지원_실패() throws Exception {
+        // given
+        willThrow(wrongFileExtensionException).given(memberService).updateImage(any(MultipartFile.class));
+        // when
+        ResultActions resultActions = 회원_이미지_수정_요청();
+        // then
+        회원_이미지_수정_요청_파일형식미지원_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -444,5 +456,11 @@ public class MemberControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest()),
                 "update-member-image-not-found-member-fail");
+    }
+
+    private void 회원_이미지_수정_요청_파일형식미지원_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest()),
+                "update-member-image-invalid-file-extension-fail");
     }
 }
