@@ -107,7 +107,42 @@ include::{snippets}/update-member-fail/http-request.adoc[]
 .response
 include::{snippets}/update-member-fail/http-response.adoc[]
 
-=== 팀 관련 기능
+=== 추천 관련 기능
+==== 추천 팀 조회
+----
+/api/v1/recommends
+----
+===== 성공
+.request
+include::{snippets}/get-recommends-success/http-request.adoc[]
+
+.response
+include::{snippets}/get-recommends-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/get-recommends-fail/http-request.adoc[]
+
+.response
+include::{snippets}/get-recommends-fail/http-response.adoc[]
+
+==== 호감 보내기
+----
+/api/v1/recommends/{recommendId}/like
+----
+===== 성공
+.request
+include::{snippets}/send-like-success/http-request.adoc[]
+
+.response
+include::{snippets}/send-like-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/send-like-fail/http-request.adoc[]
+
+.response
+include::{snippets}/send-like-fail/http-response.adoc[]
+
+=== 호감 관련 기능
 ==== 받은 호감 목록 조회
 ----
 /api/v1/likes/received
