@@ -124,6 +124,9 @@ include::{snippets}/update-member-password-not-found-member-fail/http-request.ad
 .response - 회원을 찾을 수 없음
 include::{snippets}/update-member-password-not-found-member-fail/http-response.adoc[]
 
+.response - 기존 비밀번호 불일치
+include::{snippets}/update-member-password-not-equal-fail/http-response.adoc[]
+
 === 추천 관련 기능
 ==== 추천 팀 조회
 ----
