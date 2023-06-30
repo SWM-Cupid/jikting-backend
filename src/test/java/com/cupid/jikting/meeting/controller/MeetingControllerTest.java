@@ -37,7 +37,7 @@ public class MeetingControllerTest extends ApiDocument {
     private ApplicationException teamNotFoundException;
 
     @MockBean
-    MeetingService meetingService;
+    private MeetingService meetingService;
 
     @BeforeEach
     void setUp() {
