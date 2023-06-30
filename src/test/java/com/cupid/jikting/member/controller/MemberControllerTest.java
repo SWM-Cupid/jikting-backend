@@ -50,7 +50,8 @@ public class MemberControllerTest extends ApiDocument {
     private static final String NEW_PASSWORD = "새 비밀번호";
 
     private SignupRequest signupRequest;
-    private MemberUpdateRequest memberUpdateRequest;
+    private NicknameUpdateRequest nicknameUpdateRequest;
+    private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private PasswordUpdateRequest passwordUpdateRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
@@ -82,8 +83,22 @@ public class MemberControllerTest extends ApiDocument {
                 .name(NAME)
                 .phone(PHONE)
                 .build();
-        memberUpdateRequest = MemberUpdateRequest.builder()
+        nicknameUpdateRequest = NicknameUpdateRequest.builder()
                 .nickname(NICKNAME)
+                .build();
+        memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
+                .images(images)
+                .age(AGE)
+                .height(HEIGHT)
+                .gender(GENDER)
+                .address(ADDRESS)
+                .mbti(MBTI)
+                .drinkStatus(DRINK_STATUS)
+                .isSmoke(IS_SMOKE)
+                .college(COLLEGE)
+                .personalities(personalities)
+                .hobbies(hobbies)
+                .description(DESCRIPTION)
                 .build();
         passwordUpdateRequest = PasswordUpdateRequest.builder()
                 .password(PASSWORD)
@@ -119,7 +134,7 @@ public class MemberControllerTest extends ApiDocument {
         // given
         willDoNothing().given(memberService).signup(any(SignupRequest.class));
         // when
-        ResultActions resultActions = 회원_가입_요청(signupRequest);
+        ResultActions resultActions = 회원_가입_요청();
         // then
         회원_가입_요청_성공(resultActions);
     }
@@ -129,7 +144,7 @@ public class MemberControllerTest extends ApiDocument {
         // given
         willThrow(invalidFormatException).given(memberService).signup(any(SignupRequest.class));
         // when
-        ResultActions resultActions = 회원_가입_요청(signupRequest);
+        ResultActions resultActions = 회원_가입_요청();
         // then
         회원_가입_요청_실패(resultActions);
     }
@@ -175,23 +190,43 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 회원_수정_성공() throws Exception {
+    void 회원_닉네임_수정_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).update(any(MemberUpdateRequest.class));
+        willDoNothing().given(memberService).update(any(NicknameUpdateRequest.class));
         // when
-        ResultActions resultActions = 회원_수정_요청(memberUpdateRequest);
+        ResultActions resultActions = 회원_닉네임_수정_요청();
         // then
-        회원_수정_요청_성공(resultActions);
+        회원_닉네임_수정_요청_성공(resultActions);
     }
 
     @Test
-    void 회원_수정_실패() throws Exception {
+    void 회원_닉네임수정_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).update(any(MemberUpdateRequest.class));
+        willThrow(memberNotFoundException).given(memberService).update(any(NicknameUpdateRequest.class));
         // when
-        ResultActions resultActions = 회원_수정_요청(memberUpdateRequest);
+        ResultActions resultActions = 회원_닉네임_수정_요청();
         // then
-        회원_수정_요청_실패(resultActions);
+        회원_닉네임_수정_요청_실패(resultActions);
+    }
+
+    @Test
+    void 회원_프로필_수정_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).updateProfile(any(MemberProfileUpdateRequest.class));
+        // when
+        ResultActions resultActions = 회원_프로필_수정_요청();
+        // then
+        회원_프로필_수정_요청_성공(resultActions);
+    }
+
+    @Test
+    void 회원_프로필_수정_실패() throws Exception {
+        // given
+        willThrow(memberNotFoundException).given(memberService).updateProfile(any(MemberProfileUpdateRequest.class));
+        // when
+        ResultActions resultActions = 회원_프로필_수정_요청();
+        // then
+        회원_프로필_수정_요청_실패(resultActions);
     }
 
     @Test
@@ -234,7 +269,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_비밀번호_수정_요청_비밀번호양식불일치_실패(resultActions);
     }
 
-    private ResultActions 회원_가입_요청(SignupRequest signupRequest) throws Exception {
+    private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -292,24 +327,44 @@ public class MemberControllerTest extends ApiDocument {
                 "get-member-profile-fail");
     }
 
-    private ResultActions 회원_수정_요청(MemberUpdateRequest memberUpdateRequest) throws Exception {
+    private ResultActions 회원_닉네임_수정_요청() throws Exception {
         return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(memberUpdateRequest)));
+                .content(toJson(nicknameUpdateRequest)));
     }
 
-    private void 회원_수정_요청_성공(ResultActions resultActions) throws Exception {
+    private void 회원_닉네임_수정_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
-                "update-member-success");
+                "update-member-nickname-success");
     }
 
-    private void 회원_수정_요청_실패(ResultActions resultActions) throws Exception {
+    private void 회원_닉네임_수정_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
-                "update-member-fail");
+                "update-member-nickname-fail");
+    }
+
+    private ResultActions 회원_프로필_수정_요청() throws Exception {
+        return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/profile")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(memberProfileUpdateRequest)));
+    }
+
+    private void 회원_프로필_수정_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "update-member-profile-success");
+    }
+
+    private void 회원_프로필_수정_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "update-member-profile-fail");
     }
 
     private ResultActions 회원_비밀번호_수정_요청() throws Exception {

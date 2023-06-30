@@ -17,7 +17,10 @@ public class MemberService {
         return null;
     }
 
-    public void update(MemberUpdateRequest memberUpdateRequest) {
+    public void update(NicknameUpdateRequest nicknameUpdateRequest) {
+    }
+
+    public void updateProfile(MemberProfileUpdateRequest memberProfileUpdateRequest) {
     }
 
     public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {

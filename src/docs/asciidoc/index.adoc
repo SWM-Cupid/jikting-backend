@@ -90,22 +90,39 @@ include::{snippets}/get-member-profile-fail/http-request.adoc[]
 .response
 include::{snippets}/get-member-profile-fail/http-response.adoc[]
 
-==== 회원 수정
+==== 회원 닉네임 수정
 ----
 /api/v1/members
 ----
 ===== 성공
 .request
-include::{snippets}/update-member-success/http-request.adoc[]
+include::{snippets}/update-member-nickname-success/http-request.adoc[]
 
 .response
-include::{snippets}/update-member-success/http-response.adoc[]
+include::{snippets}/update-member-nickname-success/http-response.adoc[]
 ===== 실패
 .request
-include::{snippets}/update-member-fail/http-request.adoc[]
+include::{snippets}/update-member-nickname-fail/http-request.adoc[]
 
 .response
-include::{snippets}/update-member-fail/http-response.adoc[]
+include::{snippets}/update-member-nickname-fail/http-response.adoc[]
+
+==== 회원 프로필 수정
+----
+/api/v1/members/profile
+----
+===== 성공
+.request
+include::{snippets}/update-member-profile-success/http-request.adoc[]
+
+.response
+include::{snippets}/update-member-profile-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/update-member-profile-fail/http-request.adoc[]
+
+.response
+include::{snippets}/update-member-profile-fail/http-response.adoc[]
 
 ==== 회원 비밀번호 수정
 ----

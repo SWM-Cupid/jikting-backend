@@ -30,8 +30,14 @@ public class MemberController {
     }
 
     @PatchMapping
-    public ResponseEntity<Void> update(@RequestBody MemberUpdateRequest memberUpdateRequest) {
-        memberService.update(memberUpdateRequest);
+    public ResponseEntity<Void> update(@RequestBody NicknameUpdateRequest nicknameUpdateRequest) {
+        memberService.update(nicknameUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/profile")
+    public ResponseEntity<Void> updateProfile(@RequestBody MemberProfileUpdateRequest memberProfileUpdateRequest) {
+        memberService.updateProfile(memberProfileUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
