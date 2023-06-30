@@ -183,23 +183,23 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 회원수정_성공() throws Exception {
+    void 회원_닉네임_수정_성공() throws Exception {
         // given
         willDoNothing().given(memberService).update(any(MemberUpdateRequest.class));
         // when
-        ResultActions resultActions = 회원수정_요청();
+        ResultActions resultActions = 회원_닉네임수정_요청();
         // then
-        회원수정_요청_성공(resultActions);
+        회원_닉네임수정_요청_성공(resultActions);
     }
 
     @Test
-    void 회원수정_실패() throws Exception {
+    void 회원_닉네임수정_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).update(any(MemberUpdateRequest.class));
         // when
-        ResultActions resultActions = 회원수정_요청();
+        ResultActions resultActions = 회원_닉네임수정_요청();
         // then
-        회원수정_요청_실패(resultActions);
+        회원_닉네임수정_요청_실패(resultActions);
     }
 
     @Test
@@ -280,24 +280,24 @@ public class MemberControllerTest extends ApiDocument {
                 "get-member-profile-fail");
     }
 
-    private ResultActions 회원수정_요청() throws Exception {
+    private ResultActions 회원_닉네임수정_요청() throws Exception {
         return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(memberUpdateRequest)));
     }
 
-    private void 회원수정_요청_성공(ResultActions resultActions) throws Exception {
+    private void 회원_닉네임수정_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
-                "update-member-success");
+                "update-member-nickname-success");
     }
 
-    private void 회원수정_요청_실패(ResultActions resultActions) throws Exception {
+    private void 회원_닉네임수정_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
-                "update-member-fail");
+                "update-member-nickname-fail");
     }
 
     private ResultActions 회원_프로필_수정_요청() throws Exception {
