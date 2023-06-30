@@ -2,10 +2,7 @@ package com.cupid.jikting.member.controller;
 
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.common.dto.ErrorResponse;
-import com.cupid.jikting.common.error.ApplicationError;
-import com.cupid.jikting.common.error.ApplicationException;
-import com.cupid.jikting.common.error.BadRequestException;
-import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.error.*;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,6 +56,7 @@ public class MemberControllerTest extends ApiDocument {
     private MemberProfileResponse memberProfileResponse;
     private ApplicationException invalidFormatException;
     private ApplicationException memberNotFoundException;
+    private ApplicationException passwordNotEqualException;
 
     @MockBean
     private MemberService memberService;
@@ -111,6 +109,7 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
+        passwordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
     }
 
     @Test
@@ -213,6 +212,16 @@ public class MemberControllerTest extends ApiDocument {
         회원_비밀번호_수정_요청_회원정보찾기_실패(resultActions);
     }
 
+    @Test
+    void 회원_비밀번호_수정_비밀번호불일치_실패() throws Exception {
+        // given
+        willThrow(passwordNotEqualException).given(memberService).updatePassword(any(MemberPasswordUpdateRequest.class));
+        // when
+        ResultActions resultActions = 회원_비밀번호_수정_요청();
+        // then
+        회원_비밀번호_수정_요청_비밀번호불일치_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청(SignupRequest signupRequest) throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -309,5 +318,12 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
                 "update-member-password-not-found-member-fail");
+    }
+
+    private void 회원_비밀번호_수정_요청_비밀번호불일치_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(passwordNotEqualException)))),
+                "update-member-password-not-equal-fail");
     }
 }
