@@ -7,6 +7,7 @@ import java.util.List;
 
 @Service
 public class MeetingService {
+
     public List<TeamProfileResponse> getReceivedLikes() {
         return null;
     }
