@@ -7,7 +7,6 @@ import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.team.dto.TeamProfileResponse;
 import com.cupid.jikting.team.service.TeamService;
-import com.cupid.jikting.team.controller.TeamController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
