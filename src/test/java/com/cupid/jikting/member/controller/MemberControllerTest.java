@@ -212,6 +212,16 @@ public class MemberControllerTest extends ApiDocument {
         회원_프로필_수정_요청_성공(resultActions);
     }
 
+    @Test
+    void 회원_프로필_수정_실패() throws Exception {
+        // given
+        willThrow(memberNotFoundException).given(memberService).updateProfile(any(MemberProfileUpdateRequest.class));
+        // when
+        ResultActions resultActions = 회원_프로필_수정_요청();
+        // then
+        회원_프로필_수정_요청_실패(resultActions);
+    }
+
     private ResultActions 회원가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -301,5 +311,12 @@ public class MemberControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
                 "update-member-profile-success");
+    }
+
+    private void 회원_프로필_수정_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "update-member-profile-fail");
     }
 }
