@@ -30,7 +30,7 @@ public class TeamControllerTest extends ApiDocument {
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/teams";
     private static final String LIKE_PATH = "/likes";
-    private static final String SLASH = "/";
+    private static final String PATH_DELIMITER = "/";
     private static final String ID = "1";
     private static final String KEYWORD = "키워드";
     private static final String URL = "http://test-url";
@@ -102,7 +102,7 @@ public class TeamControllerTest extends ApiDocument {
     }
 
     private ResultActions 받은_호감_목록_조회_요청() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + SLASH + ID + LIKE_PATH + "/received")
+        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + LIKE_PATH + "/received")
                 .contextPath(CONTEXT_PATH));
         return resultActions;
     }
@@ -122,7 +122,7 @@ public class TeamControllerTest extends ApiDocument {
     }
 
     private ResultActions 보낸_호감_목록_조회_요청() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + SLASH + ID + LIKE_PATH + "/sent")
+        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + LIKE_PATH + "/sent")
                 .contextPath(CONTEXT_PATH));
         return resultActions;
     }

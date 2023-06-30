@@ -31,7 +31,7 @@ public class RecommendControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/recommends";
-    private static final String SLASH = "/";
+    private static final String PATH_DELIMITER = "/";
     private static final String HOBBY = "취미";
     private static final String PERSONALITY = "성격";
     private static final String URL = "http://test-url";
@@ -127,7 +127,7 @@ public class RecommendControllerTest extends ApiDocument {
     }
 
     private ResultActions 추천팀_조회_요청() throws Exception {
-        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/teams" + SLASH + ID)
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/teams" + PATH_DELIMITER + ID)
                 .contextPath(CONTEXT_PATH));
     }
 
@@ -146,7 +146,7 @@ public class RecommendControllerTest extends ApiDocument {
     }
 
     private ResultActions 호감_보내기_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + SLASH + ID + "/like")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/like")
                 .contextPath(CONTEXT_PATH));
     }
 
