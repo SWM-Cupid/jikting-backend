@@ -1,12 +1,12 @@
-package com.cupid.jikting.meeting.service;
+package com.cupid.jikting.team.service;
 
-import com.cupid.jikting.meeting.dto.TeamProfileResponse;
+import com.cupid.jikting.team.dto.TeamProfileResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class MeetingService {
+public class TeamService {
 
     public List<TeamProfileResponse> getReceivedLikes() {
         return null;

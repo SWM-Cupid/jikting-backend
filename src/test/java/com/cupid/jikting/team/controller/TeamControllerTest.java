@@ -1,12 +1,13 @@
-package com.cupid.jikting.meeting.controller;
+package com.cupid.jikting.team.controller;
 
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.meeting.dto.TeamProfileResponse;
-import com.cupid.jikting.meeting.service.MeetingService;
+import com.cupid.jikting.team.dto.TeamProfileResponse;
+import com.cupid.jikting.team.service.TeamService;
+import com.cupid.jikting.team.controller.TeamController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,17 +18,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(MeetingController.class)
-public class MeetingControllerTest extends ApiDocument {
+@WebMvcTest(TeamController.class)
+public class TeamControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
-    private static final String DOMAIN_ROOT_PATH = "/meetings";
+    private static final String DOMAIN_ROOT_PATH = "/teams";
     private static final String LIKE_PATH = "/likes";
     private static final String KEYWORD = "키워드";
     private static final String URL = "http://test-url";
@@ -37,7 +39,7 @@ public class MeetingControllerTest extends ApiDocument {
     private ApplicationException teamNotFoundException;
 
     @MockBean
-    private MeetingService meetingService;
+    private TeamService teamService;
 
     @BeforeEach
     void setUp() {
@@ -99,7 +101,7 @@ public class MeetingControllerTest extends ApiDocument {
     }
 
     private ResultActions 받은_호감_목록_조회_요청() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + LIKE_PATH + "/received")
+        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + SLASH + ID + LIKE_PATH + "/received")
                 .contextPath(CONTEXT_PATH));
         return resultActions;
     }
@@ -119,7 +121,7 @@ public class MeetingControllerTest extends ApiDocument {
     }
 
     private ResultActions 보낸_호감_목록_조회_요청() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + LIKE_PATH + "/sent")
+        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + SLASH + ID + LIKE_PATH + "/sent")
                 .contextPath(CONTEXT_PATH));
         return resultActions;
     }
