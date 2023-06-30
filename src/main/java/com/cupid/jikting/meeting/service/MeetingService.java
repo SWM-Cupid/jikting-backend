@@ -11,4 +11,8 @@ public class MeetingService {
     public List<TeamProfileResponse> getReceivedLikes() {
         return null;
     }
+
+    public List<TeamProfileResponse> getSentLikes() {
+        return null;
+    }
 }

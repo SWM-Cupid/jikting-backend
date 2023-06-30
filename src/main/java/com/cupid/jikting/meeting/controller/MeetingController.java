@@ -21,4 +21,9 @@ public class MeetingController {
     public ResponseEntity<List<TeamProfileResponse>> getReceivedLikes() {
         return ResponseEntity.ok().body(meetingService.getReceivedLikes());
     }
+
+    @GetMapping("/likes/sent")
+    public ResponseEntity<List<TeamProfileResponse>> getSentLikes() {
+        return ResponseEntity.ok().body(meetingService.getSentLikes());
+    }
 }
