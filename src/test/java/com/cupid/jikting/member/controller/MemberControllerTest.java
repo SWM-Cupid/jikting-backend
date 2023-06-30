@@ -66,6 +66,7 @@ public class MemberControllerTest extends ApiDocument {
     private ApplicationException passwordNotEqualException;
     private ApplicationException wrongFormException;
     private ApplicationException wrongFileExtensionException;
+    private ApplicationException wrongFileSizeException;
 
     @MockBean
     private MemberService memberService;
@@ -135,6 +136,7 @@ public class MemberControllerTest extends ApiDocument {
         passwordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
         wrongFormException = new WrongFromException(ApplicationError.INVALID_FORMAT);
         wrongFileExtensionException = new WrongFromException(ApplicationError.INVALID_FILE_EXTENSION);
+        wrongFileSizeException = new WrongFromException(ApplicationError.INVALID_FILE_SIZE);
     }
 
     @Test
@@ -307,6 +309,16 @@ public class MemberControllerTest extends ApiDocument {
         회원_이미지_수정_요청_파일형식미지원_실패(resultActions);
     }
 
+    @Test
+    void 회원_이미지_수정_파일크기미지원_실패() throws Exception {
+        // given
+        willThrow(wrongFileSizeException).given(memberService).updateImage(any(MultipartFile.class));
+        // when
+        ResultActions resultActions = 회원_이미지_수정_요청();
+        // then
+        회원_이미지_수정_요청_파일크기미지원_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -462,5 +474,12 @@ public class MemberControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest()),
                 "update-member-image-invalid-file-extension-fail");
+    }
+
+    private void 회원_이미지_수정_요청_파일크기미지원_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(wrongFileSizeException)))),
+                "update-member-image-invalid-file-size-fail");
     }
 }
