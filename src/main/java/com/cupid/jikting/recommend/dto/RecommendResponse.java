@@ -8,7 +8,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RecommendedTeamResponse {
+public class RecommendResponse {
 
     private Long recommendId;
     private List<MemberResponse> members;

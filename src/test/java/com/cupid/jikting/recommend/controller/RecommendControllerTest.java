@@ -7,7 +7,7 @@ import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.recommend.dto.ImageResponse;
 import com.cupid.jikting.recommend.dto.MemberResponse;
-import com.cupid.jikting.recommend.dto.RecommendedTeamResponse;
+import com.cupid.jikting.recommend.dto.RecommendResponse;
 import com.cupid.jikting.recommend.service.RecommendService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class RecommendControllerTest extends ApiDocument {
     private static final Long ID = 1L;
     private static final boolean TRUE = true;
 
-    private RecommendedTeamResponse recommendedTeamResponse;
+    private List<RecommendResponse> recommendResponses;
     private ApplicationException teamNotFoundException;
 
     @MockBean
@@ -75,18 +75,21 @@ public class RecommendControllerTest extends ApiDocument {
                         .images(imageResponses)
                         .build())
                 .collect(Collectors.toList());
-        recommendedTeamResponse = RecommendedTeamResponse.builder()
+        RecommendResponse recommendResponse = RecommendResponse.builder()
                 .recommendId(ID)
                 .members(memberResponses)
                 .personalities(personalities)
                 .build();
+        this.recommendResponses = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> recommendResponse)
+                .collect(Collectors.toList());
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
     }
 
     @Test
     void 추천팀_조회_성공() throws Exception {
         //given
-        willReturn(recommendedTeamResponse).given(recommendService).getRecommendedTeam(anyLong());
+        willReturn(recommendResponses).given(recommendService).getRecommendedTeam(anyLong());
         //when
         ResultActions resultActions = 추천팀_조회_요청();
         //then
@@ -124,7 +127,7 @@ public class RecommendControllerTest extends ApiDocument {
     }
 
     private ResultActions 추천팀_조회_요청() throws Exception {
-        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + SLASH + ID)
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/teams" + SLASH + ID)
                 .contextPath(CONTEXT_PATH));
     }
 
@@ -133,6 +136,7 @@ public class RecommendControllerTest extends ApiDocument {
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(recommendedTeamResponse))),
                 "get-recommends-success");
+                        .andExpect(content().json(toJson(recommendResponses))),
     }
 
     private void 추천팀_조회_요청_실패(ResultActions resultActions) throws Exception {
