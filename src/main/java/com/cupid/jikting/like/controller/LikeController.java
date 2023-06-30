@@ -25,8 +25,9 @@ public class LikeController {
         return ResponseEntity.ok().body(likeService.getSentLikes());
     }
 
-    @GetMapping("/{teamId}/likes/sent")
-    public ResponseEntity<List<TeamProfileResponse>> getSentLikes(@PathVariable Long teamId) {
-        return ResponseEntity.ok().body(teamService.getSentLikes(teamId));
+    @PostMapping("/{likeId}/accept")
+    public ResponseEntity<Void> acceptLike(@PathVariable Long likeId) {
+        likeService.acceptLike(likeId);
+        return ResponseEntity.ok().build();
     }
 }

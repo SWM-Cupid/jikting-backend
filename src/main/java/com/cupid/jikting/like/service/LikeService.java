@@ -15,4 +15,7 @@ public class LikeService {
     public List<LikeResponse> getSentLikes() {
         return null;
     }
+
+    public void acceptLike(Long likeId) {
+    }
 }
