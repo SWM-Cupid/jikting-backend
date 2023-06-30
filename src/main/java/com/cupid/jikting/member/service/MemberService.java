@@ -1,5 +1,6 @@
 package com.cupid.jikting.member.service;
 
+import com.cupid.jikting.member.dto.MemberProfileResponse;
 import com.cupid.jikting.member.dto.MemberResponse;
 import com.cupid.jikting.member.dto.MemberUpdateRequest;
 import com.cupid.jikting.member.dto.SignupRequest;
@@ -12,6 +13,10 @@ public class MemberService {
     }
 
     public MemberResponse get(Long memberId) {
+        return null;
+    }
+
+    public MemberProfileResponse getProfile(Long memberId) {
         return null;
     }
 

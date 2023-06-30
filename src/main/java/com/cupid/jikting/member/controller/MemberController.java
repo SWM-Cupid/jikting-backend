@@ -1,5 +1,6 @@
 package com.cupid.jikting.member.controller;
 
+import com.cupid.jikting.member.dto.MemberProfileResponse;
 import com.cupid.jikting.member.dto.MemberResponse;
 import com.cupid.jikting.member.dto.MemberUpdateRequest;
 import com.cupid.jikting.member.dto.SignupRequest;
@@ -24,6 +25,11 @@ public class MemberController {
     @GetMapping
     public ResponseEntity<MemberResponse> get() {
         return ResponseEntity.ok().body(memberService.get(1L));
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<MemberProfileResponse> getProfile() {
+        return ResponseEntity.ok().body(memberService.getProfile(1L));
     }
 
     @PatchMapping
