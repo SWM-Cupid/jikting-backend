@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public class RecommendService {
 
-    public List<RecommendResponse> getRecommendedTeam(Long teamId) {
+    public List<RecommendResponse> get() {
         return null;
     }
 

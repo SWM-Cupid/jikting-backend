@@ -89,7 +89,7 @@ public class RecommendControllerTest extends ApiDocument {
     @Test
     void 추천팀_조회_성공() throws Exception {
         //given
-        willReturn(recommendResponses).given(recommendService).getRecommendedTeam(anyLong());
+        willReturn(recommendResponses).given(recommendService).get();
         //when
         ResultActions resultActions = 추천팀_조회_요청();
         //then
@@ -99,7 +99,7 @@ public class RecommendControllerTest extends ApiDocument {
     @Test
     void 추천팀_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(recommendService).getRecommendedTeam(anyLong());
+        willThrow(teamNotFoundException).given(recommendService).get();
         //when
         ResultActions resultActions = 추천팀_조회_요청();
         //then
@@ -127,7 +127,7 @@ public class RecommendControllerTest extends ApiDocument {
     }
 
     private ResultActions 추천팀_조회_요청() throws Exception {
-        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/teams" + PATH_DELIMITER + ID)
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH));
     }
 
