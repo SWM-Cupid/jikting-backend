@@ -134,15 +134,16 @@ public class RecommendControllerTest extends ApiDocument {
     private void 추천팀_조회_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
+                        .andExpect(content().json(toJson(recommendedTeamResponse))),
+                "get-recommends-success");
                         .andExpect(content().json(toJson(recommendResponses))),
-                "get-recommended-team-success");
     }
 
     private void 추천팀_조회_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
-                "get-recommended-team-fail");
+                "get-recommends-fail");
     }
 
     private ResultActions 호감_보내기_요청() throws Exception {
