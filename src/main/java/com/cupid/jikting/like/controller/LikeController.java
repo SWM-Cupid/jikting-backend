@@ -16,13 +16,13 @@ public class LikeController {
     private final LikeService likeService;
 
     @GetMapping("/received")
-    public ResponseEntity<List<LikeResponse>> getReceivedLikes() {
-        return ResponseEntity.ok().body(likeService.getReceivedLikes());
+    public ResponseEntity<List<LikeResponse>> getAllReceivedLike() {
+        return ResponseEntity.ok().body(likeService.getAllReceivedLike());
     }
 
     @GetMapping("/sent")
-    public ResponseEntity<List<LikeResponse>> getSentLikes() {
-        return ResponseEntity.ok().body(likeService.getSentLikes());
+    public ResponseEntity<List<LikeResponse>> getAllSentLike() {
+        return ResponseEntity.ok().body(likeService.getAllSentLike());
     }
 
     @PostMapping("/{likeId}/accept")

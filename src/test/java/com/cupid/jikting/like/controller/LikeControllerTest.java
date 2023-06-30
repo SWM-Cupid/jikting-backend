@@ -64,7 +64,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 받은_호감_목록_조회_성공() throws Exception {
         //given
-        willReturn(likeResponses).given(likeService).getReceivedLikes();
+        willReturn(likeResponses).given(likeService).getAllReceivedLike();
         //when
         ResultActions resultActions = 받은_호감_목록_조회_요청();
         //then
@@ -74,7 +74,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 받은_호감_목록_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(likeService).getReceivedLikes();
+        willThrow(teamNotFoundException).given(likeService).getAllReceivedLike();
         //when
         ResultActions resultActions = 받은_호감_목록_조회_요청();
         //then
@@ -84,7 +84,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 보낸_호감_목록_조회_성공() throws Exception {
         //given
-        willReturn(likeResponses).given(likeService).getSentLikes();
+        willReturn(likeResponses).given(likeService).getAllSentLike();
         //when
         ResultActions resultActions = 보낸_호감_목록_조회_요청();
         //then
@@ -94,7 +94,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 보낸_호감_목록_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(likeService).getSentLikes();
+        willThrow(teamNotFoundException).given(likeService).getAllSentLike();
         //when
         ResultActions resultActions = 보낸_호감_목록_조회_요청();
         //then
