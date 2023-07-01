@@ -283,6 +283,16 @@ public class MemberControllerTest extends ApiDocument {
         회원_탈퇴_요청_성공(resultActions);
     }
 
+    @Test
+    void 회원_탈퇴_회원정보찾기_실패() throws Exception {
+        // given
+        willThrow(memberNotFoundException).given(memberService).withdraw(anyLong(), any(PasswordRequest.class));
+        // when
+        ResultActions resultActions = 회원_탈퇴_요청();
+        // then
+        회원_탈퇴_요청_회원정보찾기_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -426,5 +436,12 @@ public class MemberControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
                 "delete-member-success");
+    }
+
+    private void 회원_탈퇴_요청_회원정보찾기_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "delete-member-not-found-member-fail");
     }
 }
