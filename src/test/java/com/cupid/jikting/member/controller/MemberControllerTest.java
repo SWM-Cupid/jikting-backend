@@ -53,6 +53,7 @@ public class MemberControllerTest extends ApiDocument {
     private NicknameUpdateRequest nicknameUpdateRequest;
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private PasswordUpdateRequest passwordUpdateRequest;
+    private PasswordRequest passwordRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private ApplicationException invalidFormatException;
@@ -103,6 +104,9 @@ public class MemberControllerTest extends ApiDocument {
         passwordUpdateRequest = PasswordUpdateRequest.builder()
                 .password(PASSWORD)
                 .newPassword(NEW_PASSWORD)
+                .build();
+        passwordRequest = PasswordRequest.builder()
+                .password(PASSWORD)
                 .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
@@ -269,6 +273,16 @@ public class MemberControllerTest extends ApiDocument {
         회원_비밀번호_수정_요청_비밀번호양식불일치_실패(resultActions);
     }
 
+    @Test
+    void 회원_탈퇴_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).withdraw(anyLong(), any(PasswordRequest.class));
+        // when
+        ResultActions resultActions = 회원_탈퇴_요청();
+        // then
+        회원_탈퇴_요청_성공(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -399,5 +413,18 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
                 "update-member-password-wrong-form-fail");
+    }
+
+    private ResultActions 회원_탈퇴_요청() throws Exception {
+        return mockMvc.perform(delete(CONTEXT_PATH + DOMAIN_ROOT_PATH)
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(passwordRequest)));
+    }
+
+    private void 회원_탈퇴_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "delete-member-success");
     }
 }
