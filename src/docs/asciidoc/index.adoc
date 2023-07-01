@@ -164,6 +164,9 @@ include::{snippets}/update-member-password-not-found-member-fail/http-request.ad
 .response - 회원을 찾을 수 없음
 include::{snippets}/delete-member-not-found-member-fail/http-response.adoc[]
 
+.response - 비밀번호 불일치
+include::{snippets}/delete-member-not-equal-password-fail/http-response.adoc[]
+
 === 팀 관련 기능
 ==== 받은 호감 목록 조회
 ----
