@@ -47,7 +47,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping
+    @PostMapping("/withdraw")
     public ResponseEntity<Void> withdraw(@RequestBody PasswordRequest passwordRequest) {
         memberService.withdraw(1L, passwordRequest);
         return ResponseEntity.ok().build();
