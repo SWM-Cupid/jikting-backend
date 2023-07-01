@@ -142,7 +142,7 @@ include::{snippets}/update-member-password-not-found-member-fail/http-request.ad
 include::{snippets}/update-member-password-not-found-member-fail/http-response.adoc[]
 
 .response - 기존 비밀번호 불일치
-include::{snippets}/update-member-password-not-equal-fail/http-response.adoc[]
+include::{snippets}/update-member-password-not-equal-password-fail/http-response.adoc[]
 
 .response - 비밀번호 양식 불일치
 include::{snippets}/update-member-password-wrong-form-fail/http-response.adoc[]
