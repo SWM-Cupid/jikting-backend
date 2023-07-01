@@ -436,7 +436,7 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 회원_탈퇴_요청() throws Exception {
-        return mockMvc.perform(delete(CONTEXT_PATH + DOMAIN_ROOT_PATH)
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/withdraw")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(passwordRequest)));
