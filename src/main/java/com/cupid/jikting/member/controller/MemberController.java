@@ -46,4 +46,10 @@ public class MemberController {
         memberService.updatePassword(passwordUpdateRequest);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> withdraw(@RequestBody PasswordRequest passwordRequest) {
+        memberService.withdraw(1L, passwordRequest);
+        return ResponseEntity.ok().build();
+    }
 }
