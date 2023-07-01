@@ -25,4 +25,7 @@ public class MemberService {
 
     public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
     }
+
+    public void withdraw(Long memberId, PasswordRequest passwordRequest) {
+    }
 }
