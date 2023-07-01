@@ -425,7 +425,7 @@ public class MemberControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(passwordNotEqualException)))),
-                "update-member-password-not-equal-fail");
+                "update-member-password-not-equal-password-fail");
     }
 
     private void 회원_비밀번호_수정_요청_비밀번호양식불일치_실패(ResultActions resultActions) throws Exception {
