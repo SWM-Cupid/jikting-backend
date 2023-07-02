@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ApplicationError {
 
-    INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "C001", "인증번호가 일치하지 않습니다."),
+    VERIFICATION_CODE_NOT_EQUAL(HttpStatus.BAD_REQUEST, "C001", "인증번호가 일치하지 않습니다."),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "C002", "잘못된 양식입니다."),
     INVALID_AUTHORITY(HttpStatus.BAD_REQUEST, "C003", "잘못된 권한입니다."),
     INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "C004", "지원하지 않는 파일 확장자입니다."),
