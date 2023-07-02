@@ -458,11 +458,11 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).resetPassword(any(PasswordResetVerificationCodeRequest.class));
+        willDoNothing().given(memberService).resetPassword(any(PasswordRequest.class));
         // when
-        ResultActions resultActions = 비밀번호_재설정_인증_요청();
+        ResultActions resultActions = 비밀번호_재설정_요청();
         // then
-        비밀번호_재설정_인증_요청_성공(resultActions);
+        비밀번호_재설정_요청_성공(resultActions);
     }
 
     private ResultActions 회원_가입_요청() throws Exception {
@@ -737,5 +737,18 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(verificationCodeNotEqualException)))),
                 "reset-password-verify-fail");
+    }
+
+    private ResultActions 비밀번호_재설정_요청() throws Exception {
+        return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/password/reset")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(passwordRequest)));
+    }
+
+    private void 비밀번호_재설정_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "reset-password-success");
     }
 }
