@@ -192,7 +192,7 @@ include::{snippets}/delete-member-not-equal-password-fail/http-response.adoc[]
 
 ==== 아이디 찾기 인증번호 발급
 ----
-/api/v1/members/search/username/code
+/api/v1/members/username/search/code
 ----
 ===== 성공
 .request
@@ -209,7 +209,7 @@ include::{snippets}/search-username-create-verification-code-fail/http-response.
 
 ==== 아이디 찾기 인증
 ----
-/api/v1/members/search/username/verification
+/api/v1/members/username/search/verification
 ----
 ===== 성공
 .request

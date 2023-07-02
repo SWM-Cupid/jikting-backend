@@ -659,7 +659,7 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 아이디_찾기_인증번호_발급_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username/code")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/username/search/code")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(usernameSearchVerificationCodeRequest)));
@@ -679,7 +679,7 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 아이디_찾기_인증_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username/verification")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/username/search/verification")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(verificationRequest)));
