@@ -84,8 +84,8 @@ public class MemberController {
     }
 
     @PatchMapping("/password/reset")
-    public ResponseEntity<Void> resetPassword(@RequestBody PasswordRequest passwordRequest) {
-        memberService.resetPassword(passwordRequest);
+    public ResponseEntity<Void> resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
+        memberService.resetPassword(passwordResetRequest);
         return ResponseEntity.ok().build();
     }
 }

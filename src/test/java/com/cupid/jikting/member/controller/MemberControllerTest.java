@@ -64,6 +64,7 @@ public class MemberControllerTest extends ApiDocument {
     private UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest;
     private VerificationRequest verificationRequest;
     private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
+    private PasswordResetRequest passwordResetRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private UsernameResponse usernameResponse;
@@ -133,6 +134,10 @@ public class MemberControllerTest extends ApiDocument {
                 .username(USERNAME)
                 .name(NAME)
                 .phone(PHONE)
+                .build();
+        passwordResetRequest = PasswordResetRequest.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
                 .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
@@ -458,7 +463,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).resetPassword(any(PasswordRequest.class));
+        willDoNothing().given(memberService).resetPassword(any(PasswordResetRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_요청();
         // then
@@ -635,7 +640,7 @@ public class MemberControllerTest extends ApiDocument {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/withdraw")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(passwordRequest)));
+                .content(toJson(withdrawRequest)));
     }
 
     private void 회원_탈퇴_요청_성공(ResultActions resultActions) throws Exception {
@@ -743,7 +748,7 @@ public class MemberControllerTest extends ApiDocument {
         return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/password/reset")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(passwordRequest)));
+                .content(toJson(passwordResetRequest)));
     }
 
     private void 비밀번호_재설정_요청_성공(ResultActions resultActions) throws Exception {
