@@ -61,8 +61,8 @@ public class MemberController {
     }
 
     @PostMapping("/search/username/code")
-    public ResponseEntity<Void> createVerificationCodeForSearchUsername(@RequestBody UsernameSearchRequest usernameSearchRequest) {
-        memberService.createVerificationCodeForSearchUsername(usernameSearchRequest);
+    public ResponseEntity<Void> createVerificationCodeForSearchUsername(@RequestBody UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest) {
+        memberService.createVerificationCodeForSearchUsername(usernameSearchVerificationCodeRequest);
         return ResponseEntity.ok().build();
     }
 

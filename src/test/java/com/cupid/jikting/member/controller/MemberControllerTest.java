@@ -61,7 +61,7 @@ public class MemberControllerTest extends ApiDocument {
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private PasswordUpdateRequest passwordUpdateRequest;
     private PasswordRequest passwordRequest;
-    private UsernameSearchRequest usernameSearchRequest;
+    private UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest;
     private VerificationRequest verificationRequest;
     private PasswordResetRequest passwordResetRequest;
     private MemberResponse memberResponse;
@@ -122,7 +122,7 @@ public class MemberControllerTest extends ApiDocument {
         passwordRequest = PasswordRequest.builder()
                 .password(PASSWORD)
                 .build();
-        usernameSearchRequest = UsernameSearchRequest.builder()
+        usernameSearchVerificationCodeRequest = UsernameSearchVerificationCodeRequest.builder()
                 .username(USERNAME)
                 .phone(PHONE)
                 .build();
@@ -378,7 +378,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 아이디_찾기_인증번호_발급_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchRequest.class));
+        willDoNothing().given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 아이디_찾기_인증번호_발급_요청();
         // then
@@ -388,7 +388,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 아이디_찾기_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchRequest.class));
+        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 아이디_찾기_인증번호_발급_요청();
         // then
@@ -453,6 +453,16 @@ public class MemberControllerTest extends ApiDocument {
         ResultActions resultActions = 비밀번호_재설정_인증_요청();
         // then
         비밀번호_재설정_인증_요청_실패(resultActions);
+    }
+
+    @Test
+    void 비밀번호_재설정_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).resetPassword(any(PasswordResetRequest.class));
+        // when
+        ResultActions resultActions = 비밀번호_재설정_인증_요청();
+        // then
+        비밀번호_재설정_인증_요청_성공(resultActions);
     }
 
     private ResultActions 회원_가입_요청() throws Exception {
@@ -652,7 +662,7 @@ public class MemberControllerTest extends ApiDocument {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username/code")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(usernameSearchRequest)));
+                .content(toJson(usernameSearchVerificationCodeRequest)));
     }
 
     private void 아이디_찾기_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
