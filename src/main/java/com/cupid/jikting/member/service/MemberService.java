@@ -29,4 +29,8 @@ public class MemberService {
 
     public void updateImage(MultipartFile multipartFile) {
     }
+
+    public VerificationCodeResponse resetPassword(PasswordResetRequest passwordResetRequest) {
+        return null;
+    }
 }
