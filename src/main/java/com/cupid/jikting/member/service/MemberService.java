@@ -25,4 +25,8 @@ public class MemberService {
 
     public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
     }
+
+    public UsernameResponse verifyForSearchUsername(VerificationRequest verificationRequest) {
+        return null;
+    }
 }
