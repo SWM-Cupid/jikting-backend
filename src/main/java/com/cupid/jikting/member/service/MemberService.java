@@ -26,7 +26,6 @@ public class MemberService {
     public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
     }
 
-    public VerificationCodeResponse createVerificationCodeForSearchUsername(UsernameSearchRequest usernameSearchRequest) {
-        return null;
+    public void createVerificationCodeForSearchUsername(UsernameSearchRequest usernameSearchRequest) {
     }
 }
