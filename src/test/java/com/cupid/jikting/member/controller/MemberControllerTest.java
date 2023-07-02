@@ -57,7 +57,6 @@ public class MemberControllerTest extends ApiDocument {
     private UsernameSearchRequest usernameSearchRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
-    private VerificationCodeResponse verificationCodeResponse;
     private ApplicationException invalidFormatException;
     private ApplicationException memberNotFoundException;
     private ApplicationException passwordNotEqualException;
@@ -130,10 +129,6 @@ public class MemberControllerTest extends ApiDocument {
                 .personalities(personalities)
                 .hobbies(hobbies)
                 .description(DESCRIPTION)
-                .build();
-        verificationCodeResponse = VerificationCodeResponse
-                .builder()
-                .verificationCode(VERIFICATION_CODE)
                 .build();
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
@@ -285,7 +280,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 아이디_찾기_인증번호_발급_성공() throws Exception {
         // given
-        willReturn(verificationCodeResponse).given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchRequest.class));
+        willDoNothing().given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchRequest.class));
         // when
         ResultActions resultActions = 아이디_찾기_인증번호_발급_요청();
         // then
@@ -443,8 +438,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private void 아이디_찾기_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
-                        .andExpect(status().isOk())
-                        .andExpect(content().json(toJson(verificationCodeResponse))),
+                        .andExpect(status().isOk()),
                 "search-username-create-verification-code-success");
     }
 
