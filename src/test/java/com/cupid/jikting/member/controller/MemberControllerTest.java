@@ -54,11 +54,13 @@ public class MemberControllerTest extends ApiDocument {
     private static final String ORIGINAL_FILENAME = "image.png";
     private static final String CONTENT_TYPE = "image/png";
     private static final String IMAGE_FILE = "이미지 파일";
+    private static final String VERIFICATION_CODE = "인증번호";
 
     private SignupRequest signupRequest;
     private NicknameUpdateRequest nicknameUpdateRequest;
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private PasswordUpdateRequest passwordUpdateRequest;
+    private VerificationRequest verificationRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private ApplicationException invalidFormatException;
@@ -111,6 +113,9 @@ public class MemberControllerTest extends ApiDocument {
         passwordUpdateRequest = PasswordUpdateRequest.builder()
                 .password(PASSWORD)
                 .newPassword(NEW_PASSWORD)
+                .build();
+        verificationRequest = VerificationRequest.builder()
+                .verificationCode(VERIFICATION_CODE)
                 .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
@@ -319,6 +324,16 @@ public class MemberControllerTest extends ApiDocument {
         회원_이미지_수정_요청_파일크기미지원_실패(resultActions);
     }
 
+    @Test
+    void 비밀번호_재설정_인증_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).verifyForResetPassword(any(VerificationRequest.class));
+        // when
+        ResultActions resultActions = 비밀번호_재설정_인증_요청();
+        // then
+        비밀번호_재설정_인증_요청_성공(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -483,5 +498,18 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFileSizeException)))),
                 "update-member-image-invalid-file-size-fail");
+    }
+
+    private ResultActions 비밀번호_재설정_인증_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/reset/password/verification")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(verificationRequest)));
+    }
+
+    private void 비밀번호_재설정_인증_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "reset-password-verify-success");
     }
 }
