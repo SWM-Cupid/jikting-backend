@@ -258,6 +258,17 @@ include::{snippets}/reset-password-verify-fail/http-request.adoc[]
 .response
 include::{snippets}/reset-password-verify-fail/http-response.adoc[]
 
+==== 비밀번호 재설정
+----
+/api/v1/members/password/reset
+----
+===== 성공
+.request
+include::{snippets}/reset-password-success/http-request.adoc[]
+
+.response
+include::{snippets}/reset-password-success/http-response.adoc[]
+
 === 추천 관련 기능
 ==== 추천 팀 조회
 ----
