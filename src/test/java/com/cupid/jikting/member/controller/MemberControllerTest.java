@@ -62,6 +62,7 @@ public class MemberControllerTest extends ApiDocument {
     private ApplicationException memberNotFoundException;
     private ApplicationException passwordNotEqualException;
     private ApplicationException wrongFormException;
+    private ApplicationException phoneNotEqualException;
 
     @MockBean
     private MemberService memberService;
@@ -138,6 +139,7 @@ public class MemberControllerTest extends ApiDocument {
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         passwordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
         wrongFormException = new WrongFromException(ApplicationError.INVALID_FORMAT);
+        phoneNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_PHONE);
     }
 
     @Test
@@ -300,6 +302,16 @@ public class MemberControllerTest extends ApiDocument {
         아이디_찾기_요청_회원정보찾기_실패(resultActions);
     }
 
+    @Test
+    void 아이디_찾기_전화번호불일치_실패() throws Exception {
+        // given
+        willThrow(phoneNotEqualException).given(memberService).searchUsername(any(UsernameSearchRequest.class));
+        // when
+        ResultActions resultActions = 아이디_찾기_요청();
+        // then
+        아이디_찾기_요청_전화번호불일치_실패(resultActions);
+    }
+
     private ResultActions 아이디_찾기_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username")
                 .contextPath(CONTEXT_PATH)
@@ -451,5 +463,12 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
                 "search-username-not-found-member-fail");
+    }
+
+    private void 아이디_찾기_요청_전화번호불일치_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(phoneNotEqualException)))),
+                "search-username-not-equal-phone-fail");
     }
 }
