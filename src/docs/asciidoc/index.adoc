@@ -309,3 +309,19 @@ include::{snippets}/accept-like-fail/http-request.adoc[]
 
 .response
 include::{snippets}/accept-like-fail/http-response.adoc[]
+==== 받은 호감 거절
+----
+/api/v1/likes/{likeId}/decline
+----
+===== 성공
+.request
+include::{snippets}/decline-like-success/http-request.adoc[]
+
+.response
+include::{snippets}/decline-like-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/decline-like-fail/http-request.adoc[]
+
+.response
+include::{snippets}/decline-like-fail/http-response.adoc[]
