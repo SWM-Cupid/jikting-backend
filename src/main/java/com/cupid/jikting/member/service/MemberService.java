@@ -45,4 +45,7 @@ public class MemberService {
 
     public void verifyForResetPassword(VerificationRequest verificationRequest) {
     }
+
+    public void resetPassword(PasswordRequest passwordRequest) {
+    }
 }
