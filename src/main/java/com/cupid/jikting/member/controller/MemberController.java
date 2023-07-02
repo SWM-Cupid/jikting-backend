@@ -5,6 +5,7 @@ import com.cupid.jikting.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
@@ -44,6 +45,12 @@ public class MemberController {
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest) {
         memberService.updatePassword(passwordUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/image")
+    public ResponseEntity<Void> updateImage(@RequestPart("file") MultipartFile multipartFile) {
+        memberService.updateImage(multipartFile);
         return ResponseEntity.ok().build();
     }
 }
