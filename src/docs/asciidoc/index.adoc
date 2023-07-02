@@ -275,6 +275,9 @@ include::{snippets}/reset-password-not-found-member-fail/http-request.adoc[]
 .response - 회원을 찾을 수 없음
 include::{snippets}/reset-password-not-found-member-fail/http-response.adoc[]
 
+.response - 비밀번호 양식 불일치
+include::{snippets}/reset-password-wrong-form-fail/http-response.adoc[]
+
 === 추천 관련 기능
 ==== 추천 팀 조회
 ----
