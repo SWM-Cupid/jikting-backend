@@ -13,5 +13,5 @@ public class TeamDetailResponse {
     private Long likeId;
     private String teamName;
     private List<String> keywords;
-    private List<MemberResponse> members;
+    private List<MemberProfileResponse> members;
 }
