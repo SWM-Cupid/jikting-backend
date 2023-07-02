@@ -46,4 +46,9 @@ public class MemberController {
         memberService.updatePassword(passwordUpdateRequest);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/search/username")
+    public ResponseEntity<VerificationCodeResponse> searchUsername(@RequestBody UsernameSearchRequest usernameSearchRequest) {
+        return ResponseEntity.ok().body(memberService.searchUsername(usernameSearchRequest));
+    }
 }
