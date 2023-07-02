@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ApplicationError {
 
-    INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "C001", "인증번호가 일치하지 않습니다."),
+    VERIFICATION_CODE_NOT_EQUAL(HttpStatus.BAD_REQUEST, "C001", "인증번호가 일치하지 않습니다."),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "C002", "잘못된 양식입니다."),
     INVALID_AUTHORITY(HttpStatus.BAD_REQUEST, "C003", "잘못된 권한입니다."),
     INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "C004", "지원하지 않는 파일 확장자입니다."),
@@ -23,7 +23,6 @@ public enum ApplicationError {
     DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "U005", "해당 닉네임이 이미 존재합니다."),
     INVALID_COMPANY(HttpStatus.BAD_REQUEST, "U006", "지원하지 않는 회사입니다."),
     NOT_EQUAL_ID_OR_PASSWORD(HttpStatus.BAD_REQUEST, "U007", "아이디 또는 비밀번호가 일치하지 않습니다."),
-    NOT_EQUAL_PHONE(HttpStatus.BAD_REQUEST, "U008", "전화번호가 일치하지 않습니다."),
 
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "T001", "팀을 찾을 수 없습니다."),
     GENDER_MISMATCH(HttpStatus.BAD_REQUEST, "T002", "해당 성별은 팀에 참여할 수 없습니다."),

@@ -35,4 +35,8 @@ public class MemberService {
 
     public void createVerificationCodeForSearchUsername(UsernameSearchRequest usernameSearchRequest) {
     }
+
+    public UsernameResponse verifyForSearchUsername(VerificationRequest verificationRequest) {
+        return null;
+    }
 }

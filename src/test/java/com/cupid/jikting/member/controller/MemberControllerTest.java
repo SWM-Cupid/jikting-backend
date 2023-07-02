@@ -62,14 +62,17 @@ public class MemberControllerTest extends ApiDocument {
     private PasswordUpdateRequest passwordUpdateRequest;
     private PasswordRequest passwordRequest;
     private UsernameSearchRequest usernameSearchRequest;
+    private VerificationRequest verificationRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
+    private UsernameResponse usernameResponse;
     private ApplicationException invalidFormatException;
     private ApplicationException memberNotFoundException;
     private ApplicationException passwordNotEqualException;
     private ApplicationException wrongFormException;
     private ApplicationException wrongFileExtensionException;
     private ApplicationException wrongFileSizeException;
+    private ApplicationException verificationCodeNotEqualException;
 
     @MockBean
     private MemberService memberService;
@@ -122,6 +125,9 @@ public class MemberControllerTest extends ApiDocument {
                 .username(USERNAME)
                 .phone(PHONE)
                 .build();
+        verificationRequest = VerificationRequest.builder()
+                .verificationCode(VERIFICATION_CODE)
+                .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
                 .company(COMPANY)
@@ -141,12 +147,16 @@ public class MemberControllerTest extends ApiDocument {
                 .hobbies(hobbies)
                 .description(DESCRIPTION)
                 .build();
+        usernameResponse = UsernameResponse.builder()
+                .username(USERNAME)
+                .build();
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         passwordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
         wrongFormException = new WrongFromException(ApplicationError.INVALID_FORMAT);
         wrongFileExtensionException = new WrongFromException(ApplicationError.INVALID_FILE_EXTENSION);
         wrongFileSizeException = new WrongFromException(ApplicationError.INVALID_FILE_SIZE);
+        verificationCodeNotEqualException = new NotEqualException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
     }
 
     @Test
@@ -379,6 +389,26 @@ public class MemberControllerTest extends ApiDocument {
         아이디_찾기_인증번호_발급_요청_실패(resultActions);
     }
 
+    @Test
+    void 아이디_찾기_인증_성공() throws Exception {
+        // given
+        willReturn(usernameResponse).given(memberService).verifyForSearchUsername(any(VerificationRequest.class));
+        // when
+        ResultActions resultActions = 아이디_찾기_인증_요청();
+        // then
+        아이디_찾기_인증_요청_성공(resultActions);
+    }
+
+    @Test
+    void 아이디_찾기_인증_실패() throws Exception {
+        // given
+        willThrow(verificationCodeNotEqualException).given(memberService).verifyForSearchUsername(any(VerificationRequest.class));
+        // when
+        ResultActions resultActions = 아이디_찾기_인증_요청();
+        // then
+        아이디_찾기_인증_요청_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -590,5 +620,26 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
                 "search-username-create-verification-code-fail");
+    }
+
+    private ResultActions 아이디_찾기_인증_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username/verification")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(verificationRequest)));
+    }
+
+    private void 아이디_찾기_인증_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk())
+                        .andExpect(content().json(toJson(usernameResponse))),
+                "search-username-verify-success");
+    }
+
+    private void 아이디_찾기_인증_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(verificationCodeNotEqualException)))),
+                "search-username-verify-fail");
     }
 }
