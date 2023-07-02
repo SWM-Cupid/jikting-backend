@@ -290,6 +290,16 @@ public class MemberControllerTest extends ApiDocument {
         아이디_찾기_요청_성공(resultActions);
     }
 
+    @Test
+    void 아이디_찾기_회원정보찾기_실패() throws Exception {
+        // given
+        willThrow(memberNotFoundException).given(memberService).searchUsername(any(UsernameSearchRequest.class));
+        // when
+        ResultActions resultActions = 아이디_찾기_요청();
+        // then
+        아이디_찾기_요청_회원정보찾기_실패(resultActions);
+    }
+
     private ResultActions 아이디_찾기_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username")
                 .contextPath(CONTEXT_PATH)
@@ -434,5 +444,12 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(verificationCodeResponse))),
                 "search-username-success");
+    }
+
+    private void 아이디_찾기_요청_회원정보찾기_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "search-username-not-found-member-fail");
     }
 }
