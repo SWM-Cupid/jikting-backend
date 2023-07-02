@@ -61,7 +61,6 @@ public class MemberControllerTest extends ApiDocument {
     private ApplicationException memberNotFoundException;
     private ApplicationException passwordNotEqualException;
     private ApplicationException wrongFormException;
-    private ApplicationException phoneNotEqualException;
 
     @MockBean
     private MemberService memberService;
@@ -134,7 +133,6 @@ public class MemberControllerTest extends ApiDocument {
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         passwordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
         wrongFormException = new WrongFromException(ApplicationError.INVALID_FORMAT);
-        phoneNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_PHONE);
     }
 
     @Test
