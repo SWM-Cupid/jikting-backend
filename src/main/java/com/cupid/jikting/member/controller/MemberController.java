@@ -53,4 +53,9 @@ public class MemberController {
         memberService.updateImage(multipartFile);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/reset/password")
+    public ResponseEntity<VerificationCodeResponse> resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
+        return ResponseEntity.ok().body(memberService.resetPassword(passwordResetRequest));
+    }
 }
