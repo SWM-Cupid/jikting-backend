@@ -63,7 +63,6 @@ public class MemberControllerTest extends ApiDocument {
     private PasswordResetRequest passwordResetRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
-    private VerificationCodeResponse verificationCodeResponse;
     private ApplicationException invalidFormatException;
     private ApplicationException memberNotFoundException;
     private ApplicationException passwordNotEqualException;
@@ -138,9 +137,6 @@ public class MemberControllerTest extends ApiDocument {
                 .personalities(personalities)
                 .hobbies(hobbies)
                 .description(DESCRIPTION)
-                .build();
-        verificationCodeResponse = VerificationCodeResponse.builder()
-                .verificationCode(VERIFICATION_CODE)
                 .build();
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
@@ -333,7 +329,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_인증번호_발급_성공() throws Exception {
         // given
-        willReturn(verificationCodeResponse).given(memberService).createVerificationCodeForResetPassword(any(PasswordResetRequest.class));
+        willDoNothing().given(memberService).createVerificationCodeForResetPassword(any(PasswordResetRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_인증번호_발급_요청();
         // then
@@ -525,8 +521,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private void 비밀번호_재설정_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
-                        .andExpect(status().isOk())
-                        .andExpect(content().json(toJson(verificationCodeResponse))),
+                        .andExpect(status().isOk()),
                 "reset-password-create-verification-code-success");
     }
 
