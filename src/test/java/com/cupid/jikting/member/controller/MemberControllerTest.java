@@ -386,7 +386,7 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 아이디_찾기_실패() throws Exception {
+    void 아이디_찾기_인증번호_발급_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchRequest.class));
         // when
