@@ -527,13 +527,13 @@ public class MemberControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(verificationCodeResponse))),
-                "reset-password-success");
+                "reset-password-create-verification-code-success");
     }
 
     private void 비밀번호_재설정_인증번호_발급_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
-                "reset-password-fail");
+                "reset-password-create-verification-code-fail");
     }
 }
