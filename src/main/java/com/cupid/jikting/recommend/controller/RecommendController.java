@@ -15,9 +15,9 @@ public class RecommendController {
 
     private final RecommendService recommendService;
 
-    @GetMapping("/teams/{teamId}")
-    public ResponseEntity<List<RecommendResponse>> getRecommendedTeam(@PathVariable Long teamId) {
-        return ResponseEntity.ok().body(recommendService.getRecommendedTeam(teamId));
+    @GetMapping
+    public ResponseEntity<List<RecommendResponse>> get() {
+        return ResponseEntity.ok().body(recommendService.get());
     }
 
     @PostMapping("/{recommendId}/like")
