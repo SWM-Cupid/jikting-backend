@@ -32,7 +32,7 @@ public class LikeController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{likeId}/detail")
+    @GetMapping("/{likeId}")
     public ResponseEntity<TeamDetailResponse> getTeamDetail(@PathVariable Long likeId) {
         return ResponseEntity.ok().body(likeService.getTeamDetail(likeId));
     }
