@@ -64,6 +64,7 @@ public class MemberControllerTest extends ApiDocument {
     private UsernameSearchRequest usernameSearchRequest;
     private VerificationRequest verificationRequest;
     private PasswordResetRequest passwordResetRequest;
+    private UsernameCheckRequest usernameCheckRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private UsernameResponse usernameResponse;
@@ -133,6 +134,9 @@ public class MemberControllerTest extends ApiDocument {
                 .username(USERNAME)
                 .name(NAME)
                 .phone(PHONE)
+                .build();
+        usernameCheckRequest = UsernameCheckRequest.builder()
+                .username(USERNAME)
                 .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
@@ -373,6 +377,16 @@ public class MemberControllerTest extends ApiDocument {
         ResultActions resultActions = 회원_탈퇴_요청();
         // then
         회원_탈퇴_요청_비밀번호불일치_실패(resultActions);
+    }
+
+    @Test
+    void 아이디_중복_검사_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).checkDuplicatedUsername(any(UsernameCheckRequest.class));
+        // when
+        ResultActions resultActions = 아이디_중복_검사_요청();
+        // then
+        아이디_중복_검사_요청_성공(resultActions);
     }
 
     @Test
@@ -646,6 +660,19 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(passwordNotEqualException)))),
                 "delete-member-not-equal-password-fail");
+    }
+
+    private ResultActions 아이디_중복_검사_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/username/check")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(usernameCheckRequest)));
+    }
+
+    private void 아이디_중복_검사_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "check-duplicated-username-success");
     }
 
     private ResultActions 아이디_찾기_인증번호_발급_요청() throws Exception {
