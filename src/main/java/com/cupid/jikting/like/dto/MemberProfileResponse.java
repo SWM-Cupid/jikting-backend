@@ -8,7 +8,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberResponse {
+public class MemberProfileResponse {
 
     private String nickname;
     private String image;
