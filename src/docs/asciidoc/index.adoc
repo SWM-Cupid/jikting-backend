@@ -200,6 +200,12 @@ include::{snippets}/check-duplicated-username-success/http-request.adoc[]
 
 .response
 include::{snippets}/check-duplicated-username-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/check-duplicated-username-fail/http-request.adoc[]
+
+.response
+include::{snippets}/check-duplicated-username-fail/http-response.adoc[]
 
 ==== 아이디 찾기 인증번호 발급
 ----
