@@ -32,4 +32,7 @@ public class MemberService {
 
     public void withdraw(Long memberId, PasswordRequest passwordRequest) {
     }
+
+    public void createVerificationCodeForSearchUsername(UsernameSearchRequest usernameSearchRequest) {
+    }
 }

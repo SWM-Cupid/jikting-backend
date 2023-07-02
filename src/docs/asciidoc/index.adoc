@@ -172,7 +172,7 @@ include::{snippets}/update-member-image-invalid-file-size-fail/http-response.ado
 
 ==== 회원 탈퇴
 ----
-/api/v1/members
+/api/v1/members/withdraw
 ----
 ===== 성공
 .request
@@ -189,6 +189,23 @@ include::{snippets}/delete-member-not-found-member-fail/http-response.adoc[]
 
 .response - 비밀번호 불일치
 include::{snippets}/delete-member-not-equal-password-fail/http-response.adoc[]
+
+==== 아이디 찾기 인증번호 발급
+----
+/api/v1/members/search/username/code
+----
+===== 성공
+.request
+include::{snippets}/search-username-create-verification-code-success/http-request.adoc[]
+
+.response
+include::{snippets}/search-username-create-verification-code-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/search-username-create-verification-code-fail/http-request.adoc[]
+
+.response
+include::{snippets}/search-username-create-verification-code-fail/http-response.adoc[]
 
 === 추천 관련 기능
 ==== 추천 팀 조회

@@ -59,4 +59,10 @@ public class MemberController {
         memberService.withdraw(1L, passwordRequest);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/search/username/code")
+    public ResponseEntity<Void> createVerificationCodeForSearchUsername(@RequestBody UsernameSearchRequest usernameSearchRequest) {
+        memberService.createVerificationCodeForSearchUsername(usernameSearchRequest);
+        return ResponseEntity.ok().build();
+    }
 }

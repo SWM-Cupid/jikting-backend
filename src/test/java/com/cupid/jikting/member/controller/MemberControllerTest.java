@@ -54,12 +54,14 @@ public class MemberControllerTest extends ApiDocument {
     private static final String ORIGINAL_FILENAME = "image.png";
     private static final String CONTENT_TYPE = "image/png";
     private static final String IMAGE_FILE = "이미지 파일";
+    private static final String VERIFICATION_CODE = "인증번호";
 
     private SignupRequest signupRequest;
     private NicknameUpdateRequest nicknameUpdateRequest;
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private PasswordUpdateRequest passwordUpdateRequest;
     private PasswordRequest passwordRequest;
+    private UsernameSearchRequest usernameSearchRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private ApplicationException invalidFormatException;
@@ -115,6 +117,10 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         passwordRequest = PasswordRequest.builder()
                 .password(PASSWORD)
+                .build();
+        usernameSearchRequest = UsernameSearchRequest.builder()
+                .username(USERNAME)
+                .phone(PHONE)
                 .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
@@ -353,6 +359,26 @@ public class MemberControllerTest extends ApiDocument {
         회원_탈퇴_요청_비밀번호불일치_실패(resultActions);
     }
 
+    @Test
+    void 아이디_찾기_인증번호_발급_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchRequest.class));
+        // when
+        ResultActions resultActions = 아이디_찾기_인증번호_발급_요청();
+        // then
+        아이디_찾기_인증번호_발급_요청_성공(resultActions);
+    }
+
+    @Test
+    void 아이디_찾기_실패() throws Exception {
+        // given
+        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchRequest.class));
+        // when
+        ResultActions resultActions = 아이디_찾기_인증번호_발급_요청();
+        // then
+        아이디_찾기_인증번호_발급_요청_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -544,5 +570,25 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(passwordNotEqualException)))),
                 "delete-member-not-equal-password-fail");
+    }
+
+    private ResultActions 아이디_찾기_인증번호_발급_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username/code")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(usernameSearchRequest)));
+    }
+
+    private void 아이디_찾기_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "search-username-create-verification-code-success");
+    }
+
+    private void 아이디_찾기_인증번호_발급_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "search-username-create-verification-code-fail");
     }
 }
