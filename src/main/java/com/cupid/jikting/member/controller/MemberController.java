@@ -53,4 +53,10 @@ public class MemberController {
         memberService.updateImage(multipartFile);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<Void> withdraw(@RequestBody PasswordRequest passwordRequest) {
+        memberService.withdraw(1L, passwordRequest);
+        return ResponseEntity.ok().build();
+    }
 }

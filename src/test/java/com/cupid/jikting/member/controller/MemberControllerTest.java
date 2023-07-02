@@ -59,6 +59,7 @@ public class MemberControllerTest extends ApiDocument {
     private NicknameUpdateRequest nicknameUpdateRequest;
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private PasswordUpdateRequest passwordUpdateRequest;
+    private PasswordRequest passwordRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private ApplicationException invalidFormatException;
@@ -111,6 +112,9 @@ public class MemberControllerTest extends ApiDocument {
         passwordUpdateRequest = PasswordUpdateRequest.builder()
                 .password(PASSWORD)
                 .newPassword(NEW_PASSWORD)
+                .build();
+        passwordRequest = PasswordRequest.builder()
+                .password(PASSWORD)
                 .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
@@ -319,6 +323,36 @@ public class MemberControllerTest extends ApiDocument {
         회원_이미지_수정_요청_파일크기미지원_실패(resultActions);
     }
 
+    @Test
+    void 회원_탈퇴_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).withdraw(anyLong(), any(PasswordRequest.class));
+        // when
+        ResultActions resultActions = 회원_탈퇴_요청();
+        // then
+        회원_탈퇴_요청_성공(resultActions);
+    }
+
+    @Test
+    void 회원_탈퇴_회원정보찾기_실패() throws Exception {
+        // given
+        willThrow(memberNotFoundException).given(memberService).withdraw(anyLong(), any(PasswordRequest.class));
+        // when
+        ResultActions resultActions = 회원_탈퇴_요청();
+        // then
+        회원_탈퇴_요청_회원정보찾기_실패(resultActions);
+    }
+
+    @Test
+    void 회원_탈퇴_비밀번호불일치_실패() throws Exception {
+        // given
+        willThrow(passwordNotEqualException).given(memberService).withdraw(anyLong(), any(PasswordRequest.class));
+        // when
+        ResultActions resultActions = 회원_탈퇴_요청();
+        // then
+        회원_탈퇴_요청_비밀번호불일치_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -441,7 +475,7 @@ public class MemberControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(passwordNotEqualException)))),
-                "update-member-password-not-equal-fail");
+                "update-member-password-not-equal-password-fail");
     }
 
     private void 회원_비밀번호_수정_요청_비밀번호양식불일치_실패(ResultActions resultActions) throws Exception {
@@ -483,5 +517,32 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFileSizeException)))),
                 "update-member-image-invalid-file-size-fail");
+    }
+
+    private ResultActions 회원_탈퇴_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/withdraw")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(passwordRequest)));
+    }
+
+    private void 회원_탈퇴_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "delete-member-success");
+    }
+
+    private void 회원_탈퇴_요청_회원정보찾기_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "delete-member-not-found-member-fail");
+    }
+
+    private void 회원_탈퇴_요청_비밀번호불일치_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(passwordNotEqualException)))),
+                "delete-member-not-equal-password-fail");
     }
 }

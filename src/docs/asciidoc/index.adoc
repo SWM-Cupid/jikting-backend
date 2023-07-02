@@ -142,7 +142,7 @@ include::{snippets}/update-member-password-not-found-member-fail/http-request.ad
 include::{snippets}/update-member-password-not-found-member-fail/http-response.adoc[]
 
 .response - 기존 비밀번호 불일치
-include::{snippets}/update-member-password-not-equal-fail/http-response.adoc[]
+include::{snippets}/update-member-password-not-equal-password-fail/http-response.adoc[]
 
 .response - 비밀번호 양식 불일치
 include::{snippets}/update-member-password-wrong-form-fail/http-response.adoc[]
@@ -169,6 +169,26 @@ include::{snippets}/update-member-image-invalid-file-extension-fail/http-respons
 
 .response - 파일 크기 미지원
 include::{snippets}/update-member-image-invalid-file-size-fail/http-response.adoc[]
+
+==== 회원 탈퇴
+----
+/api/v1/members
+----
+===== 성공
+.request
+include::{snippets}/delete-member-success/http-request.adoc[]
+
+.response
+include::{snippets}/delete-member-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/update-member-password-not-found-member-fail/http-request.adoc[]
+
+.response - 회원을 찾을 수 없음
+include::{snippets}/delete-member-not-found-member-fail/http-response.adoc[]
+
+.response - 비밀번호 불일치
+include::{snippets}/delete-member-not-equal-password-fail/http-response.adoc[]
 
 === 추천 관련 기능
 ==== 추천 팀 조회
