@@ -153,16 +153,16 @@ include::{snippets}/update-member-password-wrong-form-fail/http-response.adoc[]
 ----
 ===== 성공
 .request
-include::{snippets}/search-username-success/http-request.adoc[]
+include::{snippets}/search-username-create-verification-code-success/http-request.adoc[]
 
 .response
-include::{snippets}/search-username-success/http-response.adoc[]
+include::{snippets}/search-username-create-verification-code-success/http-response.adoc[]
 ===== 실패
 .request
-include::{snippets}/search-username-fail/http-request.adoc[]
+include::{snippets}/search-username-create-verification-code-fail/http-request.adoc[]
 
 .response
-include::{snippets}/search-username-fail/http-response.adoc[]
+include::{snippets}/search-username-create-verification-code-fail/http-response.adoc[]
 
 === 팀 관련 기능
 ==== 받은 호감 목록 조회
