@@ -47,7 +47,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/search/username")
+    @PostMapping("/search/username/code")
     public ResponseEntity<VerificationCodeResponse> searchUsername(@RequestBody UsernameSearchRequest usernameSearchRequest) {
         return ResponseEntity.ok().body(memberService.searchUsername(usernameSearchRequest));
     }
