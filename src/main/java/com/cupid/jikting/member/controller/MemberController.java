@@ -1,9 +1,6 @@
 package com.cupid.jikting.member.controller;
 
-import com.cupid.jikting.member.dto.MemberProfileResponse;
-import com.cupid.jikting.member.dto.MemberResponse;
-import com.cupid.jikting.member.dto.MemberUpdateRequest;
-import com.cupid.jikting.member.dto.SignupRequest;
+import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +30,20 @@ public class MemberController {
     }
 
     @PatchMapping
-    public ResponseEntity<Void> update(@RequestBody MemberUpdateRequest memberUpdateRequest) {
-        memberService.update(memberUpdateRequest);
+    public ResponseEntity<Void> update(@RequestBody NicknameUpdateRequest nicknameUpdateRequest) {
+        memberService.update(nicknameUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/profile")
+    public ResponseEntity<Void> updateProfile(@RequestBody MemberProfileUpdateRequest memberProfileUpdateRequest) {
+        memberService.updateProfile(memberProfileUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updatePassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+        memberService.updatePassword(passwordUpdateRequest);
         return ResponseEntity.ok().build();
     }
 }

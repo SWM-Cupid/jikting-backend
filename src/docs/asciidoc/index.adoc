@@ -90,22 +90,62 @@ include::{snippets}/get-member-profile-fail/http-request.adoc[]
 .response
 include::{snippets}/get-member-profile-fail/http-response.adoc[]
 
-==== 회원 수정
+==== 회원 닉네임 수정
 ----
 /api/v1/members
 ----
 ===== 성공
 .request
-include::{snippets}/update-member-success/http-request.adoc[]
+include::{snippets}/update-member-nickname-success/http-request.adoc[]
 
 .response
-include::{snippets}/update-member-success/http-response.adoc[]
+include::{snippets}/update-member-nickname-success/http-response.adoc[]
 ===== 실패
 .request
-include::{snippets}/update-member-fail/http-request.adoc[]
+include::{snippets}/update-member-nickname-fail/http-request.adoc[]
 
 .response
-include::{snippets}/update-member-fail/http-response.adoc[]
+include::{snippets}/update-member-nickname-fail/http-response.adoc[]
+
+==== 회원 프로필 수정
+----
+/api/v1/members/profile
+----
+===== 성공
+.request
+include::{snippets}/update-member-profile-success/http-request.adoc[]
+
+.response
+include::{snippets}/update-member-profile-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/update-member-profile-fail/http-request.adoc[]
+
+.response
+include::{snippets}/update-member-profile-fail/http-response.adoc[]
+
+==== 회원 비밀번호 수정
+----
+/api/v1/members/password
+----
+===== 성공
+.request
+include::{snippets}/update-member-password-success/http-request.adoc[]
+
+.response
+include::{snippets}/update-member-password-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/update-member-password-not-found-member-fail/http-request.adoc[]
+
+.response - 회원을 찾을 수 없음
+include::{snippets}/update-member-password-not-found-member-fail/http-response.adoc[]
+
+.response - 기존 비밀번호 불일치
+include::{snippets}/update-member-password-not-equal-fail/http-response.adoc[]
+
+.response - 비밀번호 양식 불일치
+include::{snippets}/update-member-password-wrong-form-fail/http-response.adoc[]
 
 === 추천 관련 기능
 ==== 추천 팀 조회
@@ -159,6 +199,7 @@ include::{snippets}/get-received-likes-fail/http-request.adoc[]
 
 .response
 include::{snippets}/get-received-likes-fail/http-response.adoc[]
+
 ==== 보낸 호감 목록 조회
 ----
 /api/v1/likes/sent
