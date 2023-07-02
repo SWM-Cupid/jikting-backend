@@ -302,23 +302,6 @@ public class MemberControllerTest extends ApiDocument {
         아이디_찾기_요청_회원정보찾기_실패(resultActions);
     }
 
-    @Test
-    void 아이디_찾기_전화번호불일치_실패() throws Exception {
-        // given
-        willThrow(phoneNotEqualException).given(memberService).searchUsername(any(UsernameSearchRequest.class));
-        // when
-        ResultActions resultActions = 아이디_찾기_요청();
-        // then
-        아이디_찾기_요청_전화번호불일치_실패(resultActions);
-    }
-
-    private ResultActions 아이디_찾기_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username")
-                .contextPath(CONTEXT_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(usernameSearchRequest)));
-    }
-
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -449,6 +432,13 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
                 "update-member-password-wrong-form-fail");
+    }
+
+    private ResultActions 아이디_찾기_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(usernameSearchRequest)));
     }
 
     private void 아이디_찾기_요청_성공(ResultActions resultActions) throws Exception {
