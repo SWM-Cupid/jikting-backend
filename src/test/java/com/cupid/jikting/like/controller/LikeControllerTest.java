@@ -142,9 +142,8 @@ public class LikeControllerTest extends ApiDocument {
     }
 
     private ResultActions 받은_호감_목록_조회_요청() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/received")
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/received")
                 .contextPath(CONTEXT_PATH));
-        return resultActions;
     }
 
     private void 받은_호감_목록_조회_요청_성공(ResultActions resultActions) throws Exception {
@@ -162,9 +161,8 @@ public class LikeControllerTest extends ApiDocument {
     }
 
     private ResultActions 보낸_호감_목록_조회_요청() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/sent")
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/sent")
                 .contextPath(CONTEXT_PATH));
-        return resultActions;
     }
 
     private void 보낸_호감_목록_조회_요청_성공(ResultActions resultActions) throws Exception {
@@ -182,9 +180,8 @@ public class LikeControllerTest extends ApiDocument {
     }
 
     private ResultActions 받은_호감_수락_요청() throws Exception {
-        ResultActions resultActions = mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/accept")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/accept")
                 .contextPath(CONTEXT_PATH));
-        return resultActions;
     }
 
     private void 받은_호감_수락_요청_성공(ResultActions resultActions) throws Exception {
