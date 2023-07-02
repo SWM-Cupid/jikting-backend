@@ -149,7 +149,7 @@ include::{snippets}/update-member-password-wrong-form-fail/http-response.adoc[]
 
 ==== 아이디 찾기 인증번호 요청
 ----
-/api/v1/members/search/username
+/api/v1/members/search/username/code
 ----
 ===== 성공
 .request
