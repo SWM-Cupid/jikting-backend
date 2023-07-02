@@ -69,6 +69,7 @@ public class MemberControllerTest extends ApiDocument {
     private ApplicationException wrongFormException;
     private ApplicationException wrongFileExtensionException;
     private ApplicationException wrongFileSizeException;
+    private ApplicationException verificationCodeNotEqualException;
 
     @MockBean
     private MemberService memberService;
@@ -142,6 +143,7 @@ public class MemberControllerTest extends ApiDocument {
         wrongFormException = new WrongFromException(ApplicationError.INVALID_FORMAT);
         wrongFileExtensionException = new WrongFromException(ApplicationError.INVALID_FILE_EXTENSION);
         wrongFileSizeException = new WrongFromException(ApplicationError.INVALID_FILE_SIZE);
+        verificationCodeNotEqualException = new BadRequestException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
     }
 
     @Test
@@ -334,6 +336,16 @@ public class MemberControllerTest extends ApiDocument {
         비밀번호_재설정_인증_요청_성공(resultActions);
     }
 
+    @Test
+    void 비밀번호_재설정_인증_실패() throws Exception {
+        // given
+        willThrow(verificationCodeNotEqualException).given(memberService).verifyForResetPassword(any(VerificationRequest.class));
+        // when
+        ResultActions resultActions = 비밀번호_재설정_인증_요청();
+        // then
+        비밀번호_재설정_인증_요청_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -511,5 +523,12 @@ public class MemberControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
                 "reset-password-verify-success");
+    }
+
+    private void 비밀번호_재설정_인증_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(verificationCodeNotEqualException)))),
+                "reset-password-verify-fail");
     }
 }
