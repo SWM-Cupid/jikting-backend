@@ -281,13 +281,13 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 회원_비밀번호_수정_회원정보찾기_실패() throws Exception {
+    void 회원_비밀번호_수정_회원정보없음_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).updatePassword(any(PasswordUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_비밀번호_수정_요청();
         // then
-        회원_비밀번호_수정_요청_회원정보찾기_실패(resultActions);
+        회원_비밀번호_수정_요청_회원정보없음_실패(resultActions);
     }
 
     @Test
@@ -321,13 +321,13 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 회원_이미지_수정_회원정보찾기_실패() throws Exception {
+    void 회원_이미지_수정_회원정보없음_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).updateImage(any(MultipartFile.class));
         // when
         ResultActions resultActions = 회원_이미지_수정_요청();
         // then
-        회원_이미지_수정_요청_회원정보찾기_실패(resultActions);
+        회원_이미지_수정_요청_회원정보없음_실패(resultActions);
     }
 
     @Test
@@ -361,13 +361,13 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 회원_탈퇴_회원정보찾기_실패() throws Exception {
+    void 회원_탈퇴_회원정보없음_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).withdraw(anyLong(), any(WithdrawRequest.class));
         // when
         ResultActions resultActions = 회원_탈퇴_요청();
         // then
-        회원_탈퇴_요청_회원정보찾기_실패(resultActions);
+        회원_탈퇴_요청_회원정보없음_실패(resultActions);
     }
 
     @Test
@@ -471,13 +471,13 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 비밀번호_재설정_회원정보찾기_실패() throws Exception {
+    void 비밀번호_재설정_회원정보없음_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).resetPassword(any(PasswordResetRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_요청();
         // then
-        비밀번호_재설정_요청_회원정보찾기_실패(resultActions);
+        비밀번호_재설정_요청_회원정보없음_실패(resultActions);
     }
 
     @Test
@@ -601,7 +601,7 @@ public class MemberControllerTest extends ApiDocument {
                 "update-member-password-success");
     }
 
-    private void 회원_비밀번호_수정_요청_회원정보찾기_실패(ResultActions resultActions) throws Exception {
+    private void 회원_비밀번호_수정_요청_회원정보없음_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
@@ -635,7 +635,7 @@ public class MemberControllerTest extends ApiDocument {
                 "update-member-image-success");
     }
 
-    private void 회원_이미지_수정_요청_회원정보찾기_실패(ResultActions resultActions) throws Exception {
+    private void 회원_이미지_수정_요청_회원정보없음_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
@@ -669,7 +669,7 @@ public class MemberControllerTest extends ApiDocument {
                 "delete-member-success");
     }
 
-    private void 회원_탈퇴_요청_회원정보찾기_실패(ResultActions resultActions) throws Exception {
+    private void 회원_탈퇴_요청_회원정보없음_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
@@ -777,7 +777,7 @@ public class MemberControllerTest extends ApiDocument {
                 "reset-password-fail");
     }
 
-    private void 비밀번호_재설정_요청_회원정보찾기_실패(ResultActions resultActions) throws Exception {
+    private void 비밀번호_재설정_요청_회원정보없음_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
