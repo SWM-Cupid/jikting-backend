@@ -311,17 +311,17 @@ include::{snippets}/accept-like-fail/http-request.adoc[]
 include::{snippets}/accept-like-fail/http-response.adoc[]
 ==== 받은 호감 거절
 ----
-/api/v1/likes/{likeId}/decline
+/api/v1/likes/{likeId}/reject
 ----
 ===== 성공
 .request
-include::{snippets}/decline-like-success/http-request.adoc[]
+include::{snippets}/reject-like-success/http-request.adoc[]
 
 .response
-include::{snippets}/decline-like-success/http-response.adoc[]
+include::{snippets}/reject-like-success/http-response.adoc[]
 ===== 실패
 .request
-include::{snippets}/decline-like-fail/http-request.adoc[]
+include::{snippets}/reject-like-fail/http-request.adoc[]
 
 .response
-include::{snippets}/decline-like-fail/http-response.adoc[]
+include::{snippets}/reject-like-fail/http-response.adoc[]

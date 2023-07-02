@@ -124,7 +124,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 받은_호감_거절_성공() throws Exception {
         //given
-        willDoNothing().given(likeService).declineLike(anyLong());
+        willDoNothing().given(likeService).rejectLike(anyLong());
         //when
         ResultActions resultActions = 받은_호감_거절_요청();
         //then
@@ -134,7 +134,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 받은_호감_거절_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(likeService).declineLike(anyLong());
+        willThrow(teamNotFoundException).given(likeService).rejectLike(anyLong());
         //when
         ResultActions resultActions = 받은_호감_거절_요청();
         //then
@@ -198,20 +198,20 @@ public class LikeControllerTest extends ApiDocument {
     }
 
     private ResultActions 받은_호감_거절_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/decline")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/reject")
                 .contextPath(CONTEXT_PATH));
     }
 
     private void 받은_호감_거절_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
-                "decline-like-success");
+                "reject-like-success");
     }
 
     private void 받은_호감_거절_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
-                "decline-like-fail");
+                "reject-like-fail");
     }
 }
