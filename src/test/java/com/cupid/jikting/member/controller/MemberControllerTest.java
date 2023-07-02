@@ -435,7 +435,7 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 아이디_찾기_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username/code")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(usernameSearchRequest)));
