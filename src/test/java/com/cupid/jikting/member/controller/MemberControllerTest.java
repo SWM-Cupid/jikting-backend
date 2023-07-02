@@ -48,13 +48,16 @@ public class MemberControllerTest extends ApiDocument {
     private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
     private static final String SEQUENCE = "순서";
     private static final String NEW_PASSWORD = "새 비밀번호";
+    private static final String VERIFICATION_CODE = "인증번호";
 
     private SignupRequest signupRequest;
     private NicknameUpdateRequest nicknameUpdateRequest;
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private PasswordUpdateRequest passwordUpdateRequest;
+    private VerificationRequest verificationRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
+    private UsernameResponse usernameResponse;
     private ApplicationException invalidFormatException;
     private ApplicationException memberNotFoundException;
     private ApplicationException passwordNotEqualException;
@@ -104,6 +107,9 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .newPassword(NEW_PASSWORD)
                 .build();
+        verificationRequest = VerificationRequest.builder()
+                .verificationCode(VERIFICATION_CODE)
+                .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
                 .company(COMPANY)
@@ -122,6 +128,9 @@ public class MemberControllerTest extends ApiDocument {
                 .personalities(personalities)
                 .hobbies(hobbies)
                 .description(DESCRIPTION)
+                .build();
+        usernameResponse = UsernameResponse.builder()
+                .username(USERNAME)
                 .build();
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
@@ -269,6 +278,16 @@ public class MemberControllerTest extends ApiDocument {
         회원_비밀번호_수정_요청_비밀번호양식불일치_실패(resultActions);
     }
 
+    @Test
+    void 아이디_찾기_전화번호_인증_성공() throws Exception {
+        // given
+        willReturn(usernameResponse).given(memberService).verifyForSearchUsername(any(VerificationRequest.class));
+        // when
+        ResultActions resultActions = 아이디_찾기_전화번호_인증_요청();
+        // then
+        아이디_찾기_전화번호_인증_요청_성공(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -399,5 +418,19 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
                 "update-member-password-wrong-form-fail");
+    }
+
+    private ResultActions 아이디_찾기_전화번호_인증_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username/verification")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(verificationRequest)));
+    }
+
+    private void 아이디_찾기_전화번호_인증_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk())
+                        .andExpect(content().json(toJson(usernameResponse))),
+                "search-username-verify-success");
     }
 }
