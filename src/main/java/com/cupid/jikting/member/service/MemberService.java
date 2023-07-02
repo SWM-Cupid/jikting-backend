@@ -29,4 +29,7 @@ public class MemberService {
 
     public void updateImage(MultipartFile multipartFile) {
     }
+
+    public void verifyForResetPassword(VerificationRequest verificationRequest) {
+    }
 }
