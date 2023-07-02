@@ -700,7 +700,7 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 비밀번호_재설정_인증번호_발급_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/reset/password/code")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/password/reset/code")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(passwordResetVerificationCodeRequest)));
@@ -720,7 +720,7 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 비밀번호_재설정_인증_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/reset/password/verification")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/password/reset/verification")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(verificationRequest)));

@@ -71,13 +71,13 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.verifyForSearchUsername(verificationRequest));
     }
 
-    @PostMapping("/reset/password/code")
+    @PostMapping("/password/reset/code")
     public ResponseEntity<Void> createVerificationCodeForResetPassword(@RequestBody PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest) {
         memberService.createVerificationCodeForResetPassword(passwordResetVerificationCodeRequest);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/reset/password/verification")
+    @PostMapping("/password/reset/verification")
     public ResponseEntity<Void> verifyForResetPassword(@RequestBody VerificationRequest verificationRequest) {
         memberService.verifyForResetPassword(verificationRequest);
         return ResponseEntity.ok().build();
