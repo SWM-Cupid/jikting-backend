@@ -82,4 +82,10 @@ public class MemberController {
         memberService.verifyForResetPassword(verificationRequest);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/password/reset")
+    public ResponseEntity<Void> resetPassword(@RequestBody PasswordRequest passwordRequest) {
+        memberService.resetPassword(passwordRequest);
+        return ResponseEntity.ok().build();
+    }
 }
