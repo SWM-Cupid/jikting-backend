@@ -343,3 +343,19 @@ include::{snippets}/accept-like-fail/http-request.adoc[]
 
 .response
 include::{snippets}/accept-like-fail/http-response.adoc[]
+==== 팀 상세 조회
+----
+/api/v1/likes/{likeId}/detail
+----
+===== 성공
+.request
+include::{snippets}/get-team-detail-success/http-request.adoc[]
+
+.response
+include::{snippets}/get-team-detail-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/get-team-detail-fail/http-request.adoc[]
+
+.response
+include::{snippets}/get-team-detail-fail/http-response.adoc[]
