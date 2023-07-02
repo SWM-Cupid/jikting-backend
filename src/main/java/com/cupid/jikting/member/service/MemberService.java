@@ -30,7 +30,7 @@ public class MemberService {
     public void updateImage(MultipartFile multipartFile) {
     }
 
-    public VerificationCodeResponse resetPassword(PasswordResetRequest passwordResetRequest) {
+    public VerificationCodeResponse createVerificationCodeForResetPassword(PasswordResetRequest passwordResetRequest) {
         return null;
     }
 }
