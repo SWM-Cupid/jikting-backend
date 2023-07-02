@@ -281,23 +281,23 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 아이디_찾기_전화번호_인증_성공() throws Exception {
+    void 아이디_찾기_인증_성공() throws Exception {
         // given
         willReturn(usernameResponse).given(memberService).verifyForSearchUsername(any(VerificationRequest.class));
         // when
-        ResultActions resultActions = 아이디_찾기_전화번호_인증_요청();
+        ResultActions resultActions = 아이디_찾기_인증_요청();
         // then
-        아이디_찾기_전화번호_인증_요청_성공(resultActions);
+        아이디_찾기_인증_요청_성공(resultActions);
     }
 
     @Test
-    void 아이디_찾기_전화번호_인증_실패() throws Exception {
+    void 아이디_찾기_인증_실패() throws Exception {
         // given
         willThrow(verificationCodeNotEqualException).given(memberService).verifyForSearchUsername(any(VerificationRequest.class));
         // when
-        ResultActions resultActions = 아이디_찾기_전화번호_인증_요청();
+        ResultActions resultActions = 아이디_찾기_인증_요청();
         // then
-        아이디_찾기_전화번호_인증_요청_실패(resultActions);
+        아이디_찾기_인증_요청_실패(resultActions);
     }
 
     private ResultActions 회원_가입_요청() throws Exception {
@@ -432,21 +432,21 @@ public class MemberControllerTest extends ApiDocument {
                 "update-member-password-wrong-form-fail");
     }
 
-    private ResultActions 아이디_찾기_전화번호_인증_요청() throws Exception {
+    private ResultActions 아이디_찾기_인증_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username/verification")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(verificationRequest)));
     }
 
-    private void 아이디_찾기_전화번호_인증_요청_성공(ResultActions resultActions) throws Exception {
+    private void 아이디_찾기_인증_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(usernameResponse))),
                 "search-username-verify-success");
     }
 
-    private void 아이디_찾기_전화번호_인증_요청_실패(ResultActions resultActions) throws Exception {
+    private void 아이디_찾기_인증_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(verificationCodeNotEqualException)))),
