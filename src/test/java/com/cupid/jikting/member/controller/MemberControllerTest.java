@@ -480,6 +480,16 @@ public class MemberControllerTest extends ApiDocument {
         비밀번호_재설정_요청_회원정보찾기_실패(resultActions);
     }
 
+    @Test
+    void 비밀번호_재설정_비밀번호양식불일치_실패() throws Exception {
+        // given
+        willThrow(wrongFormException).given(memberService).resetPassword(any(PasswordResetRequest.class));
+        // when
+        ResultActions resultActions = 비밀번호_재설정_요청();
+        // then
+        비밀번호_재설정_요청_비밀번호양식불일치_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -772,5 +782,12 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
                 "reset-password-not-found-member-fail");
+    }
+
+    private void 비밀번호_재설정_요청_비밀번호양식불일치_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
+                "reset-password-wrong-form-fail");
     }
 }
