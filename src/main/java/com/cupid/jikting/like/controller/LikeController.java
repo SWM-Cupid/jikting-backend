@@ -30,4 +30,10 @@ public class LikeController {
         likeService.acceptLike(likeId);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/{likeId}/decline")
+    public ResponseEntity<Void> declineLike(@PathVariable Long likeId) {
+        likeService.declineLike(likeId);
+        return ResponseEntity.ok().build();
+    }
 }

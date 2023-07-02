@@ -18,4 +18,7 @@ public class LikeService {
 
     public void acceptLike(Long likeId) {
     }
+
+    public void declineLike(Long likeId) {
+    }
 }
