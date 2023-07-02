@@ -1,6 +1,7 @@
 package com.cupid.jikting.like.controller;
 
 import com.cupid.jikting.like.dto.LikeResponse;
+import com.cupid.jikting.like.dto.TeamDetailResponse;
 import com.cupid.jikting.like.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,10 @@ public class LikeController {
     public ResponseEntity<Void> acceptLike(@PathVariable Long likeId) {
         likeService.acceptLike(likeId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{likeId}/detail")
+    public ResponseEntity<TeamDetailResponse> getTeamDetail(@PathVariable Long likeId) {
+        return ResponseEntity.ok().body(likeService.getTeamDetail(likeId));
     }
 }
