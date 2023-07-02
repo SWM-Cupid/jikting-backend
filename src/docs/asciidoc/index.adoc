@@ -147,9 +147,9 @@ include::{snippets}/update-member-password-not-equal-fail/http-response.adoc[]
 .response - 비밀번호 양식 불일치
 include::{snippets}/update-member-password-wrong-form-fail/http-response.adoc[]
 
-==== 아이디 찾기 전화번호 인증 성공
+==== 아이디 찾기 전화번호 인증
 ----
-/api/v1/members/password
+/api/v1/members/search/username/verification
 ----
 ===== 성공
 .request
