@@ -53,4 +53,10 @@ public class MemberController {
         memberService.updateImage(multipartFile);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/reset/password/verification")
+    public ResponseEntity<Void> verifyForResetPassword(@RequestBody VerificationRequest verificationRequest) {
+        memberService.verifyForResetPassword(verificationRequest);
+        return ResponseEntity.ok().build();
+    }
 }
