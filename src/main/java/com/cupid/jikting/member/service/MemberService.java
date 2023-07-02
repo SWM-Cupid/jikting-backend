@@ -39,4 +39,7 @@ public class MemberService {
     public UsernameResponse verifyForSearchUsername(VerificationRequest verificationRequest) {
         return null;
     }
+
+    public void createVerificationCodeForResetPassword(PasswordResetRequest passwordResetRequest) {
+    }
 }

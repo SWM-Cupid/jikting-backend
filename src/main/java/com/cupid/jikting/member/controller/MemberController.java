@@ -70,4 +70,10 @@ public class MemberController {
     public ResponseEntity<UsernameResponse> verifyForSearchUsername(@RequestBody VerificationRequest verificationRequest) {
         return ResponseEntity.ok().body(memberService.verifyForSearchUsername(verificationRequest));
     }
+
+    @PostMapping("/reset/password/code")
+    public ResponseEntity<Void> createVerificationCodeForResetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
+        memberService.createVerificationCodeForResetPassword(passwordResetRequest);
+        return ResponseEntity.ok().build();
+    }
 }

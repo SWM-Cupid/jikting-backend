@@ -63,6 +63,7 @@ public class MemberControllerTest extends ApiDocument {
     private PasswordRequest passwordRequest;
     private UsernameSearchRequest usernameSearchRequest;
     private VerificationRequest verificationRequest;
+    private PasswordResetRequest passwordResetRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private UsernameResponse usernameResponse;
@@ -127,6 +128,11 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         verificationRequest = VerificationRequest.builder()
                 .verificationCode(VERIFICATION_CODE)
+                .build();
+        passwordResetRequest = PasswordResetRequest.builder()
+                .username(USERNAME)
+                .name(NAME)
+                .phone(PHONE)
                 .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
@@ -409,6 +415,26 @@ public class MemberControllerTest extends ApiDocument {
         아이디_찾기_인증_요청_실패(resultActions);
     }
 
+    @Test
+    void 비밀번호_재설정_인증번호_발급_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).createVerificationCodeForResetPassword(any(PasswordResetRequest.class));
+        // when
+        ResultActions resultActions = 비밀번호_재설정_인증번호_발급_요청();
+        // then
+        비밀번호_재설정_인증번호_발급_요청_성공(resultActions);
+    }
+
+    @Test
+    void 비밀번호_재설정_인증번호_발급_실패() throws Exception {
+        // given
+        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForResetPassword(any(PasswordResetRequest.class));
+        // when
+        ResultActions resultActions = 비밀번호_재설정_인증번호_발급_요청();
+        // then
+        비밀번호_재설정_인증번호_발급_요청_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -641,5 +667,25 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(verificationCodeNotEqualException)))),
                 "search-username-verify-fail");
+    }
+
+    private ResultActions 비밀번호_재설정_인증번호_발급_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/reset/password/code")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(passwordResetRequest)));
+    }
+
+    private void 비밀번호_재설정_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "reset-password-create-verification-code-success");
+    }
+
+    private void 비밀번호_재설정_인증번호_발급_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "reset-password-create-verification-code-fail");
     }
 }
