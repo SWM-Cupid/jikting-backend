@@ -30,7 +30,7 @@ public class MemberService {
     public void updateImage(MultipartFile multipartFile) {
     }
 
-    public void withdraw(Long memberId, PasswordRequest passwordRequest) {
+    public void withdraw(Long memberId, WithdrawRequest withdrawRequest) {
     }
 
     public void createVerificationCodeForSearchUsername(UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest) {

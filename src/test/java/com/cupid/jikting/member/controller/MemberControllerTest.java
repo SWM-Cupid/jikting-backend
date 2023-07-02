@@ -60,7 +60,7 @@ public class MemberControllerTest extends ApiDocument {
     private NicknameUpdateRequest nicknameUpdateRequest;
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private PasswordUpdateRequest passwordUpdateRequest;
-    private PasswordRequest passwordRequest;
+    private WithdrawRequest withdrawRequest;
     private UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest;
     private VerificationRequest verificationRequest;
     private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
@@ -119,7 +119,7 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .newPassword(NEW_PASSWORD)
                 .build();
-        passwordRequest = PasswordRequest.builder()
+        withdrawRequest = WithdrawRequest.builder()
                 .password(PASSWORD)
                 .build();
         usernameSearchVerificationCodeRequest = UsernameSearchVerificationCodeRequest.builder()
@@ -348,7 +348,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_탈퇴_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).withdraw(anyLong(), any(PasswordRequest.class));
+        willDoNothing().given(memberService).withdraw(anyLong(), any(WithdrawRequest.class));
         // when
         ResultActions resultActions = 회원_탈퇴_요청();
         // then
@@ -358,7 +358,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_탈퇴_회원정보찾기_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).withdraw(anyLong(), any(PasswordRequest.class));
+        willThrow(memberNotFoundException).given(memberService).withdraw(anyLong(), any(WithdrawRequest.class));
         // when
         ResultActions resultActions = 회원_탈퇴_요청();
         // then
@@ -368,7 +368,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_탈퇴_비밀번호불일치_실패() throws Exception {
         // given
-        willThrow(passwordNotEqualException).given(memberService).withdraw(anyLong(), any(PasswordRequest.class));
+        willThrow(passwordNotEqualException).given(memberService).withdraw(anyLong(), any(WithdrawRequest.class));
         // when
         ResultActions resultActions = 회원_탈퇴_요청();
         // then
