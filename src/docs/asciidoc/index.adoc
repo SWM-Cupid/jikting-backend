@@ -147,6 +147,17 @@ include::{snippets}/update-member-password-not-equal-fail/http-response.adoc[]
 .response - 비밀번호 양식 불일치
 include::{snippets}/update-member-password-wrong-form-fail/http-response.adoc[]
 
+==== 아이디 찾기
+----
+/api/v1/members/search/username
+----
+===== 성공
+.request
+include::{snippets}/search-username-success/http-request.adoc[]
+
+.response
+include::{snippets}/search-username-success/http-response.adoc[]
+
 === 팀 관련 기능
 ==== 받은 호감 목록 조회
 ----
