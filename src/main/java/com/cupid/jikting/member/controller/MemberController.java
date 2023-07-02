@@ -55,7 +55,8 @@ public class MemberController {
     }
 
     @PostMapping("/reset/password/code")
-    public ResponseEntity<VerificationCodeResponse> createVerificationCodeForResetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
-        return ResponseEntity.ok().body(memberService.createVerificationCodeForResetPassword(passwordResetRequest));
+    public ResponseEntity<Void> createVerificationCodeForResetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
+        memberService.createVerificationCodeForResetPassword(passwordResetRequest);
+        return ResponseEntity.ok().build();
     }
 }
