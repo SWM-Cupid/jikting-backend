@@ -42,4 +42,7 @@ public class MemberService {
 
     public void createVerificationCodeForResetPassword(PasswordResetRequest passwordResetRequest) {
     }
+
+    public void verifyForResetPassword(VerificationRequest verificationRequest) {
+    }
 }
