@@ -236,7 +236,7 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 회원_닉네임수정_실패() throws Exception {
+    void 회원_닉네임수_수정_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).update(any(NicknameUpdateRequest.class));
         // when
