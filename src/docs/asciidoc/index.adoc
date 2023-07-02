@@ -268,6 +268,12 @@ include::{snippets}/reset-password-success/http-request.adoc[]
 
 .response
 include::{snippets}/reset-password-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/reset-password-not-found-member-fail/http-request.adoc[]
+
+.response - 회원을 찾을 수 없음
+include::{snippets}/reset-password-not-found-member-fail/http-response.adoc[]
 
 === 추천 관련 기능
 ==== 추천 팀 조회
