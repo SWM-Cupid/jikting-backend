@@ -157,6 +157,12 @@ include::{snippets}/search-username-verify-success/http-request.adoc[]
 
 .response
 include::{snippets}/search-username-verify-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/search-username-verify-fail/http-request.adoc[]
+
+.response
+include::{snippets}/search-username-verify-fail/http-response.adoc[]
 
 === 팀 관련 기능
 ==== 받은 호감 목록 조회
