@@ -445,13 +445,13 @@ public class MemberControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(verificationCodeResponse))),
-                "search-username-success");
+                "search-username-create-verification-code-success");
     }
 
     private void 아이디_찾기_인증번호_발급_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
-                "search-username-fail");
+                "search-username-create-verification-code-fail");
     }
 }
