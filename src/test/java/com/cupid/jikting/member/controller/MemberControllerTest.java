@@ -333,7 +333,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_성공() throws Exception {
         // given
-        willReturn(verificationCodeResponse).given(memberService).resetPassword(any(PasswordResetRequest.class));
+        willReturn(verificationCodeResponse).given(memberService).createVerificationCodeForResetPassword(any(PasswordResetRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_요청();
         // then
@@ -343,7 +343,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).resetPassword(any(PasswordResetRequest.class));
+        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForResetPassword(any(PasswordResetRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_요청();
         // then
