@@ -40,7 +40,7 @@ public class MemberService {
         return null;
     }
 
-    public void createVerificationCodeForResetPassword(PasswordResetRequest passwordResetRequest) {
+    public void createVerificationCodeForResetPassword(PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest) {
     }
 
     public void verifyForResetPassword(VerificationRequest verificationRequest) {

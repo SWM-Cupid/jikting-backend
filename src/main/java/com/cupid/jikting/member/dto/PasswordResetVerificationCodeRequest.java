@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PasswordResetRequest {
+public class PasswordResetVerificationCodeRequest {
 
     private String username;
     private String name;

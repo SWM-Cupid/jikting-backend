@@ -63,7 +63,7 @@ public class MemberControllerTest extends ApiDocument {
     private PasswordRequest passwordRequest;
     private UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest;
     private VerificationRequest verificationRequest;
-    private PasswordResetRequest passwordResetRequest;
+    private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private UsernameResponse usernameResponse;
@@ -129,7 +129,7 @@ public class MemberControllerTest extends ApiDocument {
         verificationRequest = VerificationRequest.builder()
                 .verificationCode(VERIFICATION_CODE)
                 .build();
-        passwordResetRequest = PasswordResetRequest.builder()
+        passwordResetVerificationCodeRequest = PasswordResetVerificationCodeRequest.builder()
                 .username(USERNAME)
                 .name(NAME)
                 .phone(PHONE)
@@ -418,7 +418,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_인증번호_발급_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).createVerificationCodeForResetPassword(any(PasswordResetRequest.class));
+        willDoNothing().given(memberService).createVerificationCodeForResetPassword(any(PasswordResetVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_인증번호_발급_요청();
         // then
@@ -428,7 +428,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_인증번호_발급_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForResetPassword(any(PasswordResetRequest.class));
+        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForResetPassword(any(PasswordResetVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_인증번호_발급_요청();
         // then
@@ -458,7 +458,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).resetPassword(any(PasswordResetRequest.class));
+        willDoNothing().given(memberService).resetPassword(any(PasswordResetVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_인증_요청();
         // then
@@ -703,7 +703,7 @@ public class MemberControllerTest extends ApiDocument {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/reset/password/code")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(passwordResetRequest)));
+                .content(toJson(passwordResetVerificationCodeRequest)));
     }
 
     private void 비밀번호_재설정_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
