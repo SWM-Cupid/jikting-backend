@@ -327,6 +327,7 @@ include::{snippets}/get-sent-likes-fail/http-request.adoc[]
 
 .response
 include::{snippets}/get-sent-likes-fail/http-response.adoc[]
+
 ==== 받은 호감 수락
 ----
 /api/v1/likes/{likeId}/accept
@@ -343,6 +344,7 @@ include::{snippets}/accept-like-fail/http-request.adoc[]
 
 .response
 include::{snippets}/accept-like-fail/http-response.adoc[]
+
 ==== 팀 상세 조회
 ----
 /api/v1/likes/{likeId}/detail
