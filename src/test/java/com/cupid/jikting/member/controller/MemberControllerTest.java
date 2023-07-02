@@ -283,23 +283,23 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 아이디_찾기_성공() throws Exception {
+    void 아이디_찾기_인증번호_발급_성공() throws Exception {
         // given
-        willReturn(verificationCodeResponse).given(memberService).searchUsername(any(UsernameSearchRequest.class));
+        willReturn(verificationCodeResponse).given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchRequest.class));
         // when
-        ResultActions resultActions = 아이디_찾기_요청();
+        ResultActions resultActions = 아이디_찾기_인증번호_발급_요청();
         // then
-        아이디_찾기_요청_성공(resultActions);
+        아이디_찾기_인증번호_발급_요청_성공(resultActions);
     }
 
     @Test
     void 아이디_찾기_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).searchUsername(any(UsernameSearchRequest.class));
+        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchRequest.class));
         // when
-        ResultActions resultActions = 아이디_찾기_요청();
+        ResultActions resultActions = 아이디_찾기_인증번호_발급_요청();
         // then
-        아이디_찾기_요청_실패(resultActions);
+        아이디_찾기_인증번호_발급_요청_실패(resultActions);
     }
 
     private ResultActions 회원_가입_요청() throws Exception {
@@ -434,21 +434,21 @@ public class MemberControllerTest extends ApiDocument {
                 "update-member-password-wrong-form-fail");
     }
 
-    private ResultActions 아이디_찾기_요청() throws Exception {
+    private ResultActions 아이디_찾기_인증번호_발급_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username/code")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(usernameSearchRequest)));
     }
 
-    private void 아이디_찾기_요청_성공(ResultActions resultActions) throws Exception {
+    private void 아이디_찾기_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(verificationCodeResponse))),
                 "search-username-success");
     }
 
-    private void 아이디_찾기_요청_실패(ResultActions resultActions) throws Exception {
+    private void 아이디_찾기_인증번호_발급_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
