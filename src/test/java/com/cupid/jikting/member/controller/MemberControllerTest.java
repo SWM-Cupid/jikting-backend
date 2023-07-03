@@ -61,6 +61,8 @@ public class MemberControllerTest extends ApiDocument {
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private PasswordUpdateRequest passwordUpdateRequest;
     private WithdrawRequest withdrawRequest;
+    private UsernameCheckRequest usernameCheckRequest;
+    private NicknameCheckRequest nicknameCheckRequest;
     private UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest;
     private VerificationRequest verificationRequest;
     private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
@@ -127,6 +129,9 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         usernameCheckRequest = UsernameCheckRequest.builder()
                 .username(USERNAME)
+                .build();
+        nicknameCheckRequest = NicknameCheckRequest.builder()
+                .nickname(NICKNAME)
                 .build();
         usernameSearchVerificationCodeRequest = UsernameSearchVerificationCodeRequest.builder()
                 .username(USERNAME)
@@ -404,6 +409,16 @@ public class MemberControllerTest extends ApiDocument {
         ResultActions resultActions = 아이디_중복_검사_요청();
         // then
         아이디_중복_검사_요청_실패(resultActions);
+    }
+
+    @Test
+    void 닉네임_중복_검사_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).checkDuplicatedNickname(any(NicknameCheckRequest.class));
+        // when
+        ResultActions resultActions = 닉네임_중복_검사_요청();
+        // then
+        닉네임_중복_검사_요청_성공(resultActions);
     }
 
     @Test
