@@ -60,6 +60,12 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/username/check")
+    public ResponseEntity<Void> checkDuplicatedUsername(@RequestBody UsernameCheckRequest usernameCheckRequest) {
+        memberService.checkDuplicatedUsername(usernameCheckRequest);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/search/username/code")
     public ResponseEntity<Void> createVerificationCodeForSearchUsername(@RequestBody UsernameSearchRequest usernameSearchRequest) {
         memberService.createVerificationCodeForSearchUsername(usernameSearchRequest);
