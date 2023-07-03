@@ -820,7 +820,7 @@ public class MemberControllerTest extends ApiDocument {
     private void 비밀번호_재설정_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
-                "reset-password-fail");
+                "reset-password-success");
     }
 
     private void 비밀번호_재설정_요청_회원정보없음_실패(ResultActions resultActions) throws Exception {
