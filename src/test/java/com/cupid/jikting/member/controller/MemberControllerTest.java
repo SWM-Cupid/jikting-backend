@@ -61,6 +61,7 @@ public class MemberControllerTest extends ApiDocument {
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private PasswordUpdateRequest passwordUpdateRequest;
     private WithdrawRequest withdrawRequest;
+    private SignUpVerificationCodeRequest signUpVerificationCodeRequest;
     private UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest;
     private VerificationRequest verificationRequest;
     private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
@@ -127,6 +128,9 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         usernameCheckRequest = UsernameCheckRequest.builder()
                 .username(USERNAME)
+                .build();
+        signUpVerificationCodeRequest = SignUpVerificationCodeRequest.builder()
+                .phone(PHONE)
                 .build();
         usernameSearchVerificationCodeRequest = UsernameSearchVerificationCodeRequest.builder()
                 .username(USERNAME)
@@ -447,6 +451,16 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
+    void 전화번호_인증번호_발급_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).createVerificationCodeForSignup(any(SignUpVerificationCodeRequest.class));
+        // when
+        ResultActions resultActions = 전화번호_인증번호_발급_요청();
+        // then
+        전화번호_인증번호_발급_요청_성공(resultActions);
+    }
+
+    @Test
     void 비밀번호_재설정_인증번호_발급_성공() throws Exception {
         // given
         willDoNothing().given(memberService).createVerificationCodeForResetPassword(any(PasswordResetVerificationCodeRequest.class));
@@ -727,6 +741,19 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(duplicatedUsernameException)))),
                 "check-duplicated-username-fail");
+    }
+
+    private ResultActions 전화번호_인증번호_발급_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/code")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(signUpVerificationCodeRequest)));
+    }
+
+    private void 전화번호_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "signup-create-verification-code-success");
     }
 
     private ResultActions 아이디_찾기_인증번호_발급_요청() throws Exception {
