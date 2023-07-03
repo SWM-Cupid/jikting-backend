@@ -347,7 +347,7 @@ include::{snippets}/accept-like-fail/http-response.adoc[]
 
 ==== 팀 상세 조회
 ----
-/api/v1/likes/{likeId}/detail
+/api/v1/likes/{likeId}
 ----
 ===== 성공
 .request
