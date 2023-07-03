@@ -32,15 +32,20 @@ public class RecommendControllerTest extends ApiDocument {
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/recommends";
     private static final String PATH_DELIMITER = "/";
+    private static final String NICKNAME = "닉네임";
     private static final String HOBBY = "취미";
     private static final String PERSONALITY = "성격";
     private static final String URL = "http://test-url";
     private static final String COMPANY = "회사";
     private static final String DESCRIPTION = "소개";
     private static final String DRINK_STATUS = "안마심";
+    private static final String MBTI = "mbti";
+    private static final String ADDRESS = "거주지";
+    private static final String COLLEGE = "대학";
     private static final int AGE = 20;
     private static final int HEIGHT = 180;
     private static final Long ID = 1L;
+    private static final boolean IS_SMOKE = true;
     private static final boolean TRUE = true;
 
     private List<RecommendResponse> recommendResponses;
@@ -66,13 +71,18 @@ public class RecommendControllerTest extends ApiDocument {
                 .collect(Collectors.toList());
         List<MemberResponse> memberResponses = IntStream.rangeClosed(1, 2)
                 .mapToObj(n -> MemberResponse.builder()
+                        .nickname(NICKNAME)
                         .age(AGE)
+                        .mbti(MBTI)
+                        .address(ADDRESS)
                         .company(COMPANY)
-                        .description(DESCRIPTION)
+                        .isSmoke(IS_SMOKE)
                         .drinkStatus(DRINK_STATUS)
                         .height(HEIGHT)
+                        .description(DESCRIPTION)
                         .hobbies(hobbies)
                         .images(imageResponses)
+                        .college(COLLEGE)
                         .build())
                 .collect(Collectors.toList());
         RecommendResponse recommendResponse = RecommendResponse.builder()

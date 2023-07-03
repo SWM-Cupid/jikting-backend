@@ -1,6 +1,7 @@
 package com.cupid.jikting.like.service;
 
 import com.cupid.jikting.like.dto.LikeResponse;
+import com.cupid.jikting.like.dto.TeamDetailResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,5 +18,9 @@ public class LikeService {
     }
 
     public void acceptLike(Long likeId) {
+    }
+
+    public TeamDetailResponse getTeamDetail(Long likeId) {
+        return null;
     }
 }
