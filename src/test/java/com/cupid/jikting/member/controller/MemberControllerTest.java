@@ -67,7 +67,6 @@ public class MemberControllerTest extends ApiDocument {
     private VerificationRequest verificationRequest;
     private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
     private PasswordResetRequest passwordResetRequest;
-    private UsernameCheckRequest usernameCheckRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private UsernameResponse usernameResponse;
@@ -79,6 +78,7 @@ public class MemberControllerTest extends ApiDocument {
     private ApplicationException wrongFileSizeException;
     private ApplicationException verificationCodeNotEqualException;
     private ApplicationException duplicatedUsernameException;
+    private ApplicationException duplicatedNicknameException;
 
     @MockBean
     private MemberService memberService;
@@ -179,6 +179,7 @@ public class MemberControllerTest extends ApiDocument {
         wrongFileSizeException = new WrongFormException(ApplicationError.INVALID_FILE_SIZE);
         verificationCodeNotEqualException = new NotEqualException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
         duplicatedUsernameException = new DuplicateException(ApplicationError.DUPLICATE_USERNAME);
+        duplicatedNicknameException = new DuplicateException(ApplicationError.DUPLICATE_NICKNAME);
     }
 
     @Test
@@ -419,6 +420,16 @@ public class MemberControllerTest extends ApiDocument {
         ResultActions resultActions = 닉네임_중복_검사_요청();
         // then
         닉네임_중복_검사_요청_성공(resultActions);
+    }
+
+    @Test
+    void 닉네임_중복_검사_실패() throws Exception {
+        // given
+        willThrow(duplicatedNicknameException).given(memberService).checkDuplicatedUsername(any(UsernameCheckRequest.class));
+        // when
+        ResultActions resultActions = 아이디_중복_검사_요청();
+        // then
+        닉네임_중복_검사_요청_실패(resultActions);
     }
 
     @Test
@@ -742,6 +753,26 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(duplicatedUsernameException)))),
                 "check-duplicated-username-fail");
+    }
+
+    private ResultActions 닉네임_중복_검사_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/nickname/check")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(nicknameCheckRequest)));
+    }
+
+    private void 닉네임_중복_검사_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "check-duplicated-nickname-success");
+    }
+
+    private void 닉네임_중복_검사_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(duplicatedNicknameException)))),
+                "check-duplicated-nickname-fail");
     }
 
     private ResultActions 아이디_찾기_인증번호_발급_요청() throws Exception {
