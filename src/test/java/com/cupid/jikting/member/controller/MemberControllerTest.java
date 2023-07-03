@@ -60,9 +60,10 @@ public class MemberControllerTest extends ApiDocument {
     private NicknameUpdateRequest nicknameUpdateRequest;
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
     private PasswordUpdateRequest passwordUpdateRequest;
-    private PasswordRequest passwordRequest;
-    private UsernameSearchRequest usernameSearchRequest;
+    private WithdrawRequest withdrawRequest;
+    private UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest;
     private VerificationRequest verificationRequest;
+    private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
     private PasswordResetRequest passwordResetRequest;
     private UsernameCheckRequest usernameCheckRequest;
     private MemberResponse memberResponse;
@@ -121,23 +122,27 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .newPassword(NEW_PASSWORD)
                 .build();
-        passwordRequest = PasswordRequest.builder()
+        withdrawRequest = WithdrawRequest.builder()
                 .password(PASSWORD)
                 .build();
-        usernameSearchRequest = UsernameSearchRequest.builder()
+        usernameCheckRequest = UsernameCheckRequest.builder()
+                .username(USERNAME)
+                .build();
+        usernameSearchVerificationCodeRequest = UsernameSearchVerificationCodeRequest.builder()
                 .username(USERNAME)
                 .phone(PHONE)
                 .build();
         verificationRequest = VerificationRequest.builder()
                 .verificationCode(VERIFICATION_CODE)
                 .build();
-        passwordResetRequest = PasswordResetRequest.builder()
+        passwordResetVerificationCodeRequest = PasswordResetVerificationCodeRequest.builder()
                 .username(USERNAME)
                 .name(NAME)
                 .phone(PHONE)
                 .build();
-        usernameCheckRequest = UsernameCheckRequest.builder()
+        passwordResetRequest = PasswordResetRequest.builder()
                 .username(USERNAME)
+                .password(PASSWORD)
                 .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
@@ -164,9 +169,9 @@ public class MemberControllerTest extends ApiDocument {
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         passwordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
-        wrongFormException = new WrongFromException(ApplicationError.INVALID_FORMAT);
-        wrongFileExtensionException = new WrongFromException(ApplicationError.INVALID_FILE_EXTENSION);
-        wrongFileSizeException = new WrongFromException(ApplicationError.INVALID_FILE_SIZE);
+        wrongFormException = new WrongFormException(ApplicationError.INVALID_FORMAT);
+        wrongFileExtensionException = new WrongFormException(ApplicationError.INVALID_FILE_EXTENSION);
+        wrongFileSizeException = new WrongFormException(ApplicationError.INVALID_FILE_SIZE);
         verificationCodeNotEqualException = new NotEqualException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
         duplicatedUsernameException = new DuplicateException(ApplicationError.DUPLICATE_USERNAME);
     }
@@ -282,13 +287,13 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 회원_비밀번호_수정_회원정보찾기_실패() throws Exception {
+    void 회원_비밀번호_수정_회원정보없음_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).updatePassword(any(PasswordUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_비밀번호_수정_요청();
         // then
-        회원_비밀번호_수정_요청_회원정보찾기_실패(resultActions);
+        회원_비밀번호_수정_요청_회원정보없음_실패(resultActions);
     }
 
     @Test
@@ -322,13 +327,13 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 회원_이미지_수정_회원정보찾기_실패() throws Exception {
+    void 회원_이미지_수정_회원정보없음_실패() throws Exception {
         // given
         willThrow(memberNotFoundException).given(memberService).updateImage(any(MultipartFile.class));
         // when
         ResultActions resultActions = 회원_이미지_수정_요청();
         // then
-        회원_이미지_수정_요청_회원정보찾기_실패(resultActions);
+        회원_이미지_수정_요청_회원정보없음_실패(resultActions);
     }
 
     @Test
@@ -354,7 +359,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_탈퇴_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).withdraw(anyLong(), any(PasswordRequest.class));
+        willDoNothing().given(memberService).withdraw(anyLong(), any(WithdrawRequest.class));
         // when
         ResultActions resultActions = 회원_탈퇴_요청();
         // then
@@ -362,19 +367,19 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 회원_탈퇴_회원정보찾기_실패() throws Exception {
+    void 회원_탈퇴_회원정보없음_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).withdraw(anyLong(), any(PasswordRequest.class));
+        willThrow(memberNotFoundException).given(memberService).withdraw(anyLong(), any(WithdrawRequest.class));
         // when
         ResultActions resultActions = 회원_탈퇴_요청();
         // then
-        회원_탈퇴_요청_회원정보찾기_실패(resultActions);
+        회원_탈퇴_요청_회원정보없음_실패(resultActions);
     }
 
     @Test
     void 회원_탈퇴_비밀번호불일치_실패() throws Exception {
         // given
-        willThrow(passwordNotEqualException).given(memberService).withdraw(anyLong(), any(PasswordRequest.class));
+        willThrow(passwordNotEqualException).given(memberService).withdraw(anyLong(), any(WithdrawRequest.class));
         // when
         ResultActions resultActions = 회원_탈퇴_요청();
         // then
@@ -404,7 +409,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 아이디_찾기_인증번호_발급_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchRequest.class));
+        willDoNothing().given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 아이디_찾기_인증번호_발급_요청();
         // then
@@ -414,7 +419,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 아이디_찾기_인증번호_발급_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchRequest.class));
+        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 아이디_찾기_인증번호_발급_요청();
         // then
@@ -444,7 +449,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_인증번호_발급_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).createVerificationCodeForResetPassword(any(PasswordResetRequest.class));
+        willDoNothing().given(memberService).createVerificationCodeForResetPassword(any(PasswordResetVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_인증번호_발급_요청();
         // then
@@ -454,7 +459,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_인증번호_발급_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForResetPassword(any(PasswordResetRequest.class));
+        willThrow(memberNotFoundException).given(memberService).createVerificationCodeForResetPassword(any(PasswordResetVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_인증번호_발급_요청();
         // then
@@ -479,6 +484,36 @@ public class MemberControllerTest extends ApiDocument {
         ResultActions resultActions = 비밀번호_재설정_인증_요청();
         // then
         비밀번호_재설정_인증_요청_실패(resultActions);
+    }
+
+    @Test
+    void 비밀번호_재설정_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).resetPassword(any(PasswordResetRequest.class));
+        // when
+        ResultActions resultActions = 비밀번호_재설정_요청();
+        // then
+        비밀번호_재설정_요청_성공(resultActions);
+    }
+
+    @Test
+    void 비밀번호_재설정_회원정보없음_실패() throws Exception {
+        // given
+        willThrow(memberNotFoundException).given(memberService).resetPassword(any(PasswordResetRequest.class));
+        // when
+        ResultActions resultActions = 비밀번호_재설정_요청();
+        // then
+        비밀번호_재설정_요청_회원정보없음_실패(resultActions);
+    }
+
+    @Test
+    void 비밀번호_재설정_비밀번호양식불일치_실패() throws Exception {
+        // given
+        willThrow(wrongFormException).given(memberService).resetPassword(any(PasswordResetRequest.class));
+        // when
+        ResultActions resultActions = 비밀번호_재설정_요청();
+        // then
+        비밀번호_재설정_요청_비밀번호양식불일치_실패(resultActions);
     }
 
     private ResultActions 회원_가입_요청() throws Exception {
@@ -592,7 +627,7 @@ public class MemberControllerTest extends ApiDocument {
                 "update-member-password-success");
     }
 
-    private void 회원_비밀번호_수정_요청_회원정보찾기_실패(ResultActions resultActions) throws Exception {
+    private void 회원_비밀번호_수정_요청_회원정보없음_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
@@ -626,7 +661,7 @@ public class MemberControllerTest extends ApiDocument {
                 "update-member-image-success");
     }
 
-    private void 회원_이미지_수정_요청_회원정보찾기_실패(ResultActions resultActions) throws Exception {
+    private void 회원_이미지_수정_요청_회원정보없음_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
@@ -651,7 +686,7 @@ public class MemberControllerTest extends ApiDocument {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/withdraw")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(passwordRequest)));
+                .content(toJson(withdrawRequest)));
     }
 
     private void 회원_탈퇴_요청_성공(ResultActions resultActions) throws Exception {
@@ -660,7 +695,7 @@ public class MemberControllerTest extends ApiDocument {
                 "delete-member-success");
     }
 
-    private void 회원_탈퇴_요청_회원정보찾기_실패(ResultActions resultActions) throws Exception {
+    private void 회원_탈퇴_요청_회원정보없음_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
@@ -695,10 +730,10 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 아이디_찾기_인증번호_발급_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username/code")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/username/search/code")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(usernameSearchRequest)));
+                .content(toJson(usernameSearchVerificationCodeRequest)));
     }
 
     private void 아이디_찾기_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
@@ -715,7 +750,7 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 아이디_찾기_인증_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/search/username/verification")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/username/search/verification")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(verificationRequest)));
@@ -736,10 +771,10 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 비밀번호_재설정_인증번호_발급_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/reset/password/code")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/password/reset/code")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(passwordResetRequest)));
+                .content(toJson(passwordResetVerificationCodeRequest)));
     }
 
     private void 비밀번호_재설정_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
@@ -756,7 +791,7 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 비밀번호_재설정_인증_요청() throws Exception {
-        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/reset/password/verification")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/password/reset/verification")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(verificationRequest)));
@@ -773,5 +808,32 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(verificationCodeNotEqualException)))),
                 "reset-password-verify-fail");
+    }
+
+    private ResultActions 비밀번호_재설정_요청() throws Exception {
+        return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/password/reset")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(passwordResetRequest)));
+    }
+
+    private void 비밀번호_재설정_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "reset-password-fail");
+    }
+
+    private void 비밀번호_재설정_요청_회원정보없음_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "reset-password-not-found-member-fail");
+    }
+
+    private void 비밀번호_재설정_요청_비밀번호양식불일치_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
+                "reset-password-wrong-form-fail");
     }
 }

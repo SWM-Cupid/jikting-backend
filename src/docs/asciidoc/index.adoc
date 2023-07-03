@@ -209,7 +209,7 @@ include::{snippets}/check-duplicated-username-fail/http-response.adoc[]
 
 ==== 아이디 찾기 인증번호 발급
 ----
-/api/v1/members/search/username/code
+/api/v1/members/username/search/code
 ----
 ===== 성공
 .request
@@ -226,7 +226,7 @@ include::{snippets}/search-username-create-verification-code-fail/http-response.
 
 ==== 아이디 찾기 인증
 ----
-/api/v1/members/search/username/verification
+/api/v1/members/username/search/verification
 ----
 ===== 성공
 .request
@@ -243,7 +243,7 @@ include::{snippets}/search-username-verify-fail/http-response.adoc[]
 
 ==== 비밀번호 재설정 인증번호 발급
 ----
-/api/v1/members/reset/password/code
+/api/v1/members/password/reset/code
 ----
 ===== 성공
 .request
@@ -260,7 +260,7 @@ include::{snippets}/reset-password-create-verification-code-fail/http-response.a
 
 ==== 비밀번호 재설정 인증
 ----
-/api/v1/members/reset/password/verification
+/api/v1/members/password/reset/verification
 ----
 ===== 성공
 .request
@@ -274,6 +274,26 @@ include::{snippets}/reset-password-verify-fail/http-request.adoc[]
 
 .response
 include::{snippets}/reset-password-verify-fail/http-response.adoc[]
+
+==== 비밀번호 재설정
+----
+/api/v1/members/password/reset
+----
+===== 성공
+.request
+include::{snippets}/reset-password-success/http-request.adoc[]
+
+.response
+include::{snippets}/reset-password-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/reset-password-not-found-member-fail/http-request.adoc[]
+
+.response - 회원을 찾을 수 없음
+include::{snippets}/reset-password-not-found-member-fail/http-response.adoc[]
+
+.response - 비밀번호 양식 불일치
+include::{snippets}/reset-password-wrong-form-fail/http-response.adoc[]
 
 === 추천 관련 기능
 ==== 추천 팀 조회

@@ -55,8 +55,8 @@ public class MemberController {
     }
 
     @PostMapping("/withdraw")
-    public ResponseEntity<Void> withdraw(@RequestBody PasswordRequest passwordRequest) {
-        memberService.withdraw(1L, passwordRequest);
+    public ResponseEntity<Void> withdraw(@RequestBody WithdrawRequest withdrawRequest) {
+        memberService.withdraw(1L, withdrawRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -66,26 +66,32 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/search/username/code")
-    public ResponseEntity<Void> createVerificationCodeForSearchUsername(@RequestBody UsernameSearchRequest usernameSearchRequest) {
-        memberService.createVerificationCodeForSearchUsername(usernameSearchRequest);
+    @PostMapping("/username/search/code")
+    public ResponseEntity<Void> createVerificationCodeForSearchUsername(@RequestBody UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest) {
+        memberService.createVerificationCodeForSearchUsername(usernameSearchVerificationCodeRequest);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/search/username/verification")
+    @PostMapping("/username/search/verification")
     public ResponseEntity<UsernameResponse> verifyForSearchUsername(@RequestBody VerificationRequest verificationRequest) {
         return ResponseEntity.ok().body(memberService.verifyForSearchUsername(verificationRequest));
     }
 
-    @PostMapping("/reset/password/code")
-    public ResponseEntity<Void> createVerificationCodeForResetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
-        memberService.createVerificationCodeForResetPassword(passwordResetRequest);
+    @PostMapping("/password/reset/code")
+    public ResponseEntity<Void> createVerificationCodeForResetPassword(@RequestBody PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest) {
+        memberService.createVerificationCodeForResetPassword(passwordResetVerificationCodeRequest);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/reset/password/verification")
+    @PostMapping("/password/reset/verification")
     public ResponseEntity<Void> verifyForResetPassword(@RequestBody VerificationRequest verificationRequest) {
         memberService.verifyForResetPassword(verificationRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/password/reset")
+    public ResponseEntity<Void> resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
+        memberService.resetPassword(passwordResetRequest);
         return ResponseEntity.ok().build();
     }
 }

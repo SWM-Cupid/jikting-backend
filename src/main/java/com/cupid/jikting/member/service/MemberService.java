@@ -30,22 +30,25 @@ public class MemberService {
     public void updateImage(MultipartFile multipartFile) {
     }
 
-    public void withdraw(Long memberId, PasswordRequest passwordRequest) {
+    public void withdraw(Long memberId, WithdrawRequest withdrawRequest) {
     }
 
     public void checkDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
     }
 
-    public void createVerificationCodeForSearchUsername(UsernameSearchRequest usernameSearchRequest) {
+    public void createVerificationCodeForSearchUsername(UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest) {
     }
 
     public UsernameResponse verifyForSearchUsername(VerificationRequest verificationRequest) {
         return null;
     }
 
-    public void createVerificationCodeForResetPassword(PasswordResetRequest passwordResetRequest) {
+    public void createVerificationCodeForResetPassword(PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest) {
     }
 
     public void verifyForResetPassword(VerificationRequest verificationRequest) {
+    }
+
+    public void resetPassword(PasswordResetRequest passwordResetRequest) {
     }
 }
