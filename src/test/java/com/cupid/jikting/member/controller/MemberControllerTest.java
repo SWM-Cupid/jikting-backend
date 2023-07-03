@@ -164,9 +164,9 @@ public class MemberControllerTest extends ApiDocument {
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         passwordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
-        wrongFormException = new WrongFromException(ApplicationError.INVALID_FORMAT);
-        wrongFileExtensionException = new WrongFromException(ApplicationError.INVALID_FILE_EXTENSION);
-        wrongFileSizeException = new WrongFromException(ApplicationError.INVALID_FILE_SIZE);
+        wrongFormException = new WrongFormException(ApplicationError.INVALID_FORMAT);
+        wrongFileExtensionException = new WrongFormException(ApplicationError.INVALID_FILE_EXTENSION);
+        wrongFileSizeException = new WrongFormException(ApplicationError.INVALID_FILE_SIZE);
         verificationCodeNotEqualException = new NotEqualException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
     }
 
