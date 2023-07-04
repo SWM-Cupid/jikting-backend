@@ -306,6 +306,12 @@ include::{snippets}/register-team-success/http-request.adoc[]
 
 .response
 include::{snippets}/register-team-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/register-team-fail/http-request.adoc[]
+
+.response
+include::{snippets}/register-team-fail/http-response.adoc[]
 
 === 추천 관련 기능
 ==== 추천 팀 조회
