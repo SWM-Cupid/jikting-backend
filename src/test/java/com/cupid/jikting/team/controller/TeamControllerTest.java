@@ -1,6 +1,10 @@
 package com.cupid.jikting.team.controller;
 
 import com.cupid.jikting.ApiDocument;
+import com.cupid.jikting.common.dto.ErrorResponse;
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.ApplicationException;
+import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.service.TeamService;
@@ -17,6 +21,7 @@ import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,6 +37,7 @@ public class TeamControllerTest extends ApiDocument {
 
     private TeamRegisterRequest teamRegisterRequest;
     private TeamRegisterResponse teamRegisterResponse;
+    private ApplicationException invalidFormatException;
 
     @MockBean
     private TeamService teamService;
@@ -48,6 +54,7 @@ public class TeamControllerTest extends ApiDocument {
         teamRegisterResponse = TeamRegisterResponse.builder()
                 .invitationUrl(INVITATION_URL)
                 .build();
+        invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
     }
 
     @Test
@@ -58,6 +65,16 @@ public class TeamControllerTest extends ApiDocument {
         ResultActions resultActions = 팀_등록_요청();
         // then
         팀_등록_요청_성공(resultActions);
+    }
+
+    @Test
+    void 팀_등록_실패() throws Exception {
+        // given
+        willThrow(invalidFormatException).given(teamService).register(any(TeamRegisterRequest.class));
+        // when
+        ResultActions resultActions = 팀_등록_요청();
+        // then
+        팀_등록_요청_실패(resultActions);
     }
 
     private ResultActions 팀_등록_요청() throws Exception {
@@ -72,5 +89,12 @@ public class TeamControllerTest extends ApiDocument {
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(teamRegisterResponse))),
                 "register-team-success");
+    }
+
+    private void 팀_등록_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(invalidFormatException)))),
+                "register-team-fail");
     }
 }
