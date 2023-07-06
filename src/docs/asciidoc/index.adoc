@@ -355,4 +355,3 @@ include::{snippets}/get-instant-meeting-success/http-request.adoc[]
 
 .response
 include::{snippets}/get-instant-meeting-success/http-response.adoc[]
-===== 실패
