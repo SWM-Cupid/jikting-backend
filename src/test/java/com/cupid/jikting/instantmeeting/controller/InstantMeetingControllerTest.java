@@ -28,7 +28,6 @@ public class InstantMeetingControllerTest extends ApiDocument {
     private static final Long ID = 1L;
     private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2023, Month.JUNE, 30, 18, 0);
     private static final String LOCATION = "장소";
-    private static final int POINT = 10;
 
     private List<InstantMeetingResponse> instantMeetingResponses;
 
@@ -42,7 +41,6 @@ public class InstantMeetingControllerTest extends ApiDocument {
                         .InstantMeetingId(ID)
                         .InstantMeetingDateTime(LOCAL_DATE_TIME)
                         .location(LOCATION)
-                        .point(POINT)
                         .build())
                 .collect(Collectors.toList());
 
