@@ -51,4 +51,7 @@ public class MemberService {
 
     public void resetPassword(PasswordResetRequest passwordResetRequest) {
     }
+
+    public void checkDuplicatedNickname(NicknameCheckRequest nicknameCheckRequest) {
+    }
 }

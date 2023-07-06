@@ -207,6 +207,23 @@ include::{snippets}/check-duplicated-username-fail/http-request.adoc[]
 .response
 include::{snippets}/check-duplicated-username-fail/http-response.adoc[]
 
+==== 닉네임 중복 검사
+----
+/api/v1/members/nickname/check
+----
+===== 성공
+.request
+include::{snippets}/check-duplicated-nickname-success/http-request.adoc[]
+
+.response
+include::{snippets}/check-duplicated-nickname-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/check-duplicated-nickname-fail/http-request.adoc[]
+
+.response
+include::{snippets}/check-duplicated-nickname-fail/http-response.adoc[]
+
 ==== 아이디 찾기 인증번호 발급
 ----
 /api/v1/members/username/search/code
