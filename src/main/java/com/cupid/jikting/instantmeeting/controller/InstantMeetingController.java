@@ -12,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/instants")
+@RequestMapping("/instant-meetings")
 public class InstantMeetingController {
 
     private final InstantMeetingService instantMeetingService;
