@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class InstantMeetingControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
-    private static final String DOMAIN_ROOT_PATH = "/instants";
+    private static final String DOMAIN_ROOT_PATH = "/instant-meetings";
     private static final Long ID = 1L;
     private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2023, Month.JUNE, 30, 18, 0);
     private static final String LOCATION = "장소";
