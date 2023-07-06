@@ -38,12 +38,11 @@ public class InstantMeetingControllerTest extends ApiDocument {
     void setUp() {
         instantMeetingResponses = IntStream.rangeClosed(0, 3)
                 .mapToObj(n -> InstantMeetingResponse.builder()
-                        .InstantMeetingId(ID)
-                        .InstantMeetingDateTime(LOCAL_DATE_TIME)
+                        .instantMeetingId(ID)
+                        .instantMeetingDateTime(LOCAL_DATE_TIME)
                         .location(LOCATION)
                         .build())
                 .collect(Collectors.toList());
-
     }
 
     @Test
