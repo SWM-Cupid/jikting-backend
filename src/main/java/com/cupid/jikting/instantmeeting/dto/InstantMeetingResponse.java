@@ -10,8 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class InstantMeetingResponse {
 
-    private Long InstantMeetingId;
-    private LocalDateTime InstantMeetingDateTime;
+    private Long instantMeetingId;
+    private LocalDateTime instantMeetingDateTime;
     private String location;
-    private int point;
 }

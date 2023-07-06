@@ -7,6 +7,7 @@ import java.util.List;
 
 @Service
 public class InstantMeetingService {
+
     public List<InstantMeetingResponse> getAll() {
         return null;
     }
