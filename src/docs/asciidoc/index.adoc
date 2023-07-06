@@ -398,3 +398,20 @@ include::{snippets}/get-team-detail-fail/http-request.adoc[]
 
 .response
 include::{snippets}/get-team-detail-fail/http-response.adoc[]
+
+==== 받은 호감 거절
+----
+/api/v1/likes/{likeId}/reject
+----
+===== 성공
+.request
+include::{snippets}/reject-like-success/http-request.adoc[]
+
+.response
+include::{snippets}/reject-like-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/reject-like-fail/http-request.adoc[]
+
+.response
+include::{snippets}/reject-like-fail/http-response.adoc[]

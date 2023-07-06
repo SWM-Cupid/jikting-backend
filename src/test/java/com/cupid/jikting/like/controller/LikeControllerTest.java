@@ -157,6 +157,26 @@ public class LikeControllerTest extends ApiDocument {
     }
 
     @Test
+    void 받은_호감_거절_성공() throws Exception {
+        //given
+        willDoNothing().given(likeService).rejectLike(anyLong());
+        //when
+        ResultActions resultActions = 받은_호감_거절_요청();
+        //then
+        받은_호감_거절_요청_성공(resultActions);
+    }
+
+    @Test
+    void 받은_호감_거절_실패() throws Exception {
+        //given
+        willThrow(teamNotFoundException).given(likeService).rejectLike(anyLong());
+        //when
+        ResultActions resultActions = 받은_호감_거절_요청();
+        //then
+        받은_호감_거절_요청_실패(resultActions);
+    }
+
+    @Test
     void 팀_상세_조회_성공() throws Exception {
         //given
         willReturn(teamDetailResponse).given(likeService).getTeamDetail(anyLong());
@@ -177,9 +197,8 @@ public class LikeControllerTest extends ApiDocument {
     }
 
     private ResultActions 받은_호감_목록_조회_요청() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/received")
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/received")
                 .contextPath(CONTEXT_PATH));
-        return resultActions;
     }
 
     private void 받은_호감_목록_조회_요청_성공(ResultActions resultActions) throws Exception {
@@ -197,9 +216,8 @@ public class LikeControllerTest extends ApiDocument {
     }
 
     private ResultActions 보낸_호감_목록_조회_요청() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/sent")
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/sent")
                 .contextPath(CONTEXT_PATH));
-        return resultActions;
     }
 
     private void 보낸_호감_목록_조회_요청_성공(ResultActions resultActions) throws Exception {
@@ -217,9 +235,8 @@ public class LikeControllerTest extends ApiDocument {
     }
 
     private ResultActions 받은_호감_수락_요청() throws Exception {
-        ResultActions resultActions = mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/accept")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/accept")
                 .contextPath(CONTEXT_PATH));
-        return resultActions;
     }
 
     private void 받은_호감_수락_요청_성공(ResultActions resultActions) throws Exception {
@@ -233,6 +250,24 @@ public class LikeControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
                 "accept-like-fail");
+    }
+
+    private ResultActions 받은_호감_거절_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/reject")
+                .contextPath(CONTEXT_PATH));
+    }
+
+    private void 받은_호감_거절_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "reject-like-success");
+    }
+
+    private void 받은_호감_거절_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
+                "reject-like-fail");
     }
 
     private ResultActions 팀_상세_조회_요청() throws Exception {

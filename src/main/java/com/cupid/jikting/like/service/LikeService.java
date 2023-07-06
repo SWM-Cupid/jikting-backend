@@ -20,6 +20,9 @@ public class LikeService {
     public void acceptLike(Long likeId) {
     }
 
+    public void rejectLike(Long likeId) {
+    }
+
     public TeamDetailResponse getTeamDetail(Long likeId) {
         return null;
     }
