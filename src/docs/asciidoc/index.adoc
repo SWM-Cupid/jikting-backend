@@ -432,3 +432,15 @@ include::{snippets}/reject-like-fail/http-request.adoc[]
 
 .response
 include::{snippets}/reject-like-fail/http-response.adoc[]
+
+=== 채팅 관련 기능
+==== 채팅 목록 조회
+----
+/api/v1/chattings
+----
+===== 성공
+.request
+include::{snippets}/get-chattings-success/http-request.adoc[]
+
+.response
+include::{snippets}/get-chattings-success/http-response.adoc[]
