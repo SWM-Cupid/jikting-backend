@@ -347,7 +347,7 @@ include::{snippets}/accept-like-fail/http-response.adoc[]
 === 번개팅 관련 기능
 ==== 번개팅 목록 조회
 ----
-/api/v1/instants
+/api/v1/instant-meetings
 ----
 ===== 성공
 .request
