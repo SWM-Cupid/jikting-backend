@@ -312,6 +312,24 @@ include::{snippets}/reset-password-not-found-member-fail/http-response.adoc[]
 .response - 비밀번호 양식 불일치
 include::{snippets}/reset-password-wrong-form-fail/http-response.adoc[]
 
+=== 팀 관련 기능
+==== 팀 참여
+----
+/api/v1/teams/attend/{teamId}
+----
+===== 성공
+.request
+include::{snippets}/attend-team-success/http-request.adoc[]
+
+.response
+include::{snippets}/attend-team-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/attend-team-fail/http-request.adoc[]
+
+.response
+include::{snippets}/attend-team-fail/http-response.adoc[]
+
 === 추천 관련 기능
 ==== 추천 팀 조회
 ----
