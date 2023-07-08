@@ -217,6 +217,12 @@ include::{snippets}/signup-create-verification-code-success/http-request.adoc[]
 
 .response
 include::{snippets}/signup-create-verification-code-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/signup-create-verification-code-fail/http-request.adoc[]
+
+.response
+include::{snippets}/signup-create-verification-code-fail/http-response.adoc[]
 
 ==== 아이디 찾기 인증번호 발급
 ----
