@@ -315,7 +315,7 @@ include::{snippets}/reset-password-wrong-form-fail/http-response.adoc[]
 === 팀 관련 기능
 ==== 팀 참여
 ----
-/api/v1/teams/attend/{teamId}
+/api/v1/teams/{teamId}/attend
 ----
 ===== 성공
 .request
