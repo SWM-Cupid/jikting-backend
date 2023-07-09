@@ -11,4 +11,7 @@ public class InstantMeetingService {
     public List<InstantMeetingResponse> getAll() {
         return null;
     }
+
+    public void attend(Long instantMeetingId) {
+    }
 }
