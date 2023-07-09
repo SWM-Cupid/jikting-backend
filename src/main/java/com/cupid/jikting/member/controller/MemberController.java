@@ -106,4 +106,10 @@ public class MemberController {
         memberService.resetPassword(passwordResetRequest);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/company/code")
+    public ResponseEntity<Void> createVerificationCodeForCompany(@RequestBody CompanyVerificationCodeRequest companyVerificationCodeRequest) {
+        memberService.createVerificationCodeForCompany(companyVerificationCodeRequest);
+        return ResponseEntity.ok().build();
+    }
 }
