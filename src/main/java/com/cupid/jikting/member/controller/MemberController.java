@@ -67,8 +67,8 @@ public class MemberController {
     }
 
     @PostMapping("/verification")
-    public ResponseEntity<Void> verifyForSignup(@RequestBody VerificationRequest verificationRequest) {
-        memberService.verifyForSignup(verificationRequest);
+    public ResponseEntity<Void> verifyPhoneForSignup(@RequestBody VerificationRequest verificationRequest) {
+        memberService.verifyPhoneForSignup(verificationRequest);
         return ResponseEntity.ok().build();
     }
 
