@@ -213,16 +213,16 @@ include::{snippets}/check-duplicated-username-fail/http-response.adoc[]
 ----
 ===== 성공
 .request
-include::{snippets}/signup-verify-success/http-request.adoc[]
+include::{snippets}/signup-verify-phone-success/http-request.adoc[]
 
 .response
-include::{snippets}/signup-verify-success/http-response.adoc[]
+include::{snippets}/signup-verify-phone-success/http-response.adoc[]
 ===== 실패
 .request
-include::{snippets}/signup-verify-fail/http-request.adoc[]
+include::{snippets}/signup-verify-phone-fail/http-request.adoc[]
 
 .response
-include::{snippets}/signup-verify-fail/http-response.adoc[]
+include::{snippets}/signup-verify-phone-fail/http-response.adoc[]
 
 ==== 아이디 찾기 인증번호 발급
 ----
