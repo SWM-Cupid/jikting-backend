@@ -15,7 +15,7 @@ public class TeamController {
 
     private final TeamService teamService;
 
-    @PostMapping("/attend/{teamId}")
+    @PostMapping("/{teamId}/attend")
     public ResponseEntity<Void> attend(@PathVariable Long teamId) {
         teamService.attend(teamId);
         return ResponseEntity.ok().build();
