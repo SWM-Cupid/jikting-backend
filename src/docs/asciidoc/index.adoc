@@ -224,6 +224,23 @@ include::{snippets}/check-duplicated-nickname-fail/http-request.adoc[]
 .response
 include::{snippets}/check-duplicated-nickname-fail/http-response.adoc[]
 
+==== 전화번호 인증번호 발급
+----
+/api/v1/members/code
+----
+===== 성공
+.request
+include::{snippets}/signup-create-verification-code-success/http-request.adoc[]
+
+.response
+include::{snippets}/signup-create-verification-code-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/signup-create-verification-code-fail/http-request.adoc[]
+
+.response
+include::{snippets}/signup-create-verification-code-fail/http-response.adoc[]
+
 ==== 아이디 찾기 인증번호 발급
 ----
 /api/v1/members/username/search/code

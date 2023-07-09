@@ -63,6 +63,7 @@ public class MemberControllerTest extends ApiDocument {
     private WithdrawRequest withdrawRequest;
     private UsernameCheckRequest usernameCheckRequest;
     private NicknameCheckRequest nicknameCheckRequest;
+    private SignUpVerificationCodeRequest signUpVerificationCodeRequest;
     private UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest;
     private VerificationRequest verificationRequest;
     private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
@@ -132,6 +133,9 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         nicknameCheckRequest = NicknameCheckRequest.builder()
                 .nickname(NICKNAME)
+                .build();
+        signUpVerificationCodeRequest = SignUpVerificationCodeRequest.builder()
+                .phone(PHONE)
                 .build();
         usernameSearchVerificationCodeRequest = UsernameSearchVerificationCodeRequest.builder()
                 .username(USERNAME)
@@ -430,6 +434,26 @@ public class MemberControllerTest extends ApiDocument {
         ResultActions resultActions = 아이디_중복_검사_요청();
         // then
         닉네임_중복_검사_요청_실패(resultActions);
+    }
+
+    @Test
+    void 전화번호_인증번호_발급_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).createVerificationCodeForSignup(any(SignUpVerificationCodeRequest.class));
+        // when
+        ResultActions resultActions = 전화번호_인증번호_발급_요청();
+        // then
+        전화번호_인증번호_발급_요청_성공(resultActions);
+    }
+
+    @Test
+    void 전화번호_인증번호_발급_실패() throws Exception {
+        // given
+        willThrow(wrongFormException).given(memberService).createVerificationCodeForSignup(any(SignUpVerificationCodeRequest.class));
+        // when
+        ResultActions resultActions = 전화번호_인증번호_발급_요청();
+        // then
+        전화번호_인증번호_발급_요청_실패(resultActions);
     }
 
     @Test
@@ -773,6 +797,26 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(duplicatedNicknameException)))),
                 "check-duplicated-nickname-fail");
+    }
+
+    private ResultActions 전화번호_인증번호_발급_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/code")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(signUpVerificationCodeRequest)));
+    }
+
+    private void 전화번호_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "signup-create-verification-code-success");
+    }
+
+    private void 전화번호_인증번호_발급_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
+                "signup-create-verification-code-fail");
     }
 
     private ResultActions 아이디_찾기_인증번호_발급_요청() throws Exception {

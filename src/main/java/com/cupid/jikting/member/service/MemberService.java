@@ -36,6 +36,9 @@ public class MemberService {
     public void checkDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
     }
 
+    public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
+    }
+
     public void createVerificationCodeForSearchUsername(UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest) {
     }
 
