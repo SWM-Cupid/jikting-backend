@@ -23,6 +23,7 @@ public class ChattingControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/chattings";
+    private static final String URL = "이미지 주소";
     private static final Long ID = 1L;
     private static final String TEAM_NAME = "팀이름";
     private static final String MESSAGE = "메시지";
@@ -34,14 +35,17 @@ public class ChattingControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
+        List<String> images = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> URL)
+                .collect(Collectors.toList());
         chattingResponses = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> ChattingResponse.builder()
                         .chattingId(ID)
                         .opposingTeamName(TEAM_NAME)
                         .lastMessage(MESSAGE)
+                        .images(images)
                         .build())
                 .collect(Collectors.toList());
-
     }
 
     @Test
