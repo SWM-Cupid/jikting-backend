@@ -566,6 +566,16 @@ public class MemberControllerTest extends ApiDocument {
         비밀번호_재설정_요청_비밀번호양식불일치_실패(resultActions);
     }
 
+    @Test
+    void 회사_이메일_인증_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).verifyForCompany(any(VerificationRequest.class));
+        // when
+        ResultActions resultActions = 회사_이메일_인증_요청();
+        // then
+        회사_이메일_인증_요청_성공(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -925,5 +935,18 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
                 "reset-password-wrong-form-fail");
+    }
+
+    private ResultActions 회사_이메일_인증_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/verification")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(verificationRequest)));
+    }
+
+    private void 회사_이메일_인증_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "verify-company-success");
     }
 }
