@@ -339,6 +339,12 @@ include::{snippets}/verify-company-create-verification-code-success/http-request
 
 .response
 include::{snippets}/verify-company-create-verification-code-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/verify-company-create-verification-code-fail/http-request.adoc[]
+
+.response
+include::{snippets}/verify-company-create-verification-code-fail/http-response.adoc[]
 
 === 팀 관련 기능
 ==== 팀 등록
