@@ -8,7 +8,6 @@ import java.util.List;
 @Service
 public class ChattingService {
 
-
     public List<ChattingResponse> getAll() {
         return null;
     }
