@@ -347,6 +347,23 @@ include::{snippets}/register-team-fail/http-request.adoc[]
 .response
 include::{snippets}/register-team-fail/http-response.adoc[]
 
+==== 팀 수정
+----
+/api/v1/teams/{teamId}
+----
+===== 성공
+.request
+include::{snippets}/update-team-success/http-request.adoc[]
+
+.response
+include::{snippets}/update-team-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/update-team-fail/http-request.adoc[]
+
+.response
+include::{snippets}/update-team-fail/http-response.adoc[]
+
 === 추천 관련 기능
 ==== 추천 팀 조회
 ----
