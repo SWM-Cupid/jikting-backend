@@ -409,7 +409,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 전화번호_인증_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).verifyForSignup(any(VerificationRequest.class));
+        willDoNothing().given(memberService).verifyPhoneForSignup(any(VerificationRequest.class));
         // when
         ResultActions resultActions = 전화번호_인증_요청();
         // then
@@ -419,7 +419,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 전화번호_인증_실패() throws Exception {
         // given
-        willThrow(verificationCodeNotEqualException).given(memberService).verifyForSignup(any(VerificationRequest.class));
+        willThrow(verificationCodeNotEqualException).given(memberService).verifyPhoneForSignup(any(VerificationRequest.class));
         // when
         ResultActions resultActions = 전화번호_인증_요청();
         // then

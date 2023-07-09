@@ -36,7 +36,7 @@ public class MemberService {
     public void checkDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
     }
 
-    public void verifyForSignup(VerificationRequest verificationRequest) {
+    public void verifyPhoneForSignup(VerificationRequest verificationRequest) {
     }
 
     public void createVerificationCodeForSearchUsername(UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest) {
