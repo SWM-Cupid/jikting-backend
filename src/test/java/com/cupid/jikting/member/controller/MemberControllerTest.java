@@ -759,14 +759,14 @@ public class MemberControllerTest extends ApiDocument {
     private void 전화번호_인증_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
-                "signup-verify-success");
+                "signup-verify-phone-success");
     }
 
     private void 전화번호_인증_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(verificationCodeNotEqualException)))),
-                "signup-verify-fail");
+                "signup-verify-phone-fail");
     }
 
     private ResultActions 아이디_찾기_인증번호_발급_요청() throws Exception {
