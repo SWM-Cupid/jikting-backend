@@ -329,6 +329,17 @@ include::{snippets}/reset-password-not-found-member-fail/http-response.adoc[]
 .response - 비밀번호 양식 불일치
 include::{snippets}/reset-password-wrong-form-fail/http-response.adoc[]
 
+==== 회사 이메일 인증
+----
+/api/v1/members/company/verification
+----
+===== 성공
+.request
+include::{snippets}/verify-company-success/http-request.adoc[]
+
+.response
+include::{snippets}/verify-company-success/http-response.adoc[]
+
 === 팀 관련 기능
 ==== 팀 등록
 ----
