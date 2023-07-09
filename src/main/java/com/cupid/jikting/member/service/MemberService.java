@@ -57,4 +57,7 @@ public class MemberService {
 
     public void checkDuplicatedNickname(NicknameCheckRequest nicknameCheckRequest) {
     }
+
+    public void verifyForCompany(VerificationRequest verificationRequest) {
+    }
 }
