@@ -10,4 +10,7 @@ public class TeamService {
     public TeamRegisterResponse register(TeamRegisterRequest teamRegisterRequest) {
         return null;
     }
+
+    public void delete(Long teamId) {
+    }
 }
