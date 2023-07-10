@@ -39,6 +39,9 @@ public class MemberService {
     public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
     }
 
+    public void verifyPhoneForSignup(VerificationRequest verificationRequest) {
+    }
+
     public void createVerificationCodeForSearchUsername(UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest) {
     }
 

@@ -457,6 +457,26 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
+    void 전화번호_인증_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).verifyPhoneForSignup(any(VerificationRequest.class));
+        // when
+        ResultActions resultActions = 전화번호_인증_요청();
+        // then
+        전화번호_인증_요청_성공(resultActions);
+    }
+
+    @Test
+    void 전화번호_인증_실패() throws Exception {
+        // given
+        willThrow(verificationCodeNotEqualException).given(memberService).verifyPhoneForSignup(any(VerificationRequest.class));
+        // when
+        ResultActions resultActions = 전화번호_인증_요청();
+        // then
+        전화번호_인증_요청_실패(resultActions);
+    }
+
+    @Test
     void 아이디_찾기_인증번호_발급_성공() throws Exception {
         // given
         willDoNothing().given(memberService).createVerificationCodeForSearchUsername(any(UsernameSearchVerificationCodeRequest.class));
@@ -817,6 +837,26 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
                 "signup-create-verification-code-fail");
+    }
+
+    private ResultActions 전화번호_인증_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/verification")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(verificationRequest)));
+    }
+
+    private void 전화번호_인증_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "signup-verify-phone-success");
+    }
+
+    private void 전화번호_인증_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(verificationCodeNotEqualException)))),
+                "signup-verify-phone-fail");
     }
 
     private ResultActions 아이디_찾기_인증번호_발급_요청() throws Exception {
