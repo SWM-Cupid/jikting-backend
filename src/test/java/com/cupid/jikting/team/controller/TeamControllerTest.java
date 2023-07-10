@@ -91,6 +91,16 @@ public class TeamControllerTest extends ApiDocument {
         팀_삭제_요청_성공(resultActions);
     }
 
+    @Test
+    void 팀_삭제_실패() throws Exception {
+        // given
+        willThrow(teamNotFoundException).given(teamService).delete(anyLong());
+        // when
+        ResultActions resultActions = 팀_삭제_요청();
+        // then
+        팀_삭제_요청_실패(resultActions);
+    }
+
     private ResultActions 팀_등록_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -121,5 +131,12 @@ public class TeamControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
                 "delete-team-success");
+    }
+
+    private void 팀_삭제_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
+                "delete-team-fail");
     }
 }
