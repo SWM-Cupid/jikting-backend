@@ -68,12 +68,13 @@ public class MemberControllerTest extends ApiDocument {
     private VerificationRequest verificationRequest;
     private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
     private PasswordResetRequest passwordResetRequest;
+    private LoginRequest loginRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private UsernameResponse usernameResponse;
     private ApplicationException invalidFormatException;
     private ApplicationException memberNotFoundException;
-    private ApplicationException passwordNotEqualException;
+    private ApplicationException idOrPasswordNotEqualException;
     private ApplicationException wrongFormException;
     private ApplicationException wrongFileExtensionException;
     private ApplicationException wrongFileSizeException;
@@ -153,6 +154,10 @@ public class MemberControllerTest extends ApiDocument {
                 .username(USERNAME)
                 .password(PASSWORD)
                 .build();
+        loginRequest = LoginRequest.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
                 .company(COMPANY)
@@ -177,7 +182,7 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
-        passwordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
+        idOrPasswordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
         wrongFormException = new WrongFormException(ApplicationError.INVALID_FORMAT);
         wrongFileExtensionException = new WrongFormException(ApplicationError.INVALID_FILE_EXTENSION);
         wrongFileSizeException = new WrongFormException(ApplicationError.INVALID_FILE_SIZE);
@@ -309,7 +314,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_비밀번호_수정_비밀번호불일치_실패() throws Exception {
         // given
-        willThrow(passwordNotEqualException).given(memberService).updatePassword(any(PasswordUpdateRequest.class));
+        willThrow(idOrPasswordNotEqualException).given(memberService).updatePassword(any(PasswordUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_비밀번호_수정_요청();
         // then
@@ -389,7 +394,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_탈퇴_비밀번호불일치_실패() throws Exception {
         // given
-        willThrow(passwordNotEqualException).given(memberService).withdraw(anyLong(), any(WithdrawRequest.class));
+        willThrow(idOrPasswordNotEqualException).given(memberService).withdraw(anyLong(), any(WithdrawRequest.class));
         // when
         ResultActions resultActions = 회원_탈퇴_요청();
         // then
@@ -586,6 +591,16 @@ public class MemberControllerTest extends ApiDocument {
         비밀번호_재설정_요청_비밀번호양식불일치_실패(resultActions);
     }
 
+    @Test
+    void 로그인_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).login(any(LoginRequest.class));
+        // when
+        ResultActions resultActions = 로그인_요청();
+        // then
+        로그인_요청_성공(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -707,7 +722,7 @@ public class MemberControllerTest extends ApiDocument {
     private void 회원_비밀번호_수정_요청_비밀번호불일치_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
-                        .andExpect(content().json(toJson(ErrorResponse.from(passwordNotEqualException)))),
+                        .andExpect(content().json(toJson(ErrorResponse.from(idOrPasswordNotEqualException)))),
                 "update-member-password-not-equal-password-fail");
     }
 
@@ -775,7 +790,7 @@ public class MemberControllerTest extends ApiDocument {
     private void 회원_탈퇴_요청_비밀번호불일치_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
-                        .andExpect(content().json(toJson(ErrorResponse.from(passwordNotEqualException)))),
+                        .andExpect(content().json(toJson(ErrorResponse.from(idOrPasswordNotEqualException)))),
                 "delete-member-not-equal-password-fail");
     }
 
@@ -965,5 +980,18 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
                 "reset-password-wrong-form-fail");
+    }
+
+    private ResultActions 로그인_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/login")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(loginRequest)));
+    }
+
+    private void 로그인_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "login-success");
     }
 }
