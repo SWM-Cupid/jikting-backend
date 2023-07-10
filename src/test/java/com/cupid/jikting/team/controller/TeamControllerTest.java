@@ -20,8 +20,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,9 +32,11 @@ public class TeamControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/teams";
+    private static final String PATH_DELIMITER = "/";
     private static final String KEYWORD = "키워드";
     private static final String DESCRIPTION = "한줄 소개";
     private static final String INVITATION_URL = "초대 URL";
+    private static final Long ID = 1L;
 
     private TeamRegisterRequest teamRegisterRequest;
     private TeamRegisterResponse teamRegisterResponse;
@@ -77,6 +80,16 @@ public class TeamControllerTest extends ApiDocument {
         팀_등록_요청_실패(resultActions);
     }
 
+    @Test
+    void 팀원_삭제_성공() throws Exception {
+        // given
+        willDoNothing().given(teamService).deleteMember(anyLong(), anyLong());
+        // when
+        ResultActions resultActions = 팀원_삭제_요청();
+        // then
+        팀원_삭제_요청_성공(resultActions);
+    }
+
     private ResultActions 팀_등록_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -96,5 +109,16 @@ public class TeamControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(invalidFormatException)))),
                 "register-team-fail");
+    }
+
+    private ResultActions 팀원_삭제_요청() throws Exception {
+        return mockMvc.perform(delete(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/members" + PATH_DELIMITER + ID)
+                .contextPath(CONTEXT_PATH));
+    }
+
+    private void 팀원_삭제_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "delete-team-member-success");
     }
 }
