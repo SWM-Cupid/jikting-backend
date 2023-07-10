@@ -42,6 +42,7 @@ public class TeamControllerTest extends ApiDocument {
     private TeamRegisterResponse teamRegisterResponse;
     private ApplicationException invalidFormatException;
     private ApplicationException teamNotFoundException;
+    private ApplicationException memberNotFoundException;
 
     @MockBean
     private TeamService teamService;
@@ -60,6 +61,7 @@ public class TeamControllerTest extends ApiDocument {
                 .build();
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         teamNotFoundException = new BadRequestException(ApplicationError.TEAM_NOT_FOUND);
+        memberNotFoundException = new BadRequestException(ApplicationError.MEMBER_NOT_FOUND);
     }
 
     @Test
@@ -102,6 +104,16 @@ public class TeamControllerTest extends ApiDocument {
         팀원_삭제_요청_팀정보없음_실패(resultActions);
     }
 
+    @Test
+    void 팀원_삭제_회원정보없음_실패() throws Exception {
+        // given
+        willThrow(memberNotFoundException).given(teamService).deleteMember(anyLong(), anyLong());
+        // when
+        ResultActions resultActions = 팀원_삭제_요청();
+        // then
+        팀원_삭제_요청_회원정보없음_실패(resultActions);
+    }
+
     private ResultActions 팀_등록_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -139,5 +151,12 @@ public class TeamControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
                 "delete-team-member-not-found-team-fail");
+    }
+
+    private void 팀원_삭제_요청_회원정보없음_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "delete-team-member-not-found-member-fail");
     }
 }
