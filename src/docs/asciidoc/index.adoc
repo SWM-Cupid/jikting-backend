@@ -346,6 +346,9 @@ include::{snippets}/verify-company-card-invalid-file-extension-fail/http-request
 .response - 파일 형식 미지원
 include::{snippets}/verify-company-card-invalid-file-extension-fail/http-response.adoc[]
 
+.response - 파일 크기 미지원
+include::{snippets}/verify-company-card-invalid-file-size-fail/http-response.adoc[]
+
 === 팀 관련 기능
 ==== 팀 등록
 ----
