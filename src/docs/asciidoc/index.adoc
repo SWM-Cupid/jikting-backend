@@ -374,6 +374,12 @@ include::{snippets}/delete-team-member-success/http-request.adoc[]
 
 .response
 include::{snippets}/delete-team-member-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/delete-team-member-not-found-team-fail/http-request.adoc[]
+
+.response - 팀을 찾을 수 없음
+include::{snippets}/delete-team-member-not-found-team-fail/http-response.adoc[]
 
 === 추천 관련 기능
 ==== 추천 팀 조회
