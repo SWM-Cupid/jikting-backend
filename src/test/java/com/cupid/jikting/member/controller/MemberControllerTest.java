@@ -14,6 +14,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -50,12 +51,15 @@ public class MemberControllerTest extends ApiDocument {
     private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
     private static final String SEQUENCE = "순서";
     private static final String NEW_PASSWORD = "새 비밀번호";
-    private static final String FILE_HEADER = "file";
-    private static final String ORIGINAL_FILENAME = "image.png";
-    private static final String CONTENT_TYPE = "image/png";
+    private static final String IMAGE_PARAMETER_NAME = "file";
+    private static final String IMAGE_FILENAME = "image.png";
+    private static final String IMAGE_CONTENT_TYPE = "image/png";
     private static final String IMAGE_FILE = "이미지 파일";
     private static final String VERIFICATION_CODE = "인증번호";
     private static final String COMPANY_EMAIL = "회사 이메일";
+    private static final String COMPANY_VERIFICATION_REQUEST_PARAMETER_NAME = "companyVerificationRequest";
+    private static final String COMPANY_VERIFICATION_REQUEST_FILENAME = "";
+    private static final String COMPANY_VERIFICATION_CONTENT_TYPE = "application/json";
 
     private SignupRequest signupRequest;
     private NicknameUpdateRequest nicknameUpdateRequest;
@@ -73,6 +77,8 @@ public class MemberControllerTest extends ApiDocument {
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private UsernameResponse usernameResponse;
+    private MockMultipartFile companyVerificationRequestPart;
+    private MockMultipartFile image;
     private ApplicationException invalidFormatException;
     private ApplicationException memberNotFoundException;
     private ApplicationException passwordNotEqualException;
@@ -100,6 +106,9 @@ public class MemberControllerTest extends ApiDocument {
         List<String> hobbies = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> HOBBY + n)
                 .collect(Collectors.toList());
+        CompanyVerificationRequest companyVerificationRequest = CompanyVerificationRequest.builder()
+                .company(COMPANY)
+                .build();
         signupRequest = SignupRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD)
@@ -181,6 +190,8 @@ public class MemberControllerTest extends ApiDocument {
         usernameResponse = UsernameResponse.builder()
                 .username(USERNAME)
                 .build();
+        companyVerificationRequestPart = new MockMultipartFile(COMPANY_VERIFICATION_REQUEST_PARAMETER_NAME, COMPANY_VERIFICATION_REQUEST_FILENAME, COMPANY_VERIFICATION_CONTENT_TYPE, toJson(companyVerificationRequest).getBytes(StandardCharsets.UTF_8));
+        image = new MockMultipartFile(IMAGE_PARAMETER_NAME, IMAGE_FILENAME, IMAGE_CONTENT_TYPE, IMAGE_FILE.getBytes());
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         passwordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
@@ -612,6 +623,36 @@ public class MemberControllerTest extends ApiDocument {
         회사_이메일_인증번호_발급_요청_실패(resultActions);
     }
 
+    @Test
+    void 회사_명함_인증_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).verifyCardForCompany(any(CompanyVerificationRequest.class), any(MultipartFile.class));
+        // when
+        ResultActions resultActions = 회사_명함_인증_요청();
+        // then
+        회사_명함_인증_요청_성공(resultActions);
+    }
+
+    @Test
+    void 회사_명함_인증_파일형식미지원_실패() throws Exception {
+        // given
+        willThrow(wrongFileExtensionException).given(memberService).verifyCardForCompany(any(CompanyVerificationRequest.class), any(MultipartFile.class));
+        // when
+        ResultActions resultActions = 회사_명함_인증_요청();
+        // then
+        회사_명함_인증_요청_파일형식미지원_실패(resultActions);
+    }
+
+    @Test
+    void 회사_명함_인증_파일크기미지원_실패() throws Exception {
+        // given
+        willThrow(wrongFileSizeException).given(memberService).verifyCardForCompany(any(CompanyVerificationRequest.class), any(MultipartFile.class));
+        // when
+        ResultActions resultActions = 회사_명함_인증_요청();
+        // then
+        회사_명함_인증_요청_파일크기미지원_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -746,7 +787,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private ResultActions 회원_이미지_수정_요청() throws Exception {
         return mockMvc.perform(multipart(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/image")
-                .file(new MockMultipartFile(FILE_HEADER, ORIGINAL_FILENAME, CONTENT_TYPE, IMAGE_FILE.getBytes()))
+                .file(image)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.MULTIPART_FORM_DATA));
     }
@@ -1011,5 +1052,33 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
                 "verify-company-create-verification-code-fail");
+    }
+
+    private ResultActions 회사_명함_인증_요청() throws Exception {
+        return mockMvc.perform(multipart(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/card")
+                .file(companyVerificationRequestPart)
+                .file(image)
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.MULTIPART_FORM_DATA));
+    }
+
+    private void 회사_명함_인증_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "verify-company-card-success");
+    }
+
+    private void 회사_명함_인증_요청_파일형식미지원_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(wrongFileExtensionException)))),
+                "verify-company-card-invalid-file-extension-fail");
+    }
+
+    private void 회사_명함_인증_요청_파일크기미지원_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(wrongFileSizeException)))),
+                "verify-company-card-invalid-file-size-fail");
     }
 }
