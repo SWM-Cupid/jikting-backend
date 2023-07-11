@@ -20,7 +20,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/{teamId}")
-    public ResponseEntity<TeamRegisterResponse> delete(@PathVariable Long teamId) {
+    public ResponseEntity<Void> delete(@PathVariable Long teamId) {
         teamService.delete(teamId);
         return ResponseEntity.ok().build();
     }
