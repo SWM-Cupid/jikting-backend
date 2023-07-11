@@ -25,4 +25,7 @@ public class TeamService {
 
     public void delete(Long teamId) {
     }
+
+    public void deleteMember(Long teamId, Long memberId) {
+    }
 }

@@ -401,7 +401,6 @@ include::{snippets}/register-team-fail/http-request.adoc[]
 .response
 include::{snippets}/register-team-fail/http-response.adoc[]
 
-
 ==== 팀 참여
 ----
 /api/v1/teams/{teamId}/attend
@@ -469,6 +468,26 @@ include::{snippets}/delete-team-fail/http-request.adoc[]
 
 .response
 include::{snippets}/delete-team-fail/http-response.adoc[]
+
+==== 팀원 삭제
+----
+/api/v1/teams/{teamId}/members/{memberId}
+----
+===== 성공
+.request
+include::{snippets}/delete-team-member-success/http-request.adoc[]
+
+.response
+include::{snippets}/delete-team-member-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/delete-team-member-not-found-team-fail/http-request.adoc[]
+
+.response - 팀을 찾을 수 없음
+include::{snippets}/delete-team-member-not-found-team-fail/http-response.adoc[]
+
+.response - 회원을 찾을 수 없음
+include::{snippets}/delete-team-member-not-found-member-fail/http-response.adoc[]
 
 === 추천 관련 기능
 ==== 추천 팀 조회
