@@ -346,6 +346,9 @@ include::{snippets}/verify-company-not-equal-code-fail/http-request.adoc[]
 .response - 인증번호 불일치
 include::{snippets}/verify-company-not-equal-code-fail/http-response.adoc[]
 
+.response - 인증번호 만료
+include::{snippets}/verify-company-code-expired-fail/http-response.adoc[]
+
 === 팀 관련 기능
 ==== 팀 등록
 ----
