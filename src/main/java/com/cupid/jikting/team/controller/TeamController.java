@@ -30,4 +30,10 @@ public class TeamController {
     public ResponseEntity<TeamResponse> get(@PathVariable Long teamId) {
         return ResponseEntity.ok().body(teamService.get(teamId));
     }
+
+    @DeleteMapping("/{teamId}")
+    public ResponseEntity<Void> delete(@PathVariable Long teamId) {
+        teamService.delete(teamId);
+        return ResponseEntity.ok().build();
+    }
 }
