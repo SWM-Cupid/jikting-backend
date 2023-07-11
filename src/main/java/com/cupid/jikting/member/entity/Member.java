@@ -24,11 +24,6 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Enumerated(EnumType.STRING)
-    private SocialType socialType;
-
-    private String socialId;
-
     private String refreshToken;
 
     public void authorizeUser() {
