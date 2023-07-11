@@ -15,4 +15,7 @@ public class TeamService {
     public TeamResponse get(Long teamId) {
         return null;
     }
+
+    public void delete(Long teamId) {
+    }
 }

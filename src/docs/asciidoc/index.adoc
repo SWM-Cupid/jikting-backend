@@ -418,6 +418,23 @@ include::{snippets}/get-team-fail/http-request.adoc[]
 .response
 include::{snippets}/get-team-fail/http-response.adoc[]
 
+==== 팀 삭제
+----
+/api/v1/teams/{teamId}
+----
+===== 성공
+.request
+include::{snippets}/delete-team-success/http-request.adoc[]
+
+.response
+include::{snippets}/delete-team-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/delete-team-fail/http-request.adoc[]
+
+.response
+include::{snippets}/delete-team-fail/http-response.adoc[]
+
 === 추천 관련 기능
 ==== 추천 팀 조회
 ----
