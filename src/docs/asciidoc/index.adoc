@@ -596,3 +596,20 @@ include::{snippets}/get-instant-meeting-success/http-request.adoc[]
 
 .response
 include::{snippets}/get-instant-meeting-success/http-response.adoc[]
+
+==== 번개팅 참여
+----
+/api/v1/instant-meetings/{instantMeetingId}
+----
+===== 성공
+.request
+include::{snippets}/attend-instant-meeting-success/http-request.adoc[]
+
+.response
+include::{snippets}/attend-instant-meeting-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/attend-instant-meeting-fail/http-request.adoc[]
+
+.response
+include::{snippets}/attend-instant-meeting-fail/http-response.adoc[]
