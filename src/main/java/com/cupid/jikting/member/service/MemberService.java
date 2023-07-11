@@ -1,11 +1,7 @@
 package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.member.dto.*;
-import com.cupid.jikting.member.entity.Member;
-import com.cupid.jikting.member.entity.Role;
-import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,19 +12,7 @@ import javax.transaction.Transactional;
 @Service
 public class MemberService {
 
-    private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    public void signup(SignupRequest signupRequest){
-        Member member = Member.builder()
-                .username(signupRequest.getUsername())
-                .password(signupRequest.getPassword())
-                .phone(signupRequest.getPhone())
-                .gender(signupRequest.getGender())
-                .role(Role.UNCERTIFIED)
-                .build();
-        member.passwordEncode(passwordEncoder);
-        memberRepository.save(member);
+    public void signup(SignupRequest signupRequest) {
     }
 
     public MemberResponse get(Long memberId) {
