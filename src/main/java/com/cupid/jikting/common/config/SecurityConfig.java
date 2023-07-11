@@ -6,9 +6,6 @@ import com.cupid.jikting.common.login.filter.CustomJsonUsernamePasswordAuthentic
 import com.cupid.jikting.common.login.handler.LoginFailureHandler;
 import com.cupid.jikting.common.login.handler.LoginSuccessHandler;
 import com.cupid.jikting.common.login.service.LoginService;
-import com.cupid.jikting.common.oauth2.handler.OAuth2LoginFailureHandler;
-import com.cupid.jikting.common.oauth2.handler.OAuth2LoginSuccessHandler;
-import com.cupid.jikting.common.oauth2.service.CustomOAuth2UserService;
 import com.cupid.jikting.member.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +33,6 @@ public class SecurityConfig {
     private final MemberRepository memberRepository;
     private final ObjectMapper objectMapper;
 
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
-    private final CustomOAuth2UserService customOAuth2UserService;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -51,16 +44,9 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers(HttpMethod.POST, "/members").permitAll()
-                .antMatchers("**/sign-up").permitAll()
+                .mvcMatchers("/").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/members").permitAll()
                 .anyRequest().authenticated();
-//                .and()
-//                .oauth2Login()
-//                .successHandler(oAuth2LoginSuccessHandler)
-//                .failureHandler(oAuth2LoginFailureHandler)
-//                .userInfoEndpoint()
-//                .userService(customOAuth2UserService);
 
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class);
