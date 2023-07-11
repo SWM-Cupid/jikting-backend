@@ -20,7 +20,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/{teamId}/members/{memberId}")
-    public ResponseEntity<TeamRegisterResponse> deleteMember(@PathVariable Long teamId, @PathVariable Long memberId) {
+    public ResponseEntity<Void> deleteMember(@PathVariable Long teamId, @PathVariable Long memberId) {
         teamService.deleteMember(teamId, memberId);
         return ResponseEntity.ok().build();
     }
