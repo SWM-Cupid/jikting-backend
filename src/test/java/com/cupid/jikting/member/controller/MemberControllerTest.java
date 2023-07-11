@@ -88,6 +88,7 @@ public class MemberControllerTest extends ApiDocument {
     private ApplicationException verificationCodeNotEqualException;
     private ApplicationException duplicatedUsernameException;
     private ApplicationException duplicatedNicknameException;
+    private ApplicationException verificationCodeExpiredException;
 
     @MockBean
     private MemberService memberService;
@@ -201,6 +202,7 @@ public class MemberControllerTest extends ApiDocument {
         verificationCodeNotEqualException = new NotEqualException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
         duplicatedUsernameException = new DuplicateException(ApplicationError.DUPLICATE_USERNAME);
         duplicatedNicknameException = new DuplicateException(ApplicationError.DUPLICATE_NICKNAME);
+        verificationCodeExpiredException = new BadRequestException(ApplicationError.VERIFICATION_CODE_EXPIRED);
     }
 
     @Test
@@ -621,6 +623,36 @@ public class MemberControllerTest extends ApiDocument {
         ResultActions resultActions = 회사_이메일_인증번호_발급_요청();
         // then
         회사_이메일_인증번호_발급_요청_실패(resultActions);
+    }
+
+    @Test
+    void 회사_이메일_인증_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).verifyForCompany(any(VerificationRequest.class));
+        // when
+        ResultActions resultActions = 회사_이메일_인증_요청();
+        // then
+        회사_이메일_인증_요청_성공(resultActions);
+    }
+
+    @Test
+    void 회사_이메일_인증_인증번호불일치_실패() throws Exception {
+        // given
+        willThrow(verificationCodeNotEqualException).given(memberService).verifyForCompany(any(VerificationRequest.class));
+        // when
+        ResultActions resultActions = 회사_이메일_인증_요청();
+        // then
+        회사_이메일_인증_요청_인증번호불일치_실패(resultActions);
+    }
+
+    @Test
+    void 회사_이메일_인증_시간초과_실패() throws Exception {
+        // given
+        willThrow(verificationCodeExpiredException).given(memberService).verifyForCompany(any(VerificationRequest.class));
+        // when
+        ResultActions resultActions = 회사_이메일_인증_요청();
+        // then
+        회사_이메일_인증_요청_시간초과_실패(resultActions);
     }
 
     @Test
@@ -1052,6 +1084,33 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
                 "verify-company-create-verification-code-fail");
+    }
+
+    private ResultActions 회사_이메일_인증_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/verification")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(verificationRequest)));
+    }
+
+    private void 회사_이메일_인증_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "verify-company-success");
+    }
+
+    private void 회사_이메일_인증_요청_인증번호불일치_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(verificationCodeNotEqualException)))),
+                "verify-company-not-equal-code-fail");
+    }
+
+    private void 회사_이메일_인증_요청_시간초과_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(verificationCodeExpiredException)))),
+                "verify-company-code-expired-fail");
     }
 
     private ResultActions 회사_명함_인증_요청() throws Exception {

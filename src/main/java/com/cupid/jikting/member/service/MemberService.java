@@ -64,6 +64,9 @@ public class MemberService {
     public void createVerificationCodeForCompany(CompanyVerificationCodeRequest companyVerificationCodeRequest) {
     }
 
+    public void verifyForCompany(VerificationRequest verificationRequest) {
+    }
+
     public void verifyCardForCompany(CompanyVerificationRequest companyVerificationRequest, MultipartFile multipartFile) {
     }
 }

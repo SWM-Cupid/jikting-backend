@@ -363,6 +363,26 @@ include::{snippets}/verify-company-create-verification-code-fail/http-request.ad
 .response
 include::{snippets}/verify-company-create-verification-code-fail/http-response.adoc[]
 
+==== 회사 이메일 인증
+----
+/api/v1/members/company/verification
+----
+===== 성공
+.request
+include::{snippets}/verify-company-success/http-request.adoc[]
+
+.response
+include::{snippets}/verify-company-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/verify-company-not-equal-code-fail/http-request.adoc[]
+
+.response - 인증번호 불일치
+include::{snippets}/verify-company-not-equal-code-fail/http-response.adoc[]
+
+.response - 인증번호 만료
+include::{snippets}/verify-company-code-expired-fail/http-response.adoc[]
+
 ==== 회사 명함 인증
 ----
 /api/v1/members/company/card

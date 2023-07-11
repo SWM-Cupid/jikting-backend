@@ -119,6 +119,12 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/company/verification")
+    public ResponseEntity<Void> verifyForCompany(@RequestBody VerificationRequest verificationRequest) {
+        memberService.verifyForCompany(verificationRequest);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/company/card")
     public ResponseEntity<Void> verifyCardForCompany(@RequestPart CompanyVerificationRequest companyVerificationRequest, @RequestPart(value = "file") MultipartFile multipartFile) {
         memberService.verifyCardForCompany(companyVerificationRequest, multipartFile);
