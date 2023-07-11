@@ -1,7 +1,6 @@
 package com.cupid.jikting.common.jwt.filter;
 
 import com.cupid.jikting.common.jwt.service.JwtService;
-import com.cupid.jikting.common.jwt.util.PasswordUtil;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -69,16 +68,11 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     public void saveAuthentication(Member member) {
         String password = member.getPassword();
-        if (password == null) {
-            password = PasswordUtil.generateRandomPassword();
-        }
-
         UserDetails userDetailsUser = User.builder()
                 .username(member.getUsername())
                 .password(password)
                 .roles(member.getRole().name())
                 .build();
-
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetailsUser,
                 null,
                 authoritiesMapper.mapAuthorities(userDetailsUser.getAuthorities()));
