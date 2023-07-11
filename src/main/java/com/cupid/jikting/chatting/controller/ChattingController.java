@@ -4,9 +4,7 @@ import com.cupid.jikting.chatting.dto.ChattingResponse;
 import com.cupid.jikting.chatting.service.ChattingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +18,11 @@ public class ChattingController {
     @GetMapping
     public ResponseEntity<List<ChattingResponse>> getAll() {
         return ResponseEntity.ok().body(chattingService.getAll());
+    }
+
+    @PostMapping("/{chattingRoomId}/confirm")
+    public ResponseEntity<Void> confirm(@PathVariable Long chattingRoomId) {
+        chattingService.confirm(chattingRoomId);
+        return ResponseEntity.ok().build();
     }
 }

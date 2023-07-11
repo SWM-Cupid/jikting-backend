@@ -11,4 +11,7 @@ public class ChattingService {
     public List<ChattingResponse> getAll() {
         return null;
     }
+
+    public void confirm(Long chattingRoomId) {
+    }
 }
