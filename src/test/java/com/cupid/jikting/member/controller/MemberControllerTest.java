@@ -577,13 +577,13 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     @Test
-    void 회사_이메일_인증_실패() throws Exception {
+    void 회사_이메일_인증_인증번호불일치_실패() throws Exception {
         // given
         willThrow(verificationCodeNotEqualException).given(memberService).verifyForCompany(any(VerificationRequest.class));
         // when
         ResultActions resultActions = 회사_이메일_인증_요청();
         // then
-        회사_이메일_인증_요청_실패(resultActions);
+        회사_이메일_인증_요청_인증번호불일치_실패(resultActions);
     }
 
     private ResultActions 회원_가입_요청() throws Exception {
@@ -960,10 +960,10 @@ public class MemberControllerTest extends ApiDocument {
                 "verify-company-success");
     }
 
-    private void 회사_이메일_인증_요청_실패(ResultActions resultActions) throws Exception {
+    private void 회사_이메일_인증_요청_인증번호불일치_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(verificationCodeNotEqualException)))),
-                "verify-company-fail");
+                "verify-company-not-equal-code-fail");
     }
 }
