@@ -659,6 +659,23 @@ include::{snippets}/get-chattings-success/http-request.adoc[]
 .response
 include::{snippets}/get-chattings-success/http-response.adoc[]
 
+==== 미팅 확정
+----
+/api/v1/chattings/{chattingId}/confirm
+----
+===== 성공
+.request
+include::{snippets}/meeting-confirm-success/http-request.adoc[]
+
+.response
+include::{snippets}/meeting-confirm-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/meeting-confirm-fail/http-request.adoc[]
+
+.response
+include::{snippets}/meeting-confirm-fail/http-response.adoc[]
+
 === 번개팅 관련 기능
 ==== 번개팅 목록 조회
 ----
