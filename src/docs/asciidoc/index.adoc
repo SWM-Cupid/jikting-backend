@@ -401,6 +401,23 @@ include::{snippets}/register-team-fail/http-request.adoc[]
 .response
 include::{snippets}/register-team-fail/http-response.adoc[]
 
+==== 팀 참여
+----
+/api/v1/teams/{teamId}/attend
+----
+===== 성공
+.request
+include::{snippets}/attend-team-success/http-request.adoc[]
+
+.response
+include::{snippets}/attend-team-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/attend-team-fail/http-request.adoc[]
+
+.response
+include::{snippets}/attend-team-fail/http-response.adoc[]
+
 ==== 팀 조회
 ----
 /api/v1/teams/{teamId}

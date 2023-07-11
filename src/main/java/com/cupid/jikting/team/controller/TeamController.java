@@ -20,6 +20,12 @@ public class TeamController {
         return ResponseEntity.ok().body(teamService.register(teamRegisterRequest));
     }
 
+    @PostMapping("/{teamId}/attend")
+    public ResponseEntity<Void> attend(@PathVariable Long teamId) {
+        teamService.attend(teamId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{teamId}")
     public ResponseEntity<TeamResponse> get(@PathVariable Long teamId) {
         return ResponseEntity.ok().body(teamService.get(teamId));

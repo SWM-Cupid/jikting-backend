@@ -24,8 +24,7 @@ import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -110,6 +109,26 @@ public class TeamControllerTest extends ApiDocument {
     }
 
     @Test
+    void 팀_참여_성공() throws Exception {
+        // given
+        willDoNothing().given(teamService).attend(anyLong());
+        // when
+        ResultActions resultActions = 팀_참여_요청();
+        // then
+        팀_참여_요청_성공(resultActions);
+    }
+
+    @Test
+    void 팀_참여_실패() throws Exception {
+        // given
+        willThrow(teamNotFoundException).given(teamService).attend(anyLong());
+        // when
+        ResultActions resultActions = 팀_참여_요청();
+        // then
+        팀_참여_요청_실패(resultActions);
+    }
+
+    @Test
     void 팀_조회_성공() throws Exception {
         //given
         willReturn(teamResponse).given(teamService).get(anyLong());
@@ -148,6 +167,24 @@ public class TeamControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(invalidFormatException)))),
                 "register-team-fail");
+    }
+
+    private ResultActions 팀_참여_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/attend")
+                .contextPath(CONTEXT_PATH));
+    }
+
+    private void 팀_참여_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "attend-team-success");
+    }
+
+    private void 팀_참여_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
+                "attend-team-fail");
     }
 
     private ResultActions 팀_조회_요청() throws Exception {

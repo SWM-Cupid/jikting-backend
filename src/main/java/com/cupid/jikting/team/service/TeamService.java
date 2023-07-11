@@ -12,6 +12,9 @@ public class TeamService {
         return null;
     }
 
+    public void attend(Long teamId) {
+    }
+
     public TeamResponse get(Long teamId) {
         return null;
     }
