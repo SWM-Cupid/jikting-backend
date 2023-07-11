@@ -55,6 +55,7 @@ public class MemberControllerTest extends ApiDocument {
     private static final String CONTENT_TYPE = "image/png";
     private static final String IMAGE_FILE = "이미지 파일";
     private static final String VERIFICATION_CODE = "인증번호";
+    private static final String COMPANY_EMAIL = "회사 이메일";
 
     private SignupRequest signupRequest;
     private NicknameUpdateRequest nicknameUpdateRequest;
@@ -68,6 +69,7 @@ public class MemberControllerTest extends ApiDocument {
     private VerificationRequest verificationRequest;
     private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
     private PasswordResetRequest passwordResetRequest;
+    private CompanyVerificationCodeRequest companyVerificationCodeRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private UsernameResponse usernameResponse;
@@ -152,6 +154,10 @@ public class MemberControllerTest extends ApiDocument {
         passwordResetRequest = PasswordResetRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD)
+                .build();
+        companyVerificationCodeRequest = CompanyVerificationCodeRequest.builder()
+                .company(COMPANY)
+                .companyEmail(COMPANY_EMAIL)
                 .build();
         memberResponse = MemberResponse.builder()
                 .nickname(NICKNAME)
@@ -586,6 +592,26 @@ public class MemberControllerTest extends ApiDocument {
         비밀번호_재설정_요청_비밀번호양식불일치_실패(resultActions);
     }
 
+    @Test
+    void 회사_이메일_인증번호_발급_성공() throws Exception {
+        // given
+        willDoNothing().given(memberService).createVerificationCodeForCompany(any(CompanyVerificationCodeRequest.class));
+        // when
+        ResultActions resultActions = 회사_이메일_인증번호_발급_요청();
+        // then
+        회사_이메일_인증번호_발급_요청_성공(resultActions);
+    }
+
+    @Test
+    void 회사_이메일_인증번호_발급_실패() throws Exception {
+        // given
+        willThrow(wrongFormException).given(memberService).createVerificationCodeForCompany(any(CompanyVerificationCodeRequest.class));
+        // when
+        ResultActions resultActions = 회사_이메일_인증번호_발급_요청();
+        // then
+        회사_이메일_인증번호_발급_요청_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -965,5 +991,25 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
                 "reset-password-wrong-form-fail");
+    }
+
+    private ResultActions 회사_이메일_인증번호_발급_요청() throws Exception {
+        return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/code")
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(companyVerificationCodeRequest)));
+    }
+
+    private void 회사_이메일_인증번호_발급_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "verify-company-create-verification-code-success");
+    }
+
+    private void 회사_이메일_인증번호_발급_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
+                "verify-company-create-verification-code-fail");
     }
 }
