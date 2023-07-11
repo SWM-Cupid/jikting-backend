@@ -15,6 +15,7 @@ public enum ApplicationError {
     INVALID_FILE_SIZE(HttpStatus.BAD_REQUEST, "C005", "지원하지 않는 파일 크기입니다."),
     INCOMPLETE_FORM(HttpStatus.BAD_REQUEST, "C006", "채워지지 않은 내용이 있습니다."),
     POINT_NOT_ENOUGH(HttpStatus.BAD_REQUEST, "C007", "포인트가 부족합니다."),
+    VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "C008", "인증번호가 유효하지 않습니다."),
 
     UNAUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "U001", "인증되지 않은 사용자입니다."),
     FORBIDDEN_MEMBER(HttpStatus.FORBIDDEN, "U002", "권한이 없는 사용자입니다."),
