@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChattingResponse {
 
-    private Long chattingId;
+    private Long chattingRoomId;
     private String opposingTeamName;
     private String lastMessage;
     private List<String> images;
