@@ -12,12 +12,15 @@ import java.io.IOException;
 @Slf4j
 public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
+    private final String CHARACTER_ENCODING = "UTF-8";
+    private final String CONTENT_TYPE = "text/plain;charset=UTF-8";
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/plain;charset=UTF-8");
+        response.setCharacterEncoding(CHARACTER_ENCODING);
+        response.setContentType(CONTENT_TYPE);
         response.getWriter().write(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD.getMessage());
         log.info("로그인에 실패했습니다. 메시지 : {}", exception.getMessage());
     }
