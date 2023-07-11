@@ -3,6 +3,7 @@ package com.cupid.jikting.team.controller;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
+import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,12 @@ public class TeamController {
     @GetMapping("/{teamId}")
     public ResponseEntity<TeamResponse> get(@PathVariable Long teamId) {
         return ResponseEntity.ok().body(teamService.get(teamId));
+    }
+
+    @PatchMapping("/{teamId}")
+    public ResponseEntity<Void> update(@PathVariable Long teamId, @RequestBody TeamUpdateRequest teamUpdateRequest) {
+        teamService.update(teamId, teamUpdateRequest);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{teamId}")

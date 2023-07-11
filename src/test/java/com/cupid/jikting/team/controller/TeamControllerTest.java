@@ -6,10 +6,7 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.team.dto.MemberResponse;
-import com.cupid.jikting.team.dto.TeamRegisterRequest;
-import com.cupid.jikting.team.dto.TeamRegisterResponse;
-import com.cupid.jikting.team.dto.TeamResponse;
+import com.cupid.jikting.team.dto.*;
 import com.cupid.jikting.team.service.TeamService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +43,7 @@ public class TeamControllerTest extends ApiDocument {
     private static final String ADDRESS = "거주지";
 
     private TeamRegisterRequest teamRegisterRequest;
+    private TeamUpdateRequest teamUpdateRequest;
     private TeamRegisterResponse teamRegisterResponse;
     private TeamResponse teamResponse;
     private ApplicationException invalidFormatException;
@@ -72,6 +70,10 @@ public class TeamControllerTest extends ApiDocument {
                         .build())
                 .collect(Collectors.toList());
         teamRegisterRequest = TeamRegisterRequest.builder()
+                .description(DESCRIPTION)
+                .keywords(keywords)
+                .build();
+        teamUpdateRequest = TeamUpdateRequest.builder()
                 .description(DESCRIPTION)
                 .keywords(keywords)
                 .build();
@@ -145,6 +147,26 @@ public class TeamControllerTest extends ApiDocument {
         ResultActions resultActions = 팀_조회_요청();
         //then
         팀_조회_요청_실패(resultActions);
+    }
+
+    @Test
+    void 팀_수정_성공() throws Exception {
+        //given
+        willDoNothing().given(teamService).update(anyLong(), any(TeamUpdateRequest.class));
+        //when
+        ResultActions resultActions = 팀_수정_요청();
+        //then
+        팀_수정_요청_성공(resultActions);
+    }
+
+    @Test
+    void 팀_수정_실패() throws Exception {
+        //given
+        willThrow(invalidFormatException).given(teamService).update(anyLong(), any(TeamUpdateRequest.class));
+        //when
+        ResultActions resultActions = 팀_수정_요청();
+        //then
+        팀_수정_요청_실패(resultActions);
     }
 
     @Test
@@ -223,6 +245,26 @@ public class TeamControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
                 "get-team-fail");
+    }
+
+    private ResultActions 팀_수정_요청() throws Exception {
+        return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID)
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(teamUpdateRequest)));
+    }
+
+    private void 팀_수정_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "update-team-success");
+    }
+
+    private void 팀_수정_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(invalidFormatException)))),
+                "update-team-fail");
     }
 
     private ResultActions 팀_삭제_요청() throws Exception {

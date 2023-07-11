@@ -401,6 +401,7 @@ include::{snippets}/register-team-fail/http-request.adoc[]
 .response
 include::{snippets}/register-team-fail/http-response.adoc[]
 
+
 ==== 팀 참여
 ----
 /api/v1/teams/{teamId}/attend
@@ -434,6 +435,23 @@ include::{snippets}/get-team-fail/http-request.adoc[]
 
 .response
 include::{snippets}/get-team-fail/http-response.adoc[]
+
+==== 팀 수정
+----
+/api/v1/teams/{teamId}
+----
+===== 성공
+.request
+include::{snippets}/update-team-success/http-request.adoc[]
+
+.response
+include::{snippets}/update-team-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/update-team-fail/http-request.adoc[]
+
+.response
+include::{snippets}/update-team-fail/http-response.adoc[]
 
 ==== 팀 삭제
 ----
