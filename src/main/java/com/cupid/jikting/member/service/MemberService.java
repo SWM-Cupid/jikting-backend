@@ -69,4 +69,7 @@ public class MemberService {
 
     public void verifyCardForCompany(CompanyVerificationRequest companyVerificationRequest, MultipartFile multipartFile) {
     }
+
+    public void login(LoginRequest loginRequest) {
+    }
 }

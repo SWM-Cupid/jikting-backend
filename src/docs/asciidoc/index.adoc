@@ -403,6 +403,23 @@ include::{snippets}/verify-company-card-invalid-file-extension-fail/http-respons
 .response - 파일 크기 미지원
 include::{snippets}/verify-company-card-invalid-file-size-fail/http-response.adoc[]
 
+==== 로그인
+----
+/api/v1/members/login
+----
+===== 성공
+.request
+include::{snippets}/login-success/http-request.adoc[]
+
+.response
+include::{snippets}/login-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/login-fail/http-request.adoc[]
+
+.response
+include::{snippets}/login-fail/http-response.adoc[]
+
 === 팀 관련 기능
 ==== 팀 등록
 ----

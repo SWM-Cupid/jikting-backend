@@ -130,4 +130,10 @@ public class MemberController {
         memberService.verifyCardForCompany(companyVerificationRequest, multipartFile);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
+        memberService.login(loginRequest);
+        return ResponseEntity.ok().build();
+    }
 }
