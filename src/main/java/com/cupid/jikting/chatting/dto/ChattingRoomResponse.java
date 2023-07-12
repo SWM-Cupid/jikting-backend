@@ -8,7 +8,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChattingResponse {
+public class ChattingRoomResponse {
 
     private Long chattingRoomId;
     private String opposingTeamName;
