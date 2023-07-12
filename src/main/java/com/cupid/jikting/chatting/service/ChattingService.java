@@ -1,7 +1,7 @@
 package com.cupid.jikting.chatting.service;
 
 import com.cupid.jikting.chatting.dto.ChattingResponse;
-import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
+import com.cupid.jikting.chatting.dto.ChattingRoomDetailResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class ChattingService {
         return null;
     }
 
-    public ChattingRoomResponse get(Long chattingRoomId) {
+    public ChattingRoomDetailResponse get(Long chattingRoomId) {
         return null;
     }
 }

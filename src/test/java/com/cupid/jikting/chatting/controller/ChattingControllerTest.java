@@ -2,7 +2,7 @@ package com.cupid.jikting.chatting.controller;
 
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.chatting.dto.ChattingResponse;
-import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
+import com.cupid.jikting.chatting.dto.ChattingRoomDetailResponse;
 import com.cupid.jikting.chatting.dto.MemberResponse;
 import com.cupid.jikting.chatting.service.ChattingService;
 import com.cupid.jikting.common.dto.ErrorResponse;
@@ -41,7 +41,7 @@ public class ChattingControllerTest extends ApiDocument {
     private static final String NICKNAME = "닉네임";
 
     private List<ChattingResponse> chattingResponses;
-    private ChattingRoomResponse chattingRoomResponse;
+    private ChattingRoomDetailResponse chattingRoomDetailResponse;
     private ApplicationException chattingRoomNotFoundException;
 
     @MockBean
@@ -63,7 +63,7 @@ public class ChattingControllerTest extends ApiDocument {
                         .images(images)
                         .build())
                 .collect(Collectors.toList());
-        chattingRoomResponse = ChattingRoomResponse.builder()
+        chattingRoomDetailResponse = ChattingRoomDetailResponse.builder()
                 .description(DESCRIPTION)
                 .keywords(keywords)
                 .members(IntStream.rangeClosed(0, 2)
@@ -90,7 +90,7 @@ public class ChattingControllerTest extends ApiDocument {
     @Test
     void 채팅방_입장_성공() throws Exception {
         //given
-        willReturn(chattingRoomResponse).given(chattingService).get(anyLong());
+        willReturn(chattingRoomDetailResponse).given(chattingService).get(anyLong());
         //when
         ResultActions resultActions = 채팅방_입장_요청();
         //then
@@ -127,7 +127,7 @@ public class ChattingControllerTest extends ApiDocument {
     private void 채팅방_입장_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
-                        .andExpect(content().json(toJson(chattingRoomResponse))),
+                        .andExpect(content().json(toJson(chattingRoomDetailResponse))),
                 "chattingRoom-enter-success");
     }
 

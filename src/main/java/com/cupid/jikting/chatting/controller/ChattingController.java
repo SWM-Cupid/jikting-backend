@@ -1,7 +1,7 @@
 package com.cupid.jikting.chatting.controller;
 
 import com.cupid.jikting.chatting.dto.ChattingResponse;
-import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
+import com.cupid.jikting.chatting.dto.ChattingRoomDetailResponse;
 import com.cupid.jikting.chatting.service.ChattingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class ChattingController {
     }
 
     @GetMapping("/{chattingRoomId}")
-    public ResponseEntity<ChattingRoomResponse> get(@PathVariable Long chattingRoomId) {
+    public ResponseEntity<ChattingRoomDetailResponse> get(@PathVariable Long chattingRoomId) {
         return ResponseEntity.ok().body(chattingService.get(chattingRoomId));
     }
 }
