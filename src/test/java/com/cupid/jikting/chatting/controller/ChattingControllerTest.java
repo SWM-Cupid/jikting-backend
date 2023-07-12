@@ -7,6 +7,7 @@ import com.cupid.jikting.chatting.service.ChattingService;
 import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.WrongFormException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,7 @@ public class ChattingControllerTest extends ApiDocument {
     private MeetingConfirmRequest meetingConfirmRequest;
     private List<ChattingRoomResponse> chattingRoomResponses;
     private ApplicationException wrongFormException;
+    private ApplicationException chattingRoomNotFoundException;
 
     @MockBean
     private ChattingService chattingService;
@@ -67,6 +69,7 @@ public class ChattingControllerTest extends ApiDocument {
                         .build())
                 .collect(Collectors.toList());
         wrongFormException = new WrongFormException(ApplicationError.INVALID_FORMAT);
+        chattingRoomNotFoundException = new NotFoundException(ApplicationError.CHATTING_ROOM_NOT_FOUND);
     }
 
     @Test
@@ -90,13 +93,23 @@ public class ChattingControllerTest extends ApiDocument {
     }
 
     @Test
-    void 미팅_확정_실패() throws Exception {
+    void 미팅_확정_양식불일치_실패() throws Exception {
         //given
         willThrow(wrongFormException).given(chattingService).confirm(anyLong());
         //when
         ResultActions resultActions = 미팅_확정_요청();
         //then
-        미팅_확정_요청_실패(resultActions);
+        미팅_확정_요청_양식불일치_실패(resultActions);
+    }
+
+    @Test
+    void 미팅_확정_채팅방정보없음_실패() throws Exception {
+        //given
+        willThrow(chattingRoomNotFoundException).given(chattingService).confirm(anyLong());
+        //when
+        ResultActions resultActions = 미팅_확정_요청();
+        //then
+        미팅_확정_요청_채팅방정보없음_실패(resultActions);
     }
 
     private ResultActions 채팅방_목록_조회_요청() throws Exception {
@@ -124,10 +137,17 @@ public class ChattingControllerTest extends ApiDocument {
                 "meeting-confirm-success");
     }
 
-    private void 미팅_확정_요청_실패(ResultActions resultActions) throws Exception {
+    private void 미팅_확정_요청_양식불일치_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(wrongFormException)))),
-                "meeting-confirm-fail");
+                "meeting-confirm-wrong-form-fail");
+    }
+
+    private void 미팅_확정_요청_채팅방정보없음_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(chattingRoomNotFoundException)))),
+                "meeting-confirm-chattingRoom-not-found-fail");
     }
 }
