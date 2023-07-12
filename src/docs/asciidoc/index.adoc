@@ -673,8 +673,11 @@ include::{snippets}/meeting-confirm-success/http-response.adoc[]
 .request
 include::{snippets}/meeting-confirm-fail/http-request.adoc[]
 
-.response
-include::{snippets}/meeting-confirm-fail/http-response.adoc[]
+.response - 잘못된 양식
+include::{snippets}/meeting-confirm-wrong-form-fail/http-response.adoc[]
+
+.response - 채팅방 정보를 찾을 수 없음
+include::{snippets}/meeting-confirm-chattingRoom-not-found-fail/http-response.adoc[]
 
 === 번개팅 관련 기능
 ==== 번개팅 목록 조회
