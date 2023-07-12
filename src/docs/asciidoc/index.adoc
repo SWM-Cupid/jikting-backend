@@ -659,6 +659,24 @@ include::{snippets}/get-chattings-success/http-request.adoc[]
 .response
 include::{snippets}/get-chattings-success/http-response.adoc[]
 
+==== 채팅방 입장
+----
+/api/v1/chattings/{chattingRoomId}
+----
+===== 성공
+.request
+include::{snippets}/chatting-room-enter-success/http-request.adoc[]
+
+.response
+include::{snippets}/chatting-room-enter-success/http-response.adoc[]
+
+===== 실패
+.request
+include::{snippets}/chatting-room-enter-fail/http-request.adoc[]
+
+.response
+include::{snippets}/chatting-room-enter-fail/http-response.adoc[]
+
 === 번개팅 관련 기능
 ==== 번개팅 목록 조회
 ----
