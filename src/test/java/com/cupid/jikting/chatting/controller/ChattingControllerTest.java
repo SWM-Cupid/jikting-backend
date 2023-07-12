@@ -148,6 +148,6 @@ public class ChattingControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(chattingRoomNotFoundException)))),
-                "meeting-confirm-chattingRoom-not-found-fail");
+                "meeting-confirm-chatting-room-not-found-fail");
     }
 }
