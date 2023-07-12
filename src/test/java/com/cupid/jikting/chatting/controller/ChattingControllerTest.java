@@ -56,7 +56,7 @@ public class ChattingControllerTest extends ApiDocument {
         meetingConfirmRequest = MeetingConfirmRequest.builder()
                 .meetingId(ID)
                 .place(PLACE)
-                .date(DATE)
+                .dateTime(DATE)
                 .build();
         chattingRoomResponses = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> ChattingRoomResponse.builder()

@@ -12,5 +12,5 @@ public class MeetingConfirmRequest {
 
     private Long meetingId;
     private String place;
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
 }
