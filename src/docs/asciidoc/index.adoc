@@ -677,6 +677,26 @@ include::{snippets}/chatting-room-enter-fail/http-request.adoc[]
 .response
 include::{snippets}/chatting-room-enter-fail/http-response.adoc[]
 
+==== 미팅 확정
+----
+/api/v1/chattings/{chattingId}/confirm
+----
+===== 성공
+.request
+include::{snippets}/meeting-confirm-success/http-request.adoc[]
+
+.response
+include::{snippets}/meeting-confirm-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/meeting-confirm-fail/http-request.adoc[]
+
+.response - 잘못된 양식
+include::{snippets}/meeting-confirm-wrong-form-fail/http-response.adoc[]
+
+.response - 채팅방 정보를 찾을 수 없음
+include::{snippets}/meeting-confirm-chatting-room-not-found-fail/http-response.adoc[]
+
 === 번개팅 관련 기능
 ==== 번개팅 목록 조회
 ----

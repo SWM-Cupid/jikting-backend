@@ -8,9 +8,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChattingResponse {
+public class ChattingRoomResponse {
 
-    private Long chattingId;
+    private Long chattingRoomId;
     private String opposingTeamName;
     private String lastMessage;
     private List<String> images;
