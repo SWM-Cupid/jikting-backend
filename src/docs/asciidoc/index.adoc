@@ -665,17 +665,17 @@ include::{snippets}/get-chattings-success/http-response.adoc[]
 ----
 ===== 성공
 .request
-include::{snippets}/chattingRoom-enter-success/http-request.adoc[]
+include::{snippets}/chatting-room-enter-success/http-request.adoc[]
 
 .response
-include::{snippets}/chattingRoom-enter-success/http-response.adoc[]
+include::{snippets}/chatting-room-enter-success/http-response.adoc[]
 
 ===== 실패
 .request
-include::{snippets}/chattingRoom-enter-fail/http-request.adoc[]
+include::{snippets}/chatting-room-enter-fail/http-request.adoc[]
 
 .response
-include::{snippets}/chattingRoom-enter-fail/http-response.adoc[]
+include::{snippets}/chatting-room-enter-fail/http-response.adoc[]
 
 === 번개팅 관련 기능
 ==== 번개팅 목록 조회

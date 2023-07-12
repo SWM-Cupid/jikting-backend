@@ -128,13 +128,13 @@ public class ChattingControllerTest extends ApiDocument {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(chattingRoomDetailResponse))),
-                "chattingRoom-enter-success");
+                "chatting-room-enter-success");
     }
 
     private void 채팅방_입장_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(chattingRoomNotFoundException)))),
-                "chattingRoom-enter-fail");
+                "chatting-room-enter-fail");
     }
 }
