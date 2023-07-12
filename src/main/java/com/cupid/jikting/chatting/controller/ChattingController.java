@@ -1,6 +1,6 @@
 package com.cupid.jikting.chatting.controller;
 
-import com.cupid.jikting.chatting.dto.ChattingResponse;
+import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
 import com.cupid.jikting.chatting.service.ChattingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class ChattingController {
     private final ChattingService chattingService;
 
     @GetMapping
-    public ResponseEntity<List<ChattingResponse>> getAll() {
+    public ResponseEntity<List<ChattingRoomResponse>> getAll() {
         return ResponseEntity.ok().body(chattingService.getAll());
     }
 

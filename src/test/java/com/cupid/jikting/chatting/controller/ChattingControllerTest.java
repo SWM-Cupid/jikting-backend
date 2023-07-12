@@ -1,7 +1,7 @@
 package com.cupid.jikting.chatting.controller;
 
 import com.cupid.jikting.ApiDocument;
-import com.cupid.jikting.chatting.dto.ChattingResponse;
+import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
 import com.cupid.jikting.chatting.dto.MeetingConfirmRequest;
 import com.cupid.jikting.chatting.service.ChattingService;
 import com.cupid.jikting.common.dto.ErrorResponse;
@@ -42,7 +42,7 @@ public class ChattingControllerTest extends ApiDocument {
     private static final String MESSAGE = "메시지";
 
     private MeetingConfirmRequest meetingConfirmRequest;
-    private List<ChattingResponse> chattingResponses;
+    private List<ChattingRoomResponse> chattingRoomResponses;
     private ApplicationException wrongFormException;
 
     @MockBean
@@ -58,8 +58,8 @@ public class ChattingControllerTest extends ApiDocument {
                 .place(PLACE)
                 .date(DATE)
                 .build();
-        chattingResponses = IntStream.rangeClosed(0, 2)
-                .mapToObj(n -> ChattingResponse.builder()
+        chattingRoomResponses = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> ChattingRoomResponse.builder()
                         .chattingRoomId(ID)
                         .opposingTeamName(TEAM_NAME)
                         .lastMessage(MESSAGE)
@@ -72,7 +72,7 @@ public class ChattingControllerTest extends ApiDocument {
     @Test
     void 채팅방_목록_조회_성공() throws Exception {
         //given
-        willReturn(chattingResponses).given(chattingService).getAll();
+        willReturn(chattingRoomResponses).given(chattingService).getAll();
         //when
         ResultActions resultActions = 채팅방_목록_조회_요청();
         //then
@@ -107,7 +107,7 @@ public class ChattingControllerTest extends ApiDocument {
     private void 채팅방_목록_조회_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
-                        .andExpect(content().json(toJson(chattingResponses))),
+                        .andExpect(content().json(toJson(chattingRoomResponses))),
                 "get-chattings-success");
     }
 
@@ -120,8 +120,8 @@ public class ChattingControllerTest extends ApiDocument {
 
     private void 미팅_확정_요쳥_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
-                        .andExpect(status().isOk())
-                , "meeting-confirm-success");
+                        .andExpect(status().isOk()),
+                "meeting-confirm-success");
     }
 
     private void 미팅_확정_요청_실패(ResultActions resultActions) throws Exception {
