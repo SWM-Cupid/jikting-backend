@@ -1,5 +1,6 @@
 package com.cupid.jikting.common.config;
 
+import com.cupid.jikting.common.filter.ExceptionHandlerFilter;
 import com.cupid.jikting.common.jwt.filter.JwtAuthenticationProcessingFilter;
 import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.common.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
@@ -23,8 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
-@EnableWebSecurity
 @RequiredArgsConstructor
+@EnableWebSecurity
 @Configuration
 public class SecurityConfig {
 
@@ -46,10 +47,11 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .mvcMatchers("/").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/members").permitAll()
-                .anyRequest().authenticated();
-
-        http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
-        http.addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class);
+                .anyRequest().authenticated()
+                .and()
+                .addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
+                .addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationProcessingFilter.class);
 
         return http.build();
     }
@@ -89,7 +91,6 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, memberRepository);
-        return jwtAuthenticationFilter;
+        return new JwtAuthenticationProcessingFilter(jwtService, memberRepository);
     }
 }
