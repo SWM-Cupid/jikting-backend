@@ -20,7 +20,6 @@ public class LoginService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(ApplicationError.MEMBER_NOT_FOUND.getMessage()));
-
         return User.builder()
                 .username(member.getUsername())
                 .password(member.getPassword())
