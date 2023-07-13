@@ -1,5 +1,9 @@
 package com.cupid.jikting.common.jwt.filter;
 
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.common.error.InvalidJwtException;
+import com.cupid.jikting.common.error.UnAuthorizedException;
 import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
@@ -24,7 +28,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
-    private static final String NO_CHECK_URL = "/members/login";
+    private static final String LOGIN_URI = "/members/login";
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
@@ -89,6 +93,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getServletPath().equals(NO_CHECK_URL);
+        return request.getServletPath().equals(LOGIN_URI);
     }
 }
