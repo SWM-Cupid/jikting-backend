@@ -25,16 +25,16 @@ public class JwtService {
     @Value("${jwt.secretKey}")
     private String secretKey;
 
-    @Value("${jwt.access.expiration}")
+    @Value("${jwt.accessToken.expiration}")
     private Long accessTokenExpirationPeriod;
 
-    @Value("${jwt.refresh.expiration}")
+    @Value("${jwt.refreshToken.expiration}")
     private Long refreshTokenExpirationPeriod;
 
-    @Value("${jwt.access.header}")
+    @Value("${jwt.accessToken.header}")
     private String accessHeader;
 
-    @Value("${jwt.refresh.header}")
+    @Value("${jwt.refreshToken.header}")
     private String refreshHeader;
 
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
