@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Role {
 
-    GUEST("ROLE_GUEST"), UNCERTIFIED("ROLE_UNCERTIFIED"), CERTIFIED("ROLE_CERTIFIED");
+    GUEST("ROLE_GUEST"),
+    UNCERTIFIED("ROLE_UNCERTIFIED"),
+    CERTIFIED("ROLE_CERTIFIED");
 
     private final String key;
 }
