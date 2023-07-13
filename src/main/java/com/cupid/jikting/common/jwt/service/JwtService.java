@@ -122,4 +122,12 @@ public class JwtService {
             return false;
         }
     }
+
+    private void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
+        response.setHeader(accessHeader, accessToken);
+    }
+
+    private void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
+        response.setHeader(refreshHeader, refreshToken);
+    }
 }
