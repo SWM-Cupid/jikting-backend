@@ -12,8 +12,8 @@ import java.io.IOException;
 @Slf4j
 public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private final String CHARACTER_ENCODING = "UTF-8";
-    private final String CONTENT_TYPE = "text/plain;charset=UTF-8";
+    private static final String CHARACTER_ENCODING = "UTF-8";
+    private static final String CONTENT_TYPE = "text/plain;charset=UTF-8";
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
