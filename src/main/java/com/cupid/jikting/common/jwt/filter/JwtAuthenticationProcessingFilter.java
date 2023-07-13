@@ -32,7 +32,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
-경    private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+    private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
