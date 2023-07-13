@@ -16,9 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Optional;
 
-@RequiredArgsConstructor
-@Getter
 @Slf4j
+@Getter
+@RequiredArgsConstructor
 @Service
 public class JwtService {
 
