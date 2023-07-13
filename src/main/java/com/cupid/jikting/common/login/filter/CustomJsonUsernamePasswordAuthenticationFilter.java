@@ -38,16 +38,9 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
         if (request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)) {
             throw new AuthenticationServiceException("Authentication Content-Type not supported: " + request.getContentType());
         }
-
-        String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
-
-        Map<String, String> usernamePasswordMap = objectMapper.readValue(messageBody, Map.class);
-
+        Map<String, String> usernamePasswordMap = objectMapper.readValue(StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8), Map.class);
         String username = usernamePasswordMap.get(USERNAME_KEY);
         String password = usernamePasswordMap.get(PASSWORD_KEY);
-
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
-
-        return this.getAuthenticationManager().authenticate(authRequest);
+        return this.getAuthenticationManager().authenticate(UsernamePasswordAuthenticationToken.unauthenticated(username, password));
     }
 }
