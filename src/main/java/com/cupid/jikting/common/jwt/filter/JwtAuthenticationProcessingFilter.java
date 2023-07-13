@@ -32,23 +32,20 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
-
-    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+경    private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String refreshToken = jwtService.extractRefreshToken(request).filter(jwtService::isTokenValid).orElse(null);
-
+        String refreshToken = jwtService.extractRefreshToken(request)
+                .filter(jwtService::isTokenValid)
+                .orElse(null);
         if (refreshToken != null) {
             checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
             return;
         }
-
-        if (refreshToken == null) {
-            checkAccessTokenAndAuthentication(request, response, filterChain);
-        }
+        checkAccessTokenAndAuthentication(request, response, filterChain);
     }
 
     public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
@@ -62,16 +59,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                                                   HttpServletResponse response,
                                                   FilterChain filterChain) throws ServletException, IOException {
         log.info("checkAccessTokenAndAuthentication() 호출");
-        jwtService.extractAccessToken(request).filter(jwtService::isTokenValid)
-                .flatMap(accessToken -> jwtService.extractUsername(accessToken)
-                        .flatMap(memberRepository::findByUsername))
+        jwtService.extractAccessToken(request)
+                .filter(jwtService::isTokenValid)
+                .flatMap(jwtService::extractUsername)
+                .flatMap(memberRepository::findByUsername)
                 .ifPresent(this::saveAuthentication);
-
         filterChain.doFilter(request, response);
     }
 
     public void saveAuthentication(Member member) {
-        String password = member.getPassword();
         UserDetails userDetailsUser = User.builder()
                 .username(member.getUsername())
                 .password(password)
