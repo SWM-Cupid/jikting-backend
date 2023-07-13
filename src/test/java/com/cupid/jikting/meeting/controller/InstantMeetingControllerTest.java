@@ -1,12 +1,12 @@
-package com.cupid.jikting.instantmeeting.controller;
+package com.cupid.jikting.meeting.controller;
 
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
-import com.cupid.jikting.instantmeeting.dto.InstantMeetingResponse;
-import com.cupid.jikting.instantmeeting.service.InstantMeetingService;
+import com.cupid.jikting.meeting.dto.InstantMeetingResponse;
+import com.cupid.jikting.meeting.service.InstantMeetingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
