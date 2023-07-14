@@ -17,6 +17,11 @@ import java.io.IOException;
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
     private static final String ENCODING = "UTF-8";
+    private final ObjectMapper objectMapper;
+
+    public ExceptionHandlerFilter(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     protected void doFilterInternal(
@@ -35,7 +40,6 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             ApplicationException exception
     ) {
-        ObjectMapper objectMapper = new ObjectMapper();
         response.setStatus(exception.getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(ENCODING);
