@@ -27,14 +27,6 @@ public class Member {
 
     private String refreshToken;
 
-    public void authorizeUser() {
-        this.role = Role.UNCERTIFIED;
-    }
-
-    public void passwordEncode(PasswordEncoder passwordEncoder) {
-        this.password = passwordEncoder.encode(this.password);
-    }
-
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
     }
