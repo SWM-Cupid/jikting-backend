@@ -2,6 +2,8 @@ package com.cupid.jikting.common.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.JwtException;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,13 @@ import java.util.Optional;
 @Service
 public class JwtService {
 
+    private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
+    private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
+    private static final String USERNAME_CLAIM = "username";
+    private static final String BEARER = "Bearer ";
+
+    private final MemberRepository memberRepository;
+
     @Value("${jwt.secretKey}")
     private String secretKey;
 
@@ -35,18 +44,11 @@ public class JwtService {
     @Value("${jwt.refreshToken.header}")
     private String refreshHeader;
 
-    private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
-    private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
-    private static final String USERNAME_CLAIM = "username";
-    private static final String BEARER = "Bearer ";
-
-    private final MemberRepository memberRepository;
-
-    public String createAccessToken(String email) {
+    public String createAccessToken(String username) {
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(new Date().getTime() + accessTokenExpirationPeriod))
-                .withClaim(USERNAME_CLAIM, email)
+                .withClaim(USERNAME_CLAIM, username)
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
@@ -95,7 +97,7 @@ public class JwtService {
             return true;
         } catch (Exception e) {
             log.error("유효하지 않은 토큰입니다. {}", e.getMessage());
-            return false;
+            throw new JwtException(ApplicationError.INVALID_TOKEN);
         }
     }
 
