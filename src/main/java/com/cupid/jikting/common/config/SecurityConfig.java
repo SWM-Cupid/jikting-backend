@@ -36,7 +36,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .formLogin().disable()
                 .httpBasic().disable()
                 .csrf().disable()
@@ -51,9 +51,8 @@ public class SecurityConfig {
                 .and()
                 .addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationProcessingFilter.class);
-
-        return http.build();
+                .addFilterBefore(new ExceptionHandlerFilter(new ObjectMapper()), JwtAuthenticationProcessingFilter.class)
+                .build();
     }
 
     @Bean
