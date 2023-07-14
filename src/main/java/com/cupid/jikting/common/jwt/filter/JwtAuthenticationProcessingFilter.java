@@ -1,9 +1,7 @@
 package com.cupid.jikting.common.jwt.filter;
 
 import com.cupid.jikting.common.error.ApplicationError;
-import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.InvalidJwtException;
-import com.cupid.jikting.common.error.UnAuthorizedException;
 import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
@@ -35,8 +33,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String refreshToken = jwtService.extractRefreshToken(request)
                 .filter(jwtService::isTokenValid)
@@ -68,13 +65,13 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     public void saveAuthentication(Member member) {
-        UserDetails userDetailsUser = User.builder()
+        UserDetails userDetails = User.builder()
                 .username(member.getUsername())
                 .password(member.getPassword())
                 .roles(member.getRole().name())
                 .build();
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
-                userDetailsUser, null, authoritiesMapper.mapAuthorities(userDetailsUser.getAuthorities()));
+                userDetails, null, authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
