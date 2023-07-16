@@ -2,6 +2,7 @@ package com.cupid.jikting.team.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.meeting.entity.Meeting;
+import com.cupid.jikting.recommend.entity.Recommend;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
@@ -41,6 +42,14 @@ public class Team extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "sentTeam")
     private final List<TeamLike> sentTeamLikes = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "from")
+    private final List<Recommend> recommendsFrom = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "to")
+    private final List<Recommend> recommendsTo = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "recommendedTeam")
