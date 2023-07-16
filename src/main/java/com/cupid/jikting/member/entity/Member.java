@@ -19,6 +19,13 @@ import java.util.List;
 @Entity
 public class Member extends BaseEntity {
 
+    private String username;
+    private String password;
+    private String phone;
+    private String name;
+    private String type;
+    private Gender gender;
+
     @Builder.Default
     @OneToMany(mappedBy = "member")
     private final List<MemberCompany> memberCompanies = new ArrayList<>();
@@ -26,11 +33,4 @@ public class Member extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "member")
     private final List<MemberCertification> memberCertifications = new ArrayList<>();
-
-    private String username;
-    private String password;
-    private String phone;
-    private String name;
-    private String type;
-    private Gender gender;
 }
