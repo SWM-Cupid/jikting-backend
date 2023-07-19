@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .and()
                 .addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new ExceptionHandlerFilter(new ObjectMapper()), JwtAuthenticationProcessingFilter.class)
+                .addFilterBefore(exceptionHandlerFilter(), JwtAuthenticationProcessingFilter.class)
                 .build();
     }
 
@@ -91,5 +91,10 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
         return new JwtAuthenticationProcessingFilter(jwtService, memberRepository);
+    }
+
+    @Bean
+    public ExceptionHandlerFilter exceptionHandlerFilter() {
+        return new ExceptionHandlerFilter(objectMapper);
     }
 }
