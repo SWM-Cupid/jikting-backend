@@ -5,6 +5,7 @@ import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.ExpiredJwtException;
 import com.cupid.jikting.common.error.InvalidJwtException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -14,14 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
     private static final String ENCODING = "UTF-8";
-    private final ObjectMapper objectMapper;
 
-    public ExceptionHandlerFilter(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(
