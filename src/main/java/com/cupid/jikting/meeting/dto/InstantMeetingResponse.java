@@ -1,4 +1,4 @@
-package com.cupid.jikting.instantmeeting.dto;
+package com.cupid.jikting.meeting.dto;
 
 import lombok.*;
 

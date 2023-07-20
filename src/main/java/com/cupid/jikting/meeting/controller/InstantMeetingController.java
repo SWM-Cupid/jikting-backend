@@ -1,7 +1,7 @@
-package com.cupid.jikting.instantmeeting.controller;
+package com.cupid.jikting.meeting.controller;
 
-import com.cupid.jikting.instantmeeting.dto.InstantMeetingResponse;
-import com.cupid.jikting.instantmeeting.service.InstantMeetingService;
+import com.cupid.jikting.meeting.dto.InstantMeetingResponse;
+import com.cupid.jikting.meeting.service.InstantMeetingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
