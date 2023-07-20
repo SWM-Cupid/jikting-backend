@@ -1,5 +1,6 @@
 package com.cupid.jikting.member.dto;
 
+import com.cupid.jikting.member.entity.Gender;
 import lombok.*;
 
 @Getter
@@ -12,4 +13,5 @@ public class SignupRequest {
     private String password;
     private String name;
     private String phone;
+    private Gender gender;
 }
