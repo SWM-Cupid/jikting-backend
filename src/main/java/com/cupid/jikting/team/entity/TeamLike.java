@@ -19,6 +19,7 @@ import javax.persistence.*;
 @Entity
 public class TeamLike extends BaseEntity {
 
+    @Enumerated(EnumType.STRING)
     private AcceptStatus acceptStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)

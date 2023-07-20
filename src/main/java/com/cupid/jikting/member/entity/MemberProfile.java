@@ -22,14 +22,22 @@ public class MemberProfile extends BaseEntity {
 
     private String nickname;
     private String birth;
-    private Gender gender;
     private int height;
-    private MBTI mbti;
     private String address;
-    private SmokeStatus smokeStatus;
-    private DrinkStatus drinkStatus;
     private String description;
     private String school;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    private MBTI mbti;
+
+    @Enumerated(EnumType.STRING)
+    private SmokeStatus smokeStatus;
+
+    @Enumerated(EnumType.STRING)
+    private DrinkStatus drinkStatus;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

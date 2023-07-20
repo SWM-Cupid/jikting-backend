@@ -20,6 +20,8 @@ import javax.persistence.*;
 public class ProfileImage extends BaseEntity {
 
     private String url;
+
+    @Enumerated(EnumType.STRING)
     private Sequence sequence;
 
     @ManyToOne(fetch = FetchType.LAZY)

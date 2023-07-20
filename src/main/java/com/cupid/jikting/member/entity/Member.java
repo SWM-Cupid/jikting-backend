@@ -4,10 +4,7 @@ import com.cupid.jikting.common.entity.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +21,8 @@ public class Member extends BaseEntity {
     private String phone;
     private String name;
     private String type;
+
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Builder.Default
