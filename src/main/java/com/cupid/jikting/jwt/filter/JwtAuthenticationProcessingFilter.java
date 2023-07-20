@@ -1,8 +1,8 @@
-package com.cupid.jikting.common.jwt.filter;
+package com.cupid.jikting.jwt.filter;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.InvalidJwtException;
-import com.cupid.jikting.common.jwt.service.JwtService;
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

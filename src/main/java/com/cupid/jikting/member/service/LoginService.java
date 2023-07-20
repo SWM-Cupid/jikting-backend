@@ -1,4 +1,4 @@
-package com.cupid.jikting.common.login.service;
+package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.member.entity.Member;

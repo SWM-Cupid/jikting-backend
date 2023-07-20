@@ -1,6 +1,6 @@
-package com.cupid.jikting.common.login.handler;
+package com.cupid.jikting.member.handler;
 
-import com.cupid.jikting.common.jwt.service.JwtService;
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

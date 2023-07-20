@@ -1,4 +1,4 @@
-package com.cupid.jikting.common.login.handler;
+package com.cupid.jikting.member.handler;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import lombok.extern.slf4j.Slf4j;

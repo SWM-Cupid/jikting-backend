@@ -1,12 +1,12 @@
 package com.cupid.jikting.common.config;
 
 import com.cupid.jikting.common.filter.ExceptionHandlerFilter;
-import com.cupid.jikting.common.jwt.filter.JwtAuthenticationProcessingFilter;
-import com.cupid.jikting.common.jwt.service.JwtService;
-import com.cupid.jikting.common.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
-import com.cupid.jikting.common.login.handler.LoginFailureHandler;
-import com.cupid.jikting.common.login.handler.LoginSuccessHandler;
-import com.cupid.jikting.common.login.service.LoginService;
+import com.cupid.jikting.jwt.filter.JwtAuthenticationProcessingFilter;
+import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.member.filter.CustomJsonUsernamePasswordAuthenticationFilter;
+import com.cupid.jikting.member.handler.LoginFailureHandler;
+import com.cupid.jikting.member.handler.LoginSuccessHandler;
+import com.cupid.jikting.member.service.LoginService;
 import com.cupid.jikting.member.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

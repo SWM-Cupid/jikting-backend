@@ -1,4 +1,4 @@
-package com.cupid.jikting.common.login.filter;
+package com.cupid.jikting.member.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationServiceException;
