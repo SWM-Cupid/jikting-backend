@@ -14,8 +14,8 @@ pipeline {
         CONTAINER_NAME = 'cupid-backend'
 
         AWS_CREDENTIAL_NAME = 'aws-key'
-        ECR_PATH = '191509918438.dkr.ecr.ap-northeast-2.amazonaws.com/cupid/dev'
-        IMAGE_NAME = '191509918438.dkr.ecr.ap-northeast-2.amazonaws.com/cupid/dev/backend'
+        ECR_PATH = '191509918438.dkr.ecr.ap-northeast-2.amazonaws.com'
+        IMAGE_NAME = '191509918438.dkr.ecr.ap-northeast-2.amazonaws.com/backend'
         REGION = 'ap-northeast-2'
     }
     stages{
