@@ -6,6 +6,7 @@ import com.cupid.jikting.common.error.ExpiredJwtException;
 import com.cupid.jikting.common.error.InvalidJwtException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,11 +24,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException | InvalidJwtException exception) {
@@ -35,10 +33,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         }
     }
 
-    private void setErrorResponse(
-            HttpServletResponse response,
-            ApplicationException exception
-    ) {
+    private void setErrorResponse(HttpServletResponse response, ApplicationException exception) {
         response.setStatus(exception.getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(ENCODING);
