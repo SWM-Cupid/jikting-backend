@@ -27,8 +27,4 @@ public class Company extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "company")
     private final List<MemberCompany> memberCompanies = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "company")
-    private final List<MemberCertification> memberCertifications = new ArrayList<>();
 }
