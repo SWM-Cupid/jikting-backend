@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
@@ -40,7 +41,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             response.getWriter().write(objectMapper.writeValueAsString(ErrorResponse.from(exception)));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.info("{}: {}", e.getClass().getSimpleName(), e.getMessage(), e);
         }
     }
 }
