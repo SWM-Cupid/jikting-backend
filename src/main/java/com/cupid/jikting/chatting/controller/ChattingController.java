@@ -17,7 +17,7 @@ public class ChattingController {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChattingService chattingService;
 
-    @MessageMapping("/chattings/room/{chattingRoomId}/messages")
+    @MessageMapping("/chattings/rooms/{chattingRoomId}/messages")
     public void send(@DestinationVariable Long chattingRoomId, ChattingRequest chattingRequest) {
         simpMessagingTemplate.convertAndSend("/subscription/room/" + chattingRoomId, chattingRequest.getContent());
         chattingService.sendMessage(chattingRoomId, chattingRequest);
