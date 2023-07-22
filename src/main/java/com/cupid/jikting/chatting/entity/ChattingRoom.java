@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE chatting SET deleted = true WHERE id=?")
