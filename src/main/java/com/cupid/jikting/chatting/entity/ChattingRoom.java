@@ -22,10 +22,10 @@ import java.util.List;
 public class ChattingRoom extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "chattingRoom", cascade = CascadeType.ALL)
-    private final List<Chatting> chattings = new ArrayList<>();
+    private List<Chatting> chattings = new ArrayList<>();
 
     @OneToMany(mappedBy = "chattingRoom", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private final List<MemberChattingRoom> memberChattingRooms = new ArrayList<>();
+    private List<MemberChattingRoom> memberChattingRooms = new ArrayList<>();
 
     public void createChatting(Chatting chatting) {
         chattings.add(chatting);
