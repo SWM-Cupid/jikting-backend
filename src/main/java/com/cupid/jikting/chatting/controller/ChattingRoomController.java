@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/chattings/room")
+@RequestMapping("/chattings/rooms")
 public class ChattingRoomController {
 
     private final ChattingRoomService chattingRoomService;
