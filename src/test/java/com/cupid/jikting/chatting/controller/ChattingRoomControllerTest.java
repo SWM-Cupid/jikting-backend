@@ -1,7 +1,10 @@
 package com.cupid.jikting.chatting.controller;
 
 import com.cupid.jikting.ApiDocument;
-import com.cupid.jikting.chatting.dto.*;
+import com.cupid.jikting.chatting.dto.ChattingRoomDetailResponse;
+import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
+import com.cupid.jikting.chatting.dto.MeetingConfirmRequest;
+import com.cupid.jikting.chatting.dto.MemberResponse;
 import com.cupid.jikting.chatting.service.ChattingService;
 import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
@@ -28,8 +31,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ChattingController.class)
-public class ChattingControllerTest extends ApiDocument {
+@WebMvcTest(ChattingRoomController.class)
+public class ChattingRoomControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/chattings";
