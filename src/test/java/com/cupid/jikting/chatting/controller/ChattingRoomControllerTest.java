@@ -5,7 +5,7 @@ import com.cupid.jikting.chatting.dto.ChattingRoomDetailResponse;
 import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
 import com.cupid.jikting.chatting.dto.MeetingConfirmRequest;
 import com.cupid.jikting.chatting.dto.MemberResponse;
-import com.cupid.jikting.chatting.service.ChattingService;
+import com.cupid.jikting.chatting.service.ChattingRoomService;
 import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
@@ -54,7 +54,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     private ApplicationException chattingRoomNotFoundException;
 
     @MockBean
-    private ChattingService chattingService;
+    private ChattingRoomService chattingRoomService;
 
     @BeforeEach
     void setUp() {
@@ -95,7 +95,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 채팅방_목록_조회_성공() throws Exception {
         //given
-        willReturn(chattingRoomResponses).given(chattingService).getAll();
+        willReturn(chattingRoomResponses).given(chattingRoomService).getAll();
         //when
         ResultActions resultActions = 채팅방_목록_조회_요청();
         //then
@@ -105,7 +105,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 채팅방_입장_성공() throws Exception {
         //given
-        willReturn(chattingRoomDetailResponse).given(chattingService).get(anyLong());
+        willReturn(chattingRoomDetailResponse).given(chattingRoomService).get(anyLong());
         //when
         ResultActions resultActions = 채팅방_입장_요청();
         //then
@@ -115,7 +115,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 채팅방_입장_실패() throws Exception {
         //given
-        willThrow(chattingRoomNotFoundException).given(chattingService).get(anyLong());
+        willThrow(chattingRoomNotFoundException).given(chattingRoomService).get(anyLong());
         //when
         ResultActions resultActions = 채팅방_입장_요청();
         //then
@@ -125,7 +125,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 미팅_확정_성공() throws Exception {
         //given
-        willDoNothing().given(chattingService).confirm(anyLong());
+        willDoNothing().given(chattingRoomService).confirm(anyLong());
         //when
         ResultActions resultActions = 미팅_확정_요청();
         //then
@@ -135,7 +135,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 미팅_확정_양식불일치_실패() throws Exception {
         //given
-        willThrow(wrongFormException).given(chattingService).confirm(anyLong());
+        willThrow(wrongFormException).given(chattingRoomService).confirm(anyLong());
         //when
         ResultActions resultActions = 미팅_확정_요청();
         //then
@@ -145,7 +145,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 미팅_확정_채팅방정보없음_실패() throws Exception {
         //given
-        willThrow(chattingRoomNotFoundException).given(chattingService).confirm(anyLong());
+        willThrow(chattingRoomNotFoundException).given(chattingRoomService).confirm(anyLong());
         //when
         ResultActions resultActions = 미팅_확정_요청();
         //then
