@@ -2,10 +2,7 @@ package com.cupid.jikting.chatting.entity;
 
 import com.cupid.jikting.member.entity.BaseEntity;
 import com.cupid.jikting.member.entity.Member;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
@@ -23,9 +20,11 @@ import java.util.List;
 @Entity
 public class ChattingRoom extends BaseEntity implements Serializable {
 
+    @Builder.Default
     @OneToMany(mappedBy = "chattingRoom", cascade = CascadeType.ALL)
     private List<Chatting> chattings = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "chattingRoom", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<MemberChattingRoom> memberChattingRooms = new ArrayList<>();
 
