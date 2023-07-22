@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ChattingRoomControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
-    private static final String DOMAIN_ROOT_PATH = "/chattings";
+    private static final String DOMAIN_ROOT_PATH = "/chattings/room";
     private static final String PATH_DELIMITER = "/";
     private static final String URL = "이미지 주소";
     private static final Long ID = 1L;
