@@ -1,11 +1,18 @@
 package com.cupid.jikting.member.service;
 
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.DuplicateException;
 import com.cupid.jikting.member.dto.*;
+import com.cupid.jikting.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+@RequiredArgsConstructor
 @Service
 public class MemberService {
+
+    private final MemberRepository memberRepository;
 
     public void signup(SignupRequest signupRequest) {
     }
@@ -34,6 +41,9 @@ public class MemberService {
     }
 
     public void checkDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
+        if (memberRepository.existsByUsername(usernameCheckRequest.getUsername())) {
+            throw new DuplicateException(ApplicationError.DUPLICATE_USERNAME);
+        }
     }
 
     public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
