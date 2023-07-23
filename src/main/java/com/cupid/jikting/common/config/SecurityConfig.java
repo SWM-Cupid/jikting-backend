@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .mvcMatchers("/").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/members").permitAll()
+                .mvcMatchers("/members/username/check").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
