@@ -3,6 +3,7 @@ package com.cupid.jikting.member.entity;
 import com.cupid.jikting.common.entity.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -40,5 +41,9 @@ public class Member extends BaseEntity {
 
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
+    }
+
+    public void passwordEncode(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
     }
 }
