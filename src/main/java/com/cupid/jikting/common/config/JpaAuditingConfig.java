@@ -1,4 +1,4 @@
-package com.cupid.jikting.config;
+package com.cupid.jikting.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
