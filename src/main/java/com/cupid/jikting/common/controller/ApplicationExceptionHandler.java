@@ -4,6 +4,7 @@ import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -19,6 +20,12 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception exception) {
+        log.info("{}: {}", exception.getClass().getSimpleName(), exception.getMessage(), exception);
+        return ResponseEntity.internalServerError().body(ErrorResponse.create());
+    }
+
+    @MessageExceptionHandler(Exception.class)
+    protected ResponseEntity<ErrorResponse> handleMessageException(Exception exception) {
         log.info("{}: {}", exception.getClass().getSimpleName(), exception.getMessage(), exception);
         return ResponseEntity.internalServerError().body(ErrorResponse.create());
     }
