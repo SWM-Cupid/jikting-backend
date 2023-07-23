@@ -21,7 +21,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public void signup(SignupRequest signupRequest){
+    public void signup(SignupRequest signupRequest) {
         Member member = Member.builder()
                 .username(signupRequest.getUsername())
                 .password(signupRequest.getPassword())
