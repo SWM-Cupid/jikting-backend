@@ -1,6 +1,7 @@
 package com.cupid.jikting.member.controller;
 
 import com.cupid.jikting.ApiDocument;
+import com.cupid.jikting.TestSecurityConfig;
 import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.*;
 import com.cupid.jikting.member.dto.*;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import(TestSecurityConfig.class)
 @WebMvcTest(MemberController.class)
 public class MemberControllerTest extends ApiDocument {
 

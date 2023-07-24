@@ -1,6 +1,7 @@
 package com.cupid.jikting.chatting.controller;
 
 import com.cupid.jikting.ApiDocument;
+import com.cupid.jikting.TestSecurityConfig;
 import com.cupid.jikting.chatting.dto.ChattingRoomDetailResponse;
 import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
 import com.cupid.jikting.chatting.dto.MeetingConfirmRequest;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import(TestSecurityConfig.class)
 @WebMvcTest(ChattingRoomController.class)
 public class ChattingRoomControllerTest extends ApiDocument {
 
