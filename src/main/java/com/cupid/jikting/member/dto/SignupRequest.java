@@ -18,7 +18,7 @@ public class SignupRequest {
     private String username;
 
     @NotEmpty(message = "비밀번호는 빈칸일 수 없습니다.")
-    @Pattern(regexp = "[a-zA-Z0-9!@#$%^&*]{10,}")
+    @Pattern(regexp = "(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d!@#$%^&*]{10,}")
     private String password;
 
     @NotEmpty(message = "이름은 빈칸일 수 없습니다.")
