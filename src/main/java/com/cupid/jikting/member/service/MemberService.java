@@ -46,6 +46,9 @@ public class MemberService {
         }
     }
 
+    public void checkDuplicatedNickname(NicknameCheckRequest nicknameCheckRequest) {
+    }
+
     public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
     }
 
@@ -66,9 +69,6 @@ public class MemberService {
     }
 
     public void resetPassword(PasswordResetRequest passwordResetRequest) {
-    }
-
-    public void checkDuplicatedNickname(NicknameCheckRequest nicknameCheckRequest) {
     }
 
     public void createVerificationCodeForCompany(CompanyVerificationCodeRequest companyVerificationCodeRequest) {
