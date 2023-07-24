@@ -28,8 +28,8 @@ public class MemberServiceTest {
     private static final String NAME = "홍길동";
     private static final String PHONE = "01000000000";
 
-    private SignupRequest signupRequest;
     private Member member;
+    private SignupRequest signupRequest;
     private RollbackException rollbackException;
 
     @InjectMocks
