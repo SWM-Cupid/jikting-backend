@@ -46,6 +46,12 @@ public class MemberService {
         }
     }
 
+    public void checkDuplicatedNickname(NicknameCheckRequest nicknameCheckRequest) {
+        if (memberRepository.existsByNickname(nicknameCheckRequest.getNickname())) {
+            throw new DuplicateException(ApplicationError.DUPLICATE_NICKNAME);
+        }
+    }
+
     public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
     }
 
@@ -66,9 +72,6 @@ public class MemberService {
     }
 
     public void resetPassword(PasswordResetRequest passwordResetRequest) {
-    }
-
-    public void checkDuplicatedNickname(NicknameCheckRequest nicknameCheckRequest) {
     }
 
     public void createVerificationCodeForCompany(CompanyVerificationCodeRequest companyVerificationCodeRequest) {
