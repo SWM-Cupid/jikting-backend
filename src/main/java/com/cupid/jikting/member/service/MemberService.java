@@ -5,6 +5,7 @@ import com.cupid.jikting.common.error.DuplicateException;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.entity.Role;
+import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +20,7 @@ import javax.transaction.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberProfileRepository memberProfileRepository;
     private final PasswordEncoder passwordEncoder;
 
     public void signup(SignupRequest signupRequest) {
@@ -63,7 +65,7 @@ public class MemberService {
     }
 
     public void checkDuplicatedNickname(NicknameCheckRequest nicknameCheckRequest) {
-        if (memberRepository.existsByNickname(nicknameCheckRequest.getNickname())) {
+        if (memberProfileRepository.existsByNickname(nicknameCheckRequest.getNickname())) {
             throw new DuplicateException(ApplicationError.DUPLICATE_NICKNAME);
         }
     }

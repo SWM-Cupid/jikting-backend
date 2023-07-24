@@ -7,6 +7,7 @@ import com.cupid.jikting.member.dto.SignupRequest;
 import com.cupid.jikting.member.dto.UsernameCheckRequest;
 import com.cupid.jikting.member.entity.Gender;
 import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,6 +47,9 @@ public class MemberServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private MemberProfileRepository memberProfileRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -98,17 +102,17 @@ public class MemberServiceTest {
     @Test
     void 닉네임_중복_확인_성공() {
         // given
-        willReturn(false).given(memberRepository).existsByNickname(anyString());
+        willReturn(false).given(memberProfileRepository).existsByNickname(anyString());
         // when
         memberService.checkDuplicatedNickname(nicknameCheckRequest);
         // then
-        verify(memberRepository).existsByNickname(anyString());
+        verify(memberProfileRepository).existsByNickname(anyString());
     }
 
     @Test
     void 닉네임_중복_확인_실패_존재하는_닉네임() {
         // given
-        willReturn(true).given(memberRepository).existsByNickname(anyString());
+        willReturn(true).given(memberProfileRepository).existsByNickname(anyString());
         // when & then
         Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedNickname(nicknameCheckRequest)).isInstanceOf(DuplicateException.class).hasMessage(ApplicationError.DUPLICATE_NICKNAME.getMessage());
     }
