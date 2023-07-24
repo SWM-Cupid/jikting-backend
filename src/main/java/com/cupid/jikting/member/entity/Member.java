@@ -1,5 +1,6 @@
 package com.cupid.jikting.member.entity;
 
+import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -37,6 +38,10 @@ public class Member extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "member")
     private final List<MemberCertification> memberCertifications = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member")
+    private final List<MemberChattingRoom> memberChattingRooms = new ArrayList<>();
 
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
