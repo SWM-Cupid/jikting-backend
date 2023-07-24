@@ -29,33 +29,33 @@ public class Team extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "team")
-    private final List<TeamPersonality> teamPersonalities = new ArrayList<>();
+    private List<TeamPersonality> teamPersonalities = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "team")
-    private final List<TeamMember> teamMembers = new ArrayList<>();
+    private List<TeamMember> teamMembers = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "receivedTeam")
-    private final List<TeamLike> receivedTeamLikes = new ArrayList<>();
+    private List<TeamLike> receivedTeamLikes = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "sentTeam")
-    private final List<TeamLike> sentTeamLikes = new ArrayList<>();
+    private List<TeamLike> sentTeamLikes = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "from")
-    private final List<Recommend> recommendsFrom = new ArrayList<>();
+    private List<Recommend> recommendsFrom = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "to")
-    private final List<Recommend> recommendsTo = new ArrayList<>();
+    private List<Recommend> recommendsTo = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "recommendedTeam")
-    private final List<Meeting> recommendedMeetings = new ArrayList<>();
+    private List<Meeting> recommendedMeetings = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "acceptingTeam")
-    private final List<Meeting> acceptingMeetings = new ArrayList<>();
+    private List<Meeting> acceptingMeetings = new ArrayList<>();
 }

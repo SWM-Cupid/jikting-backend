@@ -26,9 +26,9 @@ public class Personality extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "personality")
-    private final List<MemberPersonality> memberPersonalities = new ArrayList<>();
+    private List<MemberPersonality> memberPersonalities = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "personality")
-    private final List<TeamPersonality> teamPersonalities = new ArrayList<>();
+    private List<TeamPersonality> teamPersonalities = new ArrayList<>();
 }

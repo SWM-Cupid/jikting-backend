@@ -25,5 +25,5 @@ public class Hobby extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "hobby")
-    private final List<MemberHobby> memberHobbies = new ArrayList<>();
+    private List<MemberHobby> memberHobbies = new ArrayList<>();
 }
