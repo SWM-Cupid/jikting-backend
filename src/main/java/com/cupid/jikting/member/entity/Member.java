@@ -46,4 +46,8 @@ public class Member extends BaseEntity {
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
     }
+
+    public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
+        memberChattingRooms.add(memberChattingRoom);
+    }
 }
