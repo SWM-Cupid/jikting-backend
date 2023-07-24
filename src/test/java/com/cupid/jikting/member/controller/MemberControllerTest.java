@@ -35,10 +35,10 @@ public class MemberControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/members";
-    private static final String USERNAME = "아이디";
-    private static final String PASSWORD = "비밀번호";
-    private static final String NAME = "이름";
-    private static final String PHONE = "전화번호";
+    private static final String USERNAME = "swm123";
+    private static final String PASSWORD = "password123!";
+    private static final String NAME = "홍길동";
+    private static final String PHONE = "01011112222";
     private static final String NICKNAME = "닉네임";
     private static final String COMPANY = "직장";
     private static final String IMAGE_URL = "사진 URL";
