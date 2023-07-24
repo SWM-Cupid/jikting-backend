@@ -1,6 +1,6 @@
 package com.cupid.jikting.chatting.entity;
 
-import com.cupid.jikting.member.entity.BaseEntity;
+import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.member.entity.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
