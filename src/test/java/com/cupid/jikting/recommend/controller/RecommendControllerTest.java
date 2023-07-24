@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
@@ -99,6 +100,7 @@ public class RecommendControllerTest extends ApiDocument {
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
     }
 
+    @WithMockUser
     @Test
     void 추천팀_조회_성공() throws Exception {
         //given
@@ -109,6 +111,7 @@ public class RecommendControllerTest extends ApiDocument {
         추천팀_조회_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 추천팀_조회_실패() throws Exception {
         //given
@@ -119,6 +122,7 @@ public class RecommendControllerTest extends ApiDocument {
         추천팀_조회_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 호감_보내기_성공() throws Exception {
         //given
@@ -129,6 +133,7 @@ public class RecommendControllerTest extends ApiDocument {
         호감_보내기_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 호감_보내기_실패() throws Exception {
         //given

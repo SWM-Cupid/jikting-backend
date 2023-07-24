@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -233,6 +234,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_가입_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_조회_성공() throws Exception {
         // given
@@ -243,6 +245,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_조회_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_조회_실패() throws Exception {
         // given
@@ -253,6 +256,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_조회_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_프로필_조회_성공() throws Exception {
         // given
@@ -263,6 +267,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_프로필_조회_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_프로필_조회_실패() throws Exception {
         // given
@@ -273,6 +278,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_프로필_조회_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_닉네임_수정_성공() throws Exception {
         // given
@@ -283,6 +289,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_닉네임_수정_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_닉네임수_수정_실패() throws Exception {
         // given
@@ -293,6 +300,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_닉네임_수정_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_프로필_수정_성공() throws Exception {
         // given
@@ -303,6 +311,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_프로필_수정_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_프로필_수정_실패() throws Exception {
         // given
@@ -313,6 +322,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_프로필_수정_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_비밀번호_수정_성공() throws Exception {
         // given
@@ -323,6 +333,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_비밀번호_수정_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_비밀번호_수정_회원정보없음_실패() throws Exception {
         // given
@@ -333,6 +344,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_비밀번호_수정_요청_회원정보없음_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_비밀번호_수정_비밀번호불일치_실패() throws Exception {
         // given
@@ -343,6 +355,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_비밀번호_수정_요청_비밀번호불일치_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_비밀번호_수정_비밀번호양식불일치_실패() throws Exception {
         // given
@@ -353,6 +366,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_비밀번호_수정_요청_비밀번호양식불일치_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_이미지_수정_성공() throws Exception {
         // given
@@ -363,6 +377,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_이미지_수정_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_이미지_수정_회원정보없음_실패() throws Exception {
         // given
@@ -373,6 +388,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_이미지_수정_요청_회원정보없음_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_이미지_수정_파일형식미지원_실패() throws Exception {
         // given
@@ -383,6 +399,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_이미지_수정_요청_파일형식미지원_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_이미지_수정_파일크기미지원_실패() throws Exception {
         // given
@@ -393,6 +410,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_이미지_수정_요청_파일크기미지원_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_탈퇴_성공() throws Exception {
         // given
@@ -403,6 +421,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_탈퇴_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_탈퇴_회원정보없음_실패() throws Exception {
         // given
@@ -413,6 +432,7 @@ public class MemberControllerTest extends ApiDocument {
         회원_탈퇴_요청_회원정보없음_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회원_탈퇴_비밀번호불일치_실패() throws Exception {
         // given
@@ -613,6 +633,7 @@ public class MemberControllerTest extends ApiDocument {
         비밀번호_재설정_요청_비밀번호양식불일치_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회사_이메일_인증번호_발급_성공() throws Exception {
         // given
@@ -623,6 +644,7 @@ public class MemberControllerTest extends ApiDocument {
         회사_이메일_인증번호_발급_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회사_이메일_인증번호_발급_실패() throws Exception {
         // given
@@ -633,6 +655,7 @@ public class MemberControllerTest extends ApiDocument {
         회사_이메일_인증번호_발급_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회사_이메일_인증_성공() throws Exception {
         // given
@@ -643,6 +666,7 @@ public class MemberControllerTest extends ApiDocument {
         회사_이메일_인증_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회사_이메일_인증_인증번호불일치_실패() throws Exception {
         // given
@@ -653,6 +677,7 @@ public class MemberControllerTest extends ApiDocument {
         회사_이메일_인증_요청_인증번호불일치_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회사_이메일_인증_시간초과_실패() throws Exception {
         // given
@@ -663,6 +688,7 @@ public class MemberControllerTest extends ApiDocument {
         회사_이메일_인증_요청_시간초과_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회사_명함_인증_성공() throws Exception {
         // given
@@ -673,6 +699,7 @@ public class MemberControllerTest extends ApiDocument {
         회사_명함_인증_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회사_명함_인증_파일형식미지원_실패() throws Exception {
         // given
@@ -683,6 +710,7 @@ public class MemberControllerTest extends ApiDocument {
         회사_명함_인증_요청_파일형식미지원_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 회사_명함_인증_파일크기미지원_실패() throws Exception {
         // given

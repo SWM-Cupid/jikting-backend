@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
@@ -99,6 +100,7 @@ public class LikeControllerTest extends ApiDocument {
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
     }
 
+    @WithMockUser
     @Test
     void 받은_호감_목록_조회_성공() throws Exception {
         //given
@@ -109,6 +111,7 @@ public class LikeControllerTest extends ApiDocument {
         받은_호감_목록_조회_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 받은_호감_목록_조회_실패() throws Exception {
         //given
@@ -119,6 +122,7 @@ public class LikeControllerTest extends ApiDocument {
         받은_호감_목록_조회_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 보낸_호감_목록_조회_성공() throws Exception {
         //given
@@ -129,6 +133,7 @@ public class LikeControllerTest extends ApiDocument {
         보낸_호감_목록_조회_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 보낸_호감_목록_조회_실패() throws Exception {
         //given
@@ -139,6 +144,7 @@ public class LikeControllerTest extends ApiDocument {
         보낸_호감_목록_조회_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 받은_호감_수락_성공() throws Exception {
         //given
@@ -149,6 +155,7 @@ public class LikeControllerTest extends ApiDocument {
         받은_호감_수락_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 받은_호감_수락_실패() throws Exception {
         //given
@@ -159,6 +166,7 @@ public class LikeControllerTest extends ApiDocument {
         받은_호감_수락_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 받은_호감_거절_성공() throws Exception {
         //given
@@ -169,6 +177,7 @@ public class LikeControllerTest extends ApiDocument {
         받은_호감_거절_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 받은_호감_거절_실패() throws Exception {
         //given
@@ -179,6 +188,7 @@ public class LikeControllerTest extends ApiDocument {
         받은_호감_거절_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀_상세_조회_성공() throws Exception {
         //given
@@ -189,6 +199,7 @@ public class LikeControllerTest extends ApiDocument {
         팀_상세_조회_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀_상세_조회_실패() throws Exception {
         //given

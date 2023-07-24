@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
@@ -57,6 +58,7 @@ public class InstantMeetingControllerTest extends ApiDocument {
         instantMeetingAlreadyFullException = new BadRequestException(ApplicationError.INSTANT_MEETING_ALREADY_FULL);
     }
 
+    @WithMockUser
     @Test
     void 번개팅_조회_성공() throws Exception {
         //given
@@ -67,6 +69,7 @@ public class InstantMeetingControllerTest extends ApiDocument {
         번개팅_조회_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 번개팅_참여_성공() throws Exception {
         //given
@@ -77,6 +80,7 @@ public class InstantMeetingControllerTest extends ApiDocument {
         번개팅_참여_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 번개팅_참여_실패() throws Exception {
         //given

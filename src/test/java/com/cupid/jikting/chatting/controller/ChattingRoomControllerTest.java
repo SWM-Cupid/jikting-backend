@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
@@ -95,6 +96,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
         chattingRoomNotFoundException = new NotFoundException(ApplicationError.CHATTING_ROOM_NOT_FOUND);
     }
 
+    @WithMockUser
     @Test
     void 채팅방_목록_조회_성공() throws Exception {
         //given
@@ -105,6 +107,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
         채팅방_목록_조회_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 채팅방_입장_성공() throws Exception {
         //given
@@ -115,6 +118,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
         채팅방_입장_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 채팅방_입장_실패() throws Exception {
         //given
@@ -125,6 +129,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
         채팅방_입장_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 미팅_확정_성공() throws Exception {
         //given
@@ -135,6 +140,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
         미팅_확정_요쳥_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 미팅_확정_양식불일치_실패() throws Exception {
         //given
@@ -145,6 +151,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
         미팅_확정_요청_양식불일치_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 미팅_확정_채팅방정보없음_실패() throws Exception {
         //given
