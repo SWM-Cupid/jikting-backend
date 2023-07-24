@@ -71,4 +71,14 @@ class MemberServiceTest {
         // then
         verify(memberRepository).existsByNickname(anyString());
     }
+
+    @Test
+    void 닉네임_중복_확인_실패_존재하는_닉네임() {
+        // given
+        willReturn(true).given(memberRepository).existsByNickname(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.checkDuplicatedNickname(nicknameCheckRequest))
+                .isInstanceOf(DuplicateException.class)
+                .hasMessage(ApplicationError.DUPLICATE_NICKNAME.getMessage());
+    }
 }
