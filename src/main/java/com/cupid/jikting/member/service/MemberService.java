@@ -47,6 +47,9 @@ public class MemberService {
     }
 
     public void checkDuplicatedNickname(NicknameCheckRequest nicknameCheckRequest) {
+        if (memberRepository.existsByNickname(nicknameCheckRequest.getNickname())) {
+            throw new DuplicateException(ApplicationError.DUPLICATE_NICKNAME);
+        }
     }
 
     public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
