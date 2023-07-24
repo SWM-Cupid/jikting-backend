@@ -43,16 +43,16 @@ public class MemberServiceTest {
 
     @BeforeEach
     void setUp() {
-        signupRequest = SignupRequest.builder()
+        member = Member.builder()
                 .username(USERNAME)
-                .password(PASSWORD)
+                .password(passwordEncoder.encode(PASSWORD))
                 .gender(Gender.MALE)
                 .name(NAME)
                 .phone(PHONE)
                 .build();
-        member = Member.builder()
+        signupRequest = SignupRequest.builder()
                 .username(USERNAME)
-                .password(passwordEncoder.encode(PASSWORD))
+                .password(PASSWORD)
                 .gender(Gender.MALE)
                 .name(NAME)
                 .phone(PHONE)
