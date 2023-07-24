@@ -56,10 +56,25 @@ public class MemberServiceTest {
 
     @BeforeEach
     void setUp() {
-        member = Member.builder().username(USERNAME).password(passwordEncoder.encode(PASSWORD)).gender(Gender.MALE).name(NAME).phone(PHONE).build();
-        signupRequest = SignupRequest.builder().username(USERNAME).password(PASSWORD).gender(Gender.MALE).name(NAME).phone(PHONE).build();
-        usernameCheckRequest = UsernameCheckRequest.builder().username(USERNAME).build();
-        nicknameCheckRequest = NicknameCheckRequest.builder().nickname(NICKNAME).build();
+        member = Member.builder()
+                .username(USERNAME)
+                .password(passwordEncoder.encode(PASSWORD))
+                .gender(Gender.MALE).name(NAME)
+                .phone(PHONE)
+                .build();
+        signupRequest = SignupRequest.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .gender(Gender.MALE.getKey())
+                .name(NAME)
+                .phone(PHONE)
+                .build();
+        usernameCheckRequest = UsernameCheckRequest.builder()
+                .username(USERNAME)
+                .build();
+        nicknameCheckRequest = NicknameCheckRequest.builder()
+                .nickname(NICKNAME)
+                .build();
         rollbackException = new RollbackException();
     }
 
