@@ -3,6 +3,7 @@ package com.cupid.jikting.member.service;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.DuplicateException;
 import com.cupid.jikting.member.dto.*;
+import com.cupid.jikting.member.entity.Gender;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.entity.Role;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
@@ -28,7 +29,7 @@ public class MemberService {
                 .username(signupRequest.getUsername())
                 .password(passwordEncoder.encode(signupRequest.getPassword()))
                 .phone(signupRequest.getPhone())
-                .gender(signupRequest.getGender())
+                .gender(Gender.find(signupRequest.getGender()))
                 .name(signupRequest.getName())
                 .role(Role.UNCERTIFIED)
                 .build();
