@@ -24,13 +24,12 @@ public class MemberService {
     public void signup(SignupRequest signupRequest) {
         Member member = Member.builder()
                 .username(signupRequest.getUsername())
-                .password(signupRequest.getPassword())
+                .password(passwordEncoder.encode(signupRequest.getPassword()))
                 .phone(signupRequest.getPhone())
                 .gender(signupRequest.getGender())
                 .name(signupRequest.getName())
                 .role(Role.UNCERTIFIED)
                 .build();
-        member.passwordEncode(passwordEncoder);
         memberRepository.save(member);
     }
 
@@ -58,9 +57,6 @@ public class MemberService {
     }
 
     public void checkDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
-        if (memberRepository.existsByUsername(usernameCheckRequest.getUsername())) {
-            throw new DuplicateException(ApplicationError.DUPLICATE_USERNAME);
-        }
     }
 
     public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
