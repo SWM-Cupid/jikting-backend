@@ -1,4 +1,4 @@
-package com.cupid.jikting.common.controller;
+package com.cupid.jikting.common.handler;
 
 import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationException;
