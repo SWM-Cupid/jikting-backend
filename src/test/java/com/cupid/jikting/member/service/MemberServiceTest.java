@@ -2,6 +2,7 @@ package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.DuplicateException;
+import com.cupid.jikting.member.dto.NicknameCheckRequest;
 import com.cupid.jikting.member.dto.UsernameCheckRequest;
 import com.cupid.jikting.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,8 +21,10 @@ import static org.mockito.Mockito.verify;
 class MemberServiceTest {
 
     private static final String USERNAME = "아이디";
+    private static final String NICKNAME = "닉네임";
 
     private UsernameCheckRequest usernameCheckRequest;
+    private NicknameCheckRequest nicknameCheckRequest;
 
     @InjectMocks
     private MemberService memberService;
@@ -33,6 +36,9 @@ class MemberServiceTest {
     void setUp() {
         usernameCheckRequest = UsernameCheckRequest.builder()
                 .username(USERNAME)
+                .build();
+        nicknameCheckRequest = NicknameCheckRequest.builder()
+                .nickname(NICKNAME)
                 .build();
     }
 
@@ -54,5 +60,15 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.checkDuplicatedUsername(usernameCheckRequest))
                 .isInstanceOf(DuplicateException.class)
                 .hasMessage(ApplicationError.DUPLICATE_USERNAME.getMessage());
+    }
+
+    @Test
+    void 닉네임_중복_확인_성공() {
+        // given
+        willReturn(false).given(memberRepository).existsByNickname(anyString());
+        // when
+        memberService.checkDuplicatedNickname(nicknameCheckRequest);
+        // then
+        verify(memberRepository).existsByNickname(anyString());
     }
 }
