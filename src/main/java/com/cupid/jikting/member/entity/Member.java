@@ -3,7 +3,6 @@ package com.cupid.jikting.member.entity;
 import com.cupid.jikting.common.entity.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
