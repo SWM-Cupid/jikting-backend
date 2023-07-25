@@ -100,7 +100,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 채팅방_목록_조회_성공() throws Exception {
         //given
-        willReturn(chattingRoomResponses).given(chattingRoomService).getAll();
+        willReturn(chattingRoomResponses).given(chattingRoomService).getAll(anyLong());
         //when
         ResultActions resultActions = 채팅방_목록_조회_요청();
         //then

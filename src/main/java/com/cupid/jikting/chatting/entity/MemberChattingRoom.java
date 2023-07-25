@@ -1,7 +1,7 @@
 package com.cupid.jikting.chatting.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
-import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.member.entity.MemberProfile;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,14 +19,14 @@ import javax.persistence.*;
 public class MemberChattingRoom extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "member_profile_id")
+    private MemberProfile memberProfile;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatting_room_id")
     private ChattingRoom chattingRoom;
 
-    public static MemberChattingRoom of(Member member, ChattingRoom chattingRoom) {
-        return new MemberChattingRoom(member, chattingRoom);
+    public static MemberChattingRoom of(MemberProfile memberProfile, ChattingRoom chattingRoom) {
+        return new MemberChattingRoom(memberProfile, chattingRoom);
     }
 }

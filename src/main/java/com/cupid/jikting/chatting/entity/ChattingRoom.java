@@ -1,7 +1,9 @@
 package com.cupid.jikting.chatting.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
-import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.meeting.entity.Meeting;
+import com.cupid.jikting.member.entity.MemberProfile;
+import com.cupid.jikting.team.entity.Team;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
@@ -20,6 +22,10 @@ import java.util.List;
 @Entity
 public class ChattingRoom extends BaseEntity implements Serializable {
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "meeting_id")
+    private Meeting meeting;
+
     @Builder.Default
     @OneToMany(mappedBy = "chattingRoom", cascade = CascadeType.ALL)
     private List<Chatting> chattings = new ArrayList<>();
@@ -30,9 +36,13 @@ public class ChattingRoom extends BaseEntity implements Serializable {
 
     public void createChatting(Chatting chatting) {
         chattings.add(chatting);
-        Member sender = chatting.getMember();
+        MemberProfile sender = chatting.getMemberProfile();
         MemberChattingRoom memberChattingRoom = MemberChattingRoom.of(sender, this);
         memberChattingRooms.add(memberChattingRoom);
         sender.addMemberChattingRoom(memberChattingRoom);
+    }
+
+    public String getOppositeTeamName(Team team) {
+        return meeting.getOppositeTeamName(team);
     }
 }

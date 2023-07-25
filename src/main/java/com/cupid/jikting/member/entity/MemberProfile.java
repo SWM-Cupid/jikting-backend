@@ -1,7 +1,11 @@
 package com.cupid.jikting.member.entity;
 
+import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.meeting.entity.InstantMeetingMember;
+import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -16,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE member_profile SET is_deleted = true WHERE id = ?")
-@AttributeOverride(name = "id", column = @Column(name = "member_id"))
+@AttributeOverride(name = "id", column = @Column(name = "member_profile_id"))
 @Entity
 public class MemberProfile extends BaseEntity {
 
@@ -61,5 +65,20 @@ public class MemberProfile extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
+    private List<MemberChattingRoom> memberChattingRooms = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "memberProfile")
     private List<InstantMeetingMember> instantMeetingMembers = new ArrayList<>();
+
+    public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
+        memberChattingRooms.add(memberChattingRoom);
+    }
+
+    public Team getTeam() {
+        return teamMembers.stream()
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM))
+                .getTeam();
+    }
 }
