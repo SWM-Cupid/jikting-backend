@@ -1,6 +1,5 @@
 package com.cupid.jikting.member.entity;
 
-import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -41,9 +40,5 @@ public class Member extends BaseEntity {
 
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
-    }
-
-    public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
-        memberChattingRooms.add(memberChattingRoom);
     }
 }
