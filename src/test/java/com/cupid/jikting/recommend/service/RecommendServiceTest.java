@@ -1,11 +1,14 @@
 package com.cupid.jikting.recommend.service;
 
+import com.cupid.jikting.common.entity.Hobby;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.member.entity.MemberProfile;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.recommend.dto.RecommendResponse;
+import com.cupid.jikting.recommend.entity.Recommend;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +18,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -29,6 +35,12 @@ public class RecommendServiceTest {
 
     private static final Long ID = 1L;
     private static final String TEAM_NAME = "팀 이름";
+    private static final LocalDate BIRTH = LocalDate.now();
+    private static final String ADDRESS = "지역";
+    private static final String COMPANY = "회사";
+    private static final int HEIGHT = 180;
+    private static final String DESCRIPTION = "자기소개";
+    private static final String COLLEGE = "대학";
 
     private MemberProfile memberProfile;
     private ApplicationException memberNotFoundException;
@@ -41,18 +53,63 @@ public class RecommendServiceTest {
 
     @BeforeEach
     void setUp() {
+        Company company = Company.builder()
+                .name(COMPANY)
+                .build();
+        List<MemberCompany> memberCompanies = List.of(MemberCompany.builder()
+                .company(company)
+                .build());
+        Member member = Member.builder()
+                .memberCompanies(memberCompanies)
+                .build();
+        Personality personality = Personality.builder().build();
+        List<MemberPersonality> memberPersonalities = List.of(MemberPersonality.builder()
+                .personality(personality)
+                .build());
+        Hobby hobby = Hobby.builder().build();
+        List<MemberHobby> memberHobbies = List.of(MemberHobby.builder()
+                .hobby(hobby)
+                .build());
+        MemberProfile memberProfile1 = MemberProfile.builder()
+                .birth(BIRTH)
+                .mbti(MBTI.ENFJ)
+                .address(ADDRESS)
+                .member(member)
+                .smokeStatus(SmokeStatus.SMOKING)
+                .drinkStatus(DrinkStatus.NEVER)
+                .height(HEIGHT)
+                .description(DESCRIPTION)
+                .memberPersonalities(memberPersonalities)
+                .memberHobbies(memberHobbies)
+                .college(COLLEGE)
+                .build();
+        List<TeamMember> teamMembers = List.of(TeamMember.builder()
+                .memberProfile(memberProfile1)
+                .build());
+        Team teamFrom = Team.builder()
+                .teamMembers(teamMembers)
+                .build();
+        List<Recommend> recommends = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> Recommend.builder()
+                        .id(ID)
+                        .from(teamFrom)
+                        .build())
+                .collect(Collectors.toList());
         Team team = Team.builder()
                 .id(ID)
                 .name(TEAM_NAME)
+                .recommendsFrom(recommends)
                 .build();
-        List<TeamMember> teamMembers = List.of(TeamMember.builder()
-                .id(ID)
-                .memberProfile(memberProfile)
-                .team(team)
-                .build());
+        List<TeamMember> teamMembers1 = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> TeamMember.builder()
+                        .id(ID)
+                        .memberProfile(memberProfile)
+                        .team(team)
+                        .build())
+                .collect(Collectors.toList());
         memberProfile = MemberProfile.builder()
                 .id(ID)
-                .teamMembers(teamMembers)
+                .teamMembers(teamMembers1)
                 .build();
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
     }
