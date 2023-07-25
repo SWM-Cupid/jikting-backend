@@ -1,7 +1,7 @@
 package com.cupid.jikting.chatting.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
-import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.member.entity.MemberProfile;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
@@ -30,7 +30,7 @@ public class ChattingRoom extends BaseEntity implements Serializable {
 
     public void createChatting(Chatting chatting) {
         chattings.add(chatting);
-        Member sender = chatting.getMember();
+        MemberProfile sender = chatting.getMemberProfile();
         MemberChattingRoom memberChattingRoom = MemberChattingRoom.of(sender, this);
         memberChattingRooms.add(memberChattingRoom);
         sender.addMemberChattingRoom(memberChattingRoom);
