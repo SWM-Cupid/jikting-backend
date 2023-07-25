@@ -21,11 +21,11 @@ import java.util.List;
 public class MemberProfile extends BaseEntity {
 
     private String nickname;
-    private String birth;
+    private LocalDate birth;
     private int height;
     private String address;
     private String description;
-    private String school;
+    private String college;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
