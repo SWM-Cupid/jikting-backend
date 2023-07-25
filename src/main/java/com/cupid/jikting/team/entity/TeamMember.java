@@ -16,7 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE team_member SET is_deleted = true WHERE team_member_id = ?")
-@AttributeOverride(name = "id", column = @Column(name = "team_member__id"))
+@AttributeOverride(name = "id", column = @Column(name = "team_member_id"))
 @Entity
 public class TeamMember extends BaseEntity {
 
