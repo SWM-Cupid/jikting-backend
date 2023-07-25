@@ -7,6 +7,7 @@ import com.cupid.jikting.member.dto.SignupRequest;
 import com.cupid.jikting.member.dto.UsernameCheckRequest;
 import com.cupid.jikting.member.entity.Gender;
 import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,14 +49,32 @@ public class MemberServiceTest {
     private MemberRepository memberRepository;
 
     @Mock
+    private MemberProfileRepository memberProfileRepository;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
-        member = Member.builder().username(USERNAME).password(passwordEncoder.encode(PASSWORD)).gender(Gender.MALE).name(NAME).phone(PHONE).build();
-        signupRequest = SignupRequest.builder().username(USERNAME).password(PASSWORD).gender(Gender.MALE).name(NAME).phone(PHONE).build();
-        usernameCheckRequest = UsernameCheckRequest.builder().username(USERNAME).build();
-        nicknameCheckRequest = NicknameCheckRequest.builder().nickname(NICKNAME).build();
+        member = Member.builder()
+                .username(USERNAME)
+                .password(passwordEncoder.encode(PASSWORD))
+                .gender(Gender.MALE).name(NAME)
+                .phone(PHONE)
+                .build();
+        signupRequest = SignupRequest.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .gender(Gender.MALE.getKey())
+                .name(NAME)
+                .phone(PHONE)
+                .build();
+        usernameCheckRequest = UsernameCheckRequest.builder()
+                .username(USERNAME)
+                .build();
+        nicknameCheckRequest = NicknameCheckRequest.builder()
+                .nickname(NICKNAME)
+                .build();
         rollbackException = new RollbackException();
     }
 
@@ -92,24 +111,28 @@ public class MemberServiceTest {
         // given
         willReturn(true).given(memberRepository).existsByUsername(anyString());
         // when & then
-        Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedUsername(usernameCheckRequest)).isInstanceOf(DuplicateException.class).hasMessage(ApplicationError.DUPLICATE_USERNAME.getMessage());
+        Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedUsername(usernameCheckRequest))
+                .isInstanceOf(DuplicateException.class)
+                .hasMessage(ApplicationError.DUPLICATE_USERNAME.getMessage());
     }
 
     @Test
     void 닉네임_중복_확인_성공() {
         // given
-        willReturn(false).given(memberRepository).existsByNickname(anyString());
+        willReturn(false).given(memberProfileRepository).existsByNickname(anyString());
         // when
         memberService.checkDuplicatedNickname(nicknameCheckRequest);
         // then
-        verify(memberRepository).existsByNickname(anyString());
+        verify(memberProfileRepository).existsByNickname(anyString());
     }
 
     @Test
     void 닉네임_중복_확인_실패_존재하는_닉네임() {
         // given
-        willReturn(true).given(memberRepository).existsByNickname(anyString());
+        willReturn(true).given(memberProfileRepository).existsByNickname(anyString());
         // when & then
-        Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedNickname(nicknameCheckRequest)).isInstanceOf(DuplicateException.class).hasMessage(ApplicationError.DUPLICATE_NICKNAME.getMessage());
+        Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedNickname(nicknameCheckRequest))
+                .isInstanceOf(DuplicateException.class)
+                .hasMessage(ApplicationError.DUPLICATE_NICKNAME.getMessage());
     }
 }

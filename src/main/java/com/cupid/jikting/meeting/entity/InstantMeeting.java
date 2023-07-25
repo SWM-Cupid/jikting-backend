@@ -28,5 +28,5 @@ public class InstantMeeting extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "instantMeeting")
-    private final List<InstantMeetingMember> instantMeetingMembers = new ArrayList<>();
+    private List<InstantMeetingMember> instantMeetingMembers = new ArrayList<>();
 }

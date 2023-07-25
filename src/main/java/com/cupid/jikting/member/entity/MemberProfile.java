@@ -45,21 +45,21 @@ public class MemberProfile extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
-    private final List<ProfileImage> profileImages = new ArrayList<>();
+    private List<ProfileImage> profileImages = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
-    private final List<MemberPersonality> memberPersonalities = new ArrayList<>();
+    private List<MemberPersonality> memberPersonalities = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
-    private final List<MemberHobby> memberHobbies = new ArrayList<>();
+    private List<MemberHobby> memberHobbies = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
-    private final List<TeamMember> teamMembers = new ArrayList<>();
+    private List<TeamMember> teamMembers = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
-    private final List<InstantMeetingMember> instantMeetingMembers = new ArrayList<>();
+    private List<InstantMeetingMember> instantMeetingMembers = new ArrayList<>();
 }

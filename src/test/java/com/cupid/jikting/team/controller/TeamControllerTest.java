@@ -1,6 +1,7 @@
 package com.cupid.jikting.team.controller;
 
 import com.cupid.jikting.ApiDocument;
+import com.cupid.jikting.TestSecurityConfig;
 import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
@@ -12,7 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
@@ -26,6 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import(TestSecurityConfig.class)
 @WebMvcTest(TeamController.class)
 public class TeamControllerTest extends ApiDocument {
 
@@ -91,6 +95,7 @@ public class TeamControllerTest extends ApiDocument {
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
     }
 
+    @WithMockUser
     @Test
     void 팀_등록_성공() throws Exception {
         // given
@@ -101,6 +106,7 @@ public class TeamControllerTest extends ApiDocument {
         팀_등록_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀_등록_실패() throws Exception {
         // given
@@ -111,6 +117,7 @@ public class TeamControllerTest extends ApiDocument {
         팀_등록_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀_참여_성공() throws Exception {
         // given
@@ -121,6 +128,7 @@ public class TeamControllerTest extends ApiDocument {
         팀_참여_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀_참여_실패() throws Exception {
         // given
@@ -131,6 +139,7 @@ public class TeamControllerTest extends ApiDocument {
         팀_참여_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀_조회_성공() throws Exception {
         //given
@@ -141,6 +150,7 @@ public class TeamControllerTest extends ApiDocument {
         팀_조회_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀_조회_실패() throws Exception {
         //given
@@ -151,6 +161,7 @@ public class TeamControllerTest extends ApiDocument {
         팀_조회_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀_수정_성공() throws Exception {
         //given
@@ -161,6 +172,7 @@ public class TeamControllerTest extends ApiDocument {
         팀_수정_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀_수정_실패() throws Exception {
         //given
@@ -171,6 +183,7 @@ public class TeamControllerTest extends ApiDocument {
         팀_수정_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀_삭제_성공() throws Exception {
         // given
@@ -181,6 +194,7 @@ public class TeamControllerTest extends ApiDocument {
         팀_삭제_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀_삭제_실패() throws Exception {
         // given
@@ -191,6 +205,7 @@ public class TeamControllerTest extends ApiDocument {
         팀_삭제_요청_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀원_삭제_성공() throws Exception {
         // given
@@ -201,6 +216,7 @@ public class TeamControllerTest extends ApiDocument {
         팀원_삭제_요청_성공(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀원_삭제_팀정보없음_실패() throws Exception {
         // given
@@ -211,6 +227,7 @@ public class TeamControllerTest extends ApiDocument {
         팀원_삭제_요청_팀정보없음_실패(resultActions);
     }
 
+    @WithMockUser
     @Test
     void 팀원_삭제_회원정보없음_실패() throws Exception {
         // given

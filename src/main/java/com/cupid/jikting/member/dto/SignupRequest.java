@@ -1,6 +1,5 @@
 package com.cupid.jikting.member.dto;
 
-import com.cupid.jikting.member.entity.Gender;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -30,5 +29,5 @@ public class SignupRequest {
     private String phone;
 
     @NotNull
-    private Gender gender;
+    private String gender;
 }

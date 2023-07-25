@@ -687,9 +687,6 @@ include::{snippets}/meeting-confirm-success/http-request.adoc[]
 
 .response
 include::{snippets}/meeting-confirm-success/http-response.adoc[]
-===== 실패
-.request
-include::{snippets}/meeting-confirm-fail/http-request.adoc[]
 
 .response - 잘못된 양식
 include::{snippets}/meeting-confirm-wrong-form-fail/http-response.adoc[]

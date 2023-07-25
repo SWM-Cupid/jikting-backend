@@ -26,5 +26,5 @@ public class Company extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "company")
-    private final List<MemberCompany> memberCompanies = new ArrayList<>();
+    private List<MemberCompany> memberCompanies = new ArrayList<>();
 }
