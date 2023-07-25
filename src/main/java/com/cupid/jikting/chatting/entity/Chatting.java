@@ -1,7 +1,7 @@
 package com.cupid.jikting.chatting.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
-import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.member.entity.MemberProfile;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,8 +23,8 @@ public class Chatting extends BaseEntity {
     private String content;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "member_profile_id")
+    private MemberProfile memberProfile;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatting_room_id")
