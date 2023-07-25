@@ -54,7 +54,7 @@ public class ChattingRoomService {
     }
 
     private String getLastMessage(List<Chatting> chattings) {
-        if (chattings.size() == 0) {
+        if (chattings.isEmpty()) {
             return NO_MESSAGE;
         }
         return chattings.get(chattings.size() - 1).getContent();
