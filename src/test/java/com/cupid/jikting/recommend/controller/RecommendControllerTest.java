@@ -6,6 +6,8 @@ import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.member.entity.SmokeStatus;
 import com.cupid.jikting.recommend.dto.ImageResponse;
 import com.cupid.jikting.recommend.dto.MemberResponse;
 import com.cupid.jikting.recommend.dto.RecommendResponse;
@@ -49,14 +51,20 @@ public class RecommendControllerTest extends ApiDocument {
     private static final int AGE = 20;
     private static final int HEIGHT = 180;
     private static final Long ID = 1L;
-    private static final boolean IS_SMOKE = true;
     private static final boolean TRUE = true;
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+
+    private static String ACCESS_TOKEN;
 
     private List<RecommendResponse> recommendResponses;
     private ApplicationException teamNotFoundException;
 
     @MockBean
     private RecommendService recommendService;
+
+    @MockBean
+    private JwtService jwtService;
 
     @BeforeEach
     void setUp() {
@@ -80,7 +88,7 @@ public class RecommendControllerTest extends ApiDocument {
                         .mbti(MBTI)
                         .address(ADDRESS)
                         .company(COMPANY)
-                        .isSmoke(IS_SMOKE)
+                        .smokeStatus(SmokeStatus.SMOKING.getValue())
                         .drinkStatus(DRINK_STATUS)
                         .height(HEIGHT)
                         .description(DESCRIPTION)
@@ -98,13 +106,14 @@ public class RecommendControllerTest extends ApiDocument {
                 .mapToObj(n -> recommendResponse)
                 .collect(Collectors.toList());
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
+        ACCESS_TOKEN = jwtService.createAccessToken(ID);
     }
 
     @WithMockUser
     @Test
     void 추천팀_조회_성공() throws Exception {
         //given
-        willReturn(recommendResponses).given(recommendService).get();
+        willReturn(recommendResponses).given(recommendService).get(anyLong());
         //when
         ResultActions resultActions = 추천팀_조회_요청();
         //then
@@ -115,7 +124,7 @@ public class RecommendControllerTest extends ApiDocument {
     @Test
     void 추천팀_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(recommendService).get();
+        willThrow(teamNotFoundException).given(recommendService).get(anyLong());
         //when
         ResultActions resultActions = 추천팀_조회_요청();
         //then
@@ -146,7 +155,8 @@ public class RecommendControllerTest extends ApiDocument {
 
     private ResultActions 추천팀_조회_요청() throws Exception {
         return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH)
-                .contextPath(CONTEXT_PATH));
+                .contextPath(CONTEXT_PATH)
+                .header(AUTHORIZATION, BEARER + ACCESS_TOKEN));
     }
 
     private void 추천팀_조회_요청_성공(ResultActions resultActions) throws Exception {
