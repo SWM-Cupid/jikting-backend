@@ -23,6 +23,10 @@ public class Meeting extends BaseEntity {
 
     private LocalDateTime schedule;
     private String place;
+    private LocalDateTime confirmAt;
+
+    @Enumerated(EnumType.STRING)
+    private ConfirmStatus confirmStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recommended_team_id")
