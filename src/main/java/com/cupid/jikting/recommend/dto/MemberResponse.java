@@ -16,7 +16,7 @@ public class MemberResponse {
     private String mbti;
     private String address;
     private String company;
-    private boolean isSmoke;
+    private String smokeStatus;
     private String drinkStatus;
     private int height;
     private String description;
