@@ -18,7 +18,7 @@ public class ChattingRoomController {
 
     @GetMapping
     public ResponseEntity<List<ChattingRoomResponse>> getAll() {
-        return ResponseEntity.ok().body(chattingRoomService.getAll());
+        return ResponseEntity.ok().body(chattingRoomService.getAll(1L));
     }
 
     @GetMapping("/{chattingRoomId}")
