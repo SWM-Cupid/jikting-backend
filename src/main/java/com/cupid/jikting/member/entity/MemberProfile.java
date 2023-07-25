@@ -62,4 +62,28 @@ public class MemberProfile extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
     private List<InstantMeetingMember> instantMeetingMembers = new ArrayList<>();
+
+    public Team getTeam() {
+        return teamMembers.stream()
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM))
+                .getTeam();
+    }
+
+    public List<Recommend> getRecommends() {
+        return getTeam().getRecommendsFrom();
+    }
+
+    public int getAge() {
+        return LocalDate.now().getYear() - birth.getYear() + 1;
+    }
+
+    public String getCompany() {
+        return member.getMemberCompanies()
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new WrongAccessException(ApplicationError.FORBIDDEN_MEMBER))
+                .getCompany()
+                .getName();
+    }
 }
