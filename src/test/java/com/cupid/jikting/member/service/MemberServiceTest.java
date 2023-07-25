@@ -111,7 +111,9 @@ public class MemberServiceTest {
         // given
         willReturn(true).given(memberRepository).existsByUsername(anyString());
         // when & then
-        Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedUsername(usernameCheckRequest)).isInstanceOf(DuplicateException.class).hasMessage(ApplicationError.DUPLICATE_USERNAME.getMessage());
+        Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedUsername(usernameCheckRequest))
+                .isInstanceOf(DuplicateException.class)
+                .hasMessage(ApplicationError.DUPLICATE_USERNAME.getMessage());
     }
 
     @Test
@@ -129,6 +131,8 @@ public class MemberServiceTest {
         // given
         willReturn(true).given(memberProfileRepository).existsByNickname(anyString());
         // when & then
-        Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedNickname(nicknameCheckRequest)).isInstanceOf(DuplicateException.class).hasMessage(ApplicationError.DUPLICATE_NICKNAME.getMessage());
+        Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedNickname(nicknameCheckRequest))
+                .isInstanceOf(DuplicateException.class)
+                .hasMessage(ApplicationError.DUPLICATE_NICKNAME.getMessage());
     }
 }
