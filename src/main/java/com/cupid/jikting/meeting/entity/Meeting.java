@@ -35,4 +35,11 @@ public class Meeting extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "acceptiong_team_id")
     private Team acceptingTeam;
+
+    public String getOppositeTeamName(Team team) {
+        if (recommendedTeam.equals(team)) {
+            return acceptingTeam.getName();
+        }
+        return recommendedTeam.getName();
+    }
 }
