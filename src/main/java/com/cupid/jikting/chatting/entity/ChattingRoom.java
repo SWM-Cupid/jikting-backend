@@ -3,6 +3,7 @@ package com.cupid.jikting.chatting.entity;
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.meeting.entity.Meeting;
 import com.cupid.jikting.member.entity.MemberProfile;
+import com.cupid.jikting.team.entity.Team;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
@@ -39,5 +40,9 @@ public class ChattingRoom extends BaseEntity implements Serializable {
         MemberChattingRoom memberChattingRoom = MemberChattingRoom.of(sender, this);
         memberChattingRooms.add(memberChattingRoom);
         sender.addMemberChattingRoom(memberChattingRoom);
+    }
+
+    public String getOppositeTeamName(Team team) {
+        return meeting.getOppositeTeamName(team);
     }
 }
