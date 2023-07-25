@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE member_profile SET is_deleted = true WHERE id = ?")
-@AttributeOverride(name = "id", column = @Column(name = "member_id"))
+@AttributeOverride(name = "id", column = @Column(name = "member_profile_id"))
 @Entity
 public class MemberProfile extends BaseEntity {
 
