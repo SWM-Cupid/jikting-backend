@@ -84,7 +84,7 @@ class ChattingRoomServiceTest {
         // when
         List<ChattingRoomResponse> chattingRoomResponses = chattingRoomService.getAll(ID);
         // then
-        assertThat(chattingRoomResponses.size()).isEqualTo(3);
+        assertThat(chattingRoomResponses.size()).isEqualTo(chattingRooms.size());
     }
 
     @Test
