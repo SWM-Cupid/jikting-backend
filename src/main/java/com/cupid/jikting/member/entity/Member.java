@@ -32,6 +32,10 @@ public class Member extends BaseEntity {
     private String refreshToken;
 
     @Builder.Default
+    @OneToOne(mappedBy = "member", cascade = CascadeType.PERSIST)
+    private MemberProfile memberProfile = new MemberProfile();
+
+    @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<MemberCompany> memberCompanies = new ArrayList<>();
 
