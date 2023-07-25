@@ -1,6 +1,7 @@
 package com.cupid.jikting.chatting.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
+import com.cupid.jikting.meeting.entity.Meeting;
 import com.cupid.jikting.member.entity.MemberProfile;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -19,6 +20,10 @@ import java.util.List;
 @AttributeOverride(name = "id", column = @Column(name = "chatting_room_id"))
 @Entity
 public class ChattingRoom extends BaseEntity implements Serializable {
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "meeting_id")
+    private Meeting meeting;
 
     @Builder.Default
     @OneToMany(mappedBy = "chattingRoom", cascade = CascadeType.ALL)
