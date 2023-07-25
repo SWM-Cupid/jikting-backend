@@ -1,5 +1,6 @@
 package com.cupid.jikting.member.entity;
 
+import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.meeting.entity.InstantMeetingMember;
 import com.cupid.jikting.team.entity.TeamMember;
@@ -58,6 +59,10 @@ public class MemberProfile extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
     private List<TeamMember> teamMembers = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "memberProfile")
+    private List<MemberChattingRoom> memberChattingRooms = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
