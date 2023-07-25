@@ -67,4 +67,8 @@ public class MemberProfile extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
     private List<InstantMeetingMember> instantMeetingMembers = new ArrayList<>();
+
+    public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
+        memberChattingRooms.add(memberChattingRoom);
+    }
 }
