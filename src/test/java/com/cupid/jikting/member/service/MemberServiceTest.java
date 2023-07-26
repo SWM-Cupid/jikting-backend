@@ -93,7 +93,8 @@ public class MemberServiceTest {
         //given
         willThrow(rollbackException).given(memberRepository).save(any(Member.class));
         //when & then
-        assertThatThrownBy(() -> memberService.signup(signupRequest)).isInstanceOf(RollbackException.class);
+        assertThatThrownBy(() -> memberService.signup(signupRequest))
+                .isInstanceOf(RollbackException.class);
     }
 
     @Test
