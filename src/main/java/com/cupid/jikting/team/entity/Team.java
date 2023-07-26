@@ -1,6 +1,7 @@
 package com.cupid.jikting.team.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.meeting.entity.Meeting;
 import com.cupid.jikting.recommend.entity.Recommend;
 import lombok.*;
@@ -58,4 +59,13 @@ public class Team extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "acceptingTeam")
     private List<Meeting> acceptingMeetings = new ArrayList<>();
+
+    public void addTeamPersonalities(List<Personality> personalities) {
+        personalities.stream()
+                .map(personality -> TeamPersonality.builder()
+                        .team(this)
+                        .personality(personality)
+                        .build())
+                .forEach(teamPersonalities::add);
+    }
 }
