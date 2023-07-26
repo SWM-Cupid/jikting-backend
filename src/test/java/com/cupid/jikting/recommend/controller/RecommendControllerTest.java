@@ -3,12 +3,13 @@ package com.cupid.jikting.recommend.controller;
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.TestSecurityConfig;
 import com.cupid.jikting.common.dto.ErrorResponse;
+import com.cupid.jikting.common.entity.Hobby;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.jwt.service.JwtService;
-import com.cupid.jikting.member.entity.SmokeStatus;
-import com.cupid.jikting.recommend.dto.ImageResponse;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.recommend.dto.MemberResponse;
 import com.cupid.jikting.recommend.dto.RecommendResponse;
 import com.cupid.jikting.recommend.service.RecommendService;
@@ -20,10 +21,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -45,13 +46,11 @@ public class RecommendControllerTest extends ApiDocument {
     private static final String COMPANY = "회사";
     private static final String DESCRIPTION = "소개";
     private static final String DRINK_STATUS = "안마심";
-    private static final String MBTI = "mbti";
     private static final String ADDRESS = "거주지";
     private static final String COLLEGE = "대학";
-    private static final int AGE = 20;
+    private static final LocalDate BIRTH = LocalDate.of(1997, 9, 11);
     private static final int HEIGHT = 180;
     private static final Long ID = 1L;
-    private static final boolean TRUE = true;
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
 
@@ -68,34 +67,57 @@ public class RecommendControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
-        List<String> hobbies = IntStream.rangeClosed(1, 3)
-                .mapToObj(n -> HOBBY + n)
-                .collect(Collectors.toList());
         List<String> personalities = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> PERSONALITY + n)
                 .collect(Collectors.toList());
-        List<ImageResponse> imageResponses = LongStream.rangeClosed(1, 3)
-                .mapToObj(n -> ImageResponse.builder()
-                        .isMain(TRUE)
-                        .memberId(n)
-                        .url(URL + n)
+        MemberProfile tmpMemberProfile = MemberProfile.builder()
+                .id(ID)
+                .build();
+        List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> ProfileImage.builder()
+                        .memberProfile(tmpMemberProfile)
+                        .sequence(Sequence.MAIN)
+                        .url(URL)
                         .build())
                 .collect(Collectors.toList());
-        List<MemberResponse> memberResponses = IntStream.rangeClosed(1, 2)
-                .mapToObj(n -> MemberResponse.builder()
-                        .nickname(NICKNAME)
-                        .age(AGE)
-                        .mbti(MBTI)
-                        .address(ADDRESS)
-                        .company(COMPANY)
-                        .smokeStatus(SmokeStatus.SMOKING.getValue())
-                        .drinkStatus(DRINK_STATUS)
-                        .height(HEIGHT)
-                        .description(DESCRIPTION)
-                        .hobbies(hobbies)
-                        .images(imageResponses)
-                        .college(COLLEGE)
-                        .build())
+        Company company = Company.builder()
+                .name(COMPANY)
+                .build();
+        MemberCompany memberCompany = MemberCompany.builder()
+                .company(company)
+                .build();
+        Member member = Member.builder()
+                .memberCompanies(List.of(memberCompany))
+                .build();
+        Hobby hobby = Hobby.builder()
+                .keyword(HOBBY)
+                .build();
+        Personality personality = Personality.builder()
+                .keyword(PERSONALITY)
+                .build();
+        MemberHobby memberHobby = MemberHobby.builder()
+                .hobby(hobby)
+                .build();
+        MemberPersonality memberPersonality = MemberPersonality.builder()
+                .personality(personality)
+                .build();
+        MemberProfile memberProfile = MemberProfile.builder()
+                .member(member)
+                .nickname(NICKNAME)
+                .birth(BIRTH)
+                .mbti(MBTI.ENFJ)
+                .address(ADDRESS)
+                .smokeStatus(SmokeStatus.SMOKING)
+                .drinkStatus(DrinkStatus.NEVER)
+                .height(HEIGHT)
+                .description(DESCRIPTION)
+                .memberHobbies(List.of(memberHobby))
+                .memberPersonalities(List.of(memberPersonality))
+                .profileImages(profileImages)
+                .college(COLLEGE)
+                .build();
+        List<MemberResponse> memberResponses = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> MemberResponse.toMemberResponse(memberProfile))
                 .collect(Collectors.toList());
         RecommendResponse recommendResponse = RecommendResponse.builder()
                 .recommendId(ID)
