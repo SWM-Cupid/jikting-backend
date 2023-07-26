@@ -1,6 +1,8 @@
 package com.cupid.jikting.team.service;
 
 import com.cupid.jikting.common.entity.Personality;
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.entity.Team;
@@ -19,10 +21,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,5 +87,15 @@ class TeamServiceTest {
                 () -> verify(teamRepository).save(any(Team.class)),
                 () -> assertThat(teamRegisterResponse.getInvitationUrl()).isEqualTo(INVITATION_URL)
         );
+    }
+
+    @Test
+    void 팀_등록_실패_키워드_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND)).given(personalityRepository).findByKeyword(anyString());
+        // when & then
+        assertThatThrownBy(() -> teamService.register(teamRegisterRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.PERSONALITY_NOT_FOUND.getMessage());
     }
 }
