@@ -32,7 +32,7 @@ public class MemberResponse {
     private List<String> hobbies;
     private String college;
 
-    public static MemberResponse toMemberResponse(MemberProfile memberProfile) {
+    public static MemberResponse from(MemberProfile memberProfile) {
         return new MemberResponse(
                 memberProfile.getNickname(),
                 getImageResponses(memberProfile),
@@ -51,10 +51,9 @@ public class MemberResponse {
 
     private static List<ImageResponse> getImageResponses(MemberProfile memberProfile) {
         return memberProfile.getProfileImages().stream()
-                .map(ImageResponse::toImageResponse)
+                .map(ImageResponse::from)
                 .collect(Collectors.toList());
     }
-
 
     private static List<String> getMemberProfilePersonalities(MemberProfile memberProfile) {
         return memberProfile.getMemberPersonalities().stream()
@@ -64,7 +63,8 @@ public class MemberResponse {
     }
 
     private static List<String> getHobbies(MemberProfile memberProfile) {
-        return memberProfile.getMemberHobbies().stream()
+        return memberProfile.getMemberHobbies()
+                .stream()
                 .map(MemberHobby::getHobby)
                 .map(Hobby::getKeyword)
                 .collect(Collectors.toList());
