@@ -2,7 +2,7 @@ package com.cupid.jikting.team.service;
 
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
-import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
@@ -62,6 +62,6 @@ public class TeamService {
 
     private Personality getPersonality(String keyword) {
         return personalityRepository.findByKeyword(keyword)
-                .orElseThrow(() -> new BadRequestException(ApplicationError.PERSONALITY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND));
     }
 }
