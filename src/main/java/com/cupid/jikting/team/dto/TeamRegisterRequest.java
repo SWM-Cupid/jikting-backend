@@ -11,5 +11,6 @@ import java.util.List;
 public class TeamRegisterRequest {
 
     private String description;
+    private int memberCount;
     private List<String> keywords;
 }
