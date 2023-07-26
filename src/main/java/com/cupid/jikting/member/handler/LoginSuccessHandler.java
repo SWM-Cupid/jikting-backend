@@ -4,7 +4,6 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
-import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +49,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private Long getMemberProfileIdByUsername(String username) {
         return memberRepository.findByUsername(username)
-                .map(Member::getMemberProfile)
-                .map(MemberProfile::getId)
+                .map(Member::getMemberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 }

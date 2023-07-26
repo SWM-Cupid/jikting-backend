@@ -54,4 +54,8 @@ public class Member extends BaseEntity {
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
         memberChattingRooms.add(memberChattingRoom);
     }
+
+    public Long getMemberProfileId() {
+        return memberProfile.getId();
+    }
 }

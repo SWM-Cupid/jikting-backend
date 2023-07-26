@@ -15,10 +15,10 @@ public class ImageResponse {
     private Long memberId;
     private String url;
 
-    public static ImageResponse toImageResponse(ProfileImage profileImage) {
+    public static ImageResponse from(ProfileImage profileImage) {
         return new ImageResponse(
-                profileImage.getSequence().name(),
-                profileImage.getMemberProfile().getId(),
+                profileImage.getSequenceName(),
+                profileImage.getMemberProfileId(),
                 profileImage.getUrl());
     }
 }

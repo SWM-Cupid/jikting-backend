@@ -49,7 +49,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         Member member = memberRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new InvalidJwtException(ApplicationError.INVALID_TOKEN));
         String reIssuedRefreshToken = reIssueRefreshToken(member);
-        jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfile().getId()), reIssuedRefreshToken);
+        jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()), reIssuedRefreshToken);
     }
 
     public void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
