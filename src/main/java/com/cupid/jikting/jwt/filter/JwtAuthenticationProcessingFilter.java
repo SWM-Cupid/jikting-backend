@@ -49,7 +49,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         Member member = memberRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new InvalidJwtException(ApplicationError.INVALID_TOKEN));
         String reIssuedRefreshToken = reIssueRefreshToken(member);
-        jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getUsername()), reIssuedRefreshToken);
+        jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()), reIssuedRefreshToken);
     }
 
     public void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -57,15 +57,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         log.info("checkAccessTokenAndAuthentication() 호출");
         jwtService.extractAccessToken(request)
                 .filter(jwtService::isTokenValid)
-                .flatMap(jwtService::extractUsername)
-                .flatMap(memberRepository::findByUsername)
+                .flatMap(jwtService::extractMemberProfileId)
+                .flatMap(memberRepository::findById)
                 .ifPresent(this::saveAuthentication);
         filterChain.doFilter(request, response);
     }
 
     public void saveAuthentication(Member member) {
         UserDetails userDetails = User.builder()
-                .username(member.getUsername())
+                .username(member.getId().toString())
                 .password(member.getPassword())
                 .roles(member.getRole().name())
                 .build();

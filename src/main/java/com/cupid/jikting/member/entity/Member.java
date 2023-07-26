@@ -31,14 +31,22 @@ public class Member extends BaseEntity {
     private String refreshToken;
 
     @Builder.Default
-    @OneToMany(mappedBy = "member")
-    private final List<MemberCompany> memberCompanies = new ArrayList<>();
+    @OneToOne(mappedBy = "member", cascade = CascadeType.PERSIST)
+    private MemberProfile memberProfile = new MemberProfile();
 
     @Builder.Default
     @OneToMany(mappedBy = "member")
-    private final List<MemberCertification> memberCertifications = new ArrayList<>();
+    private List<MemberCompany> memberCompanies = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member")
+    private List<MemberCertification> memberCertifications = new ArrayList<>();
 
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
+    }
+
+    public Long getMemberProfileId() {
+        return memberProfile.getId();
     }
 }

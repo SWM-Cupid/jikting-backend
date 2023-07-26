@@ -24,7 +24,7 @@ public class JwtService {
 
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
-    private static final String USERNAME_CLAIM = "username";
+    private static final String MEMBER_PROFILE_ID_CLAIM = "MemberProfileId";
     private static final String BEARER = "Bearer ";
 
     private final MemberRepository memberRepository;
@@ -44,11 +44,11 @@ public class JwtService {
     @Value("${jwt.refreshToken.header}")
     private String refreshHeader;
 
-    public String createAccessToken(String username) {
+    public String createAccessToken(Long memberProfileId) {
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(new Date().getTime() + accessTokenExpirationPeriod))
-                .withClaim(USERNAME_CLAIM, username)
+                .withClaim(MEMBER_PROFILE_ID_CLAIM, memberProfileId)
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
@@ -78,17 +78,26 @@ public class JwtService {
                 .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
 
-    public Optional<String> extractUsername(String accessToken) {
+    public Optional<Long> extractMemberProfileId(String accessToken) {
         try {
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                     .build()
                     .verify(accessToken)
-                    .getClaim(USERNAME_CLAIM)
-                    .asString());
+                    .getClaim(MEMBER_PROFILE_ID_CLAIM)
+                    .asLong());
         } catch (Exception e) {
             log.error("액세스 토큰이 유효하지 않습니다.");
             return Optional.empty();
         }
+    }
+
+    public Long extractValidMemberProfileId(String accessToken) {
+        return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+                        .build()
+                        .verify(accessToken)
+                        .getClaim(MEMBER_PROFILE_ID_CLAIM)
+                        .asLong())
+                .orElseThrow(() -> new JwtException(ApplicationError.INVALID_TOKEN));
     }
 
     public boolean isTokenValid(String token) {

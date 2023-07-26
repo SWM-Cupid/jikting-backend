@@ -27,4 +27,12 @@ public class ProfileImage extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_profile_id")
     private MemberProfile memberProfile;
+
+    public String getSequenceName() {
+        return sequence.name();
+    }
+
+    public Long getMemberProfileId() {
+        return memberProfile.getId();
+    }
 }

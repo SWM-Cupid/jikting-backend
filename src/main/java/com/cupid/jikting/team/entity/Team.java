@@ -2,6 +2,7 @@ package com.cupid.jikting.team.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.meeting.entity.Meeting;
+import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.recommend.entity.Recommend;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -13,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @SuperBuilder
@@ -58,4 +60,10 @@ public class Team extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "acceptingTeam")
     private List<Meeting> acceptingMeetings = new ArrayList<>();
+
+    public List<MemberProfile> getMemberProfiles() {
+        return teamMembers.stream()
+                .map(TeamMember::getMemberProfile)
+                .collect(Collectors.toList());
+    }
 }
