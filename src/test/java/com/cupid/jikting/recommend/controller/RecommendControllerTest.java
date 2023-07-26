@@ -45,7 +45,6 @@ public class RecommendControllerTest extends ApiDocument {
     private static final String URL = "http://test-url";
     private static final String COMPANY = "회사";
     private static final String DESCRIPTION = "소개";
-    private static final String DRINK_STATUS = "안마심";
     private static final String ADDRESS = "거주지";
     private static final String COLLEGE = "대학";
     private static final LocalDate BIRTH = LocalDate.of(1997, 9, 11);
@@ -54,8 +53,7 @@ public class RecommendControllerTest extends ApiDocument {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
 
-    private static String ACCESS_TOKEN;
-
+    private String accessToken;
     private List<RecommendResponse> recommendResponses;
     private ApplicationException teamNotFoundException;
 
@@ -117,7 +115,7 @@ public class RecommendControllerTest extends ApiDocument {
                 .college(COLLEGE)
                 .build();
         List<MemberResponse> memberResponses = IntStream.rangeClosed(0, 2)
-                .mapToObj(n -> MemberResponse.toMemberResponse(memberProfile))
+                .mapToObj(n -> MemberResponse.from(memberProfile))
                 .collect(Collectors.toList());
         RecommendResponse recommendResponse = RecommendResponse.builder()
                 .recommendId(ID)
@@ -128,7 +126,7 @@ public class RecommendControllerTest extends ApiDocument {
                 .mapToObj(n -> recommendResponse)
                 .collect(Collectors.toList());
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
-        ACCESS_TOKEN = jwtService.createAccessToken(ID);
+        accessToken = jwtService.createAccessToken(ID);
     }
 
     @WithMockUser
@@ -178,7 +176,7 @@ public class RecommendControllerTest extends ApiDocument {
     private ResultActions 추천팀_조회_요청() throws Exception {
         return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
-                .header(AUTHORIZATION, BEARER + ACCESS_TOKEN));
+                .header(AUTHORIZATION, BEARER + accessToken));
     }
 
     private void 추천팀_조회_요청_성공(ResultActions resultActions) throws Exception {
