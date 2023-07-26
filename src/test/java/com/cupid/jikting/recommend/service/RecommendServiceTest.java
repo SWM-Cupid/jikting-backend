@@ -70,7 +70,7 @@ public class RecommendServiceTest {
         List<MemberHobby> memberHobbies = List.of(MemberHobby.builder()
                 .hobby(hobby)
                 .build());
-        MemberProfile memberProfile1 = MemberProfile.builder()
+        MemberProfile memberProfile = MemberProfile.builder()
                 .birth(BIRTH)
                 .mbti(MBTI.ENFJ)
                 .address(ADDRESS)
@@ -83,33 +83,28 @@ public class RecommendServiceTest {
                 .memberHobbies(memberHobbies)
                 .college(COLLEGE)
                 .build();
-        List<TeamMember> teamMembers = List.of(TeamMember.builder()
-                .memberProfile(memberProfile1)
+        List<TeamMember> teamMembersFrom = List.of(TeamMember.builder()
+                .memberProfile(memberProfile)
                 .build());
         Team teamFrom = Team.builder()
-                .teamMembers(teamMembers)
+                .teamMembers(teamMembersFrom)
                 .build();
         List<Recommend> recommends = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> Recommend.builder()
-                        .id(ID)
                         .from(teamFrom)
                         .build())
                 .collect(Collectors.toList());
         Team team = Team.builder()
-                .id(ID)
-                .name(TEAM_NAME)
                 .recommendsFrom(recommends)
                 .build();
-        List<TeamMember> teamMembers1 = IntStream.rangeClosed(0, 2)
+        List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> TeamMember.builder()
-                        .id(ID)
-                        .memberProfile(memberProfile)
                         .team(team)
                         .build())
                 .collect(Collectors.toList());
-        memberProfile = MemberProfile.builder()
+        this.memberProfile = MemberProfile.builder()
                 .id(ID)
-                .teamMembers(teamMembers1)
+                .teamMembers(teamMembers)
                 .build();
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
     }
