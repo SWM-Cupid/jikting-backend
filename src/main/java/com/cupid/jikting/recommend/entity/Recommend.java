@@ -2,6 +2,7 @@ package com.cupid.jikting.recommend.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.team.entity.Team;
+import com.cupid.jikting.team.entity.TeamPersonality;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @SuperBuilder
@@ -27,4 +29,8 @@ public class Recommend extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "to_team_id")
     private Team to;
+
+    public List<TeamPersonality> getFromTeamPersonalities() {
+        return from.getTeamPersonalities();
+    }
 }

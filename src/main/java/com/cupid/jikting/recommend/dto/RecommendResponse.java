@@ -34,8 +34,7 @@ public class RecommendResponse {
     }
 
     private static List<String> getTeamPersonalities(Recommend recommend) {
-        return recommend.getFrom()
-                .getTeamPersonalities()
+        return recommend.getFromTeamPersonalities()
                 .stream()
                 .map(TeamPersonality::getPersonality)
                 .map(Personality::getKeyword)
