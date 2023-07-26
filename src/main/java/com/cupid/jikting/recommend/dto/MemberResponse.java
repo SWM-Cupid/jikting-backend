@@ -50,13 +50,15 @@ public class MemberResponse {
     }
 
     private static List<ImageResponse> getImageResponses(MemberProfile memberProfile) {
-        return memberProfile.getProfileImages().stream()
+        return memberProfile.getProfileImages()
+                .stream()
                 .map(ImageResponse::from)
                 .collect(Collectors.toList());
     }
 
     private static List<String> getMemberProfilePersonalities(MemberProfile memberProfile) {
-        return memberProfile.getMemberPersonalities().stream()
+        return memberProfile.getMemberPersonalities()
+                .stream()
                 .map(MemberPersonality::getPersonality)
                 .map(Personality::getKeyword)
                 .collect(Collectors.toList());
