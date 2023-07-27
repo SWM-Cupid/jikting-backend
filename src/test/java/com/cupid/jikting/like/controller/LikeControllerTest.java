@@ -6,6 +6,7 @@ import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.like.dto.MemberProfileResponse;
 import com.cupid.jikting.like.dto.TeamDetailResponse;
@@ -50,7 +51,10 @@ public class LikeControllerTest extends ApiDocument {
     private static final String DESCRIPTION = "소개";
     private static final String KEYWORD = "키워드";
     private static final String COLLEGE = "대학";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
 
+    private String accessToken;
     private List<LikeResponse> likeResponses;
     private TeamDetailResponse teamDetailResponse;
     private ApplicationException teamNotFoundException;
@@ -58,8 +62,12 @@ public class LikeControllerTest extends ApiDocument {
     @MockBean
     private LikeService likeService;
 
+    @MockBean
+    private JwtService jwtService;
+
     @BeforeEach
     void setUp() {
+        accessToken = jwtService.createAccessToken(ID);
         List<String> keywords = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> KEYWORD + n)
                 .collect(Collectors.toList());
@@ -104,7 +112,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 받은_호감_목록_조회_성공() throws Exception {
         //given
-        willReturn(likeResponses).given(likeService).getAllReceivedLike();
+        willReturn(likeResponses).given(likeService).getAllReceivedLike(anyLong());
         //when
         ResultActions resultActions = 받은_호감_목록_조회_요청();
         //then
@@ -115,7 +123,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 받은_호감_목록_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(likeService).getAllReceivedLike();
+        willThrow(teamNotFoundException).given(likeService).getAllReceivedLike(anyLong());
         //when
         ResultActions resultActions = 받은_호감_목록_조회_요청();
         //then
@@ -212,7 +220,8 @@ public class LikeControllerTest extends ApiDocument {
 
     private ResultActions 받은_호감_목록_조회_요청() throws Exception {
         return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/received")
-                .contextPath(CONTEXT_PATH));
+                .contextPath(CONTEXT_PATH)
+                .header(AUTHORIZATION, BEARER + accessToken));
     }
 
     private void 받은_호감_목록_조회_요청_성공(ResultActions resultActions) throws Exception {
