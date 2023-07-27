@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.JwtException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -98,6 +99,14 @@ public class JwtService {
                         .getClaim(MEMBER_PROFILE_ID_CLAIM)
                         .asLong())
                 .orElseThrow(() -> new JwtException(ApplicationError.INVALID_TOKEN));
+    }
+
+    public void updateRefreshToken(String username, String refreshToken) {
+        memberRepository.findByUsername(username)
+                .ifPresentOrElse(
+                        member -> member.updateRefreshToken(refreshToken),
+                        () -> {throw new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);}
+                );
     }
 
     public boolean isTokenValid(String token) {
