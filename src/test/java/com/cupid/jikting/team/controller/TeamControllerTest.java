@@ -127,7 +127,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 팀_참여_성공() throws Exception {
         // given
-        willDoNothing().given(teamService).attend(anyLong());
+        willDoNothing().given(teamService).attend(anyLong(), anyLong());
         // when
         ResultActions resultActions = 팀_참여_요청();
         // then
@@ -138,7 +138,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 팀_참여_실패() throws Exception {
         // given
-        willThrow(teamNotFoundException).given(teamService).attend(anyLong());
+        willThrow(teamNotFoundException).given(teamService).attend(anyLong(), anyLong());
         // when
         ResultActions resultActions = 팀_참여_요청();
         // then
