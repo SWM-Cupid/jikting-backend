@@ -153,4 +153,15 @@ class TeamServiceTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
+
+    @Test
+    void 팀_참여_실패_팀_없음() {
+        // given
+        willReturn(Optional.of(member)).given(memberProfileRepository).findById(anyLong());
+        willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(teamRepository).findById(anyLong());
+        // when & then
+        assertThatThrownBy(() -> teamService.attend(ID, ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.TEAM_NOT_FOUND.getMessage());
+    }
 }
