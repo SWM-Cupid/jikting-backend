@@ -24,9 +24,7 @@ public class OAuthAttributes {
         this.oauth2UserInfo = oauth2UserInfo;
     }
 
-    public static OAuthAttributes of(SocialType socialType,
-                                     String userNameAttributeName, Map<String, Object> attributes) {
-
+    public static OAuthAttributes of(SocialType socialType, String userNameAttributeName, Map<String, Object> attributes) {
         if (socialType == SocialType.KAKAO) {
             return ofKakao(userNameAttributeName, attributes);
         }
@@ -52,7 +50,7 @@ public class OAuthAttributes {
                 .socialType(socialType)
                 .socialId(oauth2UserInfo.getId())
                 .username(UUID.randomUUID().toString())
-                .role(Role.GUEST)
+                .role(Role.UNCERTIFIED)
                 .build();
     }
 }
