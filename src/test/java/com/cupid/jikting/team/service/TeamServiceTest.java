@@ -18,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.persistence.RollbackException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -119,12 +118,13 @@ class TeamServiceTest {
     }
 
     @Test
-    void 팀_등록_실패_저장되지_않음() {
+    void 팀_등록_실패_키워드_없음() {
         // given
-        willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
-        willThrow(new RollbackException()).given(teamRepository).save(any(Team.class));
+        willReturn(Optional.of(leader)).given(memberProfileRepository).findById(anyLong());
+        willThrow(new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND)).given(personalityRepository).findByKeyword(anyString());
         // when & then
-        assertThatThrownBy(() -> teamService.register(teamRegisterRequest))
-                .isInstanceOf(RollbackException.class);
+        assertThatThrownBy(() -> teamService.register(ID, teamRegisterRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.PERSONALITY_NOT_FOUND.getMessage());
     }
 }
