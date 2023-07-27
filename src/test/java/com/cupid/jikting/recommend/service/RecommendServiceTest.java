@@ -41,6 +41,7 @@ public class RecommendServiceTest {
     private static final int HEIGHT = 180;
     private static final String DESCRIPTION = "자기소개";
     private static final String COLLEGE = "대학";
+    private static final boolean LEADER = true;
 
     private MemberProfile memberProfile;
     private ApplicationException memberNotFoundException;
@@ -70,7 +71,10 @@ public class RecommendServiceTest {
         List<MemberHobby> memberHobbies = List.of(MemberHobby.builder()
                 .hobby(hobby)
                 .build());
-        MemberProfile memberProfile = MemberProfile.builder()
+        Team teamFrom = Team.builder()
+                .id(ID)
+                .build();
+        memberProfile = MemberProfile.builder()
                 .birth(BIRTH)
                 .mbti(MBTI.ENFJ)
                 .address(ADDRESS)
@@ -83,29 +87,16 @@ public class RecommendServiceTest {
                 .memberHobbies(memberHobbies)
                 .college(COLLEGE)
                 .build();
-        List<TeamMember> teamMembersFrom = List.of(TeamMember.builder()
-                .memberProfile(memberProfile)
-                .build());
-        Team teamFrom = Team.builder()
-                .teamMembers(teamMembersFrom)
-                .build();
+        TeamMember.of(LEADER, teamFrom, memberProfile);
         List<Recommend> recommends = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> Recommend.builder()
                         .from(teamFrom)
                         .build())
                 .collect(Collectors.toList());
-        Team team = Team.builder()
+        Team teamTo = Team.builder()
                 .recommendsFrom(recommends)
                 .build();
-        List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
-                .mapToObj(n -> TeamMember.builder()
-                        .team(team)
-                        .build())
-                .collect(Collectors.toList());
-        this.memberProfile = MemberProfile.builder()
-                .id(ID)
-                .teamMembers(teamMembers)
-                .build();
+        TeamMember.of(LEADER, teamTo, memberProfile);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
     }
 
