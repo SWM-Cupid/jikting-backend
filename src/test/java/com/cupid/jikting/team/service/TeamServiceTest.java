@@ -3,9 +3,12 @@ package com.cupid.jikting.team.service;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.member.entity.MemberProfile;
+import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.entity.Team;
+import com.cupid.jikting.team.entity.TeamMember;
 import com.cupid.jikting.team.repository.PersonalityRepository;
 import com.cupid.jikting.team.repository.TeamRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +29,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,8 +40,11 @@ class TeamServiceTest {
     private static final String NAME = "이름";
     private static final String DESCRIPTION = "한줄소개";
     private static final int MEMBER_COUNT = 3;
+    private static final boolean LEADER = true;
     private static final String INVITATION_URL = "https://jikting.com/teams/" + ID + "/invite";
 
+    private MemberProfile leader;
+    private MemberProfile member;
     private Personality personality;
     private Team team;
     private TeamRegisterRequest teamRegisterRequest;
@@ -51,6 +56,9 @@ class TeamServiceTest {
     private TeamRepository teamRepository;
 
     @Mock
+    private MemberProfileRepository memberProfileRepository;
+
+    @Mock
     private PersonalityRepository personalityRepository;
 
     @BeforeEach
@@ -58,6 +66,12 @@ class TeamServiceTest {
         List<Personality> personalities = IntStream.range(0, 3)
                 .mapToObj(n -> personality)
                 .collect(Collectors.toList());
+        leader = MemberProfile.builder()
+                .id(ID)
+                .build();
+        member = MemberProfile.builder()
+                .id(ID)
+                .build();
         personality = Personality.builder()
                 .keyword(KEYWORD)
                 .build();
@@ -68,6 +82,8 @@ class TeamServiceTest {
                 .memberCount(MEMBER_COUNT)
                 .build();
         team.addTeamPersonalities(personalities);
+        TeamMember.of(LEADER, team, leader);
+        TeamMember.of(!LEADER, team, member);
         teamRegisterRequest = TeamRegisterRequest.builder()
                 .description(DESCRIPTION)
                 .memberCount(MEMBER_COUNT)
@@ -78,14 +94,16 @@ class TeamServiceTest {
     @Test
     void 팀_등록_성공() {
         // given
+        willReturn(Optional.of(leader)).given(memberProfileRepository).findById(anyLong());
         willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
-        willReturn(team).given(teamRepository).save(any(Team.class));
+        willReturn(leader).given(memberProfileRepository).save(any(MemberProfile.class));
         // when
-        TeamRegisterResponse teamRegisterResponse = teamService.register(teamRegisterRequest);
+        TeamRegisterResponse teamRegisterResponse = teamService.register(ID, teamRegisterRequest);
         // then
         assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
                 () -> verify(personalityRepository).findByKeyword(anyString()),
-                () -> verify(teamRepository).save(any(Team.class)),
+                () -> verify(memberProfileRepository).save(any(MemberProfile.class)),
                 () -> assertThat(teamRegisterResponse.getInvitationUrl()).isEqualTo(INVITATION_URL)
         );
     }
