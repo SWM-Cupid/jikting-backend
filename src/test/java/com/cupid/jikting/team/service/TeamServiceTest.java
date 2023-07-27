@@ -143,4 +143,14 @@ class TeamServiceTest {
                 () -> verify(memberProfileRepository).save(any(MemberProfile.class))
         );
     }
+
+    @Test
+    void 팀_참여_실패_회원_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        // when & then
+        assertThatThrownBy(() -> teamService.attend(ID, ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
 }
