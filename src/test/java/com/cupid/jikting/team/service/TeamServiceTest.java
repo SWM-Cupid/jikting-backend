@@ -109,13 +109,13 @@ class TeamServiceTest {
     }
 
     @Test
-    void 팀_등록_실패_키워드_없음() {
+    void 팀_등록_실패_회원_없음() {
         // given
-        willThrow(new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND)).given(personalityRepository).findByKeyword(anyString());
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
         // when & then
-        assertThatThrownBy(() -> teamService.register(teamRegisterRequest))
+        assertThatThrownBy(() -> teamService.register(ID, teamRegisterRequest))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage(ApplicationError.PERSONALITY_NOT_FOUND.getMessage());
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
 
     @Test
