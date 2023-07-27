@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class TeamController {
 
     private final TeamService teamService;
+    private final JwtService jwtService;
 
     @PostMapping
     public ResponseEntity<TeamRegisterResponse> register(@RequestBody TeamRegisterRequest teamRegisterRequest) {
@@ -22,8 +23,8 @@ public class TeamController {
     }
 
     @PostMapping("/{teamId}/attend")
-    public ResponseEntity<Void> attend(@PathVariable Long teamId) {
-        teamService.attend(teamId);
+    public ResponseEntity<Void> attend(@RequestHeader("Authorization") String token, @PathVariable Long teamId) {
+        teamService.attend(teamId, jwtService.extractValidMemberProfileId(token));
         return ResponseEntity.ok().build();
     }
 
