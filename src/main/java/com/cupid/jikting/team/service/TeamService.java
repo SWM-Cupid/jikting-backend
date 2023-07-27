@@ -12,6 +12,7 @@ import com.cupid.jikting.team.repository.PersonalityRepository;
 import com.cupid.jikting.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -41,8 +42,9 @@ public class TeamService {
     public void attend(Long teamId) {
     }
 
+    @Transactional(readOnly = true)
     public TeamResponse get(Long teamId) {
-        return null;
+        return TeamResponse.from(getTeamBy(teamId));
     }
 
     public void update(Long teamId, TeamUpdateRequest teamUpdateRequest) {
@@ -63,5 +65,10 @@ public class TeamService {
     private Personality getPersonality(String keyword) {
         return personalityRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND));
+    }
+
+    private Team getTeamBy(Long teamId) {
+        return teamRepository.findById(teamId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.TEAM_NOT_FOUND));
     }
 }
