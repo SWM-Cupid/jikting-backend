@@ -15,12 +15,14 @@ import com.cupid.jikting.team.repository.PersonalityRepository;
 import com.cupid.jikting.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class TeamService {
 
