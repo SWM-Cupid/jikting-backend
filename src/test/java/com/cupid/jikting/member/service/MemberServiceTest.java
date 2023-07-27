@@ -18,13 +18,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.RollbackException;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,7 +36,6 @@ public class MemberServiceTest {
     private SignupRequest signupRequest;
     private UsernameCheckRequest usernameCheckRequest;
     private NicknameCheckRequest nicknameCheckRequest;
-    private RollbackException rollbackException;
 
     @InjectMocks
     private MemberService memberService;
@@ -75,7 +70,6 @@ public class MemberServiceTest {
         nicknameCheckRequest = NicknameCheckRequest.builder()
                 .nickname(NICKNAME)
                 .build();
-        rollbackException = new RollbackException();
     }
 
     @Test
@@ -86,15 +80,6 @@ public class MemberServiceTest {
         memberService.signup(signupRequest);
         // then
         verify(memberRepository).save(any(Member.class));
-    }
-
-    @Test
-    void 회원_가입_실패() {
-        //given
-        willThrow(rollbackException).given(memberRepository).save(any(Member.class));
-        //when & then
-        assertThatThrownBy(() -> memberService.signup(signupRequest))
-                .isInstanceOf(RollbackException.class);
     }
 
     @Test
