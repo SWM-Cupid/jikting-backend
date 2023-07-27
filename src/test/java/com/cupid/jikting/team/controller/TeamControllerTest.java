@@ -82,9 +82,7 @@ public class TeamControllerTest extends ApiDocument {
                 .description(DESCRIPTION)
                 .keywords(keywords)
                 .build();
-        teamRegisterResponse = TeamRegisterResponse.builder()
-                .invitationUrl(INVITATION_URL)
-                .build();
+        teamRegisterResponse = TeamRegisterResponse.from(INVITATION_URL);
         teamResponse = TeamResponse.builder()
                 .description(DESCRIPTION)
                 .keywords(keywords)

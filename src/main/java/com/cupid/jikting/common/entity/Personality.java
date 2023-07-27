@@ -1,17 +1,15 @@
 package com.cupid.jikting.common.entity;
 
-import com.cupid.jikting.member.entity.MemberPersonality;
-import com.cupid.jikting.team.entity.TeamPersonality;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @SuperBuilder
@@ -23,12 +21,4 @@ import java.util.List;
 public class Personality extends BaseEntity {
 
     private String keyword;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "personality")
-    private List<MemberPersonality> memberPersonalities = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "personality")
-    private List<TeamPersonality> teamPersonalities = new ArrayList<>();
 }
