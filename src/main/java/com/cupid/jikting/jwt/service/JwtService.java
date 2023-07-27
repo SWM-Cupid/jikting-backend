@@ -94,7 +94,7 @@ public class JwtService {
     public Long extractValidMemberProfileId(String accessToken) {
         return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                         .build()
-                        .verify(accessToken)
+                        .verify(accessToken.replace(BEARER, ""))
                         .getClaim(MEMBER_PROFILE_ID_CLAIM)
                         .asLong())
                 .orElseThrow(() -> new JwtException(ApplicationError.INVALID_TOKEN));
