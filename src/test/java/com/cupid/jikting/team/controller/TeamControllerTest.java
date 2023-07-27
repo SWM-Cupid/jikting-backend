@@ -268,6 +268,7 @@ public class TeamControllerTest extends ApiDocument {
 
     private ResultActions 팀_참여_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/attend")
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH));
     }
 
