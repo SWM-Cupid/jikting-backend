@@ -29,21 +29,15 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException {
         log.info("OAuth2 Login 성공!");
-        try {
-            CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-
-            if (oAuth2User.getRole() == Role.GUEST) {
-                String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
-                response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-                response.sendRedirect("/oauth2/sign-up");
-                jwtService.sendAccessAndRefreshToken(response, accessToken, null);
-            } else {
-                loginSuccess(response, oAuth2User);
-            }
-        } catch (Exception e) {
-            throw e;
+        CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+        if (oAuth2User.getRole() == Role.GUEST) {
+            String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
+            response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
+            response.sendRedirect("/oauth2/sign-up");
+            jwtService.sendAccessAndRefreshToken(response, accessToken, null);
+        } else {
+            loginSuccess(response, oAuth2User);
         }
-
     }
 
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) {
@@ -57,7 +51,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     }
 
     private Long getMemberProfileIdByUsername(String username) {
-        log.info("username: "+username);
         return memberRepository.findByUsername(username)
                 .map(Member::getMemberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
