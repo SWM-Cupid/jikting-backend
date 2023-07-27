@@ -127,4 +127,20 @@ class TeamServiceTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.PERSONALITY_NOT_FOUND.getMessage());
     }
+
+    @Test
+    void 팀_참여_성공() {
+        // given
+        willReturn(Optional.of(member)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        willReturn(member).given(memberProfileRepository).save(any(MemberProfile.class));
+        // when
+        teamService.attend(ID, ID);
+        // then
+        assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> verify(teamRepository).findById(anyLong()),
+                () -> verify(memberProfileRepository).save(any(MemberProfile.class))
+        );
+    }
 }
