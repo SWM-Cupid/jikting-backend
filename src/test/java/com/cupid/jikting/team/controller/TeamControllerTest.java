@@ -3,11 +3,21 @@ package com.cupid.jikting.team.controller;
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.TestSecurityConfig;
 import com.cupid.jikting.common.dto.ErrorResponse;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.team.dto.*;
+import com.cupid.jikting.member.entity.Mbti;
+import com.cupid.jikting.member.entity.MemberProfile;
+import com.cupid.jikting.member.entity.ProfileImage;
+import com.cupid.jikting.team.dto.TeamRegisterRequest;
+import com.cupid.jikting.team.dto.TeamRegisterResponse;
+import com.cupid.jikting.team.dto.TeamResponse;
+import com.cupid.jikting.team.dto.TeamUpdateRequest;
+import com.cupid.jikting.team.entity.Team;
+import com.cupid.jikting.team.entity.TeamMember;
+import com.cupid.jikting.team.entity.TeamPersonality;
 import com.cupid.jikting.team.service.TeamService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -41,6 +52,7 @@ public class TeamControllerTest extends ApiDocument {
     private static final String DESCRIPTION = "한줄 소개";
     private static final String INVITATION_URL = "초대 URL";
     private static final String NICKNAME = "닉네임";
+    private static final LocalDate BIRTH = LocalDate.of(1996, 5, 22);
     private static final String URL = "이미지 링크";
     private static final Mbti MBTI = Mbti.ENFP;
     private static final String ADDRESS = "거주지";
@@ -61,18 +73,36 @@ public class TeamControllerTest extends ApiDocument {
         List<String> keywords = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> KEYWORD + n)
                 .collect(Collectors.toList());
-        List<String> images = IntStream.rangeClosed(1, 3)
-                .mapToObj(n -> URL + n)
+        List<TeamPersonality> teamPersonalities = IntStream.range(0, 3)
+                .mapToObj(n -> TeamPersonality.builder()
+                        .personality(Personality.builder()
+                                .keyword(KEYWORD)
+                                .build())
+                        .build())
                 .collect(Collectors.toList());
-        List<MemberResponse> members = IntStream.rangeClosed(1, 3)
-                .mapToObj(n -> MemberResponse.builder()
+        List<ProfileImage> images = IntStream.range(0, 3)
+                .mapToObj(n -> ProfileImage.builder()
+                        .url(URL)
+                        .build())
+                .collect(Collectors.toList());
+        List<TeamMember> teamMembers = IntStream.range(0, 3)
+                .mapToObj(n -> MemberProfile.builder()
                         .nickname(NICKNAME)
-                        .images(images)
-                        .age(AGE)
+                        .profileImages(images)
+                        .birth(BIRTH)
                         .mbti(MBTI)
                         .address(ADDRESS)
                         .build())
+                .map(memberProfile -> TeamMember.builder()
+                        .memberProfile(memberProfile)
+                        .build())
                 .collect(Collectors.toList());
+        Team team = Team.builder()
+                .id(ID)
+                .description(DESCRIPTION)
+                .teamPersonalities(teamPersonalities)
+                .teamMembers(teamMembers)
+                .build();
         teamRegisterRequest = TeamRegisterRequest.builder()
                 .description(DESCRIPTION)
                 .keywords(keywords)
@@ -82,11 +112,7 @@ public class TeamControllerTest extends ApiDocument {
                 .keywords(keywords)
                 .build();
         teamRegisterResponse = TeamRegisterResponse.from(INVITATION_URL);
-        teamResponse = TeamResponse.builder()
-                .description(DESCRIPTION)
-                .keywords(keywords)
-                .members(members)
-                .build();
+        teamResponse = TeamResponse.from(team);
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
