@@ -3,11 +3,14 @@ package com.cupid.jikting.team.service;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.member.entity.MemberProfile;
+import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.entity.Team;
+import com.cupid.jikting.team.entity.TeamMember;
 import com.cupid.jikting.team.repository.PersonalityRepository;
 import com.cupid.jikting.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +24,12 @@ import java.util.stream.Collectors;
 @Service
 public class TeamService {
 
+    private static final boolean LEADER = true;
     private static final String TEAM_URL = "https://jikting.com/teams/";
     private static final String INVITE = "/invite";
 
     private final TeamRepository teamRepository;
+    private final MemberProfileRepository memberProfileRepository;
     private final PersonalityRepository personalityRepository;
 
     public TeamRegisterResponse register(TeamRegisterRequest teamRegisterRequest) {
@@ -38,7 +43,10 @@ public class TeamService {
         return TeamRegisterResponse.from(TEAM_URL + savedTeam.getId() + INVITE);
     }
 
-    public void attend(Long teamId) {
+    public void attend(Long teamId, Long memberProfileId) {
+        MemberProfile memberProfile = getMemberProfileBy(memberProfileId);
+        TeamMember.of(!LEADER, getTeamBy(teamId), memberProfile);
+        memberProfileRepository.save(memberProfile);
     }
 
     public TeamResponse get(Long teamId) {
