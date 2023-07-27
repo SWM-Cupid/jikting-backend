@@ -33,6 +33,7 @@ public class MemberService {
                 .name(signupRequest.getName())
                 .role(Role.UNCERTIFIED)
                 .build();
+        member.addMemberProfile();
         memberRepository.save(member);
     }
 
