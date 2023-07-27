@@ -42,8 +42,7 @@ public class TeamControllerTest extends ApiDocument {
     private static final String INVITATION_URL = "초대 URL";
     private static final String NICKNAME = "닉네임";
     private static final String URL = "이미지 링크";
-    private static final int AGE = 20;
-    private static final String MBTI = "mbti";
+    private static final Mbti MBTI = Mbti.ENFP;
     private static final String ADDRESS = "거주지";
 
     private TeamRegisterRequest teamRegisterRequest;

@@ -38,7 +38,7 @@ public class MemberProfile extends BaseEntity {
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
-    private MBTI mbti;
+    private Mbti mbti;
 
     @Enumerated(EnumType.STRING)
     private SmokeStatus smokeStatus;
