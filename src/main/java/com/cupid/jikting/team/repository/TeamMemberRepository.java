@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface TeamMemberRepository extends JpaRepository<TeamMember, Long> {
 
-    Optional<Long> getTeamIdByMemberProfileId(Long memberProfileId);
+    Optional<TeamMember> getTeamMemberByMemberProfileId(Long memberProfileId);
 }
