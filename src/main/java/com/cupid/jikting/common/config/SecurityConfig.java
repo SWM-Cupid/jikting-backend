@@ -6,7 +6,10 @@ import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.filter.CustomJsonUsernamePasswordAuthenticationFilter;
 import com.cupid.jikting.member.handler.LoginFailureHandler;
 import com.cupid.jikting.member.handler.LoginSuccessHandler;
+import com.cupid.jikting.member.handler.OAuth2LoginFailureHandler;
+import com.cupid.jikting.member.handler.OAuth2LoginSuccessHandler;
 import com.cupid.jikting.member.repository.MemberRepository;
+import com.cupid.jikting.member.service.CustomOAuth2UserService;
 import com.cupid.jikting.member.service.LoginService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +36,13 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
     private final ObjectMapper objectMapper;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+        http
                 .formLogin().disable()
                 .httpBasic().disable()
                 .csrf().disable()
@@ -50,6 +56,12 @@ public class SecurityConfig {
                 .mvcMatchers("/members/username/check").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .oauth2Login()
+                .successHandler(oAuth2LoginSuccessHandler)
+                .failureHandler(oAuth2LoginFailureHandler)
+                .userInfoEndpoint().userService(customOAuth2UserService);
+
+        return http
                 .addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(exceptionHandlerFilter(), JwtAuthenticationProcessingFilter.class)
