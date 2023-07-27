@@ -97,7 +97,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 팀_등록_성공() throws Exception {
         // given
-        willReturn(teamRegisterResponse).given(teamService).register(any(TeamRegisterRequest.class));
+        willReturn(teamRegisterResponse).given(teamService).register(anyLong(), any(TeamRegisterRequest.class));
         // when
         ResultActions resultActions = 팀_등록_요청();
         // then
@@ -108,7 +108,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 팀_등록_실패() throws Exception {
         // given
-        willThrow(invalidFormatException).given(teamService).register(any(TeamRegisterRequest.class));
+        willThrow(invalidFormatException).given(teamService).register(anyLong(), any(TeamRegisterRequest.class));
         // when
         ResultActions resultActions = 팀_등록_요청();
         // then
