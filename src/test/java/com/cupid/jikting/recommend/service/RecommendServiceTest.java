@@ -88,6 +88,7 @@ public class RecommendServiceTest {
                 .memberProfile(memberProfile)
                 .build());
         Team teamFrom = Team.builder()
+                .name(TEAM_NAME)
                 .teamMembers(teamMembersFrom)
                 .build();
         List<Recommend> recommends = IntStream.rangeClosed(0, 2)
