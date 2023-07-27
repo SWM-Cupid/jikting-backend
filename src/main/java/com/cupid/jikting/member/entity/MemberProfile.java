@@ -17,6 +17,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @SuperBuilder
@@ -100,5 +101,11 @@ public class MemberProfile extends BaseEntity {
 
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
         memberChattingRooms.add(memberChattingRoom);
+    }
+
+    public List<String> getImageUrls() {
+        return profileImages.stream()
+                .map(ProfileImage::getUrl)
+                .collect(Collectors.toList());
     }
 }
