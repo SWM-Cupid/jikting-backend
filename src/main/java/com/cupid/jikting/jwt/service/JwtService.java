@@ -14,12 +14,14 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.Optional;
 
 @Slf4j
 @Getter
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class JwtService {
 
@@ -105,7 +107,9 @@ public class JwtService {
         memberRepository.findByUsername(username)
                 .ifPresentOrElse(
                         member -> member.updateRefreshToken(refreshToken),
-                        () -> {throw new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);}
+                        () -> {
+                            throw new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
+                        }
                 );
     }
 
