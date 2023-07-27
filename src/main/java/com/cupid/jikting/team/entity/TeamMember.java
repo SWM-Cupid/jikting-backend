@@ -6,13 +6,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 
 @Getter
-@SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE team_member SET is_deleted = true WHERE team_member_id = ?")
@@ -29,4 +27,11 @@ public class TeamMember extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_profile_id")
     private MemberProfile memberProfile;
+
+    public static TeamMember of(boolean isLeader, Team team, MemberProfile memberProfile) {
+        TeamMember teamMember = new TeamMember(isLeader, team, memberProfile);
+        team.addMemberProfile(teamMember);
+        memberProfile.addTeam(teamMember);
+        return teamMember;
+    }
 }
