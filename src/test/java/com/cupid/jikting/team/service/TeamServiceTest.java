@@ -10,7 +10,7 @@ import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
-import com.cupid.jikting.team.repository.PersonalityRepository;
+import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.team.repository.TeamRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

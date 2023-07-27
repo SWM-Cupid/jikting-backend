@@ -1,6 +1,7 @@
 package com.cupid.jikting.team.repository;
 
 import com.cupid.jikting.common.entity.Personality;
+import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.team.entity.Team;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
