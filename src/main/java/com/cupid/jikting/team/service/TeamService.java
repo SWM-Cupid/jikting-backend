@@ -32,7 +32,7 @@ public class TeamService {
     private final MemberProfileRepository memberProfileRepository;
     private final PersonalityRepository personalityRepository;
 
-    public TeamRegisterResponse register(TeamRegisterRequest teamRegisterRequest) {
+    public TeamRegisterResponse register(Long memberProfileId, TeamRegisterRequest teamRegisterRequest) {
         Team team = Team.builder()
                 .name(String.valueOf(UUID.randomUUID()))
                 .description(teamRegisterRequest.getDescription())
@@ -71,5 +71,15 @@ public class TeamService {
     private Personality getPersonality(String keyword) {
         return personalityRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND));
+    }
+
+    private Team getTeamBy(Long teamId) {
+        return teamRepository.findById(teamId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.TEAM_NOT_FOUND));
+    }
+
+    private MemberProfile getMemberProfileBy(Long memberProfileId) {
+        return memberProfileRepository.findById(memberProfileId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 }
