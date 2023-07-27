@@ -98,6 +98,10 @@ public class MemberProfile extends BaseEntity {
                 .getName();
     }
 
+    public void addTeam(TeamMember teamMember) {
+        teamMembers.add(teamMember);
+    }
+
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
         memberChattingRooms.add(memberChattingRoom);
     }
