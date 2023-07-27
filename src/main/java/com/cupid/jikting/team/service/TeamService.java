@@ -33,14 +33,16 @@ public class TeamService {
     private final PersonalityRepository personalityRepository;
 
     public TeamRegisterResponse register(Long memberProfileId, TeamRegisterRequest teamRegisterRequest) {
+        MemberProfile memberProfile = getMemberProfileBy(memberProfileId);
         Team team = Team.builder()
                 .name(String.valueOf(UUID.randomUUID()))
                 .description(teamRegisterRequest.getDescription())
                 .memberCount(teamRegisterRequest.getMemberCount())
                 .build();
         team.addTeamPersonalities(getPersonalities(teamRegisterRequest.getKeywords()));
-        Team savedTeam = teamRepository.save(team);
-        return TeamRegisterResponse.from(TEAM_URL + savedTeam.getId() + INVITE);
+        TeamMember.of(LEADER, team, memberProfile);
+        MemberProfile savedMemberProfile = memberProfileRepository.save(memberProfile);
+        return TeamRegisterResponse.from(TEAM_URL + savedMemberProfile.getTeam().getId() + INVITE);
     }
 
     public void attend(Long teamId, Long memberProfileId) {
