@@ -53,4 +53,10 @@ public class Member extends BaseEntity {
     public Long getMemberProfileId() {
         return memberProfile.getId();
     }
+
+    public void addMemberProfile() {
+        memberProfile = MemberProfile.builder()
+                .member(this)
+                .build();
+    }
 }

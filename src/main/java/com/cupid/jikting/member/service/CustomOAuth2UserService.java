@@ -30,20 +30,17 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         log.info("CustomOAuth2UserService.loadUser() 실행 - OAuth2 로그인 요청 진입");
-
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
-
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         SocialType socialType = getSocialType(registrationId);
         String userNameAttributeName = userRequest.getClientRegistration()
-                .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+                .getProviderDetails()
+                .getUserInfoEndpoint()
+                .getUserNameAttributeName();
         Map<String, Object> attributes = oAuth2User.getAttributes();
-
         OAuthAttributes extractAttributes = OAuthAttributes.of(socialType, userNameAttributeName, attributes);
-
         Member createdMember = getMember(extractAttributes, socialType);
-
         return new CustomOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(createdMember.getRole().getKey())),
                 attributes,
@@ -70,6 +67,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     private Member saveMember(OAuthAttributes attributes, SocialType socialType) {
         Member createdMember = attributes.toEntity(socialType, attributes.getOauth2UserInfo());
+        createdMember.addMemberProfile();
         return memberRepository.save(createdMember);
     }
 }
