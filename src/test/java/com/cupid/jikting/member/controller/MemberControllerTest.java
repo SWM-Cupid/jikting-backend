@@ -6,6 +6,7 @@ import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.*;
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.service.MemberService;
@@ -39,6 +40,9 @@ public class MemberControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/members";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+    private static final Long ID = 1L;
     private static final String USERNAME = "swm123";
     private static final String PASSWORD = "password123!";
     private static final String NAME = "홍길동";
@@ -71,6 +75,7 @@ public class MemberControllerTest extends ApiDocument {
     private static final String COMPANY_VERIFICATION_REQUEST_FILENAME = "";
     private static final String COMPANY_VERIFICATION_CONTENT_TYPE = "application/json";
 
+    private String accessToken;
     private SignupRequest signupRequest;
     private NicknameUpdateRequest nicknameUpdateRequest;
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
@@ -102,10 +107,14 @@ public class MemberControllerTest extends ApiDocument {
     private ApplicationException verificationCodeExpiredException;
 
     @MockBean
+    private JwtService jwtService;
+
+    @MockBean
     private MemberService memberService;
 
     @BeforeEach
     void setUp() {
+        accessToken = jwtService.createAccessToken(ID);
         Company company = Company.builder()
                 .name(COMPANY)
                 .build();
@@ -337,7 +346,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_프로필_수정_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).updateProfile(any(MemberProfileUpdateRequest.class));
+        willDoNothing().given(memberService).updateProfile(anyLong(), any(MemberProfileUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_프로필_수정_요청();
         // then
@@ -348,7 +357,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_프로필_수정_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).updateProfile(any(MemberProfileUpdateRequest.class));
+        willThrow(memberNotFoundException).given(memberService).updateProfile(anyLong(), any(MemberProfileUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_프로필_수정_요청();
         // then
@@ -854,6 +863,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private ResultActions 회원_프로필_수정_요청() throws Exception {
         return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/profile")
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(memberProfileUpdateRequest)));
