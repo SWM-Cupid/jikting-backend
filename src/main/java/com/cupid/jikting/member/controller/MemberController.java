@@ -1,5 +1,6 @@
 package com.cupid.jikting.member.controller;
 
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 @RequestMapping("/members")
 public class MemberController {
 
+    private final JwtService jwtService;
     private final MemberService memberService;
 
     @PostMapping
@@ -39,8 +41,8 @@ public class MemberController {
     }
 
     @PatchMapping("/profile")
-    public ResponseEntity<Void> updateProfile(@RequestBody MemberProfileUpdateRequest memberProfileUpdateRequest) {
-        memberService.updateProfile(memberProfileUpdateRequest);
+    public ResponseEntity<Void> updateProfile(@RequestHeader("Authorization") String token, @RequestBody MemberProfileUpdateRequest memberProfileUpdateRequest) {
+        memberService.updateProfile(jwtService.extractValidMemberProfileId(token), memberProfileUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
