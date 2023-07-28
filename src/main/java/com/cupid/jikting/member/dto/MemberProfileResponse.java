@@ -40,7 +40,7 @@ public class MemberProfileResponse {
                 memberProfile.getAddress(),
                 memberProfile.getMbti().name(),
                 memberProfile.getSmokeStatus().getValue(),
-                memberProfile.getDrinkStatus().getValue(),
+                memberProfile.getDrinkStatus().getMessage(),
                 memberProfile.getCollege(),
                 memberProfile.getPersonalities(),
                 memberProfile.getHobbies(),

@@ -41,7 +41,7 @@ public class MemberResponse {
                 memberProfile.getAddress(),
                 memberProfile.getCompany(),
                 memberProfile.getSmokeStatus().getValue(),
-                memberProfile.getDrinkStatus().getValue(),
+                memberProfile.getDrinkStatus().getMessage(),
                 memberProfile.getHeight(),
                 memberProfile.getDescription(),
                 getMemberProfilePersonalities(memberProfile),

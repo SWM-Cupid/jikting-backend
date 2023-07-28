@@ -16,7 +16,7 @@ public enum DrinkStatus {
     OFTEN("가끔 마심"),
     USUALLY("자주 마심");
 
-    private final String value;
+    private final String message;
 
     public static DrinkStatus find(String message) {
         return Arrays.stream(values())

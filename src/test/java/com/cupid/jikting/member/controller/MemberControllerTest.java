@@ -190,7 +190,7 @@ public class MemberControllerTest extends ApiDocument {
                 .gender(GENDER.getKey())
                 .address(ADDRESS)
                 .mbti(MBTI.name())
-                .drinkStatus(DRINK_STATUS.getValue())
+                .drinkStatus(DRINK_STATUS.getMessage())
                 .smokeStatus(SMOKE_STATUS.getMessage())
                 .college(COLLEGE)
                 .personalities(personalities)
