@@ -22,5 +22,5 @@ public class MemberProfileUpdateRequest {
     private String description;
     private List<String> personalities;
     private List<String> hobbies;
-    private List<ImageResponse> images;
+    private List<ImageRequest> images;
 }
