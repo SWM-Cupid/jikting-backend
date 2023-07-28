@@ -2,11 +2,11 @@ package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.DuplicateException;
+import com.cupid.jikting.member.dto.MemberResponse;
 import com.cupid.jikting.member.dto.NicknameCheckRequest;
 import com.cupid.jikting.member.dto.SignupRequest;
 import com.cupid.jikting.member.dto.UsernameCheckRequest;
-import com.cupid.jikting.member.entity.Gender;
-import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -19,10 +19,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.RollbackException;
+import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
@@ -35,8 +37,12 @@ public class MemberServiceTest {
     private static final String NAME = "홍길동";
     private static final String PHONE = "01000000000";
     private static final String NICKNAME = "닉네임";
+    private static final String COMPANY = "회사";
+    private static final String IMAGE_URL = "이미지 URL";
+    private static final Long ID = 1L;
 
     private Member member;
+    private MemberProfile memberProfile;
     private SignupRequest signupRequest;
     private UsernameCheckRequest usernameCheckRequest;
     private NicknameCheckRequest nicknameCheckRequest;
@@ -56,12 +62,29 @@ public class MemberServiceTest {
 
     @BeforeEach
     void setUp() {
+        Company company = Company.builder()
+                .name(COMPANY)
+                .build();
+        ProfileImage profileImage = ProfileImage.builder()
+                .sequence(Sequence.MAIN)
+                .url(IMAGE_URL)
+                .build();
+        MemberCompany memberCompany = MemberCompany.builder()
+                .member(member)
+                .company(company)
+                .build();
         member = Member.builder()
                 .username(USERNAME)
                 .password(passwordEncoder.encode(PASSWORD))
                 .gender(Gender.MALE).name(NAME)
                 .phone(PHONE)
                 .build();
+        memberProfile = MemberProfile.builder()
+                .member(member)
+                .nickname(NICKNAME)
+                .build();
+        memberProfile.getMember().getMemberCompanies().add(memberCompany);
+        memberProfile.getProfileImages().add(profileImage);
         signupRequest = SignupRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD)
@@ -95,6 +118,21 @@ public class MemberServiceTest {
         //when & then
         assertThatThrownBy(() -> memberService.signup(signupRequest))
                 .isInstanceOf(RollbackException.class);
+    }
+
+    @Test
+    void 회원_조회_성공() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        // when
+        MemberResponse memberResponse = memberService.get(ID);
+        // then
+        assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> assertThat(memberResponse.getNickname()).isEqualTo(NICKNAME),
+                () -> assertThat(memberResponse.getCompany()).isEqualTo(COMPANY),
+                () -> assertThat(memberResponse.getImageUrl()).isEqualTo(IMAGE_URL)
+        );
     }
 
     @Test
