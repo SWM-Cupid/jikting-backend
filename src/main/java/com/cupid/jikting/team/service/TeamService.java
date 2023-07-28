@@ -66,6 +66,11 @@ public class TeamService {
     public void deleteMember(Long teamId, Long memberId) {
     }
 
+    private MemberProfile getMemberProfileById(Long memberProfileId) {
+        return memberProfileRepository.findById(memberProfileId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
+    }
+
     private List<Personality> getPersonalities(List<String> keywords) {
         return keywords.stream()
                 .map(this::getPersonalityBy)
@@ -80,10 +85,5 @@ public class TeamService {
     private Team getTeamById(Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.TEAM_NOT_FOUND));
-    }
-
-    private MemberProfile getMemberProfileById(Long memberProfileId) {
-        return memberProfileRepository.findById(memberProfileId)
-                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 }
