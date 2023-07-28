@@ -176,7 +176,7 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
                 .images(images)
-                .age(AGE)
+                .birth(BIRTH)
                 .height(HEIGHT)
                 .gender(GENDER.getKey())
                 .address(ADDRESS)
