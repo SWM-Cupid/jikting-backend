@@ -51,9 +51,6 @@ class LikeServiceTest {
     @Mock
     private  TeamMemberRepository teamMemberRepository;
 
-    @Mock
-    private  TeamLikeRepository teamLikeRepository;
-
     @BeforeEach
     void setUp() {
         Personality personality = Personality.builder()
@@ -96,7 +93,6 @@ class LikeServiceTest {
         teamLikes = List.of(TeamLike.builder()
                 .sentTeam(team)
                 .build());
-
     }
 
     @Test
@@ -113,7 +109,7 @@ class LikeServiceTest {
     }
 
     @Test
-    void 받은_호감_조회_실패_팀없음(){
+    void 받은_호감_조회_실패_팀_없음(){
         // given
         willThrow(new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM)).given(teamMemberRepository).getTeamMemberByMemberProfileId(anyLong());
         // when & then
