@@ -24,12 +24,16 @@ public class LikeService {
         return getTeamMemberById(memberProfileId)
                 .getReceivedTeamLikes()
                 .stream()
-                .map(LikeResponse::from)
+                .map(LikeResponse::fromReceivedTeamLike)
                 .collect(Collectors.toList());
     }
 
-    public List<LikeResponse> getAllSentLike() {
-        return null;
+    public List<LikeResponse> getAllSentLike(Long memberProfileId) {
+        return getTeamMemberById(memberProfileId)
+                .getSentTeamLikes()
+                .stream()
+                .map(LikeResponse::fromSentTeamLike)
+                .collect(Collectors.toList());
     }
 
     public void acceptLike(Long likeId) {
