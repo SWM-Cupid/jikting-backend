@@ -5,6 +5,7 @@ import com.cupid.jikting.TestSecurityConfig;
 import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.*;
 import com.cupid.jikting.member.dto.*;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -100,6 +101,24 @@ public class MemberControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
+        Member member = Member.builder().build();
+        Company company = Company.builder()
+                .name(COMPANY)
+                .build();
+        ProfileImage profileImage = ProfileImage.builder()
+                .sequence(Sequence.MAIN)
+                .url(IMAGE_URL)
+                .build();
+        MemberProfile memberProfile = MemberProfile.builder()
+                .member(member)
+                .nickname(NICKNAME)
+                .build();
+        MemberCompany memberCompany = MemberCompany.builder()
+                .member(member)
+                .company(company)
+                .build();
+        memberProfile.getMember().getMemberCompanies().add(memberCompany);
+        memberProfile.getProfileImages().add(profileImage);
         List<ImageResponse> images = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> ImageResponse.builder()
                         .url(IMAGE_URL)
@@ -179,11 +198,7 @@ public class MemberControllerTest extends ApiDocument {
                 .username(USERNAME)
                 .password(PASSWORD)
                 .build();
-        memberResponse = MemberResponse.builder()
-                .nickname(NICKNAME)
-                .company(COMPANY)
-                .imageUrl(IMAGE_URL)
-                .build();
+        memberResponse = MemberResponse.of(memberProfile);
         memberProfileResponse = MemberProfileResponse.builder()
                 .images(images)
                 .age(AGE)
