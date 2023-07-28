@@ -34,8 +34,8 @@ import static org.mockito.BDDMockito.willThrow;
 public class RecommendServiceTest {
 
     private static final Long ID = 1L;
-    private static final String TEAM_NAME = "팀 이름";
     private static final LocalDate BIRTH = LocalDate.now();
+    private static final Mbti MBTI = Mbti.ENFJ;
     private static final String ADDRESS = "지역";
     private static final String COMPANY = "회사";
     private static final int HEIGHT = 180;
@@ -72,7 +72,7 @@ public class RecommendServiceTest {
                 .build());
         MemberProfile memberProfile = MemberProfile.builder()
                 .birth(BIRTH)
-                .mbti(MBTI.ENFJ)
+                .mbti(MBTI)
                 .address(ADDRESS)
                 .member(member)
                 .smokeStatus(SmokeStatus.SMOKING)
