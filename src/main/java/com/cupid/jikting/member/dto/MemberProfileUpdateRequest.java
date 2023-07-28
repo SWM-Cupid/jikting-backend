@@ -17,7 +17,7 @@ public class MemberProfileUpdateRequest {
     private String address;
     private String gender;
     private String college;
-    private boolean isSmoke;
+    private String smokeStatus;
     private String drinkStatus;
     private String description;
     private List<String> personalities;
