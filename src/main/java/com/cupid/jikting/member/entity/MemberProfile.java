@@ -2,6 +2,7 @@ package com.cupid.jikting.member.entity;
 
 import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
+import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
@@ -104,6 +105,13 @@ public class MemberProfile extends BaseEntity {
         return memberPersonalities.stream()
                 .map(MemberPersonality::getPersonality)
                 .map(Personality::getKeyword)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getHobbies() {
+        return memberHobbies.stream()
+                .map(MemberHobby::getHobby)
+                .map(Hobby::getKeyword)
                 .collect(Collectors.toList());
     }
 
