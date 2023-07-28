@@ -2,6 +2,7 @@ package com.cupid.jikting.member.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -10,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberProfileUpdateRequest {
 
-    private int age;
+    private LocalDate birth;
     private int height;
     private String mbti;
     private String address;
