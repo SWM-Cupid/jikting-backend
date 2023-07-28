@@ -51,14 +51,12 @@ public class MemberControllerTest extends ApiDocument {
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
     private static final String COMPANY = "직장";
     private static final String IMAGE_URL = "사진 URL";
-    private static final int AGE = 21;
     private static final int HEIGHT = 168;
     private static final Gender GENDER = Gender.FEMALE;
     private static final String ADDRESS = "거주지";
     private static final Mbti MBTI = Mbti.ESTJ;
     private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
     private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
-    private static final boolean IS_SMOKE = false;
     private static final String COLLEGE = "출신학교(선택사항 - 없을 시 빈 문자열)";
     private static final String PERSONALITY = "성격";
     private static final String HOBBY = "취미";
