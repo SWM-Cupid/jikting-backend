@@ -44,7 +44,7 @@ public class TeamService {
 
     @Transactional(readOnly = true)
     public TeamResponse get(Long teamId) {
-        return TeamResponse.from(getTeamBy(teamId));
+        return TeamResponse.from(getTeamById(teamId));
     }
 
     public void update(Long teamId, TeamUpdateRequest teamUpdateRequest) {
@@ -67,7 +67,7 @@ public class TeamService {
                 .orElseThrow(() -> new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND));
     }
 
-    private Team getTeamBy(Long teamId) {
+    private Team getTeamById(Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.TEAM_NOT_FOUND));
     }
