@@ -71,10 +71,7 @@ public class LikeControllerTest extends ApiDocument {
         List<String> keywords = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> KEYWORD + n)
                 .collect(Collectors.toList());
-        List<String> imageUrls = IntStream.rangeClosed(1, 3)
-                .mapToObj(n -> URL + n)
-                .collect(Collectors.toList());
-        List<MemberProfileResponse> memberProfileRespons = IntStream.rangeClosed(1, 2)
+        List<MemberProfileResponse> memberProfileResponses = IntStream.rangeClosed(1, 2)
                 .mapToObj(n -> MemberProfileResponse.builder()
                         .nickname(NICKNAME)
                         .image(URL)
