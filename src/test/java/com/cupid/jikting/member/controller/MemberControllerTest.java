@@ -135,7 +135,7 @@ public class MemberControllerTest extends ApiDocument {
         Member member = Member.builder()
                 .build();
         ProfileImage profileImage = ProfileImage.builder()
-                .sequence(Sequence.MAIN)
+                .sequence(SEQUENCE)
                 .url(IMAGE_URL)
                 .build();
         MemberProfile memberProfile = MemberProfile.builder()
