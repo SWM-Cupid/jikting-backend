@@ -30,6 +30,7 @@ public enum ApplicationError {
     INVALID_GENDER(HttpStatus.BAD_REQUEST, "U008", "지원하지 않는 성별입니다."),
     NOT_EXIST_REGISTERED_TEAM(HttpStatus.BAD_REQUEST, "U009", "등록된 팀이 존재하지 않습니다."),
     NOT_EXIST_REGISTERED_IMAGES(HttpStatus.BAD_REQUEST, "U010", "등록된 프로필 이미지가 존재하지 않습니다."),
+    INVALID_SMOKE_STATUS(HttpStatus.BAD_REQUEST, "U011", "지원하지 않는 흡연 상태입니다."),
     INVALID_DRINK_STATUS(HttpStatus.BAD_REQUEST, "U011", "지원하지 않는 음주 상태입니다."),
 
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "T001", "팀을 찾을 수 없습니다."),
