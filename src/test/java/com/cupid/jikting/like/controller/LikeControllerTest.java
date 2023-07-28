@@ -3,6 +3,7 @@ package com.cupid.jikting.like.controller;
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.TestSecurityConfig;
 import com.cupid.jikting.common.dto.ErrorResponse;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
@@ -11,6 +12,13 @@ import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.like.dto.MemberProfileResponse;
 import com.cupid.jikting.like.dto.TeamDetailResponse;
 import com.cupid.jikting.like.service.LikeService;
+import com.cupid.jikting.member.entity.MemberProfile;
+import com.cupid.jikting.member.entity.ProfileImage;
+import com.cupid.jikting.member.entity.Sequence;
+import com.cupid.jikting.team.entity.Team;
+import com.cupid.jikting.team.entity.TeamLike;
+import com.cupid.jikting.team.entity.TeamMember;
+import com.cupid.jikting.team.entity.TeamPersonality;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -87,20 +95,44 @@ public class LikeControllerTest extends ApiDocument {
                         .college(COLLEGE)
                         .build())
                 .collect(Collectors.toList());
-        LikeResponse likeResponse = LikeResponse.builder()
-                .likeId(ID)
-                .name(NAME)
-                .keywords(keywords)
-                .imageUrls(imageUrls)
+        Personality personality = Personality.builder()
+                .keyword(KEYWORD)
                 .build();
-        likeResponses = IntStream.rangeClosed(0, 2)
-                .mapToObj(n -> likeResponse)
+        List<TeamPersonality> teamPersonalities = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> TeamPersonality.builder()
+                        .personality(personality)
+                        .build())
                 .collect(Collectors.toList());
+        List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> ProfileImage.builder()
+                        .url(URL)
+                        .sequence(Sequence.MAIN)
+                        .build())
+                .collect(Collectors.toList());
+        MemberProfile memberProfile = MemberProfile.builder()
+                .profileImages(profileImages)
+                .build();
+        List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> TeamMember.builder()
+                        .memberProfile(memberProfile)
+                        .build())
+                .collect(Collectors.toList());
+        Team team = Team.builder()
+                .name(NAME)
+                .teamPersonalities(teamPersonalities)
+                .teamMembers(teamMembers)
+                .build();
+        TeamLike teamLike = TeamLike.builder()
+                .id(ID)
+                .sentTeam(team)
+                .build();
+        LikeResponse likeResponse = LikeResponse.of(teamLike);
+        likeResponses = List.of(likeResponse,likeResponse);
         teamDetailResponse = TeamDetailResponse.builder()
                 .likeId(ID)
                 .teamName(NAME)
                 .keywords(keywords)
-                .members(memberProfileRespons)
+                .members(memberProfileResponses)
                 .build();
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
     }
