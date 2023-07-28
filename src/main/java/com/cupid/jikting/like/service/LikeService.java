@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,14 +21,13 @@ import java.util.List;
 public class LikeService {
 
     private final TeamMemberRepository teamMemberRepository;
-    private final TeamLikeRepository teamLikeRepository;
 
     public List<LikeResponse> getAllReceivedLike(Long memberProfileId) {
         TeamMember teamMember = teamMemberRepository.getTeamMemberByMemberProfileId(memberProfileId)
                 .orElseThrow(() -> new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM));
-        TeamLike teamLike = teamLikeRepository.getTeamLikesByReceivedTeamId(teamMember.getTeam().getId()).orElse(null);
-
-        return null;
+        return teamMember.getReceivedTeamLikes().stream()
+                .map(LikeResponse::of)
+                .collect(Collectors.toList());
     }
 
     public List<LikeResponse> getAllSentLike() {
