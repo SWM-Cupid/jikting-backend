@@ -5,8 +5,10 @@ import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.DuplicateException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
+import com.cupid.jikting.member.repository.HobbyRepository;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -58,6 +60,8 @@ public class MemberServiceTest {
 
     private Member member;
     private MemberProfile memberProfile;
+    private Personality personality;
+    private Hobby hobby;
     private List<ProfileImage> profileImages;
     private List<MemberPersonality> memberPersonalities;
     private List<MemberHobby> memberHobbies;
@@ -69,13 +73,19 @@ public class MemberServiceTest {
     private MemberService memberService;
 
     @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
     private MemberRepository memberRepository;
 
     @Mock
     private MemberProfileRepository memberProfileRepository;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private PersonalityRepository personalityRepository;
+
+    @Mock
+    private HobbyRepository hobbyRepository;
 
     @BeforeEach
     void setUp() {
@@ -101,18 +111,18 @@ public class MemberServiceTest {
                         .sequence(SEQUENCE)
                         .build())
                 .collect(Collectors.toList());
-        Personality personality = Personality.builder()
+        personality = Personality.builder()
                 .keyword(PERSONALITY)
                 .build();
-        Hobby hobby = Hobby.builder()
+        hobby = Hobby.builder()
                 .keyword(HOBBY)
                 .build();
-        memberPersonalities = IntStream.range(0, 3)
+        memberPersonalities = IntStream.range(0, 1)
                 .mapToObj(n -> MemberPersonality.builder()
                         .personality(personality)
                         .build())
                 .collect(Collectors.toList());
-        memberHobbies = IntStream.range(0, 3)
+        memberHobbies = IntStream.range(0, 1)
                 .mapToObj(n -> MemberHobby.builder()
                         .hobby(hobby)
                         .build())
@@ -254,5 +264,75 @@ public class MemberServiceTest {
         Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedNickname(nicknameCheckRequest))
                 .isInstanceOf(DuplicateException.class)
                 .hasMessage(ApplicationError.DUPLICATE_NICKNAME.getMessage());
+    }
+
+    @Test
+    void 회원_프로필_수정_성공() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
+        willReturn(Optional.of(hobby)).given(hobbyRepository).findByKeyword(anyString());
+        MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
+                .images(profileImages.stream()
+                        .map(ImageRequest::of)
+                        .collect(Collectors.toList()))
+                .birth(BIRTH)
+                .height(HEIGHT)
+                .gender(GENDER.getMessage())
+                .address(ADDRESS)
+                .mbti(MBTI.name())
+                .drinkStatus(DRINK_STATUS.getMessage())
+                .smokeStatus(SMOKE_STATUS.getMessage())
+                .college(COLLEGE)
+                .personalities(memberPersonalities.stream()
+                        .map(MemberPersonality::getPersonality)
+                        .map(Personality::getKeyword)
+                        .collect(Collectors.toList()))
+                .hobbies(memberHobbies.stream()
+                        .map(MemberHobby::getHobby)
+                        .map(Hobby::getKeyword)
+                        .collect(Collectors.toList()))
+                .description(DESCRIPTION)
+                .build();
+        // when
+        memberService.updateProfile(ID, memberProfileUpdateRequest);
+        // then
+        assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> verify(personalityRepository).findByKeyword(anyString()),
+                () -> verify(hobbyRepository).findByKeyword(anyString())
+        );
+    }
+
+    @Test
+    void 회원_프로필_수정_실패_회원_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
+                .images(profileImages.stream()
+                        .map(ImageRequest::of)
+                        .collect(Collectors.toList()))
+                .birth(BIRTH)
+                .height(HEIGHT)
+                .gender(GENDER.getMessage())
+                .address(ADDRESS)
+                .mbti(MBTI.name())
+                .drinkStatus(DRINK_STATUS.getMessage())
+                .smokeStatus(SMOKE_STATUS.getMessage())
+                .college(COLLEGE)
+                .personalities(memberPersonalities.stream()
+                        .map(MemberPersonality::getPersonality)
+                        .map(Personality::getKeyword)
+                        .collect(Collectors.toList()))
+                .hobbies(memberHobbies.stream()
+                        .map(MemberHobby::getHobby)
+                        .map(Hobby::getKeyword)
+                        .collect(Collectors.toList()))
+                .description(DESCRIPTION)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.updateProfile(ID, memberProfileUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
 }
