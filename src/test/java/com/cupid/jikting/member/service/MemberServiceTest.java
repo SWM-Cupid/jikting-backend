@@ -335,4 +335,37 @@ public class MemberServiceTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
+
+    @Test
+    void 회원_프로필_수정_실패_성격_키워드_없음() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willThrow(new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND)).given(personalityRepository).findByKeyword(anyString());
+        MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
+                .images(profileImages.stream()
+                        .map(ImageRequest::of)
+                        .collect(Collectors.toList()))
+                .birth(BIRTH)
+                .height(HEIGHT)
+                .gender(GENDER.getMessage())
+                .address(ADDRESS)
+                .mbti(MBTI.name())
+                .drinkStatus(DRINK_STATUS.getMessage())
+                .smokeStatus(SMOKE_STATUS.getMessage())
+                .college(COLLEGE)
+                .personalities(memberPersonalities.stream()
+                        .map(MemberPersonality::getPersonality)
+                        .map(Personality::getKeyword)
+                        .collect(Collectors.toList()))
+                .hobbies(memberHobbies.stream()
+                        .map(MemberHobby::getHobby)
+                        .map(Hobby::getKeyword)
+                        .collect(Collectors.toList()))
+                .description(DESCRIPTION)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.updateProfile(ID, memberProfileUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.PERSONALITY_NOT_FOUND.getMessage());
+    }
 }
