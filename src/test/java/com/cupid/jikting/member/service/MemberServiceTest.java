@@ -2,6 +2,7 @@ package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.DuplicateException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.member.dto.MemberResponse;
 import com.cupid.jikting.member.dto.NicknameCheckRequest;
 import com.cupid.jikting.member.dto.SignupRequest;
@@ -19,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.RollbackException;
+
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -133,6 +135,16 @@ public class MemberServiceTest {
                 () -> assertThat(memberResponse.getCompany()).isEqualTo(COMPANY),
                 () -> assertThat(memberResponse.getImageUrl()).isEqualTo(IMAGE_URL)
         );
+    }
+
+    @Test
+    void 회원_조회_실패_회원_없음() {
+        //given
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        //when & then
+        assertThatThrownBy(() -> memberService.get(ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
 
     @Test
