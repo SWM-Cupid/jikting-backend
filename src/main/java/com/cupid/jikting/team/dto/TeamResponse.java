@@ -17,17 +17,17 @@ public class TeamResponse {
 
     private String description;
     private List<String> keywords;
-    private List<MemberResponse> members;
+    private List<MemberProfileResponse> members;
 
     public static TeamResponse from(Team team) {
-        List<MemberResponse> memberResponses = team.getTeamMembers()
+        List<MemberProfileResponse> memberProfileResponses = team.getTeamMembers()
                 .stream()
                 .map(TeamMember::getMemberProfile)
-                .map(MemberResponse::from)
+                .map(MemberProfileResponse::from)
                 .collect(Collectors.toList());
         return new TeamResponse(
                 team.getDescription(),
                 team.getPersonalities(),
-                memberResponses);
+                memberProfileResponses);
     }
 }
