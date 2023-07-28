@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberResponse {
+public class MemberProfileResponse {
 
     private String nickname;
     private String image;
@@ -17,8 +17,8 @@ public class MemberResponse {
     private String mbti;
     private String address;
 
-    public static MemberResponse from(MemberProfile memberProfile) {
-        return new MemberResponse(
+    public static MemberProfileResponse from(MemberProfile memberProfile) {
+        return new MemberProfileResponse(
                 memberProfile.getNickname(),
                 memberProfile.getMainImageUrl(),
                 memberProfile.getAge(),
