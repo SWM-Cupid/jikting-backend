@@ -44,7 +44,7 @@ public class MemberControllerTest extends ApiDocument {
     private static final String NAME = "홍길동";
     private static final String PHONE = "01011112222";
     private static final String NICKNAME = "닉네임";
-    private static final LocalDate BIRTH = LocalDate.of(1996, 05, 10);
+    private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
     private static final String COMPANY = "직장";
     private static final String IMAGE_URL = "사진 URL";
     private static final int AGE = 21;
