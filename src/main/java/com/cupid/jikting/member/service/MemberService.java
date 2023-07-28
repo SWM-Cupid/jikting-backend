@@ -2,9 +2,11 @@ package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.DuplicateException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.Gender;
 import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.entity.Role;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
@@ -40,8 +42,8 @@ public class MemberService {
         return null;
     }
 
-    public MemberProfileResponse getProfile(Long memberId) {
-        return null;
+    public MemberProfileResponse getProfile(Long memberProfileId) {
+        return MemberProfileResponse.of(getMemberProfileById(memberProfileId));
     }
 
     public void update(NicknameUpdateRequest nicknameUpdateRequest) {
@@ -103,5 +105,11 @@ public class MemberService {
     }
 
     public void login(LoginRequest loginRequest) {
+    }
+
+    // no commit
+    private MemberProfile getMemberProfileById(Long memberProfileId) {
+        return memberProfileRepository.findById(memberProfileId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 }
