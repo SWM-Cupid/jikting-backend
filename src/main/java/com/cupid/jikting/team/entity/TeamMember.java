@@ -41,4 +41,8 @@ public class TeamMember extends BaseEntity {
     public List<TeamLike> getReceivedTeamLikes() {
         return team.getReceivedTeamLikes();
     }
+
+    public List<TeamLike> getSentTeamLikes() {
+        return team.getSentTeamLikes();
+    }
 }
