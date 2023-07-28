@@ -30,7 +30,7 @@ class PersonalityRepositoryTest {
     }
 
     @Test
-    void 키워드로_팀성격_조회_성공() {
+    void 키워드로_성격_조회_성공() {
         // when
         Personality personality = personalityRepository.findByKeyword(KEYWORD)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND));
