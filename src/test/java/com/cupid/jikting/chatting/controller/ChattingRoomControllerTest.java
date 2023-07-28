@@ -12,6 +12,7 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.WrongFormException;
+import com.cupid.jikting.jwt.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -41,6 +42,8 @@ public class ChattingRoomControllerTest extends ApiDocument {
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/chattings/rooms";
     private static final String PATH_DELIMITER = "/";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
     private static final String URL = "이미지 주소";
     private static final Long ID = 1L;
     private static final String PLACE = "미팅장소";
@@ -51,6 +54,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     private static final String KEYWORD = "키워드";
     private static final String NICKNAME = "닉네임";
 
+    private String accessToken;
     private MeetingConfirmRequest meetingConfirmRequest;
     private List<ChattingRoomResponse> chattingRoomResponses;
     private ChattingRoomDetailResponse chattingRoomDetailResponse;
@@ -60,8 +64,12 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @MockBean
     private ChattingRoomService chattingRoomService;
 
+    @MockBean
+    private JwtService jwtService;
+
     @BeforeEach
     void setUp() {
+        accessToken = jwtService.createAccessToken(ID);
         List<String> images = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> URL)
                 .collect(Collectors.toList());
@@ -164,6 +172,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
 
     private ResultActions 채팅방_목록_조회_요청() throws Exception {
         return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH)
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH));
     }
 

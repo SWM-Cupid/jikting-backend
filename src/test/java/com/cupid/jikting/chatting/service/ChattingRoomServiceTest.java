@@ -34,6 +34,7 @@ class ChattingRoomServiceTest {
 
     private static final Long ID = 1L;
     private static final String TEAM_NAME = "팀 이름";
+    private static final boolean LEADER = true;
 
     private MemberProfile memberProfile;
     private List<ChattingRoom> chattingRooms;
@@ -54,15 +55,10 @@ class ChattingRoomServiceTest {
                 .id(ID)
                 .name(TEAM_NAME)
                 .build();
-        List<TeamMember> teamMembers = List.of(TeamMember.builder()
-                .id(ID)
-                .memberProfile(memberProfile)
-                .team(team)
-                .build());
         memberProfile = MemberProfile.builder()
                 .id(ID)
-                .teamMembers(teamMembers)
                 .build();
+        TeamMember.of(LEADER, team, memberProfile);
         chattingRooms = IntStream.range(0, 3)
                 .mapToObj(n -> ChattingRoom.builder()
                         .id(n + ID)

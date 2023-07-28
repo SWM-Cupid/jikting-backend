@@ -1,5 +1,6 @@
 package com.cupid.jikting.team.controller;
 
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
@@ -15,15 +16,18 @@ import org.springframework.web.bind.annotation.*;
 public class TeamController {
 
     private final TeamService teamService;
+    private final JwtService jwtService;
 
     @PostMapping
-    public ResponseEntity<TeamRegisterResponse> register(@RequestBody TeamRegisterRequest teamRegisterRequest) {
-        return ResponseEntity.ok().body(teamService.register(teamRegisterRequest));
+    public ResponseEntity<TeamRegisterResponse> register(@RequestHeader("Authorization") String token,
+                                                         @RequestBody TeamRegisterRequest teamRegisterRequest) {
+        return ResponseEntity.ok()
+                .body(teamService.register(jwtService.extractValidMemberProfileId(token), teamRegisterRequest));
     }
 
     @PostMapping("/{teamId}/attend")
-    public ResponseEntity<Void> attend(@PathVariable Long teamId) {
-        teamService.attend(teamId);
+    public ResponseEntity<Void> attend(@RequestHeader("Authorization") String token, @PathVariable Long teamId) {
+        teamService.attend(teamId, jwtService.extractValidMemberProfileId(token));
         return ResponseEntity.ok().build();
     }
 

@@ -63,7 +63,7 @@ public class MemberProfile extends BaseEntity {
     private List<MemberHobby> memberHobbies = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<TeamMember> teamMembers = new ArrayList<>();
 
     @Builder.Default
@@ -96,6 +96,10 @@ public class MemberProfile extends BaseEntity {
                 .orElseThrow(() -> new WrongAccessException(ApplicationError.FORBIDDEN_MEMBER))
                 .getCompany()
                 .getName();
+    }
+
+    public void addTeam(TeamMember teamMember) {
+        teamMembers.add(teamMember);
     }
 
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {

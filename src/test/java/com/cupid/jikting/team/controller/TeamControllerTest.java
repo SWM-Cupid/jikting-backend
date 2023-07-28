@@ -7,6 +7,7 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.team.dto.*;
 import com.cupid.jikting.team.service.TeamService;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,8 @@ public class TeamControllerTest extends ApiDocument {
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/teams";
     private static final String PATH_DELIMITER = "/";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
     private static final Long ID = 1L;
     private static final String KEYWORD = "키워드";
     private static final String DESCRIPTION = "한줄 소개";
@@ -46,6 +49,7 @@ public class TeamControllerTest extends ApiDocument {
     private static final String MBTI = "mbti";
     private static final String ADDRESS = "거주지";
 
+    private String accessToken;
     private TeamRegisterRequest teamRegisterRequest;
     private TeamUpdateRequest teamUpdateRequest;
     private TeamRegisterResponse teamRegisterResponse;
@@ -57,8 +61,12 @@ public class TeamControllerTest extends ApiDocument {
     @MockBean
     private TeamService teamService;
 
+    @MockBean
+    private JwtService jwtService;
+
     @BeforeEach
     void setUp() {
+        accessToken = jwtService.createAccessToken(ID);
         List<String> keywords = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> KEYWORD + n)
                 .collect(Collectors.toList());
@@ -97,7 +105,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 팀_등록_성공() throws Exception {
         // given
-        willReturn(teamRegisterResponse).given(teamService).register(any(TeamRegisterRequest.class));
+        willReturn(teamRegisterResponse).given(teamService).register(anyLong(), any(TeamRegisterRequest.class));
         // when
         ResultActions resultActions = 팀_등록_요청();
         // then
@@ -108,7 +116,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 팀_등록_실패() throws Exception {
         // given
-        willThrow(invalidFormatException).given(teamService).register(any(TeamRegisterRequest.class));
+        willThrow(invalidFormatException).given(teamService).register(anyLong(), any(TeamRegisterRequest.class));
         // when
         ResultActions resultActions = 팀_등록_요청();
         // then
@@ -119,7 +127,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 팀_참여_성공() throws Exception {
         // given
-        willDoNothing().given(teamService).attend(anyLong());
+        willDoNothing().given(teamService).attend(anyLong(), anyLong());
         // when
         ResultActions resultActions = 팀_참여_요청();
         // then
@@ -130,7 +138,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 팀_참여_실패() throws Exception {
         // given
-        willThrow(teamNotFoundException).given(teamService).attend(anyLong());
+        willThrow(teamNotFoundException).given(teamService).attend(anyLong(), anyLong());
         // when
         ResultActions resultActions = 팀_참여_요청();
         // then
@@ -238,6 +246,7 @@ public class TeamControllerTest extends ApiDocument {
 
     private ResultActions 팀_등록_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(teamRegisterRequest)));
@@ -259,6 +268,7 @@ public class TeamControllerTest extends ApiDocument {
 
     private ResultActions 팀_참여_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/attend")
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH));
     }
 

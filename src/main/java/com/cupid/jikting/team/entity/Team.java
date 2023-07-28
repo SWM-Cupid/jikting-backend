@@ -62,6 +62,10 @@ public class Team extends BaseEntity {
     @OneToMany(mappedBy = "acceptingTeam")
     private List<Meeting> acceptingMeetings = new ArrayList<>();
 
+    public void addMemberProfile(TeamMember teamMember) {
+        teamMembers.add(teamMember);
+    }
+
     public void addTeamPersonalities(List<Personality> personalities) {
         personalities.stream()
                 .map(personality -> TeamPersonality.builder()
