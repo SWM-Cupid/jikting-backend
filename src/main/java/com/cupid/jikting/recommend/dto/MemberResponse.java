@@ -40,7 +40,7 @@ public class MemberResponse {
                 memberProfile.getMbti().toString(),
                 memberProfile.getAddress(),
                 memberProfile.getCompany(),
-                memberProfile.getSmokeStatus().getValue(),
+                memberProfile.getSmokeStatus().getMessage(),
                 memberProfile.getDrinkStatus().getMessage(),
                 memberProfile.getHeight(),
                 memberProfile.getDescription(),

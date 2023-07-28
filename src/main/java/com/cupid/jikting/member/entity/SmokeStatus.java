@@ -14,7 +14,7 @@ public enum SmokeStatus {
     NONSMOKING("비흡연"),
     SMOKING("흡연");
 
-    private final String value;
+    private final String message;
 
     public static SmokeStatus find(String message) {
         return Arrays.stream(values())
