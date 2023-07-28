@@ -58,11 +58,11 @@ public class TeamService {
 
     private List<Personality> getPersonalities(List<String> keywords) {
         return keywords.stream()
-                .map(this::getPersonality)
+                .map(this::getPersonalityByKeyword)
                 .collect(Collectors.toList());
     }
 
-    private Personality getPersonality(String keyword) {
+    private Personality getPersonalityByKeyword(String keyword) {
         return personalityRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND));
     }
