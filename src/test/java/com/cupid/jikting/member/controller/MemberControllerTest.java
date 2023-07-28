@@ -152,8 +152,8 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         memberProfile.getMember().getMemberCompanies().add(memberCompany);
         memberProfile.getProfileImages().add(profileImage);
-        List<ImageResponse> images = IntStream.rangeClosed(1, 3)
-                .mapToObj(n -> ImageResponse.of(profileImage))
+        List<ImageRequest> images = IntStream.rangeClosed(1, 3)
+                .mapToObj(n -> ImageRequest.of(profileImage))
                 .collect(Collectors.toList());
         List<String> personalities = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> PERSONALITY + n)
