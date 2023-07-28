@@ -4,6 +4,7 @@ import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.WrongAccessException;
 import com.cupid.jikting.meeting.entity.InstantMeetingMember;
 import com.cupid.jikting.recommend.entity.Recommend;
@@ -17,7 +18,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @SuperBuilder
@@ -103,9 +103,11 @@ public class MemberProfile extends BaseEntity {
         memberChattingRooms.add(memberChattingRoom);
     }
 
-    public List<String> getImageUrls() {
+    public String getMainImageUrl() {
         return profileImages.stream()
+                .filter(ProfileImage::isMain)
                 .map(ProfileImage::getUrl)
-                .collect(Collectors.toList());
+                .findAny()
+                .orElseThrow(() -> new NotFoundException(ApplicationError.NOT_EXIST_REGISTERED_IMAGES));
     }
 }
