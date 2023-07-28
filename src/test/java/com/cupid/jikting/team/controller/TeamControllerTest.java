@@ -11,6 +11,7 @@ import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.member.entity.Mbti;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.entity.ProfileImage;
+import com.cupid.jikting.member.entity.Sequence;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
@@ -54,6 +55,7 @@ public class TeamControllerTest extends ApiDocument {
     private static final String NICKNAME = "닉네임";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 22);
     private static final String URL = "이미지 링크";
+    private static final Sequence SEQUENCE = Sequence.MAIN;
     private static final Mbti MBTI = Mbti.ENFP;
     private static final String ADDRESS = "거주지";
 
@@ -83,6 +85,7 @@ public class TeamControllerTest extends ApiDocument {
         List<ProfileImage> images = IntStream.range(0, 3)
                 .mapToObj(n -> ProfileImage.builder()
                         .url(URL)
+                        .sequence(SEQUENCE)
                         .build())
                 .collect(Collectors.toList());
         List<TeamMember> teamMembers = IntStream.range(0, 3)
