@@ -2,6 +2,7 @@ package com.cupid.jikting.member.entity;
 
 import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.WrongAccessException;
@@ -17,6 +18,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @SuperBuilder
@@ -96,6 +98,13 @@ public class MemberProfile extends BaseEntity {
                 .orElseThrow(() -> new WrongAccessException(ApplicationError.FORBIDDEN_MEMBER))
                 .getCompany()
                 .getName();
+    }
+
+    public List<String> getPersonalities() {
+        return memberPersonalities.stream()
+                .map(MemberPersonality::getPersonality)
+                .map(Personality::getKeyword)
+                .collect(Collectors.toList());
     }
 
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
