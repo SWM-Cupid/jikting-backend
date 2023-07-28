@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @SuperBuilder
@@ -29,4 +30,8 @@ public class TeamMember extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_profile_id")
     private MemberProfile memberProfile;
+
+    public List<TeamLike> getReceivedTeamLikes() {
+        return team.getReceivedTeamLikes();
+    }
 }
