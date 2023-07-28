@@ -17,7 +17,7 @@ public class ImageResponse {
 
     public static ImageResponse from(ProfileImage profileImage) {
         return new ImageResponse(
-                profileImage.getSequenceName(),
+                profileImage.getSequence().name(),
                 profileImage.getMemberProfileId(),
                 profileImage.getUrl());
     }
