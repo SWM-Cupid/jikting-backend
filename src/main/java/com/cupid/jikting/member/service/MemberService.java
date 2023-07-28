@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class MemberService {
 
+    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
     private final PersonalityRepository personalityRepository;
