@@ -128,6 +128,23 @@ public class MemberProfile extends BaseEntity {
                 .orElseThrow(() -> new NotFoundException(ApplicationError.NOT_EXIST_REGISTERED_IMAGES));
     }
 
+    public void updateProfile(LocalDate birth, int height, Mbti mbti, String address, Gender gender, String college,
+                              SmokeStatus smokeStatus, DrinkStatus drinkStatus, String description,
+                              List<MemberPersonality> memberPersonalities, List<MemberHobby> memberHobbies, List<ProfileImage> profileImages) {
+        this.birth = birth;
+        this.height = height;
+        this.mbti = mbti;
+        this.address = address;
+        this.gender = gender;
+        this.college = college;
+        this.smokeStatus = smokeStatus;
+        this.drinkStatus = drinkStatus;
+        this.description = description;
+        this.memberPersonalities.addAll(memberPersonalities);
+        this.memberHobbies.addAll(memberHobbies);
+        this.profileImages.addAll(profileImages);
+    }
+
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
         memberChattingRooms.add(memberChattingRoom);
     }
