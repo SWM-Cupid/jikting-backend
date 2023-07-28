@@ -2,6 +2,8 @@ package com.cupid.jikting.member.entity;
 
 import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
+import com.cupid.jikting.common.entity.Hobby;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
@@ -18,6 +20,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @SuperBuilder
@@ -103,8 +106,18 @@ public class MemberProfile extends BaseEntity {
         teamMembers.add(teamMember);
     }
 
-    public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
-        memberChattingRooms.add(memberChattingRoom);
+    public List<String> getPersonalities() {
+        return memberPersonalities.stream()
+                .map(MemberPersonality::getPersonality)
+                .map(Personality::getKeyword)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getHobbies() {
+        return memberHobbies.stream()
+                .map(MemberHobby::getHobby)
+                .map(Hobby::getKeyword)
+                .collect(Collectors.toList());
     }
 
     public String getMainImageUrl() {
@@ -113,5 +126,9 @@ public class MemberProfile extends BaseEntity {
                 .map(ProfileImage::getUrl)
                 .findAny()
                 .orElseThrow(() -> new NotFoundException(ApplicationError.NOT_EXIST_REGISTERED_IMAGES));
+    }
+
+    public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
+        memberChattingRooms.add(memberChattingRoom);
     }
 }

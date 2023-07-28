@@ -43,8 +43,8 @@ public class MemberService {
         return MemberResponse.of(getMemberProfileById(memberProfileId));
     }
 
-    public MemberProfileResponse getProfile(Long memberId) {
-        return null;
+    public MemberProfileResponse getProfile(Long memberProfileId) {
+        return MemberProfileResponse.of(getMemberProfileById(memberProfileId));
     }
 
     public void update(NicknameUpdateRequest nicknameUpdateRequest) {

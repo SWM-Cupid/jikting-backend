@@ -3,6 +3,8 @@ package com.cupid.jikting.member.controller;
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.TestSecurityConfig;
 import com.cupid.jikting.common.dto.ErrorResponse;
+import com.cupid.jikting.common.entity.Hobby;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.*;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
@@ -19,6 +21,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -41,20 +44,22 @@ public class MemberControllerTest extends ApiDocument {
     private static final String NAME = "홍길동";
     private static final String PHONE = "01011112222";
     private static final String NICKNAME = "닉네임";
+    private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
     private static final String COMPANY = "직장";
     private static final String IMAGE_URL = "사진 URL";
     private static final int AGE = 21;
     private static final int HEIGHT = 168;
-    private static final String GENDER = "성별";
+    private static final Gender GENDER = Gender.FEMALE;
     private static final String ADDRESS = "거주지";
-    private static final String MBTI = "MBTI";
-    private static final String DRINK_STATUS = "음주여부";
+    private static final Mbti MBTI = Mbti.ESTJ;
+    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
+    private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
     private static final boolean IS_SMOKE = false;
     private static final String COLLEGE = "출신학교(선택사항 - 없을 시 빈 문자열)";
     private static final String PERSONALITY = "성격";
     private static final String HOBBY = "취미";
     private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
-    private static final String SEQUENCE = "순서";
+    private static final Sequence SEQUENCE = Sequence.MAIN;
     private static final String NEW_PASSWORD = "새 비밀번호";
     private static final String IMAGE_PARAMETER_NAME = "file";
     private static final String IMAGE_FILENAME = "image.png";
@@ -101,17 +106,45 @@ public class MemberControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
-        Member member = Member.builder().build();
         Company company = Company.builder()
                 .name(COMPANY)
+                .build();
+        Hobby hobby = Hobby.builder()
+                .keyword(HOBBY)
+                .build();
+        List<MemberHobby> memberHobby = IntStream.range(0, 3)
+                .mapToObj(n -> MemberHobby.builder()
+                        .hobby(hobby)
+                        .build())
+                .collect(Collectors.toList());
+        Personality personality = Personality.builder()
+                .keyword(PERSONALITY)
+                .build();
+        List<MemberPersonality> memberPersonalities = IntStream.range(0, 3)
+                .mapToObj(n -> MemberPersonality.builder()
+                        .personality(personality)
+                        .build())
+                .collect(Collectors.toList());
+        Member member = Member.builder()
                 .build();
         ProfileImage profileImage = ProfileImage.builder()
                 .sequence(Sequence.MAIN)
                 .url(IMAGE_URL)
                 .build();
         MemberProfile memberProfile = MemberProfile.builder()
-                .member(member)
                 .nickname(NICKNAME)
+                .birth(BIRTH)
+                .height(HEIGHT)
+                .gender(GENDER)
+                .address(ADDRESS)
+                .mbti(MBTI)
+                .drinkStatus(DRINK_STATUS)
+                .smokeStatus(SMOKE_STATUS)
+                .college(COLLEGE)
+                .description(DESCRIPTION)
+                .member(member)
+                .memberHobbies(memberHobby)
+                .memberPersonalities(memberPersonalities)
                 .build();
         MemberCompany memberCompany = MemberCompany.builder()
                 .member(member)
@@ -120,10 +153,7 @@ public class MemberControllerTest extends ApiDocument {
         memberProfile.getMember().getMemberCompanies().add(memberCompany);
         memberProfile.getProfileImages().add(profileImage);
         List<ImageResponse> images = IntStream.rangeClosed(1, 3)
-                .mapToObj(n -> ImageResponse.builder()
-                        .url(IMAGE_URL)
-                        .sequence(SEQUENCE)
-                        .build())
+                .mapToObj(n -> ImageResponse.of(profileImage))
                 .collect(Collectors.toList());
         List<String> personalities = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> PERSONALITY + n)
@@ -139,7 +169,7 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .name(NAME)
                 .phone(PHONE)
-                .gender(GENDER)
+                .gender(GENDER.getKey())
                 .build();
         nicknameUpdateRequest = NicknameUpdateRequest.builder()
                 .nickname(NICKNAME)
@@ -148,10 +178,10 @@ public class MemberControllerTest extends ApiDocument {
                 .images(images)
                 .age(AGE)
                 .height(HEIGHT)
-                .gender(GENDER)
+                .gender(GENDER.getKey())
                 .address(ADDRESS)
-                .mbti(MBTI)
-                .drinkStatus(DRINK_STATUS)
+                .mbti(MBTI.name())
+                .drinkStatus(DRINK_STATUS.getValue())
                 .isSmoke(IS_SMOKE)
                 .college(COLLEGE)
                 .personalities(personalities)
@@ -199,20 +229,7 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .build();
         memberResponse = MemberResponse.of(memberProfile);
-        memberProfileResponse = MemberProfileResponse.builder()
-                .images(images)
-                .age(AGE)
-                .height(HEIGHT)
-                .gender(GENDER)
-                .address(ADDRESS)
-                .mbti(MBTI)
-                .drinkStatus(DRINK_STATUS)
-                .isSmoke(IS_SMOKE)
-                .college(COLLEGE)
-                .personalities(personalities)
-                .hobbies(hobbies)
-                .description(DESCRIPTION)
-                .build();
+        memberProfileResponse = MemberProfileResponse.of(memberProfile);
         usernameResponse = UsernameResponse.builder()
                 .username(USERNAME)
                 .build();

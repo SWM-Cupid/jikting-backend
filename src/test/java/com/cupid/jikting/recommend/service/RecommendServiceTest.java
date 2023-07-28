@@ -34,15 +34,14 @@ import static org.mockito.BDDMockito.willThrow;
 public class RecommendServiceTest {
 
     private static final Long ID = 1L;
-    private static final String TEAM_NAME = "팀 이름";
     private static final LocalDate BIRTH = LocalDate.now();
+    private static final Mbti MBTI = Mbti.ENFJ;
     private static final String ADDRESS = "지역";
     private static final String COMPANY = "회사";
     private static final int HEIGHT = 180;
     private static final String DESCRIPTION = "자기소개";
     private static final String COLLEGE = "대학";
     private static final boolean LEADER = true;
-    private static final Mbti MBTI = Mbti.ENFJ;
 
     private MemberProfile memberProfile;
     private ApplicationException memberNotFoundException;
