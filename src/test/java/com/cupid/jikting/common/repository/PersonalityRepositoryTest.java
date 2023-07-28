@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PersonalityRepositoryTest {
 
-    private static final String KEYWORD = "귀여운";
+    private static final String KEYWORD = "성격 키워드";
 
     @Autowired
     private PersonalityRepository personalityRepository;
