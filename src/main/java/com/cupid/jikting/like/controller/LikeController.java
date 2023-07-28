@@ -1,5 +1,6 @@
 package com.cupid.jikting.like.controller;
 
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.like.dto.TeamDetailResponse;
 import com.cupid.jikting.like.service.LikeService;
@@ -15,10 +16,11 @@ import java.util.List;
 public class LikeController {
 
     private final LikeService likeService;
+    private final JwtService jwtService;
 
     @GetMapping("/received")
-    public ResponseEntity<List<LikeResponse>> getAllReceivedLike() {
-        return ResponseEntity.ok().body(likeService.getAllReceivedLike());
+    public ResponseEntity<List<LikeResponse>> getAllReceivedLike(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok().body(likeService.getAllReceivedLike(jwtService.extractValidMemberProfileId(token)));
     }
 
     @GetMapping("/sent")

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,5 +34,9 @@ public class TeamMember extends BaseEntity {
         team.addMemberProfile(teamMember);
         memberProfile.addTeam(teamMember);
         return teamMember;
+    }
+
+    public List<TeamLike> getReceivedTeamLikes() {
+        return team.getReceivedTeamLikes();
     }
 }

@@ -3,13 +3,22 @@ package com.cupid.jikting.like.controller;
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.TestSecurityConfig;
 import com.cupid.jikting.common.dto.ErrorResponse;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.like.dto.MemberProfileResponse;
 import com.cupid.jikting.like.dto.TeamDetailResponse;
 import com.cupid.jikting.like.service.LikeService;
+import com.cupid.jikting.member.entity.MemberProfile;
+import com.cupid.jikting.member.entity.ProfileImage;
+import com.cupid.jikting.member.entity.Sequence;
+import com.cupid.jikting.team.entity.Team;
+import com.cupid.jikting.team.entity.TeamLike;
+import com.cupid.jikting.team.entity.TeamMember;
+import com.cupid.jikting.team.entity.TeamPersonality;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -50,7 +59,10 @@ public class LikeControllerTest extends ApiDocument {
     private static final String DESCRIPTION = "소개";
     private static final String KEYWORD = "키워드";
     private static final String COLLEGE = "대학";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
 
+    private String accessToken;
     private List<LikeResponse> likeResponses;
     private TeamDetailResponse teamDetailResponse;
     private ApplicationException teamNotFoundException;
@@ -58,15 +70,16 @@ public class LikeControllerTest extends ApiDocument {
     @MockBean
     private LikeService likeService;
 
+    @MockBean
+    private JwtService jwtService;
+
     @BeforeEach
     void setUp() {
+        accessToken = jwtService.createAccessToken(ID);
         List<String> keywords = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> KEYWORD + n)
                 .collect(Collectors.toList());
-        List<String> imageUrls = IntStream.rangeClosed(1, 3)
-                .mapToObj(n -> URL + n)
-                .collect(Collectors.toList());
-        List<MemberProfileResponse> memberProfileRespons = IntStream.rangeClosed(1, 2)
+        List<MemberProfileResponse> memberProfileResponses = IntStream.rangeClosed(1, 2)
                 .mapToObj(n -> MemberProfileResponse.builder()
                         .nickname(NICKNAME)
                         .image(URL)
@@ -82,20 +95,44 @@ public class LikeControllerTest extends ApiDocument {
                         .college(COLLEGE)
                         .build())
                 .collect(Collectors.toList());
-        LikeResponse likeResponse = LikeResponse.builder()
-                .likeId(ID)
-                .name(NAME)
-                .keywords(keywords)
-                .imageUrls(imageUrls)
+        Personality personality = Personality.builder()
+                .keyword(KEYWORD)
                 .build();
-        likeResponses = IntStream.rangeClosed(0, 2)
-                .mapToObj(n -> likeResponse)
+        List<TeamPersonality> teamPersonalities = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> TeamPersonality.builder()
+                        .personality(personality)
+                        .build())
                 .collect(Collectors.toList());
+        List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> ProfileImage.builder()
+                        .url(URL)
+                        .sequence(Sequence.MAIN)
+                        .build())
+                .collect(Collectors.toList());
+        MemberProfile memberProfile = MemberProfile.builder()
+                .profileImages(profileImages)
+                .build();
+        List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> TeamMember.builder()
+                        .memberProfile(memberProfile)
+                        .build())
+                .collect(Collectors.toList());
+        Team team = Team.builder()
+                .name(NAME)
+                .teamPersonalities(teamPersonalities)
+                .teamMembers(teamMembers)
+                .build();
+        TeamLike teamLike = TeamLike.builder()
+                .id(ID)
+                .sentTeam(team)
+                .build();
+        LikeResponse likeResponse = LikeResponse.from(teamLike);
+        likeResponses = List.of(likeResponse,likeResponse);
         teamDetailResponse = TeamDetailResponse.builder()
                 .likeId(ID)
                 .teamName(NAME)
                 .keywords(keywords)
-                .members(memberProfileRespons)
+                .members(memberProfileResponses)
                 .build();
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
     }
@@ -104,7 +141,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 받은_호감_목록_조회_성공() throws Exception {
         //given
-        willReturn(likeResponses).given(likeService).getAllReceivedLike();
+        willReturn(likeResponses).given(likeService).getAllReceivedLike(anyLong());
         //when
         ResultActions resultActions = 받은_호감_목록_조회_요청();
         //then
@@ -115,7 +152,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 받은_호감_목록_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(likeService).getAllReceivedLike();
+        willThrow(teamNotFoundException).given(likeService).getAllReceivedLike(anyLong());
         //when
         ResultActions resultActions = 받은_호감_목록_조회_요청();
         //then
@@ -212,7 +249,8 @@ public class LikeControllerTest extends ApiDocument {
 
     private ResultActions 받은_호감_목록_조회_요청() throws Exception {
         return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/received")
-                .contextPath(CONTEXT_PATH));
+                .contextPath(CONTEXT_PATH)
+                .header(AUTHORIZATION, BEARER + accessToken));
     }
 
     private void 받은_호감_목록_조회_요청_성공(ResultActions resultActions) throws Exception {

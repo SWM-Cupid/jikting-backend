@@ -26,6 +26,7 @@ public class JwtService {
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String MEMBER_PROFILE_ID_CLAIM = "MemberProfileId";
     private static final String BEARER = "Bearer ";
+    private static final String REMOVE = "";
 
     private final MemberRepository memberRepository;
 
@@ -69,13 +70,13 @@ public class JwtService {
     public Optional<String> extractRefreshToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(refreshHeader))
                 .filter(refreshToken -> refreshToken.startsWith(BEARER))
-                .map(refreshToken -> refreshToken.replace(BEARER, ""));
+                .map(refreshToken -> refreshToken.replace(BEARER, REMOVE));
     }
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(accessHeader))
                 .filter(refreshToken -> refreshToken.startsWith(BEARER))
-                .map(refreshToken -> refreshToken.replace(BEARER, ""));
+                .map(refreshToken -> refreshToken.replace(BEARER, REMOVE));
     }
 
     public Optional<Long> extractMemberProfileId(String accessToken) {
@@ -94,7 +95,7 @@ public class JwtService {
     public Long extractValidMemberProfileId(String accessToken) {
         return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                         .build()
-                        .verify(accessToken)
+                        .verify(accessToken.replace(BEARER, REMOVE))
                         .getClaim(MEMBER_PROFILE_ID_CLAIM)
                         .asLong())
                 .orElseThrow(() -> new JwtException(ApplicationError.INVALID_TOKEN));
