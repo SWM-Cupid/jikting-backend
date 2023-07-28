@@ -49,7 +49,7 @@ public class TeamService {
 
     public void attend(Long teamId, Long memberProfileId) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
-        TeamMember.of(!LEADER, getTeamBy(teamId), memberProfile);
+        TeamMember.of(!LEADER, getTeamById(teamId), memberProfile);
         memberProfileRepository.save(memberProfile);
     }
 
@@ -77,7 +77,7 @@ public class TeamService {
                 .orElseThrow(() -> new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND));
     }
 
-    private Team getTeamBy(Long teamId) {
+    private Team getTeamById(Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.TEAM_NOT_FOUND));
     }
