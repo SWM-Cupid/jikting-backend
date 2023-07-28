@@ -1,11 +1,12 @@
 package com.cupid.jikting.like.dto;
 
+import com.cupid.jikting.team.entity.Team;
+import com.cupid.jikting.team.entity.TeamLike;
 import lombok.*;
 
 import java.util.List;
 
 @Getter
-@Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LikeResponse {
@@ -14,4 +15,14 @@ public class LikeResponse {
     private String name;
     private List<String> keywords;
     private List<String> imageUrls;
+
+    public static LikeResponse of(TeamLike teamLike) {
+        Team team = teamLike.getSentTeam();
+        return new LikeResponse(
+                teamLike.getId(),
+                team.getName(),
+                team.getPersonalities(),
+                team.getMainImageUrls()
+        );
+    }
 }
