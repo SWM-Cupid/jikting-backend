@@ -182,7 +182,7 @@ public class MemberControllerTest extends ApiDocument {
                 .address(ADDRESS)
                 .mbti(MBTI.name())
                 .drinkStatus(DRINK_STATUS.getValue())
-                .isSmoke(IS_SMOKE)
+                .smokeStatus(SMOKE_STATUS.getMessage())
                 .college(COLLEGE)
                 .personalities(personalities)
                 .hobbies(hobbies)
