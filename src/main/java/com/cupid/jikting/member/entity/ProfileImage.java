@@ -35,4 +35,8 @@ public class ProfileImage extends BaseEntity {
     public Long getMemberProfileId() {
         return memberProfile.getId();
     }
+
+    public boolean isMain() {
+        return sequence.equals(Sequence.MAIN);
+    }
 }
