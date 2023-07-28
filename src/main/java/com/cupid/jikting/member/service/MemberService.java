@@ -39,7 +39,7 @@ public class MemberService {
     }
 
     public MemberResponse get(Long memberProfileId) {
-        return MemberResponse.of(getMemberProfileBy(memberProfileId));
+        return MemberResponse.of(getMemberProfileById(memberProfileId));
     }
 
     public MemberProfileResponse getProfile(Long memberId) {
@@ -107,7 +107,7 @@ public class MemberService {
     public void login(LoginRequest loginRequest) {
     }
 
-    private MemberProfile getMemberProfileBy(Long memberProfileId) {
+    private MemberProfile getMemberProfileById(Long memberProfileId) {
         return memberProfileRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
