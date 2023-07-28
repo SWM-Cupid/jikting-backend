@@ -1,12 +1,15 @@
 package com.cupid.jikting.member.service;
 
+import com.cupid.jikting.common.entity.Hobby;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.DuplicateException;
+import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.member.dto.MemberProfileResponse;
 import com.cupid.jikting.member.dto.NicknameCheckRequest;
 import com.cupid.jikting.member.dto.SignupRequest;
 import com.cupid.jikting.member.dto.UsernameCheckRequest;
-import com.cupid.jikting.member.entity.Gender;
-import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -19,10 +22,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.RollbackException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
@@ -34,9 +43,27 @@ public class MemberServiceTest {
     private static final String PASSWORD = "Password123!";
     private static final String NAME = "홍길동";
     private static final String PHONE = "01000000000";
+    private static final Long ID = 1L;
+    private static final String IMAGE_URL = "사진 URL";
+    private static final Sequence SEQUENCE = Sequence.MAIN;
     private static final String NICKNAME = "닉네임";
+    private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
+    private static final int HEIGHT = 168;
+    private static final Gender GENDER = Gender.FEMALE;
+    private static final String ADDRESS = "거주지";
+    private static final Mbti MBTI = Mbti.ESTJ;
+    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
+    private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
+    private static final String COLLEGE = "출신학교(선택사항 - 없을 시 빈 문자열)";
+    private static final String PERSONALITY = "성격";
+    private static final String HOBBY = "취미";
+    private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
 
     private Member member;
+    private MemberProfile memberProfile;
+    private List<ProfileImage> profileImages;
+    private List<MemberPersonality> memberPersonalities;
+    private List<MemberHobby> memberHobbies;
     private SignupRequest signupRequest;
     private UsernameCheckRequest usernameCheckRequest;
     private NicknameCheckRequest nicknameCheckRequest;
@@ -61,6 +88,44 @@ public class MemberServiceTest {
                 .password(passwordEncoder.encode(PASSWORD))
                 .gender(Gender.MALE).name(NAME)
                 .phone(PHONE)
+                .build();
+        profileImages = IntStream.range(0, 3)
+                .mapToObj(n -> ProfileImage.builder()
+                        .url(IMAGE_URL)
+                        .sequence(SEQUENCE)
+                        .build())
+                .collect(Collectors.toList());
+        Personality personality = Personality.builder()
+                .keyword(PERSONALITY)
+                .build();
+        Hobby hobby = Hobby.builder()
+                .keyword(HOBBY)
+                .build();
+        memberPersonalities = IntStream.range(0, 3)
+                .mapToObj(n -> MemberPersonality.builder()
+                        .personality(personality)
+                        .build())
+                .collect(Collectors.toList());
+        memberHobbies = IntStream.range(0, 3)
+                .mapToObj(n -> MemberHobby.builder()
+                        .hobby(hobby)
+                        .build())
+                .collect(Collectors.toList());
+        memberProfile = MemberProfile.builder()
+                .nickname(NICKNAME)
+                .birth(BIRTH)
+                .height(HEIGHT)
+                .address(ADDRESS)
+                .description(DESCRIPTION)
+                .college(COLLEGE)
+                .gender(GENDER)
+                .mbti(MBTI)
+                .smokeStatus(SMOKE_STATUS)
+                .drinkStatus(DRINK_STATUS)
+                .member(member)
+                .profileImages(profileImages)
+                .memberHobbies(memberHobbies)
+                .memberPersonalities(memberPersonalities)
                 .build();
         signupRequest = SignupRequest.builder()
                 .username(USERNAME)
@@ -95,6 +160,29 @@ public class MemberServiceTest {
         //when & then
         assertThatThrownBy(() -> memberService.signup(signupRequest))
                 .isInstanceOf(RollbackException.class);
+    }
+
+    @Test
+    void 회원_프로필_조회_성공() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        // when
+        MemberProfileResponse memberProfileResponse = memberService.getProfile(ID);
+        // then
+        assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> assertThat(memberProfileResponse.getImages().size()).isEqualTo(profileImages.size()),
+                () -> assertThat(memberProfileResponse.getAge()).isEqualTo(memberProfile.getAge()),
+                () -> assertThat(memberProfileResponse.getHeight()).isEqualTo(memberProfile.getHeight()),
+                () -> assertThat(memberProfileResponse.getAddress()).isEqualTo(memberProfile.getAddress()),
+                () -> assertThat(memberProfileResponse.getMbti()).isEqualTo(memberProfile.getMbti().name()),
+                () -> assertThat(memberProfileResponse.getSmokeStatus()).isEqualTo(memberProfile.getSmokeStatus().getValue()),
+                () -> assertThat(memberProfileResponse.getDrinkStatus()).isEqualTo(memberProfile.getDrinkStatus().getValue()),
+                () -> assertThat(memberProfileResponse.getCollege()).isEqualTo(memberProfile.getCollege()),
+                () -> assertThat(memberProfileResponse.getPersonalities().size()).isEqualTo(memberPersonalities.size()),
+                () -> assertThat(memberProfileResponse.getHobbies().size()).isEqualTo(memberHobbies.size()),
+                () -> assertThat(memberProfileResponse.getDescription()).isEqualTo(memberProfile.getDescription())
+        );
     }
 
     @Test
