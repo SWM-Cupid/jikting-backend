@@ -4,7 +4,6 @@ import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.like.dto.LikeResponse;
-import com.cupid.jikting.like.service.LikeService;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.entity.ProfileImage;
 import com.cupid.jikting.member.entity.Sequence;
@@ -12,7 +11,6 @@ import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.entity.TeamMember;
 import com.cupid.jikting.team.entity.TeamPersonality;
-import com.cupid.jikting.team.repository.TeamLikeRepository;
 import com.cupid.jikting.team.repository.TeamMemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,19 +71,25 @@ class LikeServiceTest {
                         .memberProfile(memberProfile)
                         .build())
                 .collect(Collectors.toList());
-        Team sentTeam = Team
-                .builder()
+        Team sentTeam = Team.builder()
+                .name(NAME)
+                .teamPersonalities(List.of(teamPersonality))
+                .teamMembers(teamMembers)
+                .build();
+        Team receivedTeam = Team.builder()
                 .name(NAME)
                 .teamPersonalities(List.of(teamPersonality))
                 .teamMembers(teamMembers)
                 .build();
         TeamLike teamLike = TeamLike.builder()
-            .id(ID)
-            .sentTeam(sentTeam)
-            .build();
+                .id(ID)
+                .sentTeam(sentTeam)
+                .receivedTeam(receivedTeam)
+                .build();
         Team team = Team.builder()
                 .id(ID)
                 .receivedTeamLikes(List.of(teamLike))
+                .sentTeamLikes(List.of(teamLike))
                 .build();
         teamMember = TeamMember.builder()
                 .team(team)
@@ -109,11 +113,34 @@ class LikeServiceTest {
     }
 
     @Test
-    void 받은_호감_조회_실패_팀_없음(){
+    void 받은_호감_조회_실패_팀_없음() {
         // given
         willThrow(new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM)).given(teamMemberRepository).getTeamMemberByMemberProfileId(anyLong());
         // when & then
         assertThatThrownBy(() -> likeService.getAllReceivedLike(ID))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.NOT_EXIST_REGISTERED_TEAM.getMessage());
+    }
+
+    @Test
+    void 보낸_호감_조회_성공() {
+        // given
+        willReturn(Optional.of(teamMember)).given(teamMemberRepository).getTeamMemberByMemberProfileId(anyLong());
+        // when
+        List<LikeResponse> likeResponses = likeService.getAllSentLike(ID);
+        // then
+        assertAll(
+                () -> verify(teamMemberRepository).getTeamMemberByMemberProfileId(anyLong()),
+                () -> assertThat(likeResponses.size()).isEqualTo(teamLikes.size())
+        );
+    }
+
+    @Test
+    void 보낸_호감_조회_실패_팀_없음() {
+        // given
+        willThrow(new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM)).given(teamMemberRepository).getTeamMemberByMemberProfileId(anyLong());
+        // when & then
+        assertThatThrownBy(() -> likeService.getAllSentLike(ID))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.NOT_EXIST_REGISTERED_TEAM.getMessage());
     }
