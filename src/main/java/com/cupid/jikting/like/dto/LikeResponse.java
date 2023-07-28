@@ -24,4 +24,13 @@ public class LikeResponse {
                 team.getPersonalities(),
                 team.getMainImageUrls());
     }
+
+    public static LikeResponse fromSentTeamLike(TeamLike teamLike) {
+        Team team = teamLike.getReceivedTeam();
+        return new LikeResponse(
+                teamLike.getId(),
+                team.getName(),
+                team.getPersonalities(),
+                team.getMainImageUrls());
+    }
 }
