@@ -66,4 +66,10 @@ public class Team extends BaseEntity {
                 .map(TeamMember::getMemberProfile)
                 .collect(Collectors.toList());
     }
+
+    public List<String> getMainImageUrls() {
+        return getMemberProfiles().stream()
+                .map(MemberProfile::getMainImageUrl)
+                .collect(Collectors.toList());
+    }
 }
