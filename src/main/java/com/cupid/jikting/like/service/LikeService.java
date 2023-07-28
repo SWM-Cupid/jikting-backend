@@ -28,6 +28,7 @@ public class LikeService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly=true)
     public List<LikeResponse> getAllSentLike(Long memberProfileId) {
         return getTeamMemberById(memberProfileId)
                 .getSentTeamLikes()
