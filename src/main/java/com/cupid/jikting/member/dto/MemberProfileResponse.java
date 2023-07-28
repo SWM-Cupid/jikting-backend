@@ -36,7 +36,7 @@ public class MemberProfileResponse {
                 images,
                 memberProfile.getAge(),
                 memberProfile.getHeight(),
-                memberProfile.getGender().getKey(),
+                memberProfile.getGender().getMessage(),
                 memberProfile.getAddress(),
                 memberProfile.getMbti().name(),
                 memberProfile.getSmokeStatus().getMessage(),

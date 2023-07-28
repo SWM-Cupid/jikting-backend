@@ -136,7 +136,7 @@ public class MemberServiceTest {
         signupRequest = SignupRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD)
-                .gender(Gender.MALE.getKey())
+                .gender(Gender.MALE.getMessage())
                 .name(NAME)
                 .phone(PHONE)
                 .build();
@@ -197,8 +197,8 @@ public class MemberServiceTest {
                 () -> assertThat(memberProfileResponse.getHeight()).isEqualTo(memberProfile.getHeight()),
                 () -> assertThat(memberProfileResponse.getAddress()).isEqualTo(memberProfile.getAddress()),
                 () -> assertThat(memberProfileResponse.getMbti()).isEqualTo(memberProfile.getMbti().name()),
-                () -> assertThat(memberProfileResponse.getSmokeStatus()).isEqualTo(memberProfile.getSmokeStatus().getValue()),
-                () -> assertThat(memberProfileResponse.getDrinkStatus()).isEqualTo(memberProfile.getDrinkStatus().getValue()),
+                () -> assertThat(memberProfileResponse.getSmokeStatus()).isEqualTo(memberProfile.getSmokeStatus().getMessage()),
+                () -> assertThat(memberProfileResponse.getDrinkStatus()).isEqualTo(memberProfile.getDrinkStatus().getMessage()),
                 () -> assertThat(memberProfileResponse.getCollege()).isEqualTo(memberProfile.getCollege()),
                 () -> assertThat(memberProfileResponse.getPersonalities().size()).isEqualTo(memberPersonalities.size()),
                 () -> assertThat(memberProfileResponse.getHobbies().size()).isEqualTo(memberHobbies.size()),

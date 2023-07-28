@@ -178,7 +178,7 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .name(NAME)
                 .phone(PHONE)
-                .gender(GENDER.getKey())
+                .gender(GENDER.getMessage())
                 .build();
         nicknameUpdateRequest = NicknameUpdateRequest.builder()
                 .nickname(NICKNAME)
@@ -187,7 +187,7 @@ public class MemberControllerTest extends ApiDocument {
                 .images(images)
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(GENDER.getKey())
+                .gender(GENDER.getMessage())
                 .address(ADDRESS)
                 .mbti(MBTI.name())
                 .drinkStatus(DRINK_STATUS.getMessage())

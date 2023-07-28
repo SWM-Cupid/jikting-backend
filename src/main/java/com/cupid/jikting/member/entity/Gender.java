@@ -14,11 +14,11 @@ public enum Gender {
     MALE("남"),
     FEMALE("여");
 
-    private final String key;
+    private final String message;
 
-    public static Gender find(String key) {
+    public static Gender find(String message) {
         return Arrays.stream(values())
-                .filter(value -> value.key.equals(key))
+                .filter(value -> value.message.equals(message))
                 .findAny()
                 .orElseThrow(() -> new BadRequestException(ApplicationError.INVALID_GENDER));
     }
