@@ -125,8 +125,9 @@ public class LikeControllerTest extends ApiDocument {
         TeamLike teamLike = TeamLike.builder()
                 .id(ID)
                 .sentTeam(team)
+                .receivedTeam(team)
                 .build();
-        LikeResponse likeResponse = LikeResponse.from(teamLike);
+        LikeResponse likeResponse = LikeResponse.fromSentTeamLike(teamLike);
         likeResponses = List.of(likeResponse,likeResponse);
         teamDetailResponse = TeamDetailResponse.builder()
                 .likeId(ID)
@@ -163,7 +164,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 보낸_호감_목록_조회_성공() throws Exception {
         //given
-        willReturn(likeResponses).given(likeService).getAllSentLike();
+        willReturn(likeResponses).given(likeService).getAllSentLike(anyLong());
         //when
         ResultActions resultActions = 보낸_호감_목록_조회_요청();
         //then
@@ -174,7 +175,7 @@ public class LikeControllerTest extends ApiDocument {
     @Test
     void 보낸_호감_목록_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(likeService).getAllSentLike();
+        willThrow(teamNotFoundException).given(likeService).getAllSentLike(anyLong());
         //when
         ResultActions resultActions = 보낸_호감_목록_조회_요청();
         //then
@@ -269,7 +270,8 @@ public class LikeControllerTest extends ApiDocument {
 
     private ResultActions 보낸_호감_목록_조회_요청() throws Exception {
         return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/sent")
-                .contextPath(CONTEXT_PATH));
+                .contextPath(CONTEXT_PATH)
+                .header(AUTHORIZATION, BEARER + accessToken));
     }
 
     private void 보낸_호감_목록_조회_요청_성공(ResultActions resultActions) throws Exception {

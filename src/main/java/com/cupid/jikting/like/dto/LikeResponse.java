@@ -16,7 +16,7 @@ public class LikeResponse {
     private List<String> keywords;
     private List<String> imageUrls;
 
-    public static LikeResponse from(TeamLike teamLike) {
+    public static LikeResponse fromReceivedTeamLike(TeamLike teamLike) {
         Team team = teamLike.getSentTeam();
         return new LikeResponse(
                 teamLike.getId(),
