@@ -4,6 +4,7 @@ import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.WrongAccessException;
 import com.cupid.jikting.meeting.entity.InstantMeetingMember;
 import com.cupid.jikting.recommend.entity.Recommend;
@@ -38,7 +39,7 @@ public class MemberProfile extends BaseEntity {
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
-    private MBTI mbti;
+    private Mbti mbti;
 
     @Enumerated(EnumType.STRING)
     private SmokeStatus smokeStatus;
@@ -104,5 +105,13 @@ public class MemberProfile extends BaseEntity {
 
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
         memberChattingRooms.add(memberChattingRoom);
+    }
+
+    public String getMainImageUrl() {
+        return profileImages.stream()
+                .filter(ProfileImage::isMain)
+                .map(ProfileImage::getUrl)
+                .findAny()
+                .orElseThrow(() -> new NotFoundException(ApplicationError.NOT_EXIST_REGISTERED_IMAGES));
     }
 }

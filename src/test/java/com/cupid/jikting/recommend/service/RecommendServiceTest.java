@@ -42,6 +42,7 @@ public class RecommendServiceTest {
     private static final String DESCRIPTION = "자기소개";
     private static final String COLLEGE = "대학";
     private static final boolean LEADER = true;
+    private static final Mbti MBTI = Mbti.ENFJ;
 
     private MemberProfile memberProfile;
     private ApplicationException memberNotFoundException;
@@ -76,7 +77,7 @@ public class RecommendServiceTest {
                 .build();
         memberProfile = MemberProfile.builder()
                 .birth(BIRTH)
-                .mbti(MBTI.ENFJ)
+                .mbti(MBTI)
                 .address(ADDRESS)
                 .member(member)
                 .smokeStatus(SmokeStatus.SMOKING)

@@ -1,4 +1,4 @@
-package com.cupid.jikting.team.repository;
+package com.cupid.jikting.common.repository;
 
 import com.cupid.jikting.common.entity.Personality;
 import org.springframework.data.jpa.repository.JpaRepository;

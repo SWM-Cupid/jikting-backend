@@ -103,7 +103,7 @@ public class RecommendControllerTest extends ApiDocument {
                 .member(member)
                 .nickname(NICKNAME)
                 .birth(BIRTH)
-                .mbti(MBTI.ENFJ)
+                .mbti(Mbti.ENFJ)
                 .address(ADDRESS)
                 .smokeStatus(SmokeStatus.SMOKING)
                 .drinkStatus(DrinkStatus.NEVER)

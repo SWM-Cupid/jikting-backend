@@ -3,6 +3,7 @@ package com.cupid.jikting.team.service;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
@@ -11,7 +12,6 @@ import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
-import com.cupid.jikting.team.repository.PersonalityRepository;
 import com.cupid.jikting.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,8 +53,9 @@ public class TeamService {
         memberProfileRepository.save(memberProfile);
     }
 
+    @Transactional(readOnly = true)
     public TeamResponse get(Long teamId) {
-        return null;
+        return TeamResponse.from(getTeamById(teamId));
     }
 
     public void update(Long teamId, TeamUpdateRequest teamUpdateRequest) {
@@ -73,11 +74,11 @@ public class TeamService {
 
     private List<Personality> getPersonalities(List<String> keywords) {
         return keywords.stream()
-                .map(this::getPersonalityBy)
+                .map(this::getPersonalityByKeyword)
                 .collect(Collectors.toList());
     }
 
-    private Personality getPersonalityBy(String keyword) {
+    private Personality getPersonalityByKeyword(String keyword) {
         return personalityRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND));
     }

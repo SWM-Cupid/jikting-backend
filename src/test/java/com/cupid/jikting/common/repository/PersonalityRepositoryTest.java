@@ -1,8 +1,10 @@
-package com.cupid.jikting.team.repository;
+package com.cupid.jikting.common.repository;
 
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.repository.PersonalityRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -14,17 +16,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PersonalityRepositoryTest {
 
+    private static final String KEYWORD = "귀여운";
+
     @Autowired
     private PersonalityRepository personalityRepository;
 
+    @BeforeEach
+    void setUp() {
+        personalityRepository.save(
+                Personality.builder()
+                        .keyword(KEYWORD)
+                        .build());
+    }
+
     @Test
     void 키워드로_팀성격_조회_성공() {
-        // given
-        String keyword = "활발한";
         // when
-        Personality personality = personalityRepository.findByKeyword(keyword)
+        Personality personality = personalityRepository.findByKeyword(KEYWORD)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND));
         // then
-        assertThat(personality.getKeyword()).isEqualTo(keyword);
+        assertThat(personality.getKeyword()).isEqualTo(KEYWORD);
     }
 }

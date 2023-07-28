@@ -80,4 +80,10 @@ public class Team extends BaseEntity {
                 .map(TeamMember::getMemberProfile)
                 .collect(Collectors.toList());
     }
+
+    public List<String> getPersonalities() {
+        return teamPersonalities.stream()
+                .map(TeamPersonality::getKeyword)
+                .collect(Collectors.toList());
+    }
 }
