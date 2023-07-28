@@ -49,7 +49,7 @@ class LikeServiceTest {
     private LikeService likeService;
 
     @Mock
-    private  TeamMemberRepository teamMemberRepository;
+    private TeamMemberRepository teamMemberRepository;
 
     @BeforeEach
     void setUp() {
