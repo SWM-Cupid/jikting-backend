@@ -126,7 +126,7 @@ public class LikeControllerTest extends ApiDocument {
                 .id(ID)
                 .sentTeam(team)
                 .build();
-        LikeResponse likeResponse = LikeResponse.of(teamLike);
+        LikeResponse likeResponse = LikeResponse.from(teamLike);
         likeResponses = List.of(likeResponse,likeResponse);
         teamDetailResponse = TeamDetailResponse.builder()
                 .likeId(ID)
