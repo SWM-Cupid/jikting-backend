@@ -6,15 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberResponse {
 
     private String nickname;
-    private List<String> images;
+    private String image;
     private int age;
     private String mbti;
     private String address;
@@ -22,7 +20,7 @@ public class MemberResponse {
     public static MemberResponse from(MemberProfile memberProfile) {
         return new MemberResponse(
                 memberProfile.getNickname(),
-                memberProfile.getImageUrls(),
+                memberProfile.getMainImageUrl(),
                 memberProfile.getAge(),
                 memberProfile.getMbti().toString(),
                 memberProfile.getAddress());
