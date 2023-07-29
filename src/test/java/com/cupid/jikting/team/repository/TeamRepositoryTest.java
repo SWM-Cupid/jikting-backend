@@ -47,4 +47,19 @@ class TeamRepositoryTest {
                 () -> assertThat(savedTeam.getTeamPersonalities().size()).isEqualTo(personalities.size())
         );
     }
+
+    @Test
+    void 팀_삭제_성공() {
+        // given
+        Team team = Team.builder()
+                .name(NAME)
+                .memberCount(MEMBER_COUNT)
+                .description(DESCRIPTION)
+                .build();
+        Team savedTeam = teamRepository.save(team);
+        // when
+        teamRepository.delete(team);
+        // then
+        assertThat(teamRepository.findById(savedTeam.getId())).isEmpty();
+    }
 }
