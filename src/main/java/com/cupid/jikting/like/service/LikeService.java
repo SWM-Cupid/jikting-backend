@@ -19,17 +19,22 @@ public class LikeService {
 
     private final TeamMemberRepository teamMemberRepository;
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<LikeResponse> getAllReceivedLike(Long memberProfileId) {
         return getTeamMemberById(memberProfileId)
                 .getReceivedTeamLikes()
                 .stream()
-                .map(LikeResponse::from)
+                .map(LikeResponse::fromReceivedTeamLike)
                 .collect(Collectors.toList());
     }
 
-    public List<LikeResponse> getAllSentLike() {
-        return null;
+    @Transactional(readOnly = true)
+    public List<LikeResponse> getAllSentLike(Long memberProfileId) {
+        return getTeamMemberById(memberProfileId)
+                .getSentTeamLikes()
+                .stream()
+                .map(LikeResponse::fromSentTeamLike)
+                .collect(Collectors.toList());
     }
 
     public void acceptLike(Long likeId) {

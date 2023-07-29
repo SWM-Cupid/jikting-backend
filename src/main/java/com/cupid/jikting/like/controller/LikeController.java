@@ -24,8 +24,8 @@ public class LikeController {
     }
 
     @GetMapping("/sent")
-    public ResponseEntity<List<LikeResponse>> getAllSentLike() {
-        return ResponseEntity.ok().body(likeService.getAllSentLike());
+    public ResponseEntity<List<LikeResponse>> getAllSentLike(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok().body(likeService.getAllSentLike(jwtService.extractValidMemberProfileId(token)));
     }
 
     @PostMapping("/{likeId}/accept")
