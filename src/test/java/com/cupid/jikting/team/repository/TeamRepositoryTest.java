@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -46,5 +47,20 @@ class TeamRepositoryTest {
                 () -> assertThat(savedTeam.getDescription()).isEqualTo(DESCRIPTION),
                 () -> assertThat(savedTeam.getTeamPersonalities().size()).isEqualTo(personalities.size())
         );
+    }
+
+    @Test
+    void 팀_삭제_성공() {
+        // given
+        Team team = Team.builder()
+                .name(NAME)
+                .memberCount(MEMBER_COUNT)
+                .description(DESCRIPTION)
+                .build();
+        Team savedTeam = teamRepository.save(team);
+        // when
+        teamRepository.delete(team);
+        // then
+        assertThat(teamRepository.findById(savedTeam.getId())).isEmpty();
     }
 }
