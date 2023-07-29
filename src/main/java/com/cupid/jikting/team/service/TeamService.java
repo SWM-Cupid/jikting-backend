@@ -12,6 +12,7 @@ import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
+import com.cupid.jikting.team.entity.TeamPersonality;
 import com.cupid.jikting.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,15 @@ public class TeamService {
     }
 
     public void update(Long teamId, TeamUpdateRequest teamUpdateRequest) {
+        Team team = getTeamById(teamId);
+        List<TeamPersonality> teamPersonalities = getPersonalities(teamUpdateRequest.getKeywords()).stream()
+                .map(personality -> TeamPersonality.builder()
+                        .team(team)
+                        .personality(personality)
+                        .build())
+                .collect(Collectors.toList());
+        team.update(teamUpdateRequest.getDescription(), teamPersonalities);
+        teamRepository.save(team);
     }
 
     public void delete(Long teamId) {
