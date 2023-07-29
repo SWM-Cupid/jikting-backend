@@ -12,6 +12,7 @@ import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
+import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
 import com.cupid.jikting.team.repository.TeamRepository;
@@ -211,5 +212,23 @@ class TeamServiceTest {
         assertThatThrownBy(() -> teamService.get(ID))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.TEAM_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 팀_수정_성공() {
+        // given
+        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
+        TeamUpdateRequest teamUpdateRequest = TeamUpdateRequest.builder()
+                .description(DESCRIPTION)
+                .keywords(List.of(KEYWORD))
+                .build();
+        // when
+        teamService.update(ID, teamUpdateRequest);
+        // then
+        assertAll(
+                () -> verify(teamRepository).findById(anyLong()),
+                () -> verify(personalityRepository).findByKeyword(anyString())
+        );
     }
 }
