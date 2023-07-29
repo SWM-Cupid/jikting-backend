@@ -245,4 +245,19 @@ class TeamServiceTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.TEAM_NOT_FOUND.getMessage());
     }
+
+    @Test
+    void 팀_수정_실패_키워드_없음() {
+        // given
+        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        willThrow(new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND)).given(personalityRepository).findByKeyword(anyString());
+        TeamUpdateRequest teamUpdateRequest = TeamUpdateRequest.builder()
+                .description(DESCRIPTION)
+                .keywords(List.of(KEYWORD))
+                .build();
+        // when & then
+        assertThatThrownBy(() -> teamService.update(ID, teamUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.PERSONALITY_NOT_FOUND.getMessage());
+    }
 }
