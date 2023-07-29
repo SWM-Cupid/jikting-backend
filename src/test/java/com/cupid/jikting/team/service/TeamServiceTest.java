@@ -231,4 +231,18 @@ class TeamServiceTest {
                 () -> verify(personalityRepository).findByKeyword(anyString())
         );
     }
+
+    @Test
+    void 팀_수정_실패_팀_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(teamRepository).findById(anyLong());
+        TeamUpdateRequest teamUpdateRequest = TeamUpdateRequest.builder()
+                .description(DESCRIPTION)
+                .keywords(List.of(KEYWORD))
+                .build();
+        // when & then
+        assertThatThrownBy(() -> teamService.update(ID, teamUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.TEAM_NOT_FOUND.getMessage());
+    }
 }
