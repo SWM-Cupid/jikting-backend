@@ -32,8 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -211,5 +210,16 @@ class TeamServiceTest {
         assertThatThrownBy(() -> teamService.get(ID))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.TEAM_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 팀_삭제_성공() {
+        // given
+        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        willDoNothing().given(teamRepository).delete(team);
+        // when
+        teamService.delete(ID);
+        // then
+        verify(teamRepository).delete(any(Team.class));
     }
 }
