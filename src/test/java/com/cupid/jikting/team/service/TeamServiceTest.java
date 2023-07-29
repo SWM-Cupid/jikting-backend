@@ -222,4 +222,14 @@ class TeamServiceTest {
         // then
         verify(teamRepository).delete(any(Team.class));
     }
+
+    @Test
+    void 팀_삭제_실패_팀_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(teamRepository).findById(anyLong());
+        // when & then
+        assertThatThrownBy(() -> teamService.delete(ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.TEAM_NOT_FOUND.getMessage());
+    }
 }
