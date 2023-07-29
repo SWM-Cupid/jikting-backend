@@ -92,4 +92,9 @@ public class Team extends BaseEntity {
                 .map(MemberProfile::getMainImageUrl)
                 .collect(Collectors.toList());
     }
+
+    public void update(String description, List<TeamPersonality> teamPersonalities) {
+        this.description = description;
+        this.teamPersonalities.addAll(teamPersonalities);
+    }
 }
