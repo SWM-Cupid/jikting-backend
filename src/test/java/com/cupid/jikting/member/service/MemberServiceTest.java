@@ -5,6 +5,7 @@ import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.DuplicateException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.error.UnAuthorizedException;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
@@ -289,5 +290,19 @@ public class MemberServiceTest {
         assertThatThrownBy(() -> memberService.withdraw(ID, withdrawRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 회원_탈퇴_실패_비밀번호_불일치() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willThrow(new UnAuthorizedException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD)).given(passwordEncoder).matches(anyString(), anyString());
+        WithdrawRequest withdrawRequest = WithdrawRequest.builder()
+                .password(PASSWORD)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.withdraw(ID, withdrawRequest))
+                .isInstanceOf(UnAuthorizedException.class)
+                .hasMessage(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD.getMessage());
     }
 }
