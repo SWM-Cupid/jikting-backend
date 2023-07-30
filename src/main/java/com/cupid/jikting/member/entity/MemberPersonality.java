@@ -27,4 +27,8 @@ public class MemberPersonality extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "personality_id")
     private Personality personality;
+
+    public String getKeyword() {
+        return personality.getKeyword();
+    }
 }

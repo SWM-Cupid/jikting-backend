@@ -44,7 +44,7 @@ public class MemberResponse {
                 memberProfile.getDrinkStatus().getMessage(),
                 memberProfile.getHeight(),
                 memberProfile.getDescription(),
-                getMemberProfilePersonalities(memberProfile),
+                memberProfile.getPersonalityKeywords(),
                 getHobbies(memberProfile),
                 memberProfile.getCollege());
     }
@@ -53,14 +53,6 @@ public class MemberResponse {
         return memberProfile.getProfileImages()
                 .stream()
                 .map(ImageResponse::from)
-                .collect(Collectors.toList());
-    }
-
-    private static List<String> getMemberProfilePersonalities(MemberProfile memberProfile) {
-        return memberProfile.getMemberPersonalities()
-                .stream()
-                .map(MemberPersonality::getPersonality)
-                .map(Personality::getKeyword)
                 .collect(Collectors.toList());
     }
 

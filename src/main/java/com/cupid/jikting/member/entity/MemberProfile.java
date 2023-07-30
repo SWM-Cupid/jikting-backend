@@ -59,8 +59,8 @@ public class MemberProfile extends BaseEntity {
     private ProfileImages profileImages = new ProfileImages();
 
     @Builder.Default
-    @OneToMany(mappedBy = "memberProfile")
-    private List<MemberPersonality> memberPersonalities = new ArrayList<>();
+    @Embedded
+    private MemberPersonalities memberPersonalities = new MemberPersonalities();
 
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
@@ -106,11 +106,8 @@ public class MemberProfile extends BaseEntity {
         teamMembers.add(teamMember);
     }
 
-    public List<String> getPersonalities() {
-        return memberPersonalities.stream()
-                .map(MemberPersonality::getPersonality)
-                .map(Personality::getKeyword)
-                .collect(Collectors.toList());
+    public List<String> getPersonalityKeywords() {
+        return memberPersonalities.getKeywords();
     }
 
     public List<ProfileImage> getProfileImages() {
@@ -133,6 +130,7 @@ public class MemberProfile extends BaseEntity {
         this.smokeStatus = smokeStatus;
         this.drinkStatus = drinkStatus;
         this.description = description;
+        this.memberPersonalities.update(memberPersonalities);
         this.memberPersonalities.addAll(memberPersonalities);
         this.profileImages.update(profileImages);
     }
