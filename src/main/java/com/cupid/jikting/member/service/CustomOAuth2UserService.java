@@ -58,7 +58,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private Member getMember(OAuthAttributes attributes, SocialType socialType) {
-        Member findMember = memberRepository.findBySocialTypeAndSocialId(socialType, attributes.getOauth2UserInfo().getId()).orElse(null);
+        Member findMember = memberRepository.findBySocialTypeAndSocialId(socialType, attributes.getOauth2UserInfo().getId())
+                .orElse(null);
         if (findMember == null) {
             return saveMember(attributes, socialType);
         }
