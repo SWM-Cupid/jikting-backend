@@ -55,8 +55,8 @@ public class MemberProfile extends BaseEntity {
     private Member member;
 
     @Builder.Default
-    @OneToMany(mappedBy = "memberProfile")
-    private List<ProfileImage> profileImages = new ArrayList<>();
+    @Embedded
+    private ProfileImages profileImages = new ProfileImages();
 
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile")
@@ -113,19 +113,12 @@ public class MemberProfile extends BaseEntity {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getHobbies() {
-        return memberHobbies.stream()
-                .map(MemberHobby::getHobby)
-                .map(Hobby::getKeyword)
-                .collect(Collectors.toList());
+    public List<ProfileImage> getProfileImages() {
+        return profileImages.getProfileImages();
     }
 
     public String getMainImageUrl() {
-        return profileImages.stream()
-                .filter(ProfileImage::isMain)
-                .map(ProfileImage::getUrl)
-                .findAny()
-                .orElseThrow(() -> new NotFoundException(ApplicationError.NOT_EXIST_REGISTERED_IMAGES));
+        return profileImages.getMainImageUrl();
     }
 
     public void updateProfile(LocalDate birth, int height, Mbti mbti, String address, Gender gender, String college,
@@ -141,8 +134,7 @@ public class MemberProfile extends BaseEntity {
         this.drinkStatus = drinkStatus;
         this.description = description;
         this.memberPersonalities.addAll(memberPersonalities);
-        this.memberHobbies.addAll(memberHobbies);
-        this.profileImages.addAll(profileImages);
+        this.profileImages.update(profileImages);
     }
 
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
