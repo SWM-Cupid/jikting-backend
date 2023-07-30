@@ -3,7 +3,6 @@ package com.cupid.jikting.chatting.service;
 import com.cupid.jikting.chatting.dto.ChattingRequest;
 import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.chatting.repository.ChattingRoomRepository;
-import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import org.junit.jupiter.api.BeforeEach;

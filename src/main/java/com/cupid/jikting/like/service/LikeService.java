@@ -19,7 +19,7 @@ public class LikeService {
 
     private final TeamMemberRepository teamMemberRepository;
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<LikeResponse> getAllReceivedLike(Long memberProfileId) {
         return getTeamMemberById(memberProfileId)
                 .getReceivedTeamLikes()

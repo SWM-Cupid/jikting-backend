@@ -3,7 +3,6 @@ package com.cupid.jikting.common.repository;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.common.repository.PersonalityRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

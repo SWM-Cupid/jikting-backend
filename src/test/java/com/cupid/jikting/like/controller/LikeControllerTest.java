@@ -111,7 +111,7 @@ public class LikeControllerTest extends ApiDocument {
                 .collect(Collectors.toList());
         MemberProfile memberProfile = MemberProfile.builder()
                 .build();
-        memberProfile.updateProfile(LocalDate.of(1967, 4,19), HEIGHT, Mbti.INTJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.find(DRINK_STATUS), DESCRIPTION,
+        memberProfile.updateProfile(LocalDate.of(1967, 4, 19), HEIGHT, Mbti.INTJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.find(DRINK_STATUS), DESCRIPTION,
                 List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> TeamMember.builder()
@@ -128,7 +128,7 @@ public class LikeControllerTest extends ApiDocument {
                 .sentTeam(team)
                 .build();
         LikeResponse likeResponse = LikeResponse.from(teamLike);
-        likeResponses = List.of(likeResponse,likeResponse);
+        likeResponses = List.of(likeResponse, likeResponse);
         teamDetailResponse = TeamDetailResponse.builder()
                 .likeId(ID)
                 .teamName(NAME)
