@@ -1,7 +1,6 @@
 package com.cupid.jikting.team.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
-import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.meeting.entity.Meeting;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.recommend.entity.Recommend;
@@ -9,10 +8,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,8 +27,8 @@ public class Team extends BaseEntity {
     private int memberCount;
 
     @Builder.Default
-    @OneToMany(mappedBy = "team")
-    private List<TeamPersonality> teamPersonalities = new ArrayList<>();
+    @Embedded
+    private TeamPersonalities teamPersonalities = new TeamPersonalities();
 
     @Builder.Default
     @OneToMany(mappedBy = "team")
@@ -66,13 +62,8 @@ public class Team extends BaseEntity {
         teamMembers.add(teamMember);
     }
 
-    public void addTeamPersonalities(List<Personality> personalities) {
-        personalities.stream()
-                .map(personality -> TeamPersonality.builder()
-                        .team(this)
-                        .personality(personality)
-                        .build())
-                .forEach(teamPersonalities::add);
+    public void addTeamPersonalities(List<TeamPersonality> teamPersonalities) {
+        this.teamPersonalities.update(teamPersonalities);
     }
 
     public List<MemberProfile> getMemberProfiles() {
@@ -81,10 +72,12 @@ public class Team extends BaseEntity {
                 .collect(Collectors.toList());
     }
 
+    public List<TeamPersonality> getTeamPersonalities() {
+        return teamPersonalities.getTeamPersonalities();
+    }
+
     public List<String> getPersonalities() {
-        return teamPersonalities.stream()
-                .map(TeamPersonality::getKeyword)
-                .collect(Collectors.toList());
+        return teamPersonalities.getKeywords();
     }
 
     public List<String> getMainImageUrls() {
@@ -95,6 +88,6 @@ public class Team extends BaseEntity {
 
     public void update(String description, List<TeamPersonality> teamPersonalities) {
         this.description = description;
-        this.teamPersonalities.addAll(teamPersonalities);
+        this.teamPersonalities.update(teamPersonalities);
     }
 }

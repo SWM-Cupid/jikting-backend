@@ -42,7 +42,7 @@ public class TeamService {
                 .description(teamRegisterRequest.getDescription())
                 .memberCount(teamRegisterRequest.getMemberCount())
                 .build();
-        team.addTeamPersonalities(getPersonalities(teamRegisterRequest.getKeywords()));
+        team.addTeamPersonalities(toTeamPersonalities(toPersonalities(teamRegisterRequest.getKeywords()), team));
         TeamMember.of(LEADER, team, memberProfile);
         MemberProfile savedMemberProfile = memberProfileRepository.save(memberProfile);
         return TeamRegisterResponse.from(TEAM_URL + savedMemberProfile.getTeam().getId() + INVITE);
@@ -61,13 +61,7 @@ public class TeamService {
 
     public void update(Long teamId, TeamUpdateRequest teamUpdateRequest) {
         Team team = getTeamById(teamId);
-        List<TeamPersonality> teamPersonalities = getPersonalities(teamUpdateRequest.getKeywords()).stream()
-                .map(personality -> TeamPersonality.builder()
-                        .team(team)
-                        .personality(personality)
-                        .build())
-                .collect(Collectors.toList());
-        team.update(teamUpdateRequest.getDescription(), teamPersonalities);
+        team.update(teamUpdateRequest.getDescription(), toTeamPersonalities(toPersonalities(teamUpdateRequest.getKeywords()), team));
         teamRepository.save(team);
     }
 
@@ -82,7 +76,20 @@ public class TeamService {
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 
-    private List<Personality> getPersonalities(List<String> keywords) {
+    private List<TeamPersonality> toTeamPersonalities(List<Personality> personalities, Team team) {
+        return personalities.stream()
+                .map(personality -> toTeamPersonality(personality, team))
+                .collect(Collectors.toList());
+    }
+
+    private TeamPersonality toTeamPersonality(Personality personality, Team team) {
+        return TeamPersonality.builder()
+                .team(team)
+                .personality(personality)
+                .build();
+    }
+
+    private List<Personality> toPersonalities(List<String> keywords) {
         return keywords.stream()
                 .map(this::getPersonalityByKeyword)
                 .collect(Collectors.toList());
