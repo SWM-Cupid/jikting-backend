@@ -277,4 +277,17 @@ public class MemberServiceTest {
                 () -> verify(memberRepository).delete(any(Member.class))
         );
     }
+
+    @Test
+    void 회원_탈퇴_실패_회원_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        WithdrawRequest withdrawRequest = WithdrawRequest.builder()
+                .password(PASSWORD)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.withdraw(ID, withdrawRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
 }
