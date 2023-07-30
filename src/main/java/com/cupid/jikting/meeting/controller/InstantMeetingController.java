@@ -1,5 +1,6 @@
 package com.cupid.jikting.meeting.controller;
 
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.meeting.dto.InstantMeetingResponse;
 import com.cupid.jikting.meeting.service.InstantMeetingService;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +15,11 @@ import java.util.List;
 public class InstantMeetingController {
 
     private final InstantMeetingService instantMeetingService;
+    private final JwtService jwtService;
 
     @GetMapping
-    public ResponseEntity<List<InstantMeetingResponse>> getAll() {
-        return ResponseEntity.ok().body(instantMeetingService.getAll());
+    public ResponseEntity<List<InstantMeetingResponse>> getAll(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok().body(instantMeetingService.getAll(jwtService.extractValidMemberProfileId(token)));
     }
 
     @PostMapping("/{instantMeetingId}")
