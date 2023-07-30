@@ -50,7 +50,7 @@ public class OAuthAttributes {
                 .socialType(socialType)
                 .socialId(oauth2UserInfo.getId())
                 .username(UUID.randomUUID().toString())
-                .role(Role.UNCERTIFIED)
+                .role(Role.GUEST)
                 .build();
     }
 }
