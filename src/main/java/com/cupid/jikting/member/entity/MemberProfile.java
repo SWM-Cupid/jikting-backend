@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE member_profile SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE member_profile SET is_deleted = true WHERE member_profile_id = ?")
 @AttributeOverride(name = "id", column = @Column(name = "member_profile_id"))
 @Entity
 public class MemberProfile extends BaseEntity {
