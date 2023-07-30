@@ -84,15 +84,16 @@ class LikeServiceTest {
                 .teamPersonalities(List.of(teamPersonality))
                 .teamMembers(teamMembers)
                 .build();
-        TeamLike tmpTeamLike = TeamLike.builder()
+        teamLike = TeamLike.builder()
                 .id(ID)
                 .sentTeam(sentTeam)
                 .receivedTeam(receivedTeam)
+                .acceptStatus(AcceptStatus.INITIAL)
                 .build();
         Team team = Team.builder()
                 .id(ID)
-                .receivedTeamLikes(List.of(tmpTeamLike))
-                .sentTeamLikes(List.of(tmpTeamLike))
+                .receivedTeamLikes(List.of(teamLike))
+                .sentTeamLikes(List.of(teamLike))
                 .build();
         teamMember = TeamMember.builder()
                 .team(team)
@@ -100,10 +101,6 @@ class LikeServiceTest {
         teamLikes = List.of(TeamLike.builder()
                 .sentTeam(team)
                 .build());
-        teamLike = TeamLike.builder()
-                .id(ID)
-                .acceptStatus(AcceptStatus.INITIAL)
-                .build();
     }
 
     @Test
@@ -165,8 +162,7 @@ class LikeServiceTest {
     @Test
     void 받은_호감_거절_실패_호감_없음() {
         //given
-        willThrow(new NotFoundException(ApplicationError.LIKE_NOT_FOUND)).given(teamLikeRepository)
-                .findById(anyLong());
+        willThrow(new NotFoundException(ApplicationError.LIKE_NOT_FOUND)).given(teamLikeRepository).findById(anyLong());
         //when & then
         assertThatThrownBy(() -> likeService.rejectLike(ID))
                 .isInstanceOf(NotFoundException.class)
