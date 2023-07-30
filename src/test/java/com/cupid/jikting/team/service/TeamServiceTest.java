@@ -12,8 +12,10 @@ import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
+import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
+import com.cupid.jikting.team.entity.TeamPersonality;
 import com.cupid.jikting.team.repository.TeamRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +54,7 @@ class TeamServiceTest {
     private MemberProfile leader;
     private MemberProfile member;
     private Personality personality;
-    private List<Personality> personalities;
+    private List<TeamPersonality> teamPersonalities;
     private Team team;
     private TeamRegisterRequest teamRegisterRequest;
 
@@ -93,8 +95,11 @@ class TeamServiceTest {
         personality = Personality.builder()
                 .keyword(KEYWORD)
                 .build();
-        personalities = IntStream.range(0, 3)
-                .mapToObj(n -> personality)
+        teamPersonalities = IntStream.range(0, 3)
+                .mapToObj(n -> TeamPersonality.builder()
+                        .team(team)
+                        .personality(personality)
+                        .build())
                 .collect(Collectors.toList());
         team = Team.builder()
                 .id(ID)
@@ -102,7 +107,7 @@ class TeamServiceTest {
                 .description(DESCRIPTION)
                 .memberCount(MEMBER_COUNT)
                 .build();
-        team.addTeamPersonalities(personalities);
+        team.addTeamPersonalities(teamPersonalities);
         TeamMember.of(LEADER, team, leader);
         TeamMember.of(!LEADER, team, member);
         teamRegisterRequest = TeamRegisterRequest.builder()
@@ -197,7 +202,7 @@ class TeamServiceTest {
         assertAll(
                 () -> verify(teamRepository).findById(anyLong()),
                 () -> assertThat(teamResponse.getDescription()).isEqualTo(DESCRIPTION),
-                () -> assertThat(teamResponse.getKeywords().size()).isEqualTo(personalities.size()),
+                () -> assertThat(teamResponse.getKeywords().size()).isEqualTo(teamPersonalities.size()),
                 () -> assertThat(teamResponse.getMembers().size()).isEqualTo(team.getTeamMembers().size())
         );
     }
@@ -210,6 +215,53 @@ class TeamServiceTest {
         assertThatThrownBy(() -> teamService.get(ID))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.TEAM_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 팀_수정_성공() {
+        // given
+        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
+        TeamUpdateRequest teamUpdateRequest = TeamUpdateRequest.builder()
+                .description(DESCRIPTION)
+                .keywords(List.of(KEYWORD))
+                .build();
+        // when
+        teamService.update(ID, teamUpdateRequest);
+        // then
+        assertAll(
+                () -> verify(teamRepository).findById(anyLong()),
+                () -> verify(personalityRepository).findByKeyword(anyString())
+        );
+    }
+
+    @Test
+    void 팀_수정_실패_팀_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(teamRepository).findById(anyLong());
+        TeamUpdateRequest teamUpdateRequest = TeamUpdateRequest.builder()
+                .description(DESCRIPTION)
+                .keywords(List.of(KEYWORD))
+                .build();
+        // when & then
+        assertThatThrownBy(() -> teamService.update(ID, teamUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.TEAM_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 팀_수정_실패_키워드_없음() {
+        // given
+        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        willThrow(new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND)).given(personalityRepository).findByKeyword(anyString());
+        TeamUpdateRequest teamUpdateRequest = TeamUpdateRequest.builder()
+                .description(DESCRIPTION)
+                .keywords(List.of(KEYWORD))
+                .build();
+        // when & then
+        assertThatThrownBy(() -> teamService.update(ID, teamUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.PERSONALITY_NOT_FOUND.getMessage());
     }
 
     @Test

@@ -76,19 +76,24 @@ class LikeServiceTest {
                 .collect(Collectors.toList());
         Team sentTeam = Team.builder()
                 .name(NAME)
-                .teamPersonalities(List.of(teamPersonality))
                 .teamMembers(teamMembers)
                 .build();
+        sentTeam.addTeamPersonalities(List.of(teamPersonality));
         Team receivedTeam = Team.builder()
                 .name(NAME)
-                .teamPersonalities(List.of(teamPersonality))
                 .teamMembers(teamMembers)
                 .build();
+        receivedTeam.addTeamPersonalities(List.of(teamPersonality));
         teamLike = TeamLike.builder()
                 .id(ID)
                 .sentTeam(sentTeam)
                 .receivedTeam(receivedTeam)
                 .acceptStatus(AcceptStatus.INITIAL)
+                .build();
+        TeamLike teamLike = TeamLike.builder()
+                .id(ID)
+                .sentTeam(sentTeam)
+                .receivedTeam(receivedTeam)
                 .build();
         Team team = Team.builder()
                 .id(ID)

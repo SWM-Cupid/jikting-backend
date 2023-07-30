@@ -119,16 +119,16 @@ public class LikeControllerTest extends ApiDocument {
                 .collect(Collectors.toList());
         Team team = Team.builder()
                 .name(NAME)
-                .teamPersonalities(teamPersonalities)
                 .teamMembers(teamMembers)
                 .build();
+        team.addTeamPersonalities(teamPersonalities);
         TeamLike teamLike = TeamLike.builder()
                 .id(ID)
                 .sentTeam(team)
                 .receivedTeam(team)
                 .build();
         LikeResponse likeResponse = LikeResponse.fromSentTeamLike(teamLike);
-        likeResponses = List.of(likeResponse,likeResponse);
+        likeResponses = List.of(likeResponse, likeResponse);
         teamDetailResponse = TeamDetailResponse.builder()
                 .likeId(ID)
                 .teamName(NAME)
