@@ -164,11 +164,7 @@ public class MemberService {
 
     private List<ProfileImage> getProfileImages(MemberProfile memberProfile, List<ImageRequest> images) {
         return images.stream()
-                .map(imageRequest -> ProfileImage.builder()
-                        .memberProfile(memberProfile)
-                        .url(imageRequest.getUrl())
-                        .sequence(Sequence.valueOf(imageRequest.getSequence()))
-                        .build())
+                .map(ImageRequest::toProfileImage)
                 .collect(Collectors.toList());
     }
 }
