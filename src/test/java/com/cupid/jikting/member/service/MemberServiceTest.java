@@ -151,11 +151,15 @@ public class MemberServiceTest {
     @Test
     void 회원_가입_성공() {
         // given
+        willReturn(PASSWORD).given(passwordEncoder).encode(anyString());
         willReturn(member).given(memberRepository).save(any(Member.class));
         // when
         memberService.signup(signupRequest);
         // then
-        verify(memberRepository).save(any(Member.class));
+        assertAll(
+                () -> verify(passwordEncoder).encode(anyString()),
+                () -> verify(memberRepository).save(any(Member.class))
+        );
     }
 
     @Test
