@@ -2,11 +2,8 @@ package com.cupid.jikting.member.entity;
 
 import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
-import com.cupid.jikting.common.entity.Hobby;
-import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
-import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.WrongAccessException;
 import com.cupid.jikting.meeting.entity.InstantMeetingMember;
 import com.cupid.jikting.recommend.entity.Recommend;
@@ -20,7 +17,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @SuperBuilder
@@ -63,8 +59,8 @@ public class MemberProfile extends BaseEntity {
     private MemberPersonalities memberPersonalities = new MemberPersonalities();
 
     @Builder.Default
-    @OneToMany(mappedBy = "memberProfile")
-    private List<MemberHobby> memberHobbies = new ArrayList<>();
+    @Embedded
+    private MemberHobbies memberHobbies = new MemberHobbies();
 
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -110,6 +106,10 @@ public class MemberProfile extends BaseEntity {
         return memberPersonalities.getKeywords();
     }
 
+    public List<String> getHobbyKeywords() {
+        return memberHobbies.getKeywords();
+    }
+
     public List<ProfileImage> getProfileImages() {
         return profileImages.getProfileImages();
     }
@@ -131,7 +131,7 @@ public class MemberProfile extends BaseEntity {
         this.drinkStatus = drinkStatus;
         this.description = description;
         this.memberPersonalities.update(memberPersonalities);
-        this.memberPersonalities.addAll(memberPersonalities);
+        this.memberHobbies.update(memberHobbies);
         this.profileImages.update(profileImages);
     }
 

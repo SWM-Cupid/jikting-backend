@@ -43,7 +43,7 @@ public class MemberProfileResponse {
                 memberProfile.getDrinkStatus().getMessage(),
                 memberProfile.getCollege(),
                 memberProfile.getPersonalityKeywords(),
-                memberProfile.getHobbies(),
+                memberProfile.getHobbyKeywords(),
                 memberProfile.getDescription());
     }
 }

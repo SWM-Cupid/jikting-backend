@@ -1,9 +1,5 @@
 package com.cupid.jikting.recommend.dto;
 
-import com.cupid.jikting.common.entity.Hobby;
-import com.cupid.jikting.common.entity.Personality;
-import com.cupid.jikting.member.entity.MemberHobby;
-import com.cupid.jikting.member.entity.MemberPersonality;
 import com.cupid.jikting.member.entity.MemberProfile;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -45,7 +41,7 @@ public class MemberResponse {
                 memberProfile.getHeight(),
                 memberProfile.getDescription(),
                 memberProfile.getPersonalityKeywords(),
-                getHobbies(memberProfile),
+                memberProfile.getHobbyKeywords(),
                 memberProfile.getCollege());
     }
 
@@ -53,14 +49,6 @@ public class MemberResponse {
         return memberProfile.getProfileImages()
                 .stream()
                 .map(ImageResponse::from)
-                .collect(Collectors.toList());
-    }
-
-    private static List<String> getHobbies(MemberProfile memberProfile) {
-        return memberProfile.getMemberHobbies()
-                .stream()
-                .map(MemberHobby::getHobby)
-                .map(Hobby::getKeyword)
                 .collect(Collectors.toList());
     }
 }
