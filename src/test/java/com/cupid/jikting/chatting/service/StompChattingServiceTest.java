@@ -3,7 +3,8 @@ package com.cupid.jikting.chatting.service;
 import com.cupid.jikting.chatting.dto.ChattingRequest;
 import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.chatting.repository.ChattingRoomRepository;
-import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,10 +16,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,5 +71,15 @@ public class StompChattingServiceTest {
                 () -> verify(chattingRoomRepository).findById(anyLong()),
                 () -> verify(chattingRoomRepository).save(any(ChattingRoom.class))
         );
+    }
+
+    @Test
+    void 채팅_메시지_전송_실패_회원_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        // when & then
+        assertThatThrownBy(() -> chattingService.sendMessage(ID, chattingRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
 }
