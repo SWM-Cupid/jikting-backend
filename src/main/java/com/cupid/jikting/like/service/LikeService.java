@@ -1,10 +1,14 @@
 package com.cupid.jikting.like.service;
 
+import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.like.dto.TeamDetailResponse;
+import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.entity.TeamMember;
+import com.cupid.jikting.team.repository.TeamLikeRepository;
 import com.cupid.jikting.team.repository.TeamMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 public class LikeService {
 
     private final TeamMemberRepository teamMemberRepository;
+    private final TeamLikeRepository teamLikeRepository;
 
     @Transactional(readOnly = true)
     public List<LikeResponse> getAllReceivedLike(Long memberProfileId) {
@@ -38,6 +43,9 @@ public class LikeService {
     }
 
     public void acceptLike(Long likeId) {
+        TeamLike teamLike = teamLikeRepository.findById(likeId).orElseThrow(() -> new NotFoundException(ApplicationError.LIKE_NOT_FOUND));
+        teamLike.accept();
+        //todo: 채팅방 및 미팅 생성
     }
 
     public void rejectLike(Long likeId) {

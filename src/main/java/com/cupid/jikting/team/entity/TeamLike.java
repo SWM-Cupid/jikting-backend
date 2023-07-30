@@ -29,4 +29,8 @@ public class TeamLike extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sent_team_id")
     private Team sentTeam;
+
+    public void accept() {
+        acceptStatus = AcceptStatus.ACCEPT;
+    }
 }
