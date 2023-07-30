@@ -60,6 +60,9 @@ public class MemberService {
     }
 
     public void withdraw(Long memberId, WithdrawRequest withdrawRequest) {
+        Member member = getMemberProfileById(memberId).getMember();
+        member.validatePassword(passwordEncoder, withdrawRequest.getPassword());
+        memberRepository.delete(member);
     }
 
     public void checkDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
