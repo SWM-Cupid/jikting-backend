@@ -4,7 +4,6 @@ import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.like.dto.LikeResponse;
-import com.cupid.jikting.like.service.LikeService;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.entity.ProfileImage;
 import com.cupid.jikting.member.entity.Sequence;
@@ -12,7 +11,6 @@ import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.entity.TeamMember;
 import com.cupid.jikting.team.entity.TeamPersonality;
-import com.cupid.jikting.team.repository.TeamLikeRepository;
 import com.cupid.jikting.team.repository.TeamMemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,13 +74,13 @@ class LikeServiceTest {
         Team sentTeam = Team
                 .builder()
                 .name(NAME)
-                .teamPersonalities(List.of(teamPersonality))
                 .teamMembers(teamMembers)
                 .build();
+        sentTeam.addTeamPersonalities(List.of(teamPersonality));
         TeamLike teamLike = TeamLike.builder()
-            .id(ID)
-            .sentTeam(sentTeam)
-            .build();
+                .id(ID)
+                .sentTeam(sentTeam)
+                .build();
         Team team = Team.builder()
                 .id(ID)
                 .receivedTeamLikes(List.of(teamLike))
@@ -109,7 +107,7 @@ class LikeServiceTest {
     }
 
     @Test
-    void 받은_호감_조회_실패_팀_없음(){
+    void 받은_호감_조회_실패_팀_없음() {
         // given
         willThrow(new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM)).given(teamMemberRepository).getTeamMemberByMemberProfileId(anyLong());
         // when & then

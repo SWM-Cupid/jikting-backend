@@ -100,8 +100,8 @@ public class TeamControllerTest extends ApiDocument {
         Team team = Team.builder()
                 .id(ID)
                 .description(DESCRIPTION)
-                .teamPersonalities(teamPersonalities)
                 .build();
+        team.addTeamPersonalities(teamPersonalities);
         IntStream.range(0, 3)
                 .mapToObj(n -> MemberProfile.builder()
                         .nickname(NICKNAME)

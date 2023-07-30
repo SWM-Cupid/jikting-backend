@@ -1,14 +1,15 @@
 package com.cupid.jikting.team.repository;
 
-import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.team.entity.Team;
+import com.cupid.jikting.team.entity.TeamPersonality;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -35,8 +36,14 @@ class TeamRepositoryTest {
                 .memberCount(MEMBER_COUNT)
                 .description(DESCRIPTION)
                 .build();
-        List<Personality> personalities = personalityRepository.findAll();
-        team.addTeamPersonalities(personalities);
+        List<TeamPersonality> teamPersonalities = personalityRepository.findAll()
+                .stream()
+                .map(personality -> TeamPersonality.builder()
+                        .team(team)
+                        .personality(personality)
+                        .build())
+                .collect(Collectors.toList());
+        team.addTeamPersonalities(teamPersonalities);
         // when
         Team savedTeam = teamRepository.save(team);
         // then
@@ -44,7 +51,7 @@ class TeamRepositoryTest {
                 () -> assertThat(savedTeam.getName()).isEqualTo(NAME),
                 () -> assertThat(savedTeam.getMemberCount()).isEqualTo(MEMBER_COUNT),
                 () -> assertThat(savedTeam.getDescription()).isEqualTo(DESCRIPTION),
-                () -> assertThat(savedTeam.getTeamPersonalities().size()).isEqualTo(personalities.size())
+                () -> assertThat(savedTeam.getTeamPersonalities().size()).isEqualTo(teamPersonalities.size())
         );
     }
 }

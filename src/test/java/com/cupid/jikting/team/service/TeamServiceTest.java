@@ -15,6 +15,7 @@ import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
+import com.cupid.jikting.team.entity.TeamPersonality;
 import com.cupid.jikting.team.repository.TeamRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ class TeamServiceTest {
     private MemberProfile leader;
     private MemberProfile member;
     private Personality personality;
-    private List<Personality> personalities;
+    private List<TeamPersonality> teamPersonalities;
     private Team team;
     private TeamRegisterRequest teamRegisterRequest;
 
@@ -95,8 +96,11 @@ class TeamServiceTest {
         personality = Personality.builder()
                 .keyword(KEYWORD)
                 .build();
-        personalities = IntStream.range(0, 3)
-                .mapToObj(n -> personality)
+        teamPersonalities = IntStream.range(0, 3)
+                .mapToObj(n -> TeamPersonality.builder()
+                        .team(team)
+                        .personality(personality)
+                        .build())
                 .collect(Collectors.toList());
         team = Team.builder()
                 .id(ID)
@@ -104,7 +108,7 @@ class TeamServiceTest {
                 .description(DESCRIPTION)
                 .memberCount(MEMBER_COUNT)
                 .build();
-        team.addTeamPersonalities(personalities);
+        team.addTeamPersonalities(teamPersonalities);
         TeamMember.of(LEADER, team, leader);
         TeamMember.of(!LEADER, team, member);
         teamRegisterRequest = TeamRegisterRequest.builder()
@@ -199,7 +203,7 @@ class TeamServiceTest {
         assertAll(
                 () -> verify(teamRepository).findById(anyLong()),
                 () -> assertThat(teamResponse.getDescription()).isEqualTo(DESCRIPTION),
-                () -> assertThat(teamResponse.getKeywords().size()).isEqualTo(personalities.size()),
+                () -> assertThat(teamResponse.getKeywords().size()).isEqualTo(teamPersonalities.size()),
                 () -> assertThat(teamResponse.getMembers().size()).isEqualTo(team.getTeamMembers().size())
         );
     }
