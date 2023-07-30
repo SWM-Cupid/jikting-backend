@@ -28,8 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -90,8 +89,9 @@ public class MemberServiceTest {
                 .collect(Collectors.toList());
         member = Member.builder()
                 .username(USERNAME)
-                .password(passwordEncoder.encode(PASSWORD))
-                .gender(Gender.MALE).name(NAME)
+                .password(PASSWORD)
+                .gender(Gender.MALE)
+                .name(NAME)
                 .phone(PHONE)
                 .memberCompanies(memberCompanies)
                 .build();
@@ -254,5 +254,23 @@ public class MemberServiceTest {
         Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedNickname(nicknameCheckRequest))
                 .isInstanceOf(DuplicateException.class)
                 .hasMessage(ApplicationError.DUPLICATE_NICKNAME.getMessage());
+    }
+
+    @Test
+    void 회원_탈퇴_성공() {
+        // given
+        willReturn(true).given(passwordEncoder).matches(anyString(), anyString());
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willDoNothing().given(memberRepository).delete(member);
+        WithdrawRequest withdrawRequest = WithdrawRequest.builder()
+                .password(PASSWORD)
+                .build();
+        // when
+        memberService.withdraw(ID, withdrawRequest);
+        // then
+        assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> verify(memberRepository).delete(any(Member.class))
+        );
     }
 }
