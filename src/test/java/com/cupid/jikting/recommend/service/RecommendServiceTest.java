@@ -83,10 +83,10 @@ public class RecommendServiceTest {
                 .drinkStatus(DrinkStatus.NEVER)
                 .height(HEIGHT)
                 .description(DESCRIPTION)
-                .memberPersonalities(memberPersonalities)
-                .memberHobbies(memberHobbies)
                 .college(COLLEGE)
                 .build();
+        memberProfile.getMemberPersonalities().update(memberPersonalities);
+        memberProfile.getMemberHobbies().update(memberHobbies);
         TeamMember.of(LEADER, teamFrom, memberProfile);
         List<Recommend> recommends = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> Recommend.builder()

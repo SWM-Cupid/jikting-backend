@@ -4,15 +4,11 @@ import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.like.dto.LikeResponse;
-import com.cupid.jikting.like.service.LikeService;
-import com.cupid.jikting.member.entity.MemberProfile;
-import com.cupid.jikting.member.entity.ProfileImage;
-import com.cupid.jikting.member.entity.Sequence;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.entity.TeamMember;
 import com.cupid.jikting.team.entity.TeamPersonality;
-import com.cupid.jikting.team.repository.TeamLikeRepository;
 import com.cupid.jikting.team.repository.TeamMemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,13 +58,15 @@ class LikeServiceTest {
                 .build();
         List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> ProfileImage.builder()
+                        .id(ID)
                         .url(URL)
                         .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
         MemberProfile memberProfile = MemberProfile.builder()
-                .profileImages(profileImages)
                 .build();
+        memberProfile.updateProfile(LocalDate.of(1967, 5, 10), 189, Mbti.INTJ, "주소", Gender.FEMALE, null, SmokeStatus.SMOKING, DrinkStatus.OFTEN, "한 줄 소개",
+                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> TeamMember.builder()
                         .memberProfile(memberProfile)
@@ -80,9 +79,9 @@ class LikeServiceTest {
                 .teamMembers(teamMembers)
                 .build();
         TeamLike teamLike = TeamLike.builder()
-            .id(ID)
-            .sentTeam(sentTeam)
-            .build();
+                .id(ID)
+                .sentTeam(sentTeam)
+                .build();
         Team team = Team.builder()
                 .id(ID)
                 .receivedTeamLikes(List.of(teamLike))
@@ -109,7 +108,7 @@ class LikeServiceTest {
     }
 
     @Test
-    void 받은_호감_조회_실패_팀_없음(){
+    void 받은_호감_조회_실패_팀_없음() {
         // given
         willThrow(new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM)).given(teamMemberRepository).getTeamMemberByMemberProfileId(anyLong());
         // when & then

@@ -9,10 +9,7 @@ import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.jwt.service.JwtService;
-import com.cupid.jikting.member.entity.Mbti;
-import com.cupid.jikting.member.entity.MemberProfile;
-import com.cupid.jikting.member.entity.ProfileImage;
-import com.cupid.jikting.member.entity.Sequence;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
@@ -91,7 +88,7 @@ public class TeamControllerTest extends ApiDocument {
                                 .build())
                         .build())
                 .collect(Collectors.toList());
-        List<ProfileImage> images = IntStream.range(0, 3)
+        List<ProfileImage> profileImages = IntStream.range(0, 3)
                 .mapToObj(n -> ProfileImage.builder()
                         .url(URL)
                         .sequence(SEQUENCE)
@@ -102,15 +99,12 @@ public class TeamControllerTest extends ApiDocument {
                 .description(DESCRIPTION)
                 .teamPersonalities(teamPersonalities)
                 .build();
-        IntStream.range(0, 3)
-                .mapToObj(n -> MemberProfile.builder()
-                        .nickname(NICKNAME)
-                        .profileImages(images)
-                        .birth(BIRTH)
-                        .mbti(MBTI)
-                        .address(ADDRESS)
-                        .build())
-                .forEach(memberProfile -> TeamMember.of(LEADER, team, memberProfile));
+        MemberProfile memberProfile = MemberProfile.builder()
+                .nickname(NICKNAME)
+                .build();
+        memberProfile.updateProfile(BIRTH, 189, MBTI, ADDRESS, Gender.FEMALE, "대학", SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
+        TeamMember.of(LEADER, team, memberProfile);
         teamRegisterRequest = TeamRegisterRequest.builder()
                 .description(DESCRIPTION)
                 .keywords(keywords)

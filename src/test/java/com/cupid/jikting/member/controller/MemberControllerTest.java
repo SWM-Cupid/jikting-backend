@@ -119,7 +119,7 @@ public class MemberControllerTest extends ApiDocument {
         Hobby hobby = Hobby.builder()
                 .keyword(HOBBY)
                 .build();
-        List<MemberHobby> memberHobby = IntStream.range(0, 3)
+        List<MemberHobby> memberHobbies = IntStream.range(0, 3)
                 .mapToObj(n -> MemberHobby.builder()
                         .hobby(hobby)
                         .build())
@@ -135,6 +135,7 @@ public class MemberControllerTest extends ApiDocument {
         Member member = Member.builder()
                 .build();
         ProfileImage profileImage = ProfileImage.builder()
+                .id(ID)
                 .sequence(SEQUENCE)
                 .url(IMAGE_URL)
                 .build();
@@ -150,17 +151,20 @@ public class MemberControllerTest extends ApiDocument {
                 .college(COLLEGE)
                 .description(DESCRIPTION)
                 .member(member)
-                .memberHobbies(memberHobby)
-                .memberPersonalities(memberPersonalities)
                 .build();
+        memberProfile.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, GENDER, COLLEGE, SMOKE_STATUS, DRINK_STATUS, DESCRIPTION,
+                memberPersonalities, memberHobbies, List.of(profileImage));
         MemberCompany memberCompany = MemberCompany.builder()
                 .member(member)
                 .company(company)
                 .build();
         memberProfile.getMember().getMemberCompanies().add(memberCompany);
-        memberProfile.getProfileImages().add(profileImage);
-        List<ImageRequest> images = IntStream.rangeClosed(1, 3)
-                .mapToObj(n -> ImageRequest.of(profileImage))
+        List<ImageRequest> images = IntStream.range(0, 1)
+                .mapToObj(n -> ImageRequest.builder()
+                        .profileImageId(profileImage.getId())
+                        .url(profileImage.getUrl())
+                        .sequence(profileImage.getSequence().name())
+                        .build())
                 .collect(Collectors.toList());
         List<String> personalities = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> PERSONALITY + n)

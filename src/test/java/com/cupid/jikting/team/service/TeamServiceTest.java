@@ -4,10 +4,7 @@ import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
-import com.cupid.jikting.member.entity.Mbti;
-import com.cupid.jikting.member.entity.MemberProfile;
-import com.cupid.jikting.member.entity.ProfileImage;
-import com.cupid.jikting.member.entity.Sequence;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
@@ -82,14 +79,12 @@ class TeamServiceTest {
                 .birth(BIRTH)
                 .mbti(MBTI)
                 .address(ADDRESS)
-                .profileImages(profileImages)
                 .build();
         member = MemberProfile.builder()
                 .id(ID)
                 .birth(BIRTH)
                 .mbti(MBTI)
                 .address(ADDRESS)
-                .profileImages(profileImages)
                 .build();
         personality = Personality.builder()
                 .keyword(KEYWORD)
@@ -97,6 +92,10 @@ class TeamServiceTest {
         personalities = IntStream.range(0, 3)
                 .mapToObj(n -> personality)
                 .collect(Collectors.toList());
+        leader.updateProfile(BIRTH, 160, MBTI, ADDRESS, Gender.FEMALE, "대학", SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
+        member.updateProfile(BIRTH, 189, MBTI, ADDRESS, Gender.MALE, "대학", SmokeStatus.NONSMOKING, DrinkStatus.NEVER, DESCRIPTION,
+                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         team = Team.builder()
                 .id(ID)
                 .name(NAME)
