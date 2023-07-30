@@ -5,6 +5,7 @@ import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.chatting.repository.ChattingRoomRepository;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,11 +76,22 @@ public class StompChattingServiceTest {
 
     @Test
     void 채팅_메시지_전송_실패_회원_없음() {
-        // given
+    	// given
         willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
-        // when & then
+    	// when & then
         assertThatThrownBy(() -> chattingService.sendMessage(ID, chattingRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 채팅_메시지_전송_실패_채팅방_없음() {
+    	// given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willThrow(new NotFoundException(ApplicationError.CHATTING_ROOM_NOT_FOUND)).given(chattingRoomRepository).findById(anyLong());
+    	// when & then
+        assertThatThrownBy(() -> chattingService.sendMessage(ID, chattingRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.CHATTING_ROOM_NOT_FOUND.getMessage());
     }
 }
