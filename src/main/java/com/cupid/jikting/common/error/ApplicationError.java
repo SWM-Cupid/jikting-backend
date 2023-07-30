@@ -33,6 +33,7 @@ public enum ApplicationError {
     INVALID_SMOKE_STATUS(HttpStatus.BAD_REQUEST, "U011", "지원하지 않는 흡연 상태입니다."),
     INVALID_DRINK_STATUS(HttpStatus.BAD_REQUEST, "U011", "지원하지 않는 음주 상태입니다."),
     HOBBY_NOT_FOUND(HttpStatus.BAD_REQUEST, "U012", "취미 키워드를 찾을 수 없습니다."),
+    PROFILE_IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "U013", "프로필 이미지를 찾을 수 없습니다."),
 
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "T001", "팀을 찾을 수 없습니다."),
     GENDER_MISMATCH(HttpStatus.BAD_REQUEST, "T002", "해당 성별은 팀에 참여할 수 없습니다."),
