@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class LikeService {
 
@@ -44,10 +45,11 @@ public class LikeService {
     public void acceptLike(Long likeId) {
     }
 
-    @Transactional
     public void rejectLike(Long likeId) {
-        TeamLike teamLike = teamLikeRepository.findById(likeId).orElseThrow(() -> new NotFoundException(ApplicationError.LIKE_NOT_FOUND));
+        TeamLike teamLike = teamLikeRepository.findById(likeId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.LIKE_NOT_FOUND));
         teamLike.reject();
+        teamLikeRepository.save(teamLike);
     }
 
     public TeamDetailResponse getTeamDetail(Long likeId) {
