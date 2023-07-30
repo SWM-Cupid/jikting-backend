@@ -3,14 +3,13 @@ package com.cupid.jikting.like.service;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.entity.ProfileImage;
 import com.cupid.jikting.member.entity.Sequence;
-import com.cupid.jikting.team.entity.Team;
-import com.cupid.jikting.team.entity.TeamLike;
-import com.cupid.jikting.team.entity.TeamMember;
-import com.cupid.jikting.team.entity.TeamPersonality;
+import com.cupid.jikting.team.entity.*;
+import com.cupid.jikting.team.repository.TeamLikeRepository;
 import com.cupid.jikting.team.repository.TeamMemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,12 +41,16 @@ class LikeServiceTest {
 
     private TeamMember teamMember;
     private List<TeamLike> teamLikes;
+    private TeamLike teamLike;
 
     @InjectMocks
     private LikeService likeService;
 
     @Mock
     private TeamMemberRepository teamMemberRepository;
+
+    @Mock
+    private TeamLikeRepository teamLikeRepository;
 
     @BeforeEach
     void setUp() {
@@ -81,10 +84,11 @@ class LikeServiceTest {
                 .teamPersonalities(List.of(teamPersonality))
                 .teamMembers(teamMembers)
                 .build();
-        TeamLike teamLike = TeamLike.builder()
+        teamLike = TeamLike.builder()
                 .id(ID)
                 .sentTeam(sentTeam)
                 .receivedTeam(receivedTeam)
+                .acceptStatus(AcceptStatus.INITIAL)
                 .build();
         Team team = Team.builder()
                 .id(ID)
@@ -143,5 +147,25 @@ class LikeServiceTest {
         assertThatThrownBy(() -> likeService.getAllSentLike(ID))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.NOT_EXIST_REGISTERED_TEAM.getMessage());
+    }
+
+    @Test
+    void 받은_호감_거절_성공() {
+        //given
+        willReturn(Optional.of(teamLike)).given(teamLikeRepository).findById(anyLong());
+        //when
+        likeService.rejectLike(ID);
+        //then
+        verify(teamLikeRepository).findById(anyLong());
+    }
+
+    @Test
+    void 받은_호감_거절_실패_호감_없음() {
+        //given
+        willThrow(new NotFoundException(ApplicationError.LIKE_NOT_FOUND)).given(teamLikeRepository).findById(anyLong());
+        //when & then
+        assertThatThrownBy(() -> likeService.rejectLike(ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.LIKE_NOT_FOUND.getMessage());
     }
 }
