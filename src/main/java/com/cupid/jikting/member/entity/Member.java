@@ -53,8 +53,9 @@ public class Member extends BaseEntity {
         return memberProfile.getId();
     }
 
-    public void addMemberProfile() {
+    public void addMemberProfile(String nickname) {
         memberProfile = MemberProfile.builder()
+                .nickname(nickname)
                 .member(this)
                 .build();
     }
