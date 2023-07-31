@@ -1,6 +1,8 @@
 package com.cupid.jikting.team.entity;
 
+import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
+import com.cupid.jikting.meeting.entity.Meeting;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +32,14 @@ public class TeamLike extends BaseEntity {
     @JoinColumn(name = "sent_team_id")
     private Team sentTeam;
 
-    public void accept() {
+    public ChattingRoom accept() {
         acceptStatus = AcceptStatus.ACCEPT;
+        Meeting meeting = Meeting.builder()
+                .acceptingTeam(receivedTeam)
+                .recommendedTeam(sentTeam)
+                .build();
+        return ChattingRoom.builder()
+                .meeting(meeting)
+                .build();
     }
 }
