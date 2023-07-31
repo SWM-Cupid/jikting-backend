@@ -28,7 +28,7 @@ public class InstantMeetingMember extends BaseEntity {
     @JoinColumn(name = "instant_meeting_id")
     private InstantMeeting instantMeeting;
 
-    public Long getMemberProfileId() {
-        return memberProfile.getId();
+    public boolean isSameMemberProfileId(Long memberProfileId) {
+        return memberProfile.getId().equals(memberProfileId);
     }
 }

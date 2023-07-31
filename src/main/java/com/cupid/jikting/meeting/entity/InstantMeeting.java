@@ -32,6 +32,6 @@ public class InstantMeeting extends BaseEntity {
 
     public boolean isAttended(Long memberProfileId) {
         return instantMeetingMembers.stream()
-                .anyMatch(instantMeetingMember -> instantMeetingMember.getMemberProfileId().equals(memberProfileId));
+                .anyMatch(instantMeetingMember -> instantMeetingMember.isSameMemberProfileId(memberProfileId));
     }
 }
