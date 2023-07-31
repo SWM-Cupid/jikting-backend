@@ -22,7 +22,7 @@ import java.util.List;
 @Entity
 public class ChattingRoom extends BaseEntity implements Serializable {
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "meeting_id")
     private Meeting meeting;
 
@@ -44,5 +44,9 @@ public class ChattingRoom extends BaseEntity implements Serializable {
 
     public String getOppositeTeamName(Team team) {
         return meeting.getOppositeTeamName(team);
+    }
+
+    public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
+        memberChattingRooms.add(memberChattingRoom);
     }
 }
