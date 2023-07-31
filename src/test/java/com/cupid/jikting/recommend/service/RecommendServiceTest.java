@@ -42,6 +42,8 @@ public class RecommendServiceTest {
     private static final String DESCRIPTION = "자기소개";
     private static final String COLLEGE = "대학";
     private static final boolean LEADER = true;
+    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
+    private static final DrinkStatus DRINK_STATUS = DrinkStatus.NEVER;
 
     private MemberProfile memberProfile;
     private ApplicationException memberNotFoundException;
@@ -79,8 +81,8 @@ public class RecommendServiceTest {
                 .mbti(MBTI)
                 .address(ADDRESS)
                 .member(member)
-                .smokeStatus(SmokeStatus.SMOKING)
-                .drinkStatus(DrinkStatus.NEVER)
+                .smokeStatus(SMOKE_STATUS)
+                .drinkStatus(DRINK_STATUS)
                 .height(HEIGHT)
                 .description(DESCRIPTION)
                 .college(COLLEGE)

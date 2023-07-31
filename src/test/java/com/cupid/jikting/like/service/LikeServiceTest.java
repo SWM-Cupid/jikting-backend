@@ -38,6 +38,18 @@ class LikeServiceTest {
     private static final String NAME = "팀이름";
     private static final String KEYWORD = "키워드";
     private static final String URL = "url";
+    private static final int YEAR = 1967;
+    private static final int MONTH = 5;
+    private static final int DATE = 10;
+    private static final int HEIGHT = 189;
+    private static final Mbti MBTI = Mbti.INTJ;
+    private static final String ADDRESS = "주소";
+    private static final Gender GENDER = Gender.FEMALE;
+    private static final String COLLEGE = "대학";
+    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
+    private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
+    private static final String DESCRIPTION = "한 줄 소개";
+    private static final Sequence SEQUENCE = Sequence.MAIN;
 
     private TeamMember teamMember;
     private List<TeamLike> teamLikes;
@@ -60,12 +72,12 @@ class LikeServiceTest {
                 .mapToObj(n -> ProfileImage.builder()
                         .id(ID)
                         .url(URL)
-                        .sequence(Sequence.MAIN)
+                        .sequence(SEQUENCE)
                         .build())
                 .collect(Collectors.toList());
         MemberProfile memberProfile = MemberProfile.builder()
                 .build();
-        memberProfile.updateProfile(LocalDate.of(1967, 5, 10), 189, Mbti.INTJ, "주소", Gender.FEMALE, null, SmokeStatus.SMOKING, DrinkStatus.OFTEN, "한 줄 소개",
+        memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, MBTI, ADDRESS, GENDER, COLLEGE, SMOKE_STATUS, DRINK_STATUS, DESCRIPTION,
                 List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> TeamMember.builder()

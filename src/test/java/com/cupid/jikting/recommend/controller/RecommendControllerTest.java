@@ -52,6 +52,11 @@ public class RecommendControllerTest extends ApiDocument {
     private static final Long ID = 1L;
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
+    private static final Sequence SEQUENCE = Sequence.MAIN;
+    private static final Mbti MBTI = Mbti.INTJ;
+    private static final Gender GENDER = Gender.FEMALE;
+    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
+    private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
 
     private String accessToken;
     private List<RecommendResponse> recommendResponses;
@@ -74,7 +79,7 @@ public class RecommendControllerTest extends ApiDocument {
         List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> ProfileImage.builder()
                         .memberProfile(tmpMemberProfile)
-                        .sequence(Sequence.MAIN)
+                        .sequence(SEQUENCE)
                         .url(URL)
                         .build())
                 .collect(Collectors.toList());
@@ -104,7 +109,7 @@ public class RecommendControllerTest extends ApiDocument {
                 .nickname(NICKNAME)
                 .member(member)
                 .build();
-        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.INTJ, ADDRESS, Gender.FEMALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+        memberProfile.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, GENDER, COLLEGE, SMOKE_STATUS, DRINK_STATUS, DESCRIPTION,
                 List.of(memberPersonality), List.of(memberHobby), profileImages);
         List<MemberResponse> memberResponses = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> MemberResponse.from(memberProfile))

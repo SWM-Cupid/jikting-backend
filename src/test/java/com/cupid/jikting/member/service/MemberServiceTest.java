@@ -101,7 +101,7 @@ public class MemberServiceTest {
         member = Member.builder()
                 .username(USERNAME)
                 .password(passwordEncoder.encode(PASSWORD))
-                .gender(Gender.MALE).name(NAME)
+                .gender(GENDER).name(NAME)
                 .phone(PHONE)
                 .memberCompanies(memberCompanies)
                 .build();

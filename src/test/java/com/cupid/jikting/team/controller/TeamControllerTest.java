@@ -59,6 +59,11 @@ public class TeamControllerTest extends ApiDocument {
     private static final Mbti MBTI = Mbti.ENFP;
     private static final String ADDRESS = "거주지";
     private static final boolean LEADER = true;
+    private static final int HEIGHT = 189;
+    private static final Gender GENDER = Gender.FEMALE;
+    private static final String COLLEGE = "대학";
+    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
+    private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
 
     private String accessToken;
     private TeamRegisterRequest teamRegisterRequest;
@@ -102,7 +107,7 @@ public class TeamControllerTest extends ApiDocument {
         MemberProfile memberProfile = MemberProfile.builder()
                 .nickname(NICKNAME)
                 .build();
-        memberProfile.updateProfile(BIRTH, 189, MBTI, ADDRESS, Gender.FEMALE, "대학", SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+        memberProfile.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, GENDER, COLLEGE, SMOKE_STATUS, DRINK_STATUS, DESCRIPTION,
                 List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         TeamMember.of(LEADER, team, memberProfile);
         teamRegisterRequest = TeamRegisterRequest.builder()
