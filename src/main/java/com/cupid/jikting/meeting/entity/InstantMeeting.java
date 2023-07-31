@@ -29,4 +29,9 @@ public class InstantMeeting extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "instantMeeting")
     private List<InstantMeetingMember> instantMeetingMembers = new ArrayList<>();
+
+    public boolean isAttended(Long memberProfileId) {
+        return instantMeetingMembers.stream()
+                .anyMatch(instantMeetingMember -> instantMeetingMember.isSameMemberProfileId(memberProfileId));
+    }
 }

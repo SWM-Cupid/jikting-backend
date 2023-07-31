@@ -27,4 +27,8 @@ public class InstantMeetingMember extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instant_meeting_id")
     private InstantMeeting instantMeeting;
+
+    public boolean isSameMemberProfileId(Long memberProfileId) {
+        return memberProfile.isSameAs(memberProfileId);
+    }
 }

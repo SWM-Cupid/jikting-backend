@@ -6,7 +6,9 @@ import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.meeting.dto.InstantMeetingResponse;
+import com.cupid.jikting.meeting.entity.InstantMeeting;
 import com.cupid.jikting.meeting.service.InstantMeetingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,8 +21,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
@@ -36,25 +36,35 @@ public class InstantMeetingControllerTest extends ApiDocument {
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/instant-meetings";
     private static final String PATH_DELIMITER = "/";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
     private static final Long ID = 1L;
-    private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2023, Month.JUNE, 30, 18, 0);
-    private static final String LOCATION = "장소";
+    private static final LocalDateTime SCHEDULE = LocalDateTime.of(2023, Month.JUNE, 30, 18, 0);
+    private static final String PLACE = "장소";
+    private static final int MEMBER_COUNT = 3;
+    private static final boolean ATTEND = true;
 
+    private String accessToken;
     private List<InstantMeetingResponse> instantMeetingResponses;
     private ApplicationException instantMeetingAlreadyFullException;
 
     @MockBean
     private InstantMeetingService instantMeetingService;
 
+    @MockBean
+    private JwtService jwtService;
+
     @BeforeEach
     void setUp() {
-        instantMeetingResponses = IntStream.rangeClosed(0, 3)
-                .mapToObj(n -> InstantMeetingResponse.builder()
-                        .instantMeetingId(ID)
-                        .instantMeetingDateTime(LOCAL_DATE_TIME)
-                        .location(LOCATION)
-                        .build())
-                .collect(Collectors.toList());
+        accessToken = jwtService.createAccessToken(ID);
+        InstantMeeting instantMeeting = InstantMeeting.builder()
+                .id(ID)
+                .schedule(SCHEDULE)
+                .place(PLACE)
+                .memberCount(MEMBER_COUNT)
+                .build();
+        InstantMeetingResponse instantMeetingResponse = InstantMeetingResponse.of(instantMeeting, ATTEND);
+        instantMeetingResponses = List.of(instantMeetingResponse, instantMeetingResponse);
         instantMeetingAlreadyFullException = new BadRequestException(ApplicationError.INSTANT_MEETING_ALREADY_FULL);
     }
 
@@ -62,7 +72,7 @@ public class InstantMeetingControllerTest extends ApiDocument {
     @Test
     void 번개팅_조회_성공() throws Exception {
         //given
-        willReturn(instantMeetingResponses).given(instantMeetingService).getAll();
+        willReturn(instantMeetingResponses).given(instantMeetingService).getAll(anyLong());
         //when
         ResultActions resultActions = 번개팅_조회_요청();
         //then
@@ -93,7 +103,8 @@ public class InstantMeetingControllerTest extends ApiDocument {
 
     private ResultActions 번개팅_조회_요청() throws Exception {
         return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH)
-                .contextPath(CONTEXT_PATH));
+                .contextPath(CONTEXT_PATH)
+                .header(AUTHORIZATION, BEARER + accessToken));
     }
 
     private void 번개팅_조회_요청_성공(ResultActions resultActions) throws Exception {
