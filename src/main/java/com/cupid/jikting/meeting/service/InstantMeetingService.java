@@ -16,7 +16,6 @@ public class InstantMeetingService {
     private final InstantMeetingRepository instantMeetingRepository;
 
     public List<InstantMeetingResponse> getAll(Long memberProfileId) {
-
         return instantMeetingRepository.findAll().stream()
                 .map(instantMeeting ->
                         InstantMeetingResponse.of(instantMeeting, memberProfileId))
