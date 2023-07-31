@@ -1,8 +1,12 @@
 package com.cupid.jikting.common.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.Random;
 import java.util.stream.IntStream;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PasswordUtil {
 
     public static final char[] CHAT_SET = new char[]{
@@ -13,15 +17,12 @@ public class PasswordUtil {
             'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
     };
 
+    private static final Random RANDOM = new Random();
+
     public static String generateRandomPassword() {
         StringBuilder password = new StringBuilder();
-        Random random = new Random();
         IntStream.range(0, 8)
-                .mapToObj(i -> {
-                    double randomValue = random.nextDouble();
-                    int index = (int) (CHAT_SET.length * randomValue);
-                    return CHAT_SET[index];
-                })
+                .mapToObj(i -> CHAT_SET[(int) (CHAT_SET.length * RANDOM.nextDouble())])
                 .forEach(password::append);
         return password.toString();
     }
