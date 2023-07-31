@@ -12,9 +12,7 @@ import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.like.dto.MemberProfileResponse;
 import com.cupid.jikting.like.dto.TeamDetailResponse;
 import com.cupid.jikting.like.service.LikeService;
-import com.cupid.jikting.member.entity.MemberProfile;
-import com.cupid.jikting.member.entity.ProfileImage;
-import com.cupid.jikting.member.entity.Sequence;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.entity.TeamMember;
@@ -27,6 +25,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -50,17 +49,19 @@ public class LikeControllerTest extends ApiDocument {
     private static final Long ID = 1L;
     private static final String NICKNAME = "닉네임";
     private static final int AGE = 20;
-    private static final String MBTI = "mbti";
     private static final String ADDRESS = "거주지";
     private static final String COMPANY = "회사";
     private static final boolean IS_SMOKE = true;
-    private static final String DRINK_STATUS = "안마심";
+    private static final String DRINK_STATUS = "자주 마심";
     private static final int HEIGHT = 180;
     private static final String DESCRIPTION = "소개";
     private static final String KEYWORD = "키워드";
     private static final String COLLEGE = "대학";
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
+    private static final int YEAR = 1967;
+    private static final int MONTH = 4;
+    private static final int DATE = 19;
 
     private String accessToken;
     private List<LikeResponse> likeResponses;
@@ -84,11 +85,11 @@ public class LikeControllerTest extends ApiDocument {
                         .nickname(NICKNAME)
                         .image(URL)
                         .age(AGE)
-                        .mbti(MBTI)
+                        .mbti(Mbti.ENFJ.name())
                         .address(ADDRESS)
                         .company(COMPANY)
                         .isSmoke(IS_SMOKE)
-                        .drinkStatus(DRINK_STATUS)
+                        .drinkStatus(DrinkStatus.OFTEN.getMessage())
                         .height(HEIGHT)
                         .description(DESCRIPTION)
                         .keywords(keywords)
@@ -103,15 +104,17 @@ public class LikeControllerTest extends ApiDocument {
                         .personality(personality)
                         .build())
                 .collect(Collectors.toList());
-        List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
+        List<ProfileImage> profileImages = IntStream.range(0, 3)
                 .mapToObj(n -> ProfileImage.builder()
+                        .id(ID)
                         .url(URL)
                         .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
         MemberProfile memberProfile = MemberProfile.builder()
-                .profileImages(profileImages)
                 .build();
+        memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, Mbti.INTJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.find(DRINK_STATUS), DESCRIPTION,
+                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> TeamMember.builder()
                         .memberProfile(memberProfile)

@@ -1,9 +1,5 @@
 package com.cupid.jikting.recommend.dto;
 
-import com.cupid.jikting.common.entity.Hobby;
-import com.cupid.jikting.common.entity.Personality;
-import com.cupid.jikting.member.entity.MemberHobby;
-import com.cupid.jikting.member.entity.MemberPersonality;
 import com.cupid.jikting.member.entity.MemberProfile;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -40,12 +36,12 @@ public class MemberResponse {
                 memberProfile.getMbti().toString(),
                 memberProfile.getAddress(),
                 memberProfile.getCompany(),
-                memberProfile.getSmokeStatus().getValue(),
-                memberProfile.getDrinkStatus().getValue(),
+                memberProfile.getSmokeStatus().getMessage(),
+                memberProfile.getDrinkStatus().getMessage(),
                 memberProfile.getHeight(),
                 memberProfile.getDescription(),
-                getMemberProfilePersonalities(memberProfile),
-                getHobbies(memberProfile),
+                memberProfile.getPersonalityKeywords(),
+                memberProfile.getHobbyKeywords(),
                 memberProfile.getCollege());
     }
 
@@ -53,22 +49,6 @@ public class MemberResponse {
         return memberProfile.getProfileImages()
                 .stream()
                 .map(ImageResponse::from)
-                .collect(Collectors.toList());
-    }
-
-    private static List<String> getMemberProfilePersonalities(MemberProfile memberProfile) {
-        return memberProfile.getMemberPersonalities()
-                .stream()
-                .map(MemberPersonality::getPersonality)
-                .map(Personality::getKeyword)
-                .collect(Collectors.toList());
-    }
-
-    private static List<String> getHobbies(MemberProfile memberProfile) {
-        return memberProfile.getMemberHobbies()
-                .stream()
-                .map(MemberHobby::getHobby)
-                .map(Hobby::getKeyword)
                 .collect(Collectors.toList());
     }
 }

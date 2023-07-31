@@ -6,6 +6,7 @@ import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.*;
+import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.service.MemberService;
@@ -39,6 +40,9 @@ public class MemberControllerTest extends ApiDocument {
 
     private static final String CONTEXT_PATH = "/api/v1";
     private static final String DOMAIN_ROOT_PATH = "/members";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+    private static final Long ID = 1L;
     private static final String USERNAME = "swm123";
     private static final String PASSWORD = "password123!";
     private static final String NAME = "홍길동";
@@ -47,19 +51,12 @@ public class MemberControllerTest extends ApiDocument {
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
     private static final String COMPANY = "직장";
     private static final String IMAGE_URL = "사진 URL";
-    private static final int AGE = 21;
     private static final int HEIGHT = 168;
-    private static final Gender GENDER = Gender.FEMALE;
     private static final String ADDRESS = "거주지";
-    private static final Mbti MBTI = Mbti.ESTJ;
-    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
-    private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
-    private static final boolean IS_SMOKE = false;
     private static final String COLLEGE = "출신학교(선택사항 - 없을 시 빈 문자열)";
     private static final String PERSONALITY = "성격";
     private static final String HOBBY = "취미";
     private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
-    private static final Sequence SEQUENCE = Sequence.MAIN;
     private static final String NEW_PASSWORD = "새 비밀번호";
     private static final String IMAGE_PARAMETER_NAME = "file";
     private static final String IMAGE_FILENAME = "image.png";
@@ -71,6 +68,7 @@ public class MemberControllerTest extends ApiDocument {
     private static final String COMPANY_VERIFICATION_REQUEST_FILENAME = "";
     private static final String COMPANY_VERIFICATION_CONTENT_TYPE = "application/json";
 
+    private String accessToken;
     private SignupRequest signupRequest;
     private NicknameUpdateRequest nicknameUpdateRequest;
     private MemberProfileUpdateRequest memberProfileUpdateRequest;
@@ -102,17 +100,21 @@ public class MemberControllerTest extends ApiDocument {
     private ApplicationException verificationCodeExpiredException;
 
     @MockBean
+    private JwtService jwtService;
+
+    @MockBean
     private MemberService memberService;
 
     @BeforeEach
     void setUp() {
+        accessToken = jwtService.createAccessToken(ID);
         Company company = Company.builder()
                 .name(COMPANY)
                 .build();
         Hobby hobby = Hobby.builder()
                 .keyword(HOBBY)
                 .build();
-        List<MemberHobby> memberHobby = IntStream.range(0, 3)
+        List<MemberHobby> memberHobbies = IntStream.range(0, 3)
                 .mapToObj(n -> MemberHobby.builder()
                         .hobby(hobby)
                         .build())
@@ -128,6 +130,7 @@ public class MemberControllerTest extends ApiDocument {
         Member member = Member.builder()
                 .build();
         ProfileImage profileImage = ProfileImage.builder()
+                .id(ID)
                 .sequence(Sequence.MAIN)
                 .url(IMAGE_URL)
                 .build();
@@ -135,25 +138,28 @@ public class MemberControllerTest extends ApiDocument {
                 .nickname(NICKNAME)
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(GENDER)
+                .gender(Gender.MALE)
                 .address(ADDRESS)
-                .mbti(MBTI)
-                .drinkStatus(DRINK_STATUS)
-                .smokeStatus(SMOKE_STATUS)
+                .mbti(Mbti.ENFJ)
+                .drinkStatus(DrinkStatus.OFTEN)
+                .smokeStatus(SmokeStatus.SMOKING)
                 .college(COLLEGE)
                 .description(DESCRIPTION)
                 .member(member)
-                .memberHobbies(memberHobby)
-                .memberPersonalities(memberPersonalities)
                 .build();
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                memberPersonalities, memberHobbies, List.of(profileImage));
         MemberCompany memberCompany = MemberCompany.builder()
                 .member(member)
                 .company(company)
                 .build();
         memberProfile.getMember().getMemberCompanies().add(memberCompany);
-        memberProfile.getProfileImages().add(profileImage);
-        List<ImageResponse> images = IntStream.rangeClosed(1, 3)
-                .mapToObj(n -> ImageResponse.of(profileImage))
+        List<ImageRequest> images = IntStream.range(0, 1)
+                .mapToObj(n -> ImageRequest.builder()
+                        .profileImageId(profileImage.getId())
+                        .url(profileImage.getUrl())
+                        .sequence(profileImage.getSequence().name())
+                        .build())
                 .collect(Collectors.toList());
         List<String> personalities = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> PERSONALITY + n)
@@ -169,20 +175,20 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .name(NAME)
                 .phone(PHONE)
-                .gender(GENDER.getKey())
+                .gender(Gender.MALE.getMessage())
                 .build();
         nicknameUpdateRequest = NicknameUpdateRequest.builder()
                 .nickname(NICKNAME)
                 .build();
         memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
                 .images(images)
-                .age(AGE)
+                .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(GENDER.getKey())
+                .gender(Gender.MALE.getMessage())
                 .address(ADDRESS)
-                .mbti(MBTI.name())
-                .drinkStatus(DRINK_STATUS.getValue())
-                .isSmoke(IS_SMOKE)
+                .mbti(Mbti.ENFJ.name())
+                .drinkStatus(DrinkStatus.OFTEN.getMessage())
+                .smokeStatus(SmokeStatus.SMOKING.getMessage())
                 .college(COLLEGE)
                 .personalities(personalities)
                 .hobbies(hobbies)
@@ -337,7 +343,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_프로필_수정_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).updateProfile(any(MemberProfileUpdateRequest.class));
+        willDoNothing().given(memberService).updateProfile(anyLong(), any(MemberProfileUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_프로필_수정_요청();
         // then
@@ -348,7 +354,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_프로필_수정_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).updateProfile(any(MemberProfileUpdateRequest.class));
+        willThrow(memberNotFoundException).given(memberService).updateProfile(anyLong(), any(MemberProfileUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_프로필_수정_요청();
         // then
@@ -854,6 +860,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private ResultActions 회원_프로필_수정_요청() throws Exception {
         return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/profile")
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(memberProfileUpdateRequest)));

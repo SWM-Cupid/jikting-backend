@@ -11,10 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ImageResponse {
 
+    private Long profileImageId;
     private String url;
     private String sequence;
 
     public static ImageResponse of(ProfileImage profileImage) {
-        return new ImageResponse(profileImage.getUrl(), profileImage.getSequence().name());
+        return new ImageResponse(
+                profileImage.getId(),
+                profileImage.getUrl(),
+                profileImage.getSequence().name());
     }
 }

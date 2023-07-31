@@ -9,10 +9,7 @@ import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.jwt.service.JwtService;
-import com.cupid.jikting.member.entity.Mbti;
-import com.cupid.jikting.member.entity.MemberProfile;
-import com.cupid.jikting.member.entity.ProfileImage;
-import com.cupid.jikting.member.entity.Sequence;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
@@ -58,10 +55,10 @@ public class TeamControllerTest extends ApiDocument {
     private static final String NICKNAME = "닉네임";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 22);
     private static final String URL = "이미지 링크";
-    private static final Sequence SEQUENCE = Sequence.MAIN;
-    private static final Mbti MBTI = Mbti.ENFP;
     private static final String ADDRESS = "거주지";
     private static final boolean LEADER = true;
+    private static final int HEIGHT = 189;
+    private static final String COLLEGE = "대학";
 
     private String accessToken;
     private TeamRegisterRequest teamRegisterRequest;
@@ -91,10 +88,10 @@ public class TeamControllerTest extends ApiDocument {
                                 .build())
                         .build())
                 .collect(Collectors.toList());
-        List<ProfileImage> images = IntStream.range(0, 3)
+        List<ProfileImage> profileImages = IntStream.range(0, 3)
                 .mapToObj(n -> ProfileImage.builder()
                         .url(URL)
-                        .sequence(SEQUENCE)
+                        .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
         Team team = Team.builder()
@@ -103,14 +100,24 @@ public class TeamControllerTest extends ApiDocument {
                 .build();
         team.addTeamPersonalities(teamPersonalities);
         IntStream.range(0, 3)
-                .mapToObj(n -> MemberProfile.builder()
-                        .nickname(NICKNAME)
-                        .profileImages(images)
-                        .birth(BIRTH)
-                        .mbti(MBTI)
-                        .address(ADDRESS)
-                        .build())
+                .mapToObj(n -> {
+                    MemberProfile memberProfile = MemberProfile.builder()
+                            .nickname(NICKNAME)
+                            .birth(BIRTH)
+                            .mbti(Mbti.ENFJ)
+                            .address(ADDRESS)
+                            .build();
+                    memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                            List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
+                    return memberProfile;
+                })
                 .forEach(memberProfile -> TeamMember.of(LEADER, team, memberProfile));
+        MemberProfile memberProfile = MemberProfile.builder()
+                .nickname(NICKNAME)
+                .build();
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
+        TeamMember.of(LEADER, team, memberProfile);
         teamRegisterRequest = TeamRegisterRequest.builder()
                 .description(DESCRIPTION)
                 .keywords(keywords)

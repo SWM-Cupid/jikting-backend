@@ -63,7 +63,7 @@ public class InstantMeetingControllerTest extends ApiDocument {
                 .place(PLACE)
                 .memberCount(MEMBER_COUNT)
                 .build();
-        InstantMeetingResponse instantMeetingResponse = InstantMeetingResponse.of(instantMeeting, ATTEND);
+        InstantMeetingResponse instantMeetingResponse = InstantMeetingResponse.of(instantMeeting, ID);
         instantMeetingResponses = List.of(instantMeetingResponse, instantMeetingResponse);
         instantMeetingAlreadyFullException = new BadRequestException(ApplicationError.INSTANT_MEETING_ALREADY_FULL);
     }

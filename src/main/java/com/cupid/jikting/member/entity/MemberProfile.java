@@ -2,11 +2,8 @@ package com.cupid.jikting.member.entity;
 
 import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
-import com.cupid.jikting.common.entity.Hobby;
-import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
-import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.WrongAccessException;
 import com.cupid.jikting.meeting.entity.InstantMeetingMember;
 import com.cupid.jikting.recommend.entity.Recommend;
@@ -20,13 +17,12 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE member_profile SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE member_profile SET is_deleted = true WHERE member_profile_id = ?")
 @AttributeOverride(name = "id", column = @Column(name = "member_profile_id"))
 @Entity
 public class MemberProfile extends BaseEntity {
@@ -55,16 +51,16 @@ public class MemberProfile extends BaseEntity {
     private Member member;
 
     @Builder.Default
-    @OneToMany(mappedBy = "memberProfile")
-    private List<ProfileImage> profileImages = new ArrayList<>();
+    @Embedded
+    private ProfileImages profileImages = new ProfileImages();
 
     @Builder.Default
-    @OneToMany(mappedBy = "memberProfile")
-    private List<MemberPersonality> memberPersonalities = new ArrayList<>();
+    @Embedded
+    private MemberPersonalities memberPersonalities = new MemberPersonalities();
 
     @Builder.Default
-    @OneToMany(mappedBy = "memberProfile")
-    private List<MemberHobby> memberHobbies = new ArrayList<>();
+    @Embedded
+    private MemberHobbies memberHobbies = new MemberHobbies();
 
     @Builder.Default
     @OneToMany(mappedBy = "memberProfile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -106,26 +102,37 @@ public class MemberProfile extends BaseEntity {
         teamMembers.add(teamMember);
     }
 
-    public List<String> getPersonalities() {
-        return memberPersonalities.stream()
-                .map(MemberPersonality::getPersonality)
-                .map(Personality::getKeyword)
-                .collect(Collectors.toList());
+    public List<String> getPersonalityKeywords() {
+        return memberPersonalities.getKeywords();
     }
 
-    public List<String> getHobbies() {
-        return memberHobbies.stream()
-                .map(MemberHobby::getHobby)
-                .map(Hobby::getKeyword)
-                .collect(Collectors.toList());
+    public List<String> getHobbyKeywords() {
+        return memberHobbies.getKeywords();
+    }
+
+    public List<ProfileImage> getProfileImages() {
+        return profileImages.getProfileImages();
     }
 
     public String getMainImageUrl() {
-        return profileImages.stream()
-                .filter(ProfileImage::isMain)
-                .map(ProfileImage::getUrl)
-                .findAny()
-                .orElseThrow(() -> new NotFoundException(ApplicationError.NOT_EXIST_REGISTERED_IMAGES));
+        return profileImages.getMainImageUrl();
+    }
+
+    public void updateProfile(LocalDate birth, int height, Mbti mbti, String address, Gender gender, String college,
+                              SmokeStatus smokeStatus, DrinkStatus drinkStatus, String description,
+                              List<MemberPersonality> memberPersonalities, List<MemberHobby> memberHobbies, List<ProfileImage> profileImages) {
+        this.birth = birth;
+        this.height = height;
+        this.mbti = mbti;
+        this.address = address;
+        this.gender = gender;
+        this.college = college;
+        this.smokeStatus = smokeStatus;
+        this.drinkStatus = drinkStatus;
+        this.description = description;
+        this.memberPersonalities.update(memberPersonalities);
+        this.memberHobbies.update(memberHobbies);
+        this.profileImages.update(profileImages);
     }
 
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
@@ -133,6 +140,6 @@ public class MemberProfile extends BaseEntity {
     }
 
     public boolean isSameAs(Long memberProfileId) {
-        return this.getId().equals(memberProfileId);
+        return id.equals(memberProfileId);
     }
 }

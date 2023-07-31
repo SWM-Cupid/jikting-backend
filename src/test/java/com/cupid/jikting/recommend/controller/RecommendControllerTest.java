@@ -102,18 +102,10 @@ public class RecommendControllerTest extends ApiDocument {
         MemberProfile memberProfile = MemberProfile.builder()
                 .member(member)
                 .nickname(NICKNAME)
-                .birth(BIRTH)
-                .mbti(Mbti.ENFJ)
-                .address(ADDRESS)
-                .smokeStatus(SmokeStatus.SMOKING)
-                .drinkStatus(DrinkStatus.NEVER)
-                .height(HEIGHT)
-                .description(DESCRIPTION)
-                .memberHobbies(List.of(memberHobby))
-                .memberPersonalities(List.of(memberPersonality))
-                .profileImages(profileImages)
-                .college(COLLEGE)
+                .member(member)
                 .build();
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                List.of(memberPersonality), List.of(memberHobby), profileImages);
         List<MemberResponse> memberResponses = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> MemberResponse.from(memberProfile))
                 .collect(Collectors.toList());

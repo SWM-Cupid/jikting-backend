@@ -6,8 +6,10 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.DuplicateException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.UnAuthorizedException;
+import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
+import com.cupid.jikting.member.repository.HobbyRepository;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -41,16 +43,11 @@ public class MemberServiceTest {
     private static final String PHONE = "01000000000";
     private static final Long ID = 1L;
     private static final String IMAGE_URL = "사진 URL";
-    private static final Sequence SEQUENCE = Sequence.MAIN;
     private static final String NICKNAME = "닉네임";
     private static final String COMPANY = "회사";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
     private static final int HEIGHT = 168;
-    private static final Gender GENDER = Gender.FEMALE;
     private static final String ADDRESS = "거주지";
-    private static final Mbti MBTI = Mbti.ESTJ;
-    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
-    private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
     private static final String COLLEGE = "출신학교(선택사항 - 없을 시 빈 문자열)";
     private static final String PERSONALITY = "성격";
     private static final String HOBBY = "취미";
@@ -58,6 +55,8 @@ public class MemberServiceTest {
 
     private Member member;
     private MemberProfile memberProfile;
+    private Personality personality;
+    private Hobby hobby;
     private List<ProfileImage> profileImages;
     private List<MemberPersonality> memberPersonalities;
     private List<MemberHobby> memberHobbies;
@@ -69,13 +68,19 @@ public class MemberServiceTest {
     private MemberService memberService;
 
     @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
     private MemberRepository memberRepository;
 
     @Mock
     private MemberProfileRepository memberProfileRepository;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private PersonalityRepository personalityRepository;
+
+    @Mock
+    private HobbyRepository hobbyRepository;
 
     @BeforeEach
     void setUp() {
@@ -96,48 +101,39 @@ public class MemberServiceTest {
                 .phone(PHONE)
                 .memberCompanies(memberCompanies)
                 .build();
-        profileImages = IntStream.range(0, 3)
+        profileImages = IntStream.range(0, 1)
                 .mapToObj(n -> ProfileImage.builder()
+                        .id(ID)
                         .url(IMAGE_URL)
-                        .sequence(SEQUENCE)
+                        .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
-        Personality personality = Personality.builder()
+        personality = Personality.builder()
                 .keyword(PERSONALITY)
                 .build();
-        Hobby hobby = Hobby.builder()
+        hobby = Hobby.builder()
                 .keyword(HOBBY)
                 .build();
-        memberPersonalities = IntStream.range(0, 3)
+        memberPersonalities = IntStream.range(0, 1)
                 .mapToObj(n -> MemberPersonality.builder()
                         .personality(personality)
                         .build())
                 .collect(Collectors.toList());
-        memberHobbies = IntStream.range(0, 3)
+        memberHobbies = IntStream.range(0, 1)
                 .mapToObj(n -> MemberHobby.builder()
                         .hobby(hobby)
                         .build())
                 .collect(Collectors.toList());
         memberProfile = MemberProfile.builder()
                 .nickname(NICKNAME)
-                .birth(BIRTH)
-                .height(HEIGHT)
-                .address(ADDRESS)
-                .description(DESCRIPTION)
-                .college(COLLEGE)
-                .gender(GENDER)
-                .mbti(MBTI)
-                .smokeStatus(SMOKE_STATUS)
-                .drinkStatus(DRINK_STATUS)
                 .member(member)
-                .profileImages(profileImages)
-                .memberHobbies(memberHobbies)
-                .memberPersonalities(memberPersonalities)
                 .build();
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                memberPersonalities, memberHobbies, profileImages);
         signupRequest = SignupRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD)
-                .gender(Gender.MALE.getKey())
+                .gender(Gender.MALE.getMessage())
                 .name(NAME)
                 .phone(PHONE)
                 .build();
@@ -202,8 +198,8 @@ public class MemberServiceTest {
                 () -> assertThat(memberProfileResponse.getHeight()).isEqualTo(memberProfile.getHeight()),
                 () -> assertThat(memberProfileResponse.getAddress()).isEqualTo(memberProfile.getAddress()),
                 () -> assertThat(memberProfileResponse.getMbti()).isEqualTo(memberProfile.getMbti().name()),
-                () -> assertThat(memberProfileResponse.getSmokeStatus()).isEqualTo(memberProfile.getSmokeStatus().getValue()),
-                () -> assertThat(memberProfileResponse.getDrinkStatus()).isEqualTo(memberProfile.getDrinkStatus().getValue()),
+                () -> assertThat(memberProfileResponse.getSmokeStatus()).isEqualTo(memberProfile.getSmokeStatus().getMessage()),
+                () -> assertThat(memberProfileResponse.getDrinkStatus()).isEqualTo(memberProfile.getDrinkStatus().getMessage()),
                 () -> assertThat(memberProfileResponse.getCollege()).isEqualTo(memberProfile.getCollege()),
                 () -> assertThat(memberProfileResponse.getPersonalities().size()).isEqualTo(memberPersonalities.size()),
                 () -> assertThat(memberProfileResponse.getHobbies().size()).isEqualTo(memberHobbies.size()),
@@ -259,6 +255,159 @@ public class MemberServiceTest {
         Assertions.assertThatThrownBy(() -> memberService.checkDuplicatedNickname(nicknameCheckRequest))
                 .isInstanceOf(DuplicateException.class)
                 .hasMessage(ApplicationError.DUPLICATE_NICKNAME.getMessage());
+    }
+
+    @Test
+    void 회원_프로필_수정_성공() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
+        willReturn(Optional.of(hobby)).given(hobbyRepository).findByKeyword(anyString());
+        MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
+                .images(profileImages.stream()
+                        .map(profileImage -> ImageRequest.builder()
+                                .profileImageId(profileImage.getId())
+                                .url(profileImage.getUrl())
+                                .sequence(profileImage.getSequence().name())
+                                .build())
+                        .collect(Collectors.toList()))
+                .birth(BIRTH)
+                .height(HEIGHT)
+                .gender(Gender.MALE.getMessage())
+                .address(ADDRESS)
+                .mbti(Mbti.ENFJ.name())
+                .drinkStatus(DrinkStatus.OFTEN.getMessage())
+                .smokeStatus(SmokeStatus.SMOKING.getMessage())
+                .college(COLLEGE)
+                .personalities(memberPersonalities.stream()
+                        .map(MemberPersonality::getPersonality)
+                        .map(Personality::getKeyword)
+                        .collect(Collectors.toList()))
+                .hobbies(memberHobbies.stream()
+                        .map(MemberHobby::getHobby)
+                        .map(Hobby::getKeyword)
+                        .collect(Collectors.toList()))
+                .description(DESCRIPTION)
+                .build();
+        // when
+        memberService.updateProfile(ID, memberProfileUpdateRequest);
+        // then
+        assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> verify(personalityRepository).findByKeyword(anyString()),
+                () -> verify(hobbyRepository).findByKeyword(anyString())
+        );
+    }
+
+    @Test
+    void 회원_프로필_수정_실패_회원_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
+                .images(profileImages.stream()
+                        .map(profileImage -> ImageRequest.builder()
+                                .profileImageId(profileImage.getId())
+                                .url(profileImage.getUrl())
+                                .sequence(profileImage.getSequence().name())
+                                .build())
+                        .collect(Collectors.toList()))
+                .birth(BIRTH)
+                .height(HEIGHT)
+                .gender(Gender.MALE.getMessage())
+                .address(ADDRESS)
+                .mbti(Mbti.ENFJ.name())
+                .drinkStatus(DrinkStatus.OFTEN.getMessage())
+                .smokeStatus(SmokeStatus.SMOKING.getMessage())
+                .college(COLLEGE)
+                .personalities(memberPersonalities.stream()
+                        .map(MemberPersonality::getPersonality)
+                        .map(Personality::getKeyword)
+                        .collect(Collectors.toList()))
+                .hobbies(memberHobbies.stream()
+                        .map(MemberHobby::getHobby)
+                        .map(Hobby::getKeyword)
+                        .collect(Collectors.toList()))
+                .description(DESCRIPTION)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.updateProfile(ID, memberProfileUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 회원_프로필_수정_실패_성격_키워드_없음() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willThrow(new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND)).given(personalityRepository).findByKeyword(anyString());
+        MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
+                .images(profileImages.stream()
+                        .map(profileImage -> ImageRequest.builder()
+                                .profileImageId(profileImage.getId())
+                                .url(profileImage.getUrl())
+                                .sequence(profileImage.getSequence().name())
+                                .build())
+                        .collect(Collectors.toList()))
+                .birth(BIRTH)
+                .height(HEIGHT)
+                .gender(Gender.MALE.getMessage())
+                .address(ADDRESS)
+                .mbti(Mbti.ENFJ.name())
+                .drinkStatus(DrinkStatus.OFTEN.getMessage())
+                .smokeStatus(SmokeStatus.SMOKING.getMessage())
+                .college(COLLEGE)
+                .personalities(memberPersonalities.stream()
+                        .map(MemberPersonality::getPersonality)
+                        .map(Personality::getKeyword)
+                        .collect(Collectors.toList()))
+                .hobbies(memberHobbies.stream()
+                        .map(MemberHobby::getHobby)
+                        .map(Hobby::getKeyword)
+                        .collect(Collectors.toList()))
+                .description(DESCRIPTION)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.updateProfile(ID, memberProfileUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.PERSONALITY_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 회원_프로필_수정_실패_취미_키워드_없음() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
+        willThrow(new NotFoundException(ApplicationError.HOBBY_NOT_FOUND)).given(hobbyRepository).findByKeyword(anyString());
+        MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
+                .images(profileImages.stream()
+                        .map(profileImage -> ImageRequest.builder()
+                                .profileImageId(profileImage.getId())
+                                .url(profileImage.getUrl())
+                                .sequence(profileImage.getSequence().name())
+                                .build())
+                        .collect(Collectors.toList()))
+                .birth(BIRTH)
+                .height(HEIGHT)
+                .gender(Gender.MALE.getMessage())
+                .address(ADDRESS)
+                .mbti(Mbti.ENFJ.name())
+                .drinkStatus(DrinkStatus.OFTEN.getMessage())
+                .smokeStatus(SmokeStatus.SMOKING.getMessage())
+                .college(COLLEGE)
+                .personalities(memberPersonalities.stream()
+                        .map(MemberPersonality::getPersonality)
+                        .map(Personality::getKeyword)
+                        .collect(Collectors.toList()))
+                .hobbies(memberHobbies.stream()
+                        .map(MemberHobby::getHobby)
+                        .map(Hobby::getKeyword)
+                        .collect(Collectors.toList()))
+                .description(DESCRIPTION)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.updateProfile(ID, memberProfileUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.HOBBY_NOT_FOUND.getMessage());
     }
 
     @Test

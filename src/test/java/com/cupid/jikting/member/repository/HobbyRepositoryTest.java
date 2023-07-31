@@ -1,6 +1,6 @@
-package com.cupid.jikting.common.repository;
+package com.cupid.jikting.member.repository;
 
-import com.cupid.jikting.common.entity.Personality;
+import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,27 +13,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class PersonalityRepositoryTest {
+class HobbyRepositoryTest {
 
-    private static final String KEYWORD = "성격 키워드";
+    private static final String KEYWORD = "취미 키워드";
 
     @Autowired
-    private PersonalityRepository personalityRepository;
+    private HobbyRepository hobbyRepository;
 
     @BeforeEach
     void setUp() {
-        personalityRepository.save(
-                Personality.builder()
+        hobbyRepository.save(
+                Hobby.builder()
                         .keyword(KEYWORD)
                         .build());
     }
 
     @Test
-    void 키워드로_성격_조회_성공() {
+    void 키워드로_취미_조회_성공() {
         // when
-        Personality personality = personalityRepository.findByKeyword(KEYWORD)
-                .orElseThrow(() -> new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND));
+        Hobby hobby = hobbyRepository.findByKeyword(KEYWORD)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.HOBBY_NOT_FOUND));
         // then
-        assertThat(personality.getKeyword()).isEqualTo(KEYWORD);
+        assertThat(hobby.getKeyword()).isEqualTo(KEYWORD);
     }
 }

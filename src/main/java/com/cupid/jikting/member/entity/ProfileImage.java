@@ -35,4 +35,13 @@ public class ProfileImage extends BaseEntity {
     public boolean isMain() {
         return sequence.equals(Sequence.MAIN);
     }
+
+    public void update(String url, Sequence sequence) {
+        this.url = url;
+        this.sequence = sequence;
+    }
+
+    public boolean isSameAs(Long id) {
+        return this.id.equals(id);
+    }
 }

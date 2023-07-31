@@ -35,7 +35,6 @@ public class RecommendServiceTest {
 
     private static final Long ID = 1L;
     private static final LocalDate BIRTH = LocalDate.now();
-    private static final Mbti MBTI = Mbti.ENFJ;
     private static final String ADDRESS = "지역";
     private static final String COMPANY = "회사";
     private static final int HEIGHT = 180;
@@ -76,17 +75,17 @@ public class RecommendServiceTest {
                 .build();
         memberProfile = MemberProfile.builder()
                 .birth(BIRTH)
-                .mbti(MBTI)
+                .mbti(Mbti.ENFJ)
                 .address(ADDRESS)
                 .member(member)
                 .smokeStatus(SmokeStatus.SMOKING)
-                .drinkStatus(DrinkStatus.NEVER)
+                .drinkStatus(DrinkStatus.OFTEN)
                 .height(HEIGHT)
                 .description(DESCRIPTION)
-                .memberPersonalities(memberPersonalities)
-                .memberHobbies(memberHobbies)
                 .college(COLLEGE)
                 .build();
+        memberProfile.getMemberPersonalities().update(memberPersonalities);
+        memberProfile.getMemberHobbies().update(memberHobbies);
         TeamMember.of(LEADER, teamFrom, memberProfile);
         List<Recommend> recommends = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> Recommend.builder()

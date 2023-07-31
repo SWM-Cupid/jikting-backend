@@ -1,13 +1,14 @@
 package com.cupid.jikting.member.service;
 
+import com.cupid.jikting.common.entity.Hobby;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.DuplicateException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.dto.*;
-import com.cupid.jikting.member.entity.Gender;
-import com.cupid.jikting.member.entity.Member;
-import com.cupid.jikting.member.entity.MemberProfile;
-import com.cupid.jikting.member.entity.Role;
+import com.cupid.jikting.member.entity.*;
+import com.cupid.jikting.member.repository.HobbyRepository;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +17,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class MemberService {
 
+    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final PersonalityRepository personalityRepository;
+    private final HobbyRepository hobbyRepository;
 
     public void signup(SignupRequest signupRequest) {
         Member member = Member.builder()
@@ -50,7 +55,21 @@ public class MemberService {
     public void update(NicknameUpdateRequest nicknameUpdateRequest) {
     }
 
-    public void updateProfile(MemberProfileUpdateRequest memberProfileUpdateRequest) {
+    public void updateProfile(Long memberProfileId, MemberProfileUpdateRequest memberProfileUpdateRequest) {
+        MemberProfile memberProfile = getMemberProfileById(memberProfileId);
+        memberProfile.updateProfile(memberProfileUpdateRequest.getBirth(),
+                memberProfileUpdateRequest.getHeight(),
+                Mbti.valueOf(memberProfileUpdateRequest.getMbti()),
+                memberProfileUpdateRequest.getAddress(),
+                Gender.find(memberProfileUpdateRequest.getGender()),
+                memberProfileUpdateRequest.getCollege(),
+                SmokeStatus.find(memberProfileUpdateRequest.getSmokeStatus()),
+                DrinkStatus.find(memberProfileUpdateRequest.getDrinkStatus()),
+                memberProfileUpdateRequest.getDescription(),
+                getMemberPersonalities(memberProfile, memberProfileUpdateRequest.getPersonalities()),
+                getMemberHobbies(memberProfile, memberProfileUpdateRequest.getHobbies()),
+                getProfileImages(memberProfile, memberProfileUpdateRequest.getImages()));
+        memberProfileRepository.save(memberProfile);
     }
 
     public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
@@ -114,5 +133,46 @@ public class MemberService {
     private MemberProfile getMemberProfileById(Long memberProfileId) {
         return memberProfileRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
+    }
+
+    private List<MemberPersonality> getMemberPersonalities(MemberProfile memberProfile, List<String> keywords) {
+        return keywords.stream()
+                .map(this::getPersonalityByKeyword)
+                .map(personality -> MemberPersonality.builder()
+                        .memberProfile(memberProfile)
+                        .personality(personality)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private Personality getPersonalityByKeyword(String keyword) {
+        return personalityRepository.findByKeyword(keyword)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND));
+    }
+
+    private List<MemberHobby> getMemberHobbies(MemberProfile memberProfile, List<String> keywords) {
+        return keywords.stream()
+                .map(this::getHobbyByKeyword)
+                .map(hobby -> MemberHobby.builder()
+                        .memberProfile(memberProfile)
+                        .hobby(hobby)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private Hobby getHobbyByKeyword(String keyword) {
+        return hobbyRepository.findByKeyword(keyword)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.HOBBY_NOT_FOUND));
+    }
+
+    private List<ProfileImage> getProfileImages(MemberProfile memberProfile, List<ImageRequest> images) {
+        return images.stream()
+                .map(imageRequest -> ProfileImage.builder()
+                        .memberProfile(memberProfile)
+                        .id(imageRequest.getProfileImageId())
+                        .url(imageRequest.getUrl())
+                        .sequence(Sequence.valueOf(imageRequest.getSequence()))
+                        .build())
+                .collect(Collectors.toList());
     }
 }

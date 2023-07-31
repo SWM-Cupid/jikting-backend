@@ -5,9 +5,7 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.like.dto.LikeResponse;
-import com.cupid.jikting.member.entity.MemberProfile;
-import com.cupid.jikting.member.entity.ProfileImage;
-import com.cupid.jikting.member.entity.Sequence;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.team.entity.*;
 import com.cupid.jikting.team.repository.TeamLikeRepository;
 import com.cupid.jikting.team.repository.TeamMemberRepository;
@@ -18,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,6 +37,13 @@ class LikeServiceTest {
     private static final String NAME = "팀이름";
     private static final String KEYWORD = "키워드";
     private static final String URL = "url";
+    private static final int YEAR = 1967;
+    private static final int MONTH = 5;
+    private static final int DATE = 10;
+    private static final int HEIGHT = 189;
+    private static final String ADDRESS = "주소";
+    private static final String COLLEGE = "대학";
+    private static final String DESCRIPTION = "한 줄 소개";
 
     private TeamMember teamMember;
     private List<TeamLike> teamLikes;
@@ -62,13 +68,15 @@ class LikeServiceTest {
                 .build();
         List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> ProfileImage.builder()
+                        .id(ID)
                         .url(URL)
                         .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
         MemberProfile memberProfile = MemberProfile.builder()
-                .profileImages(profileImages)
                 .build();
+        memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> TeamMember.builder()
                         .memberProfile(memberProfile)
@@ -89,11 +97,6 @@ class LikeServiceTest {
                 .sentTeam(sentTeam)
                 .receivedTeam(receivedTeam)
                 .acceptStatus(AcceptStatus.INITIAL)
-                .build();
-        TeamLike teamLike = TeamLike.builder()
-                .id(ID)
-                .sentTeam(sentTeam)
-                .receivedTeam(receivedTeam)
                 .build();
         Team team = Team.builder()
                 .id(ID)

@@ -4,10 +4,7 @@ import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
-import com.cupid.jikting.member.entity.Mbti;
-import com.cupid.jikting.member.entity.MemberProfile;
-import com.cupid.jikting.member.entity.ProfileImage;
-import com.cupid.jikting.member.entity.Sequence;
+import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
@@ -48,8 +45,10 @@ class TeamServiceTest {
     private static final boolean LEADER = true;
     private static final String INVITATION_URL = "https://jikting.com/teams/" + ID + "/invite";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
-    private static final Mbti MBTI = Mbti.ENFJ;
     private static final String ADDRESS = "서울시 강남구 테헤란로";
+    private static final String COLLEGE = "대학";
+    private static final int HEIGHT = 160;
+    private static final String IMAGE_URL = "이미지 URL";
 
     private MemberProfile leader;
     private MemberProfile member;
@@ -74,23 +73,21 @@ class TeamServiceTest {
     void setUp() {
         List<ProfileImage> profileImages = IntStream.range(0, 3)
                 .mapToObj(n -> ProfileImage.builder()
-                        .url("이미지 URL")
+                        .url(IMAGE_URL)
                         .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
         leader = MemberProfile.builder()
                 .id(ID)
                 .birth(BIRTH)
-                .mbti(MBTI)
+                .mbti(Mbti.ENFJ)
                 .address(ADDRESS)
-                .profileImages(profileImages)
                 .build();
         member = MemberProfile.builder()
                 .id(ID)
                 .birth(BIRTH)
-                .mbti(MBTI)
+                .mbti(Mbti.ENFJ)
                 .address(ADDRESS)
-                .profileImages(profileImages)
                 .build();
         personality = Personality.builder()
                 .keyword(KEYWORD)
@@ -101,6 +98,10 @@ class TeamServiceTest {
                         .personality(personality)
                         .build())
                 .collect(Collectors.toList());
+        leader.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
+        member.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         team = Team.builder()
                 .id(ID)
                 .name(NAME)
