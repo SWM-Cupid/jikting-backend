@@ -6,6 +6,7 @@ import com.cupid.jikting.member.entity.SocialType;
 import com.cupid.jikting.member.oauth2.userinfo.GoogleOAuth2UserInfo;
 import com.cupid.jikting.member.oauth2.userinfo.KakaoOAuth2UserInfo;
 import com.cupid.jikting.member.oauth2.userinfo.OAuth2UserInfo;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,16 +14,12 @@ import java.util.Map;
 import java.util.UUID;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class OAuthAttributes {
 
     private final String nameAttributeKey;
     private final OAuth2UserInfo oauth2UserInfo;
-
-    @Builder
-    public OAuthAttributes(String nameAttributeKey, OAuth2UserInfo oauth2UserInfo) {
-        this.nameAttributeKey = nameAttributeKey;
-        this.oauth2UserInfo = oauth2UserInfo;
-    }
 
     public static OAuthAttributes of(SocialType socialType, String userNameAttributeName, Map<String, Object> attributes) {
         if (socialType == SocialType.KAKAO) {
@@ -52,5 +49,9 @@ public class OAuthAttributes {
                 .username(UUID.randomUUID().toString())
                 .role(Role.GUEST)
                 .build();
+    }
+
+    public String getOauth2UserInfoId() {
+        return oauth2UserInfo.getId();
     }
 }
