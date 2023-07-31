@@ -1,8 +1,11 @@
 package com.cupid.jikting.like.service;
 
+import com.cupid.jikting.chatting.entity.ChattingRoom;
+import com.cupid.jikting.chatting.repository.ChattingRoomRepository;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.entity.ProfileImage;
@@ -11,6 +14,7 @@ import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.entity.TeamMember;
 import com.cupid.jikting.team.entity.TeamPersonality;
+import com.cupid.jikting.team.repository.TeamLikeRepository;
 import com.cupid.jikting.team.repository.TeamMemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +31,7 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
@@ -42,12 +47,19 @@ class LikeServiceTest {
 
     private TeamMember teamMember;
     private List<TeamLike> teamLikes;
+    private TeamLike teamLike;
 
     @InjectMocks
     private LikeService likeService;
 
     @Mock
     private TeamMemberRepository teamMemberRepository;
+
+    @Mock
+    private TeamLikeRepository teamLikeRepository;
+
+    @Mock
+    private ChattingRoomRepository chattingRoomRepository;
 
     @BeforeEach
     void setUp() {
@@ -81,7 +93,7 @@ class LikeServiceTest {
                 .teamPersonalities(List.of(teamPersonality))
                 .teamMembers(teamMembers)
                 .build();
-        TeamLike teamLike = TeamLike.builder()
+        teamLike = TeamLike.builder()
                 .id(ID)
                 .sentTeam(sentTeam)
                 .receivedTeam(receivedTeam)
@@ -143,5 +155,29 @@ class LikeServiceTest {
         assertThatThrownBy(() -> likeService.getAllSentLike(ID))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.NOT_EXIST_REGISTERED_TEAM.getMessage());
+    }
+
+    @Test
+    void 받은_호감_수락_성공() {
+        //given
+        willReturn(Optional.of(teamLike)).given(teamLikeRepository).findById(anyLong());
+        //when
+        likeService.acceptLike(ID);
+        //then
+        assertAll(
+                () -> verify(teamLikeRepository).findById(anyLong()),
+                () -> verify(teamLikeRepository).save(any(TeamLike.class)),
+                () -> verify(chattingRoomRepository).save(any(ChattingRoom.class))
+        );
+    }
+
+    @Test
+    void 받은_호감_수락_실패_호감_없음() {
+        //given
+        willThrow(new NotFoundException(ApplicationError.LIKE_NOT_FOUND)).given(teamLikeRepository).findById(anyLong());
+        //when & then
+        assertThatThrownBy(() -> likeService.acceptLike(ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.LIKE_NOT_FOUND.getMessage());
     }
 }
