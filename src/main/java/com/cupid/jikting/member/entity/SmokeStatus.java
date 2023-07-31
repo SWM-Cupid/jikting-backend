@@ -20,6 +20,6 @@ public enum SmokeStatus {
         return Arrays.stream(values())
                 .filter(value -> value.message.equals(message))
                 .findAny()
-                .orElseThrow(() -> new BadRequestException(ApplicationError.INVALID_GENDER));
+                .orElseThrow(() -> new BadRequestException(ApplicationError.INVALID_SMOKE_STATUS));
     }
 }
