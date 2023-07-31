@@ -1,7 +1,6 @@
 package com.cupid.jikting.meeting.service;
 
 import com.cupid.jikting.meeting.dto.InstantMeetingResponse;
-import com.cupid.jikting.meeting.entity.InstantMeeting;
 import com.cupid.jikting.meeting.repository.InstantMeetingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,8 @@ public class InstantMeetingService {
     private final InstantMeetingRepository instantMeetingRepository;
 
     public List<InstantMeetingResponse> getAll(Long memberProfileId) {
-        return instantMeetingRepository.findAll().stream()
+        return instantMeetingRepository.findAll()
+                .stream()
                 .map(instantMeeting ->
                         InstantMeetingResponse.of(instantMeeting, memberProfileId))
                 .collect(Collectors.toList());
