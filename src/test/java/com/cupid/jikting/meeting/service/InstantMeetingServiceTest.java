@@ -1,11 +1,9 @@
 package com.cupid.jikting.meeting.service;
 
-import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.meeting.dto.InstantMeetingResponse;
 import com.cupid.jikting.meeting.entity.InstantMeeting;
 import com.cupid.jikting.meeting.entity.InstantMeetingMember;
 import com.cupid.jikting.meeting.repository.InstantMeetingRepository;
-import com.cupid.jikting.member.dto.MemberResponse;
 import com.cupid.jikting.member.entity.MemberProfile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,17 +11,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.verify;
 
@@ -56,7 +52,9 @@ public class InstantMeetingServiceTest {
                 .place(PLACE)
                 .instantMeetingMembers(List.of(instantMeetingMember))
                 .build();
-        instantMeetings = List.of(instantMeeting, instantMeeting);
+        instantMeetings = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> instantMeeting)
+                .collect(Collectors.toList());
     }
 
     @Test
