@@ -1,8 +1,11 @@
 package com.cupid.jikting.member.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.UnAuthorizedException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -54,5 +57,11 @@ public class Member extends BaseEntity {
         memberProfile = MemberProfile.builder()
                 .member(this)
                 .build();
+    }
+
+    public void validatePassword(PasswordEncoder passwordEncoder, String password) {
+        if (!passwordEncoder.matches(password, this.password)) {
+            throw new UnAuthorizedException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
+        }
     }
 }
