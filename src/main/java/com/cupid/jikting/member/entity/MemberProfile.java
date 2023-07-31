@@ -131,4 +131,8 @@ public class MemberProfile extends BaseEntity {
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
         memberChattingRooms.add(memberChattingRoom);
     }
+
+    public boolean isSameAs(Long memberProfileId) {
+        return this.getId().equals(memberProfileId);
+    }
 }

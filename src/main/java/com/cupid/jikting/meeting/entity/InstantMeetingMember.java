@@ -29,6 +29,6 @@ public class InstantMeetingMember extends BaseEntity {
     private InstantMeeting instantMeeting;
 
     public boolean isSameMemberProfileId(Long memberProfileId) {
-        return memberProfile.getId().equals(memberProfileId);
+        return memberProfile.isSameAs(memberProfileId);
     }
 }
