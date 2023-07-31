@@ -22,6 +22,8 @@ import java.io.IOException;
 @Component
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
+    private static final String TOKEN_TYPE = "Bearer ";
+
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
 
@@ -32,7 +34,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         if (oAuth2User.getRole() == Role.GUEST) {
             String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
-            response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
+            response.addHeader(jwtService.getAccessHeader(), TOKEN_TYPE + accessToken);
             response.sendRedirect("/oauth2/sign-up");
             jwtService.sendAccessAndRefreshToken(response, accessToken, null);
         } else {
