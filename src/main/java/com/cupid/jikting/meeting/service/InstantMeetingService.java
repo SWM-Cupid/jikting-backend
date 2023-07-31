@@ -6,9 +6,6 @@ import com.cupid.jikting.meeting.repository.InstantMeetingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +16,7 @@ public class InstantMeetingService {
     private final InstantMeetingRepository instantMeetingRepository;
 
     public List<InstantMeetingResponse> getAll(Long memberProfileId) {
-        List<InstantMeeting> instantMeetings = getTodayInstantMeeting();
+        List<InstantMeeting> instantMeetings = getInstantMeeting();
         return instantMeetings.stream()
                 .map(instantMeeting ->
                         InstantMeetingResponse.of(instantMeeting, isAttend(instantMeeting, memberProfileId)))
@@ -29,10 +26,8 @@ public class InstantMeetingService {
     public void attend(Long instantMeetingId) {
     }
 
-    private List<InstantMeeting> getTodayInstantMeeting() {
-        LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
-        return instantMeetingRepository.findAllByScheduleBetween(start, end);
+    private List<InstantMeeting> getInstantMeeting() {
+        return instantMeetingRepository.findAll();
     }
 
     private boolean isAttend(InstantMeeting instantMeeting, Long memberProfileId) {
