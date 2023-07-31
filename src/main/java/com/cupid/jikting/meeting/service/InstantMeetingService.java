@@ -17,8 +17,7 @@ public class InstantMeetingService {
     public List<InstantMeetingResponse> getAll(Long memberProfileId) {
         return instantMeetingRepository.findAll()
                 .stream()
-                .map(instantMeeting ->
-                        InstantMeetingResponse.of(instantMeeting, memberProfileId))
+                .map(instantMeeting -> InstantMeetingResponse.of(instantMeeting, memberProfileId))
                 .collect(Collectors.toList());
     }
 
