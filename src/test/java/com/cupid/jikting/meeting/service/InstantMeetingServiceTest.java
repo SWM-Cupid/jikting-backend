@@ -62,12 +62,12 @@ public class InstantMeetingServiceTest {
     @Test
     void 번개팅_조회_성공() {
         // given
-        willReturn(instantMeetings).given(instantMeetingRepository).findAllByScheduleBetween(any(), any());
+        willReturn(instantMeetings).given(instantMeetingRepository).findAll();
         // when
         List<InstantMeetingResponse> instantMeetingResponses = instantMeetingService.getAll(ID);
         // then
         assertAll(
-                () -> verify(instantMeetingRepository).findAllByScheduleBetween(any(), any()),
+                () -> verify(instantMeetingRepository).findAll(),
                 () -> assertThat(instantMeetingResponses.size()).isEqualTo(instantMeetings.size())
         );
     }
