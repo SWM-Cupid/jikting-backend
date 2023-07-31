@@ -41,7 +41,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         Map<String, Object> attributes = oAuth2User.getAttributes();
         OAuthAttributes extractAttributes = OAuthAttributes.of(socialType, userNameAttributeName, attributes);
         Member createdMember = getMember(extractAttributes, socialType);
-        return new CustomOAuth2User(
+        return CustomOAuth2User.of(
                 Collections.singleton(new SimpleGrantedAuthority(createdMember.getRole().getKey())),
                 attributes,
                 extractAttributes.getNameAttributeKey(),
