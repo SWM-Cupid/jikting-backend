@@ -19,19 +19,10 @@ public class InstantMeetingService {
 
         return instantMeetingRepository.findAll().stream()
                 .map(instantMeeting ->
-                        InstantMeetingResponse.of(instantMeeting, isAttend(instantMeeting, memberProfileId)))
+                        InstantMeetingResponse.of(instantMeeting, memberProfileId))
                 .collect(Collectors.toList());
     }
 
     public void attend(Long instantMeetingId) {
-    }
-
-    private List<InstantMeeting> getInstantMeeting() {
-        return instantMeetingRepository.findAll();
-    }
-
-    private boolean isAttend(InstantMeeting instantMeeting, Long memberProfileId) {
-        return instantMeeting.getInstantMeetingMembers().stream()
-                .anyMatch(instantMeetingMember -> instantMeetingMember.getMemberProfileId().equals(memberProfileId));
     }
 }

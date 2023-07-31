@@ -19,12 +19,12 @@ public class InstantMeetingResponse {
     private int memberCount;
     private boolean isAttend;
 
-    public static InstantMeetingResponse of(InstantMeeting instantMeeting, boolean isAttend) {
+    public static InstantMeetingResponse of(InstantMeeting instantMeeting, Long memberProfileId) {
         return new InstantMeetingResponse(
                 instantMeeting.getId(),
                 instantMeeting.getSchedule(),
                 instantMeeting.getPlace(),
                 instantMeeting.getMemberCount(),
-                isAttend);
+                instantMeeting.isAttend(memberProfileId));
     }
 }
