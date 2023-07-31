@@ -25,6 +25,6 @@ public class InstantMeetingResponse {
                 instantMeeting.getSchedule(),
                 instantMeeting.getPlace(),
                 instantMeeting.getMemberCount(),
-                instantMeeting.isAttend(memberProfileId));
+                instantMeeting.isAttended(memberProfileId));
     }
 }
