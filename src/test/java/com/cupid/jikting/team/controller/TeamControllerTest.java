@@ -55,15 +55,11 @@ public class TeamControllerTest extends ApiDocument {
     private static final String NICKNAME = "닉네임";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 22);
     private static final String URL = "이미지 링크";
-    private static final Sequence SEQUENCE = Sequence.MAIN;
     private static final Mbti MBTI = Mbti.ENFP;
     private static final String ADDRESS = "거주지";
     private static final boolean LEADER = true;
     private static final int HEIGHT = 189;
-    private static final Gender GENDER = Gender.FEMALE;
     private static final String COLLEGE = "대학";
-    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
-    private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
 
     private String accessToken;
     private TeamRegisterRequest teamRegisterRequest;
@@ -96,7 +92,7 @@ public class TeamControllerTest extends ApiDocument {
         List<ProfileImage> profileImages = IntStream.range(0, 3)
                 .mapToObj(n -> ProfileImage.builder()
                         .url(URL)
-                        .sequence(SEQUENCE)
+                        .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
         Team team = Team.builder()
@@ -107,7 +103,7 @@ public class TeamControllerTest extends ApiDocument {
         MemberProfile memberProfile = MemberProfile.builder()
                 .nickname(NICKNAME)
                 .build();
-        memberProfile.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, GENDER, COLLEGE, SMOKE_STATUS, DRINK_STATUS, DESCRIPTION,
+        memberProfile.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         TeamMember.of(LEADER, team, memberProfile);
         teamRegisterRequest = TeamRegisterRequest.builder()

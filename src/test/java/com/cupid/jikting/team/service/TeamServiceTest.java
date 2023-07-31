@@ -47,11 +47,8 @@ class TeamServiceTest {
     private static final Mbti MBTI = Mbti.ENFJ;
     private static final String ADDRESS = "서울시 강남구 테헤란로";
     private static final String COLLEGE = "대학";
-    private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
-    private static final Gender GENDER = Gender.MALE;
     private static final int HEIGHT = 160;
     private static final String IMAGE_URL = "이미지 URL";
-    private static final Sequence SEQUENCE = Sequence.MAIN;
 
     private MemberProfile leader;
     private MemberProfile member;
@@ -77,7 +74,7 @@ class TeamServiceTest {
         List<ProfileImage> profileImages = IntStream.range(0, 3)
                 .mapToObj(n -> ProfileImage.builder()
                         .url(IMAGE_URL)
-                        .sequence(SEQUENCE)
+                        .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
         leader = MemberProfile.builder()
@@ -98,9 +95,9 @@ class TeamServiceTest {
         personalities = IntStream.range(0, 3)
                 .mapToObj(n -> personality)
                 .collect(Collectors.toList());
-        leader.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, GENDER, COLLEGE, SmokeStatus.NONSMOKING, DRINK_STATUS, DESCRIPTION,
+        leader.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
-        member.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, GENDER, COLLEGE, SmokeStatus.NONSMOKING, DRINK_STATUS, DESCRIPTION,
+        member.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         team = Team.builder()
                 .id(ID)

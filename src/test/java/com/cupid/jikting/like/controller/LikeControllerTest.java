@@ -63,8 +63,6 @@ public class LikeControllerTest extends ApiDocument {
     private static final int YEAR = 1967;
     private static final int MONTH = 4;
     private static final int DATE = 19;
-    private static final Gender GENDER = Gender.MALE;
-    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.NONSMOKING;
 
     private String accessToken;
     private List<LikeResponse> likeResponses;
@@ -92,7 +90,7 @@ public class LikeControllerTest extends ApiDocument {
                         .address(ADDRESS)
                         .company(COMPANY)
                         .isSmoke(IS_SMOKE)
-                        .drinkStatus(DRINK_STATUS)
+                        .drinkStatus(DrinkStatus.OFTEN.getMessage())
                         .height(HEIGHT)
                         .description(DESCRIPTION)
                         .keywords(keywords)
@@ -116,7 +114,7 @@ public class LikeControllerTest extends ApiDocument {
                 .collect(Collectors.toList());
         MemberProfile memberProfile = MemberProfile.builder()
                 .build();
-        memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, Mbti.INTJ, ADDRESS, GENDER, COLLEGE, SMOKE_STATUS, DrinkStatus.find(DRINK_STATUS), DESCRIPTION,
+        memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, Mbti.INTJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.find(DRINK_STATUS), DESCRIPTION,
                 List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> TeamMember.builder()

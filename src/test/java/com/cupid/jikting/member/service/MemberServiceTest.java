@@ -43,16 +43,12 @@ public class MemberServiceTest {
     private static final String PHONE = "01000000000";
     private static final Long ID = 1L;
     private static final String IMAGE_URL = "사진 URL";
-    private static final Sequence SEQUENCE = Sequence.MAIN;
     private static final String NICKNAME = "닉네임";
     private static final String COMPANY = "회사";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
     private static final int HEIGHT = 168;
-    private static final Gender GENDER = Gender.FEMALE;
     private static final String ADDRESS = "거주지";
     private static final Mbti MBTI = Mbti.ESTJ;
-    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
-    private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
     private static final String COLLEGE = "출신학교(선택사항 - 없을 시 빈 문자열)";
     private static final String PERSONALITY = "성격";
     private static final String HOBBY = "취미";
@@ -101,7 +97,7 @@ public class MemberServiceTest {
         member = Member.builder()
                 .username(USERNAME)
                 .password(passwordEncoder.encode(PASSWORD))
-                .gender(GENDER).name(NAME)
+                .gender(Gender.MALE).name(NAME)
                 .phone(PHONE)
                 .memberCompanies(memberCompanies)
                 .build();
@@ -109,7 +105,7 @@ public class MemberServiceTest {
                 .mapToObj(n -> ProfileImage.builder()
                         .id(ID)
                         .url(IMAGE_URL)
-                        .sequence(SEQUENCE)
+                        .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
         personality = Personality.builder()
@@ -132,7 +128,7 @@ public class MemberServiceTest {
                 .nickname(NICKNAME)
                 .member(member)
                 .build();
-        memberProfile.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, GENDER, COLLEGE, SMOKE_STATUS, DRINK_STATUS, DESCRIPTION,
+        memberProfile.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 memberPersonalities, memberHobbies, profileImages);
         signupRequest = SignupRequest.builder()
                 .username(USERNAME)
@@ -273,11 +269,11 @@ public class MemberServiceTest {
                         .collect(Collectors.toList()))
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(GENDER.getMessage())
+                .gender(Gender.MALE.getMessage())
                 .address(ADDRESS)
                 .mbti(MBTI.name())
-                .drinkStatus(DRINK_STATUS.getMessage())
-                .smokeStatus(SMOKE_STATUS.getMessage())
+                .drinkStatus(DrinkStatus.OFTEN.getMessage())
+                .smokeStatus(SmokeStatus.SMOKING.getMessage())
                 .college(COLLEGE)
                 .personalities(memberPersonalities.stream()
                         .map(MemberPersonality::getPersonality)
@@ -313,11 +309,11 @@ public class MemberServiceTest {
                         .collect(Collectors.toList()))
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(GENDER.getMessage())
+                .gender(Gender.MALE.getMessage())
                 .address(ADDRESS)
                 .mbti(MBTI.name())
-                .drinkStatus(DRINK_STATUS.getMessage())
-                .smokeStatus(SMOKE_STATUS.getMessage())
+                .drinkStatus(DrinkStatus.OFTEN.getMessage())
+                .smokeStatus(SmokeStatus.SMOKING.getMessage())
                 .college(COLLEGE)
                 .personalities(memberPersonalities.stream()
                         .map(MemberPersonality::getPersonality)
@@ -350,11 +346,11 @@ public class MemberServiceTest {
                         .collect(Collectors.toList()))
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(GENDER.getMessage())
+                .gender(Gender.MALE.getMessage())
                 .address(ADDRESS)
                 .mbti(MBTI.name())
-                .drinkStatus(DRINK_STATUS.getMessage())
-                .smokeStatus(SMOKE_STATUS.getMessage())
+                .drinkStatus(DrinkStatus.OFTEN.getMessage())
+                .smokeStatus(SmokeStatus.SMOKING.getMessage())
                 .college(COLLEGE)
                 .personalities(memberPersonalities.stream()
                         .map(MemberPersonality::getPersonality)
@@ -388,11 +384,11 @@ public class MemberServiceTest {
                         .collect(Collectors.toList()))
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(GENDER.getMessage())
+                .gender(Gender.MALE.getMessage())
                 .address(ADDRESS)
                 .mbti(MBTI.name())
-                .drinkStatus(DRINK_STATUS.getMessage())
-                .smokeStatus(SMOKE_STATUS.getMessage())
+                .drinkStatus(DrinkStatus.OFTEN.getMessage())
+                .smokeStatus(SmokeStatus.SMOKING.getMessage())
                 .college(COLLEGE)
                 .personalities(memberPersonalities.stream()
                         .map(MemberPersonality::getPersonality)

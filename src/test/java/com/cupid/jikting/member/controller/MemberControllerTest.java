@@ -52,16 +52,12 @@ public class MemberControllerTest extends ApiDocument {
     private static final String COMPANY = "직장";
     private static final String IMAGE_URL = "사진 URL";
     private static final int HEIGHT = 168;
-    private static final Gender GENDER = Gender.FEMALE;
     private static final String ADDRESS = "거주지";
     private static final Mbti MBTI = Mbti.ESTJ;
-    private static final SmokeStatus SMOKE_STATUS = SmokeStatus.SMOKING;
-    private static final DrinkStatus DRINK_STATUS = DrinkStatus.OFTEN;
     private static final String COLLEGE = "출신학교(선택사항 - 없을 시 빈 문자열)";
     private static final String PERSONALITY = "성격";
     private static final String HOBBY = "취미";
     private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
-    private static final Sequence SEQUENCE = Sequence.MAIN;
     private static final String NEW_PASSWORD = "새 비밀번호";
     private static final String IMAGE_PARAMETER_NAME = "file";
     private static final String IMAGE_FILENAME = "image.png";
@@ -136,23 +132,23 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         ProfileImage profileImage = ProfileImage.builder()
                 .id(ID)
-                .sequence(SEQUENCE)
+                .sequence(Sequence.MAIN)
                 .url(IMAGE_URL)
                 .build();
         MemberProfile memberProfile = MemberProfile.builder()
                 .nickname(NICKNAME)
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(GENDER)
+                .gender(Gender.MALE)
                 .address(ADDRESS)
                 .mbti(MBTI)
-                .drinkStatus(DRINK_STATUS)
-                .smokeStatus(SMOKE_STATUS)
+                .drinkStatus(DrinkStatus.OFTEN)
+                .smokeStatus(SmokeStatus.SMOKING)
                 .college(COLLEGE)
                 .description(DESCRIPTION)
                 .member(member)
                 .build();
-        memberProfile.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, GENDER, COLLEGE, SMOKE_STATUS, DRINK_STATUS, DESCRIPTION,
+        memberProfile.updateProfile(BIRTH, HEIGHT, MBTI, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 memberPersonalities, memberHobbies, List.of(profileImage));
         MemberCompany memberCompany = MemberCompany.builder()
                 .member(member)
@@ -180,7 +176,7 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .name(NAME)
                 .phone(PHONE)
-                .gender(GENDER.getMessage())
+                .gender(Gender.MALE.getMessage())
                 .build();
         nicknameUpdateRequest = NicknameUpdateRequest.builder()
                 .nickname(NICKNAME)
@@ -189,11 +185,11 @@ public class MemberControllerTest extends ApiDocument {
                 .images(images)
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(GENDER.getMessage())
+                .gender(Gender.MALE.getMessage())
                 .address(ADDRESS)
                 .mbti(MBTI.name())
-                .drinkStatus(DRINK_STATUS.getMessage())
-                .smokeStatus(SMOKE_STATUS.getMessage())
+                .drinkStatus(DrinkStatus.OFTEN.getMessage())
+                .smokeStatus(SmokeStatus.SMOKING.getMessage())
                 .college(COLLEGE)
                 .personalities(personalities)
                 .hobbies(hobbies)
