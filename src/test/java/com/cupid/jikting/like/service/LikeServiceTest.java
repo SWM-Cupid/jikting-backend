@@ -1,10 +1,12 @@
 package com.cupid.jikting.like.service;
 
+import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.like.dto.LikeResponse;
+import com.cupid.jikting.like.dto.TeamDetailResponse;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.team.entity.*;
 import com.cupid.jikting.team.repository.TeamLikeRepository;
@@ -41,6 +43,7 @@ class LikeServiceTest {
     private static final int MONTH = 5;
     private static final int DATE = 10;
     private static final int HEIGHT = 189;
+    private static final String COMPANY = "회사";
     private static final String ADDRESS = "주소";
     private static final String COLLEGE = "대학";
     private static final String DESCRIPTION = "한 줄 소개";
@@ -63,8 +66,17 @@ class LikeServiceTest {
         Personality personality = Personality.builder()
                 .keyword(KEYWORD)
                 .build();
+        Hobby hobby = Hobby.builder()
+                .keyword(KEYWORD)
+                .build();
         TeamPersonality teamPersonality = TeamPersonality.builder()
                 .personality(personality)
+                .build();
+        MemberPersonality memberPersonality = MemberPersonality.builder()
+                .personality(personality)
+                .build();
+        MemberHobby memberHobby = MemberHobby.builder()
+                .hobby(hobby)
                 .build();
         List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> ProfileImage.builder()
@@ -73,10 +85,20 @@ class LikeServiceTest {
                         .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
+        Company company = Company.builder()
+                .name(COMPANY)
+                .build();
+        MemberCompany memberCompany = MemberCompany.builder()
+                .company(company)
+                .build();
+        Member member = Member.builder()
+                .memberCompanies(List.of(memberCompany))
+                .build();
         MemberProfile memberProfile = MemberProfile.builder()
+                .member(member)
                 .build();
         memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
+                List.of(memberPersonality), List.of(memberHobby), profileImages);
         List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> TeamMember.builder()
                         .memberProfile(memberProfile)
@@ -173,6 +195,54 @@ class LikeServiceTest {
         willThrow(new NotFoundException(ApplicationError.LIKE_NOT_FOUND)).given(teamLikeRepository).findById(anyLong());
         //when & then
         assertThatThrownBy(() -> likeService.rejectLike(ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.LIKE_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 보낸팀_상세_조회() {
+        //given
+        willReturn(Optional.of(teamLike)).given(teamLikeRepository).findById(anyLong());
+        //when
+        TeamDetailResponse teamDetailResponse = likeService.getSentTeamDetail(ID);
+        //then
+        assertAll(
+                () -> verify(teamLikeRepository).findById(anyLong()),
+                () -> assertThat(teamDetailResponse.getLikeId()).isEqualTo(ID),
+                () -> assertThat(teamDetailResponse.getTeamName()).isEqualTo(teamLike.getReceivedTeam().getName())
+        );
+    }
+
+    @Test
+    void 보낸팀_상세_조회_실패_호감_없음() {
+        //given
+        willThrow(new NotFoundException(ApplicationError.LIKE_NOT_FOUND)).given(teamLikeRepository).findById(anyLong());
+        //when & then
+        assertThatThrownBy(() -> likeService.getSentTeamDetail(ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.LIKE_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 받은팀_상세_조회() {
+        //given
+        willReturn(Optional.of(teamLike)).given(teamLikeRepository).findById(anyLong());
+        //when
+        TeamDetailResponse teamDetailResponse = likeService.getReceivedTeamDetail(ID);
+        //then
+        assertAll(
+                () -> verify(teamLikeRepository).findById(anyLong()),
+                () -> assertThat(teamDetailResponse.getLikeId()).isEqualTo(ID),
+                () -> assertThat(teamDetailResponse.getTeamName()).isEqualTo(teamLike.getSentTeam().getName())
+        );
+    }
+
+    @Test
+    void 받은팀_상세_조회_실패_호감_없음() {
+        //given
+        willThrow(new NotFoundException(ApplicationError.LIKE_NOT_FOUND)).given(teamLikeRepository).findById(anyLong());
+        //when & then
+        assertThatThrownBy(() -> likeService.getReceivedTeamDetail(ID))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.LIKE_NOT_FOUND.getMessage());
     }
