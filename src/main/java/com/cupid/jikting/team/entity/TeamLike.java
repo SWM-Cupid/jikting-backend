@@ -3,6 +3,7 @@ package com.cupid.jikting.team.entity;
 import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.meeting.entity.Meeting;
+import com.cupid.jikting.member.entity.MemberProfile;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @SuperBuilder
@@ -41,5 +43,13 @@ public class TeamLike extends BaseEntity {
         return ChattingRoom.builder()
                 .meeting(meeting)
                 .build();
+    }
+
+    public List<MemberProfile> getReceivedMemberProfiles() {
+        return receivedTeam.getMemberProfiles();
+    }
+
+    public List<MemberProfile> getSentMemberProfiles() {
+        return sentTeam.getMemberProfiles();
     }
 }
