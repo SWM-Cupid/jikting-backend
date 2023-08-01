@@ -2,6 +2,7 @@ package com.cupid.jikting.team.service;
 
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.entity.*;
@@ -121,7 +122,10 @@ class TeamServiceTest {
     @Test
     void 팀_등록_성공() {
         // given
-        willReturn(Optional.of(leader)).given(memberProfileRepository).findById(anyLong());
+        MemberProfile memberProfile = MemberProfile.builder()
+                .id(ID)
+                .build();
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
         willReturn(leader).given(memberProfileRepository).save(any(MemberProfile.class));
         // when
@@ -146,9 +150,33 @@ class TeamServiceTest {
     }
 
     @Test
+    void 팀_등록_실패_등록된_팀_존재() {
+        // given
+        willReturn(Optional.of(member)).given(memberProfileRepository).findById(anyLong());
+        Team team = Team.builder()
+                .id(ID)
+                .name(NAME)
+                .description(DESCRIPTION)
+                .memberCount(MEMBER_COUNT)
+                .build();
+        team.addTeamPersonalities(teamPersonalities);
+        team.getTeamMembers().add(TeamMember.builder()
+                .team(team)
+                .memberProfile(member)
+                .build());
+        // when & then
+        assertThatThrownBy(() -> teamService.register(ID, teamRegisterRequest))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.ALREADY_IN_TEAM.getMessage());
+    }
+
+    @Test
     void 팀_등록_실패_키워드_없음() {
         // given
-        willReturn(Optional.of(leader)).given(memberProfileRepository).findById(anyLong());
+        MemberProfile memberProfile = MemberProfile.builder()
+                .id(ID)
+                .build();
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willThrow(new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND)).given(personalityRepository).findByKeyword(anyString());
         // when & then
         assertThatThrownBy(() -> teamService.register(ID, teamRegisterRequest))
