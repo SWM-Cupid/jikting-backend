@@ -69,4 +69,8 @@ public class Member extends BaseEntity {
             throw new UnAuthorizedException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
         }
     }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }
