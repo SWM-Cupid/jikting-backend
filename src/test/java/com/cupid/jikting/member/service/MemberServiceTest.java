@@ -447,6 +447,21 @@ public class MemberServiceTest {
     }
 
     @Test
+    void 회원_비밀번호_수정_실패_비밀번호_불일치() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willReturn(false).given(passwordEncoder).matches(anyString(), anyString());
+        PasswordUpdateRequest passwordUpdateRequest = PasswordUpdateRequest.builder()
+                .password(PASSWORD)
+                .newPassword(NEW_PASSWORD)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.updatePassword(ID, passwordUpdateRequest))
+                .isInstanceOf(UnAuthorizedException.class)
+                .hasMessage(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD.getMessage());
+    }
+
+    @Test
     void 회원_탈퇴_성공() {
         // given
         willReturn(true).given(passwordEncoder).matches(anyString(), anyString());
