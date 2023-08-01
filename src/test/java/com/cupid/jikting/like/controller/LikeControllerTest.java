@@ -3,6 +3,7 @@ package com.cupid.jikting.like.controller;
 import com.cupid.jikting.ApiDocument;
 import com.cupid.jikting.TestSecurityConfig;
 import com.cupid.jikting.common.dto.ErrorResponse;
+import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
@@ -48,14 +49,17 @@ public class LikeControllerTest extends ApiDocument {
     private static final String NAME = "팀명";
     private static final Long ID = 1L;
     private static final String NICKNAME = "닉네임";
+    private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
     private static final int AGE = 20;
     private static final String ADDRESS = "거주지";
     private static final String COMPANY = "회사";
-    private static final boolean IS_SMOKE = true;
+    private static final String SMOKE_STATUS = "비흡연";
     private static final String DRINK_STATUS = "자주 마심";
     private static final int HEIGHT = 180;
     private static final String DESCRIPTION = "소개";
     private static final String KEYWORD = "키워드";
+    private static final String PERSONALITY = "성격";
+    private static final String HOBBY = "취미";
     private static final String COLLEGE = "대학";
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
@@ -77,28 +81,48 @@ public class LikeControllerTest extends ApiDocument {
     @BeforeEach
     void setUp() {
         accessToken = jwtService.createAccessToken(ID);
-        List<String> keywords = IntStream.rangeClosed(1, 3)
-                .mapToObj(n -> KEYWORD + n)
-                .collect(Collectors.toList());
-        List<MemberProfileResponse> memberProfileResponses = IntStream.rangeClosed(1, 2)
-                .mapToObj(n -> MemberProfileResponse.builder()
-                        .nickname(NICKNAME)
-                        .image(URL)
-                        .age(AGE)
-                        .mbti(Mbti.ENFJ.name())
-                        .address(ADDRESS)
-                        .company(COMPANY)
-                        .isSmoke(IS_SMOKE)
-                        .drinkStatus(DrinkStatus.OFTEN.getMessage())
-                        .height(HEIGHT)
-                        .description(DESCRIPTION)
-                        .keywords(keywords)
-                        .college(COLLEGE)
+        Hobby hobby = Hobby.builder()
+                .keyword(HOBBY)
+                .build();
+        List<MemberHobby> memberHobbies = IntStream.range(0, 3)
+                .mapToObj(n -> MemberHobby.builder()
+                        .hobby(hobby)
                         .build())
                 .collect(Collectors.toList());
         Personality personality = Personality.builder()
-                .keyword(KEYWORD)
+                .keyword(PERSONALITY)
                 .build();
+        List<MemberPersonality> memberPersonalities = IntStream.range(0, 3)
+                .mapToObj(n -> MemberPersonality.builder()
+                        .personality(personality)
+                        .build())
+                .collect(Collectors.toList());
+        Company company = Company.builder()
+                .id(ID)
+                .name(COMPANY)
+                .build();
+        MemberCompany memberCompany = MemberCompany.builder()
+                .id(ID)
+                .company(company)
+                .build();
+        Member member = Member.builder()
+                .id(ID)
+                .memberCompanies(List.of(memberCompany))
+                .build();
+        MemberProfile memberProfile = MemberProfile.builder()
+                .id(ID)
+                .member(member)
+                .build();
+        ProfileImage profileImage = ProfileImage.builder()
+                .id(ID)
+                .sequence(Sequence.MAIN)
+                .url(URL)
+                .build();
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                memberPersonalities, memberHobbies, List.of(profileImage));
+        List<MemberProfileResponse> memberProfileResponses = IntStream.rangeClosed(1, 2)
+                .mapToObj(n -> MemberProfileResponse.from(memberProfile))
+                .collect(Collectors.toList());
         List<TeamPersonality> teamPersonalities = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> TeamPersonality.builder()
                         .personality(personality)
@@ -111,10 +135,6 @@ public class LikeControllerTest extends ApiDocument {
                         .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
-        MemberProfile memberProfile = MemberProfile.builder()
-                .build();
-        memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, Mbti.INTJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.find(DRINK_STATUS), DESCRIPTION,
-                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> TeamMember.builder()
                         .memberProfile(memberProfile)
@@ -132,12 +152,7 @@ public class LikeControllerTest extends ApiDocument {
                 .build();
         LikeResponse likeResponse = LikeResponse.fromSentTeamLike(teamLike);
         likeResponses = List.of(likeResponse, likeResponse);
-        teamDetailResponse = TeamDetailResponse.builder()
-                .likeId(ID)
-                .teamName(NAME)
-                .keywords(keywords)
-                .members(memberProfileResponses)
-                .build();
+        teamDetailResponse = TeamDetailResponse.of(ID, team);
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
     }
 
@@ -231,24 +246,46 @@ public class LikeControllerTest extends ApiDocument {
 
     @WithMockUser
     @Test
-    void 팀_상세_조회_성공() throws Exception {
+    void 보낸팀_상세_조회_성공() throws Exception {
         //given
-        willReturn(teamDetailResponse).given(likeService).getTeamDetail(anyLong());
+        willReturn(teamDetailResponse).given(likeService).getSentTeamDetail(anyLong());
         //when
-        ResultActions resultActions = 팀_상세_조회_요청();
+        ResultActions resultActions = 보낸팀_상세_조회_요청();
         //then
-        팀_상세_조회_요청_성공(resultActions);
+        보낸팀_상세_조회_요청_성공(resultActions);
     }
 
     @WithMockUser
     @Test
-    void 팀_상세_조회_실패() throws Exception {
+    void 보낸팀_상세_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(likeService).getTeamDetail(anyLong());
+        willThrow(teamNotFoundException).given(likeService).getSentTeamDetail(anyLong());
         //when
-        ResultActions resultActions = 팀_상세_조회_요청();
+        ResultActions resultActions = 보낸팀_상세_조회_요청();
         //then
-        팀_상세_조회_요청_실패(resultActions);
+        보낸팀_상세_조회_요청_실패(resultActions);
+    }
+
+    @WithMockUser
+    @Test
+    void 받은팀_상세_조회_성공() throws Exception {
+        //given
+        willReturn(teamDetailResponse).given(likeService).getReceivedTeamDetail(anyLong());
+        //when
+        ResultActions resultActions = 받은팀_상세_조회_요청();
+        //then
+        받은팀_상세_조회_요청_성공(resultActions);
+    }
+
+    @WithMockUser
+    @Test
+    void 받은팀_상세_조회_실패() throws Exception {
+        //given
+        willThrow(teamNotFoundException).given(likeService).getReceivedTeamDetail(anyLong());
+        //when
+        ResultActions resultActions = 받은팀_상세_조회_요청();
+        //then
+        받은팀_상세_조회_요청_실패(resultActions);
     }
 
     private ResultActions 받은_호감_목록_조회_요청() throws Exception {
@@ -327,19 +364,38 @@ public class LikeControllerTest extends ApiDocument {
                 "reject-like-fail");
     }
 
-    private ResultActions 팀_상세_조회_요청() throws Exception {
-        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID)
+    private ResultActions 보낸팀_상세_조회_요청() throws Exception {
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + PATH_DELIMITER + "sent")
                 .contextPath(CONTEXT_PATH));
     }
 
-    private void 팀_상세_조회_요청_성공(ResultActions resultActions) throws Exception {
+    private void 보낸팀_상세_조회_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk())
                         .andExpect(content().json(toJson(teamDetailResponse))),
                 "get-team-detail-success");
     }
 
-    private void 팀_상세_조회_요청_실패(ResultActions resultActions) throws Exception {
+    private void 보낸팀_상세_조회_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
+                "get-team-detail-fail");
+    }
+
+    private ResultActions 받은팀_상세_조회_요청() throws Exception {
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + PATH_DELIMITER + "received")
+                .contextPath(CONTEXT_PATH));
+    }
+
+    private void 받은팀_상세_조회_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk())
+                        .andExpect(content().json(toJson(teamDetailResponse))),
+                "get-team-detail-success");
+    }
+
+    private void 받은팀_상세_조회_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
