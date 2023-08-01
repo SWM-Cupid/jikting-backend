@@ -80,7 +80,7 @@ public class MemberProfile extends BaseEntity {
 
     public Team getTeam() {
         return teamMembers.stream()
-                .findFirst()
+                .findAny()
                 .orElseThrow(() -> new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM))
                 .getTeam();
     }
