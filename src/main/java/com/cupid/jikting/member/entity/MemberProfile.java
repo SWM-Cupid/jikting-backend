@@ -74,6 +74,10 @@ public class MemberProfile extends BaseEntity {
     @OneToMany(mappedBy = "memberProfile")
     private List<InstantMeetingMember> instantMeetingMembers = new ArrayList<>();
 
+    public boolean isInTeam() {
+        return !teamMembers.isEmpty();
+    }
+
     public Team getTeam() {
         return teamMembers.stream()
                 .findFirst()
