@@ -433,6 +433,20 @@ public class MemberServiceTest {
     }
 
     @Test
+    void 회원_비밀번호_수정_실패_회원_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        PasswordUpdateRequest passwordUpdateRequest = PasswordUpdateRequest.builder()
+                .password(PASSWORD)
+                .newPassword(NEW_PASSWORD)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.updatePassword(ID, passwordUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
     void 회원_탈퇴_성공() {
         // given
         willReturn(true).given(passwordEncoder).matches(anyString(), anyString());
