@@ -24,12 +24,16 @@ public class Member extends BaseEntity {
     private String phone;
     private String name;
     private String type;
+    private String socialId;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
 
     private String refreshToken;
 

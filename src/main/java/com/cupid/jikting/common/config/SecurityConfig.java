@@ -6,7 +6,10 @@ import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.filter.CustomJsonUsernamePasswordAuthenticationFilter;
 import com.cupid.jikting.member.handler.LoginFailureHandler;
 import com.cupid.jikting.member.handler.LoginSuccessHandler;
+import com.cupid.jikting.member.handler.OAuth2LoginFailureHandler;
+import com.cupid.jikting.member.handler.OAuth2LoginSuccessHandler;
 import com.cupid.jikting.member.repository.MemberRepository;
+import com.cupid.jikting.member.service.CustomOAuth2UserService;
 import com.cupid.jikting.member.service.LoginService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,11 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -33,14 +41,17 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
     private final ObjectMapper objectMapper;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+        http
                 .formLogin().disable()
                 .httpBasic().disable()
                 .csrf().disable()
-                .headers().frameOptions().disable()
+                .cors().configurationSource(corsConfigurationSource())
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -50,10 +61,28 @@ public class SecurityConfig {
                 .mvcMatchers("/members/username/check").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .oauth2Login()
+                .successHandler(oAuth2LoginSuccessHandler)
+                .failureHandler(oAuth2LoginFailureHandler)
+                .userInfoEndpoint().userService(customOAuth2UserService);
+        return http
                 .addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(exceptionHandlerFilter(), JwtAuthenticationProcessingFilter.class)
                 .build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://jikting.com:5173"));
+        configuration.addAllowedHeader("*");
+        configuration.setAllowedMethods(List.of(
+                HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.PATCH.name(), HttpMethod.OPTIONS.name()));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
