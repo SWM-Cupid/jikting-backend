@@ -2,6 +2,7 @@ package com.cupid.jikting.team.service;
 
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.entity.MemberProfile;
@@ -37,6 +38,9 @@ public class TeamService {
 
     public TeamRegisterResponse register(Long memberProfileId, TeamRegisterRequest teamRegisterRequest) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
+        if (memberProfile.isInTeam()) {
+            throw new BadRequestException(ApplicationError.ALREADY_IN_TEAM);
+        }
         Team team = Team.builder()
                 .name(String.valueOf(UUID.randomUUID()))
                 .description(teamRegisterRequest.getDescription())
@@ -45,7 +49,7 @@ public class TeamService {
         team.addTeamPersonalities(toTeamPersonalities(toPersonalities(teamRegisterRequest.getKeywords()), team));
         TeamMember.of(LEADER, team, memberProfile);
         MemberProfile savedMemberProfile = memberProfileRepository.save(memberProfile);
-        return TeamRegisterResponse.from(TEAM_URL + savedMemberProfile.getTeam().getId() + INVITE);
+        return TeamRegisterResponse.from(TEAM_URL + savedMemberProfile.getTeamId() + INVITE);
     }
 
     public void attend(Long teamId, Long memberProfileId) {

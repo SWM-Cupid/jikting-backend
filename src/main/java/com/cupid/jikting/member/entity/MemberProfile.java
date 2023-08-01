@@ -74,9 +74,13 @@ public class MemberProfile extends BaseEntity {
     @OneToMany(mappedBy = "memberProfile")
     private List<InstantMeetingMember> instantMeetingMembers = new ArrayList<>();
 
+    public boolean isInTeam() {
+        return !teamMembers.isEmpty();
+    }
+
     public Team getTeam() {
         return teamMembers.stream()
-                .findFirst()
+                .findAny()
                 .orElseThrow(() -> new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM))
                 .getTeam();
     }
@@ -141,5 +145,9 @@ public class MemberProfile extends BaseEntity {
 
     public boolean isSameAs(Long memberProfileId) {
         return id.equals(memberProfileId);
+    }
+
+    public Long getTeamId() {
+        return getTeam().getId();
     }
 }
