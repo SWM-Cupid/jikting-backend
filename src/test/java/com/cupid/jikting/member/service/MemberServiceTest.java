@@ -133,9 +133,10 @@ public class MemberServiceTest {
         signupRequest = SignupRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD)
-                .gender(Gender.MALE.getMessage())
                 .name(NAME)
                 .phone(PHONE)
+                .nickname(NICKNAME)
+                .gender(Gender.MALE.getMessage())
                 .build();
         usernameCheckRequest = UsernameCheckRequest.builder()
                 .username(USERNAME)

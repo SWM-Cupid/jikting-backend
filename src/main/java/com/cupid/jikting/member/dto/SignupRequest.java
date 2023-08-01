@@ -28,6 +28,10 @@ public class SignupRequest {
     @Pattern(regexp = "[0-9]{11}")
     private String phone;
 
+    @NotEmpty(message = "닉네임은 빈칸일 수 없습니다.")
+    @Pattern(regexp = "[ㄱ-힣a-zA-Z]{2,15}")
+    private String nickname;
+
     @NotNull
     private String gender;
 }

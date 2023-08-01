@@ -40,7 +40,7 @@ public class MemberService {
                 .name(signupRequest.getName())
                 .role(Role.UNCERTIFIED)
                 .build();
-        member.addMemberProfile();
+        member.addMemberProfile(signupRequest.getNickname());
         memberRepository.save(member);
     }
 

@@ -175,6 +175,7 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .name(NAME)
                 .phone(PHONE)
+                .nickname(NICKNAME)
                 .gender(Gender.MALE.getMessage())
                 .build();
         nicknameUpdateRequest = NicknameUpdateRequest.builder()
