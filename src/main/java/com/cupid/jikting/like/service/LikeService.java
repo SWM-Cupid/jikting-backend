@@ -46,18 +46,26 @@ public class LikeService {
     }
 
     public void rejectLike(Long likeId) {
-        TeamLike teamLike = teamLikeRepository.findById(likeId)
-                .orElseThrow(() -> new NotFoundException(ApplicationError.LIKE_NOT_FOUND));
+        TeamLike teamLike = getTeamLikeById(likeId);
         teamLike.reject();
         teamLikeRepository.save(teamLike);
     }
 
-    public TeamDetailResponse getTeamDetail(Long likeId) {
-        return null;
+    public TeamDetailResponse getSentTeamDetail(Long likeId) {
+        return TeamDetailResponse.of(likeId, getTeamLikeById(likeId).getReceivedTeam());
+    }
+
+    public TeamDetailResponse getReceivedTeamDetail(Long likeId) {
+        return TeamDetailResponse.of(likeId, getTeamLikeById(likeId).getSentTeam());
     }
 
     private TeamMember getTeamMemberById(Long memberProfileId) {
         return teamMemberRepository.getTeamMemberByMemberProfileId(memberProfileId)
                 .orElseThrow(() -> new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM));
+    }
+
+    private TeamLike getTeamLikeById(Long likeId) {
+        return teamLikeRepository.findById(likeId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.LIKE_NOT_FOUND));
     }
 }
