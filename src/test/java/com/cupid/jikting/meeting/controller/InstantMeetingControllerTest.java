@@ -83,7 +83,7 @@ public class InstantMeetingControllerTest extends ApiDocument {
     @Test
     void 번개팅_참여_성공() throws Exception {
         //given
-        willDoNothing().given(instantMeetingService).attend(anyLong());
+        willDoNothing().given(instantMeetingService).attend(anyLong(), anyLong());
         //when
         ResultActions resultActions = 번개팅_참여_요청();
         //then
@@ -94,7 +94,7 @@ public class InstantMeetingControllerTest extends ApiDocument {
     @Test
     void 번개팅_참여_실패() throws Exception {
         //given
-        willThrow(instantMeetingAlreadyFullException).given(instantMeetingService).attend(anyLong());
+        willThrow(instantMeetingAlreadyFullException).given(instantMeetingService).attend(anyLong(), anyLong());
         //when
         ResultActions resultActions = 번개팅_참여_요청();
         //then
@@ -116,7 +116,8 @@ public class InstantMeetingControllerTest extends ApiDocument {
 
     private ResultActions 번개팅_참여_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID)
-                .contextPath(CONTEXT_PATH));
+                .contextPath(CONTEXT_PATH)
+                .header(AUTHORIZATION, BEARER + accessToken));
     }
 
     private void 번개팅_참여_요청_성공(ResultActions resultActions) throws Exception {
