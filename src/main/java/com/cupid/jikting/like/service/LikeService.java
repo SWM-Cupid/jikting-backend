@@ -50,8 +50,10 @@ public class LikeService {
         TeamLike teamLike = teamLikeRepository.findById(likeId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.LIKE_NOT_FOUND));
         ChattingRoom chattingRoom = teamLike.accept();
-        addMembersToChattingRoom(teamLike.getReceivedMemberProfiles(), chattingRoom);
-        addMembersToChattingRoom(teamLike.getSentMemberProfiles(), chattingRoom);
+        teamLike.getReceivedMemberProfiles()
+                .forEach(memberProfile -> MemberChattingRoom.of(memberProfile, chattingRoom));
+        teamLike.getSentMemberProfiles()
+                .forEach(memberProfile -> MemberChattingRoom.of(memberProfile, chattingRoom));
         teamLikeRepository.save(teamLike);
         chattingRoomRepository.save(chattingRoom);
     }
@@ -66,15 +68,5 @@ public class LikeService {
     private TeamMember getTeamMemberById(Long memberProfileId) {
         return teamMemberRepository.getTeamMemberByMemberProfileId(memberProfileId)
                 .orElseThrow(() -> new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM));
-    }
-
-    private void addMembersToChattingRoom(List<MemberProfile> memberProfiles, ChattingRoom chattingRoom) {
-        memberProfiles.stream()
-                .map(memberProfile -> {
-                    MemberChattingRoom memberChattingRoom = MemberChattingRoom.of(memberProfile, chattingRoom);
-                    memberProfile.addMemberChattingRoom(memberChattingRoom);
-                    return memberChattingRoom;
-                })
-                .forEach(chattingRoom::addMemberChattingRoom);
     }
 }

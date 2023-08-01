@@ -27,6 +27,9 @@ public class MemberChattingRoom extends BaseEntity {
     private ChattingRoom chattingRoom;
 
     public static MemberChattingRoom of(MemberProfile memberProfile, ChattingRoom chattingRoom) {
-        return new MemberChattingRoom(memberProfile, chattingRoom);
+        MemberChattingRoom memberChattingRoom = new MemberChattingRoom(memberProfile, chattingRoom);
+        memberProfile.addMemberChattingRoom(memberChattingRoom);
+        chattingRoom.addMemberChattingRoom(memberChattingRoom);
+        return memberChattingRoom;
     }
 }
