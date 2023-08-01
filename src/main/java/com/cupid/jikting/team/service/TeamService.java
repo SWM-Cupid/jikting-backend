@@ -49,7 +49,7 @@ public class TeamService {
         team.addTeamPersonalities(toTeamPersonalities(toPersonalities(teamRegisterRequest.getKeywords()), team));
         TeamMember.of(LEADER, team, memberProfile);
         MemberProfile savedMemberProfile = memberProfileRepository.save(memberProfile);
-        return TeamRegisterResponse.from(TEAM_URL + savedMemberProfile.getTeam().getId() + INVITE);
+        return TeamRegisterResponse.from(TEAM_URL + savedMemberProfile.getTeamId() + INVITE);
     }
 
     public void attend(Long teamId, Long memberProfileId) {

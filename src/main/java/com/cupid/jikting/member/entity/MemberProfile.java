@@ -146,4 +146,8 @@ public class MemberProfile extends BaseEntity {
     public boolean isSameAs(Long memberProfileId) {
         return id.equals(memberProfileId);
     }
+
+    public Long getTeamId() {
+        return getTeam().getId();
+    }
 }
