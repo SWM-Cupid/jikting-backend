@@ -147,4 +147,8 @@ public class MemberProfile extends BaseEntity {
     public void validatePassword(PasswordEncoder passwordEncoder, String password) {
         member.validatePassword(passwordEncoder, password);
     }
+
+    public void updatePassword(String newPassword) {
+        member.updatePassword(newPassword);
+    }
 }
