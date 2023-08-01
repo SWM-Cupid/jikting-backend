@@ -35,8 +35,8 @@ public class MemberController {
     }
 
     @PatchMapping
-    public ResponseEntity<Void> update(@RequestBody NicknameUpdateRequest nicknameUpdateRequest) {
-        memberService.update(nicknameUpdateRequest);
+    public ResponseEntity<Void> update(@RequestHeader("Authorization") String token, @RequestBody NicknameUpdateRequest nicknameUpdateRequest) {
+        memberService.update(jwtService.extractValidMemberProfileId(token), nicknameUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
