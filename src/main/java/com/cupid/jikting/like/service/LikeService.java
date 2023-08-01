@@ -8,6 +8,7 @@ import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.like.dto.TeamDetailResponse;
+import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.entity.TeamMember;
 import com.cupid.jikting.team.repository.TeamLikeRepository;
@@ -49,7 +50,8 @@ public class LikeService {
         TeamLike teamLike = teamLikeRepository.findById(likeId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.LIKE_NOT_FOUND));
         ChattingRoom chattingRoom = teamLike.accept();
-        linkMemberToChattingRoom(teamLike, chattingRoom);
+        addMembersToChattingRoom(teamLike.getReceivedMemberProfiles(), chattingRoom);
+        addMembersToChattingRoom(teamLike.getSentMemberProfiles(), chattingRoom);
         teamLikeRepository.save(teamLike);
         chattingRoomRepository.save(chattingRoom);
     }
@@ -66,14 +68,13 @@ public class LikeService {
                 .orElseThrow(() -> new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM));
     }
 
-    private void linkMemberToChattingRoom(TeamLike teamLike, ChattingRoom chattingRoom) {
-        teamLike.getReceivedTeam().getMemberProfiles()
-                .stream()
-                .map(memberProfile -> MemberChattingRoom.of(memberProfile, chattingRoom))
-                .forEach(chattingRoom::addMemberChattingRoom);
-        teamLike.getSentTeam().getMemberProfiles()
-                .stream()
-                .map(memberProfile -> MemberChattingRoom.of(memberProfile, chattingRoom))
+    private void addMembersToChattingRoom(List<MemberProfile> memberProfiles, ChattingRoom chattingRoom) {
+        memberProfiles.stream()
+                .map(memberProfile -> {
+                    MemberChattingRoom memberChattingRoom = MemberChattingRoom.of(memberProfile, chattingRoom);
+                    memberProfile.addMemberChattingRoom(memberChattingRoom);
+                    return memberChattingRoom;
+                })
                 .forEach(chattingRoom::addMemberChattingRoom);
     }
 }
