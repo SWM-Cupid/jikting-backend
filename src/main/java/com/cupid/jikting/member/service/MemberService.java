@@ -52,7 +52,10 @@ public class MemberService {
         return MemberProfileResponse.of(getMemberProfileById(memberProfileId));
     }
 
-    public void update(NicknameUpdateRequest nicknameUpdateRequest) {
+    public void update(Long memberProfileId, NicknameUpdateRequest nicknameUpdateRequest) {
+        MemberProfile memberProfile = getMemberProfileById(memberProfileId);
+        memberProfile.update(nicknameUpdateRequest.getNickname());
+        memberProfileRepository.save(memberProfile);
     }
 
     public void updateProfile(Long memberProfileId, MemberProfileUpdateRequest memberProfileUpdateRequest) {
@@ -76,6 +79,7 @@ public class MemberService {
     }
 
     public void updateImage(MultipartFile multipartFile) {
+
     }
 
     public void withdraw(Long memberId, WithdrawRequest withdrawRequest) {
