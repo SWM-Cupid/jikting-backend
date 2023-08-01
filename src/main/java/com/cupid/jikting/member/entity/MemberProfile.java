@@ -71,7 +71,7 @@ public class MemberProfile extends BaseEntity {
     private List<MemberChattingRoom> memberChattingRooms = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<InstantMeetingMember> instantMeetingMembers = new ArrayList<>();
 
     public Team getTeam() {
@@ -141,5 +141,9 @@ public class MemberProfile extends BaseEntity {
 
     public boolean isSameAs(Long memberProfileId) {
         return id.equals(memberProfileId);
+    }
+
+    public void addInstantMeeting(InstantMeetingMember instantMeetingMember) {
+        instantMeetingMembers.add(instantMeetingMember);
     }
 }
