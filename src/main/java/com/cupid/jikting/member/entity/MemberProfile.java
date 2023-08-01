@@ -122,6 +122,10 @@ public class MemberProfile extends BaseEntity {
         return profileImages.getMainImageUrl();
     }
 
+    public void update(String nickname) {
+        this.nickname = nickname;
+    }
+
     public void updateProfile(LocalDate birth, int height, Mbti mbti, String address, Gender gender, String college,
                               SmokeStatus smokeStatus, DrinkStatus drinkStatus, String description,
                               List<MemberPersonality> memberPersonalities, List<MemberHobby> memberHobbies, List<ProfileImage> profileImages) {

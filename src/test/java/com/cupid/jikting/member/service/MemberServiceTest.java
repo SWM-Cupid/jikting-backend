@@ -259,6 +259,35 @@ public class MemberServiceTest {
     }
 
     @Test
+    void 회원_닉네임_수정_성공() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        NicknameUpdateRequest nicknameUpdateRequest = NicknameUpdateRequest.builder()
+                .nickname(NICKNAME)
+                .build();
+        // when
+        memberService.update(ID, nicknameUpdateRequest);
+        // then
+        assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> verify(memberProfileRepository).save(any(MemberProfile.class))
+        );
+    }
+
+    @Test
+    void 회원_닉네임_수정_실패_회원_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        NicknameUpdateRequest nicknameUpdateRequest = NicknameUpdateRequest.builder()
+                .nickname(NICKNAME)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.update(ID, nicknameUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
     void 회원_프로필_수정_성공() {
         // given
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());

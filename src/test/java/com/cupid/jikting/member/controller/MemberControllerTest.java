@@ -322,7 +322,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_닉네임_수정_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).update(any(NicknameUpdateRequest.class));
+        willDoNothing().given(memberService).update(anyLong(), any(NicknameUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_닉네임_수정_요청();
         // then
@@ -331,9 +331,9 @@ public class MemberControllerTest extends ApiDocument {
 
     @WithMockUser
     @Test
-    void 회원_닉네임수_수정_실패() throws Exception {
+    void 회원_닉네임_수정_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).update(any(NicknameUpdateRequest.class));
+        willThrow(memberNotFoundException).given(memberService).update(anyLong(), any(NicknameUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_닉네임_수정_요청();
         // then
@@ -841,6 +841,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private ResultActions 회원_닉네임_수정_요청() throws Exception {
         return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH)
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(nicknameUpdateRequest)));
