@@ -2,6 +2,7 @@ package com.cupid.jikting.team.entity;
 
 import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
+import com.cupid.jikting.meeting.entity.ConfirmStatus;
 import com.cupid.jikting.meeting.entity.Meeting;
 import com.cupid.jikting.member.entity.MemberProfile;
 import lombok.AccessLevel;
@@ -39,6 +40,7 @@ public class TeamLike extends BaseEntity {
         Meeting meeting = Meeting.builder()
                 .acceptingTeam(receivedTeam)
                 .recommendedTeam(sentTeam)
+                .confirmStatus(ConfirmStatus.UNDECIDED)
                 .build();
         return ChattingRoom.builder()
                 .meeting(meeting)
