@@ -75,7 +75,10 @@ public class MemberService {
         memberProfileRepository.save(memberProfile);
     }
 
-    public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
+    public void updatePassword(Long memberProfileId, PasswordUpdateRequest passwordUpdateRequest) {
+        MemberProfile memberProfile = getMemberProfileById(memberProfileId);
+        memberProfile.validatePassword(passwordEncoder, passwordUpdateRequest.getPassword());
+        memberProfile.updatePassword(passwordEncoder.encode(passwordUpdateRequest.getNewPassword()));
     }
 
     public void updateImage(MultipartFile multipartFile) {

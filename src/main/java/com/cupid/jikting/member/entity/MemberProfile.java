@@ -12,6 +12,7 @@ import com.cupid.jikting.team.entity.TeamMember;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -80,7 +81,7 @@ public class MemberProfile extends BaseEntity {
 
     public Team getTeam() {
         return teamMembers.stream()
-                .findAny()
+                .findFirst()
                 .orElseThrow(() -> new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM))
                 .getTeam();
     }
@@ -153,5 +154,13 @@ public class MemberProfile extends BaseEntity {
 
     public Long getTeamId() {
         return getTeam().getId();
+    }
+
+    public void validatePassword(PasswordEncoder passwordEncoder, String password) {
+        member.validatePassword(passwordEncoder, password);
+    }
+
+    public void updatePassword(String newPassword) {
+        member.updatePassword(newPassword);
     }
 }

@@ -366,7 +366,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_비밀번호_수정_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).updatePassword(any(PasswordUpdateRequest.class));
+        willDoNothing().given(memberService).updatePassword(anyLong(), any(PasswordUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_비밀번호_수정_요청();
         // then
@@ -377,7 +377,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_비밀번호_수정_회원정보없음_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).updatePassword(any(PasswordUpdateRequest.class));
+        willThrow(memberNotFoundException).given(memberService).updatePassword(anyLong(), any(PasswordUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_비밀번호_수정_요청();
         // then
@@ -388,7 +388,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_비밀번호_수정_비밀번호불일치_실패() throws Exception {
         // given
-        willThrow(idOrPasswordNotEqualException).given(memberService).updatePassword(any(PasswordUpdateRequest.class));
+        willThrow(idOrPasswordNotEqualException).given(memberService).updatePassword(anyLong(), any(PasswordUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_비밀번호_수정_요청();
         // then
@@ -399,7 +399,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_비밀번호_수정_비밀번호양식불일치_실패() throws Exception {
         // given
-        willThrow(wrongFormException).given(memberService).updatePassword(any(PasswordUpdateRequest.class));
+        willThrow(wrongFormException).given(memberService).updatePassword(anyLong(), any(PasswordUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_비밀번호_수정_요청();
         // then
@@ -883,6 +883,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private ResultActions 회원_비밀번호_수정_요청() throws Exception {
         return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/password")
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(passwordUpdateRequest)));

@@ -39,6 +39,7 @@ public class MemberServiceTest {
 
     private static final String USERNAME = "username123";
     private static final String PASSWORD = "Password123!";
+    private static final String NEW_PASSWORD = "Password456!";
     private static final String NAME = "홍길동";
     private static final String PHONE = "01000000000";
     private static final Long ID = 1L;
@@ -438,6 +439,55 @@ public class MemberServiceTest {
         assertThatThrownBy(() -> memberService.updateProfile(ID, memberProfileUpdateRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.HOBBY_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 회원_비밀번호_수정_성공() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willReturn(true).given(passwordEncoder).matches(anyString(), anyString());
+        willReturn(NEW_PASSWORD).given(passwordEncoder).encode(anyString());
+        PasswordUpdateRequest passwordUpdateRequest = PasswordUpdateRequest.builder()
+                .password(PASSWORD)
+                .newPassword(NEW_PASSWORD)
+                .build();
+        // when
+        memberService.updatePassword(ID, passwordUpdateRequest);
+        // then
+        assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> verify(passwordEncoder).matches(anyString(), anyString()),
+                () -> verify(passwordEncoder).encode(anyString())
+        );
+    }
+
+    @Test
+    void 회원_비밀번호_수정_실패_회원_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        PasswordUpdateRequest passwordUpdateRequest = PasswordUpdateRequest.builder()
+                .password(PASSWORD)
+                .newPassword(NEW_PASSWORD)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.updatePassword(ID, passwordUpdateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 회원_비밀번호_수정_실패_비밀번호_불일치() {
+        // given
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willReturn(false).given(passwordEncoder).matches(anyString(), anyString());
+        PasswordUpdateRequest passwordUpdateRequest = PasswordUpdateRequest.builder()
+                .password(PASSWORD)
+                .newPassword(NEW_PASSWORD)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> memberService.updatePassword(ID, passwordUpdateRequest))
+                .isInstanceOf(UnAuthorizedException.class)
+                .hasMessage(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD.getMessage());
     }
 
     @Test

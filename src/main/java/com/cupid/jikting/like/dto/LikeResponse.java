@@ -20,11 +20,11 @@ public class LikeResponse {
     private List<String> imageUrls;
 
     public static LikeResponse fromReceivedTeamLike(TeamLike teamLike) {
-        return from(teamLike, teamLike.getReceivedTeam());
+        return from(teamLike, teamLike.getSentTeam());
     }
 
     public static LikeResponse fromSentTeamLike(TeamLike teamLike) {
-        return from(teamLike, teamLike.getSentTeam());
+        return from(teamLike, teamLike.getReceivedTeam());
     }
 
     private static LikeResponse from(TeamLike teamLike, Team team) {

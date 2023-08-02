@@ -47,8 +47,8 @@ public class MemberController {
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Void> updatePassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest) {
-        memberService.updatePassword(passwordUpdateRequest);
+    public ResponseEntity<Void> updatePassword(@RequestHeader("Authorization") String token, @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+        memberService.updatePassword(jwtService.extractValidMemberProfileId(token), passwordUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
