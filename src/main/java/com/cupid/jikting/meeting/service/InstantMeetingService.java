@@ -31,11 +31,19 @@ public class InstantMeetingService {
 
     @Transactional
     public void attend(Long memberProfileId, Long instantMeetingId) {
-        MemberProfile memberProfile = memberProfileRepository.findById(memberProfileId)
-                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
-        InstantMeeting instantMeeting = instantMeetingRepository.findById(instantMeetingId)
-                .orElseThrow(() -> new NotFoundException(ApplicationError.INSTANT_MEETING_NOT_FOUND));
+        MemberProfile memberProfile = getMemberProfileById(memberProfileId);
+        InstantMeeting instantMeeting = getInstantMeetingById(instantMeetingId);
         InstantMeetingMember.of(instantMeeting, memberProfile);
         memberProfileRepository.save(memberProfile);
+    }
+
+    private MemberProfile getMemberProfileById(Long memberProfileId) {
+        return memberProfileRepository.findById(memberProfileId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
+    }
+
+    private InstantMeeting getInstantMeetingById(Long instantMeetingId) {
+        return instantMeetingRepository.findById(instantMeetingId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.INSTANT_MEETING_NOT_FOUND));
     }
 }
