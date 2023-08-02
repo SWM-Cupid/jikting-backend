@@ -40,8 +40,13 @@ public class LikeController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{likeId}")
-    public ResponseEntity<TeamDetailResponse> getTeamDetail(@PathVariable Long likeId) {
-        return ResponseEntity.ok().body(likeService.getTeamDetail(likeId));
+    @GetMapping("/{likeId}/sent")
+    public ResponseEntity<TeamDetailResponse> getSentTeamDetail(@PathVariable Long likeId) {
+        return ResponseEntity.ok().body(likeService.getSentTeamDetail(likeId));
+    }
+
+    @GetMapping("/{likeId}/received")
+    public ResponseEntity<TeamDetailResponse> getReceivedTeamDetail(@PathVariable Long likeId) {
+        return ResponseEntity.ok().body(likeService.getReceivedTeamDetail(likeId));
     }
 }
