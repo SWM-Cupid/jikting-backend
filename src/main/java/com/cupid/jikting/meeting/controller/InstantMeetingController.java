@@ -23,8 +23,8 @@ public class InstantMeetingController {
     }
 
     @PostMapping("/{instantMeetingId}")
-    public ResponseEntity<Void> attend(@PathVariable Long instantMeetingId) {
-        instantMeetingService.attend(instantMeetingId);
+    public ResponseEntity<Void> attend(@RequestHeader("Authorization") String token, @PathVariable Long instantMeetingId) {
+        instantMeetingService.attend(jwtService.extractValidMemberProfileId(token), instantMeetingId);
         return ResponseEntity.ok().build();
     }
 }

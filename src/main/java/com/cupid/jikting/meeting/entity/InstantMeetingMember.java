@@ -6,13 +6,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 
 @Getter
-@SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE instant_meeting_member SET is_deleted = true WHERE instant_meeting_member_id = ?")
@@ -30,5 +28,12 @@ public class InstantMeetingMember extends BaseEntity {
 
     public boolean isSameMemberProfileId(Long memberProfileId) {
         return memberProfile.isSameAs(memberProfileId);
+    }
+
+    public static InstantMeetingMember of(InstantMeeting instantMeeting, MemberProfile memberProfile) {
+        InstantMeetingMember instantMeetingMember = new InstantMeetingMember(memberProfile, instantMeeting);
+        instantMeeting.addMemberProfile(instantMeetingMember);
+        memberProfile.addInstantMeeting(instantMeetingMember);
+        return instantMeetingMember;
     }
 }

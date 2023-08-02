@@ -34,4 +34,8 @@ public class InstantMeeting extends BaseEntity {
         return instantMeetingMembers.stream()
                 .anyMatch(instantMeetingMember -> instantMeetingMember.isSameMemberProfileId(memberProfileId));
     }
+
+    public void addMemberProfile(InstantMeetingMember instantMeetingMember) {
+        instantMeetingMembers.add(instantMeetingMember);
+    }
 }
