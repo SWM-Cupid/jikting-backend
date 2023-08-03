@@ -8,7 +8,6 @@ import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.like.dto.TeamDetailResponse;
-import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.entity.TeamMember;
 import com.cupid.jikting.team.repository.TeamLikeRepository;
@@ -47,12 +46,11 @@ public class LikeService {
     }
 
     public void acceptLike(Long likeId) {
-        TeamLike teamLike = teamLikeRepository.findById(likeId)
-                .orElseThrow(() -> new NotFoundException(ApplicationError.LIKE_NOT_FOUND));
+        TeamLike teamLike = getTeamLikeById(likeId);
         ChattingRoom chattingRoom = teamLike.accept();
-        teamLike.getReceivedMemberProfiles()
+        teamLike.getReceivedTeamMemberProfiles()
                 .forEach(memberProfile -> MemberChattingRoom.of(memberProfile, chattingRoom));
-        teamLike.getSentMemberProfiles()
+        teamLike.getSentTeamMemberProfiles()
                 .forEach(memberProfile -> MemberChattingRoom.of(memberProfile, chattingRoom));
         teamLikeRepository.save(teamLike);
         chattingRoomRepository.save(chattingRoom);
@@ -68,5 +66,10 @@ public class LikeService {
     private TeamMember getTeamMemberById(Long memberProfileId) {
         return teamMemberRepository.getTeamMemberByMemberProfileId(memberProfileId)
                 .orElseThrow(() -> new BadRequestException(ApplicationError.NOT_EXIST_REGISTERED_TEAM));
+    }
+
+    private TeamLike getTeamLikeById(Long likeId) {
+        return teamLikeRepository.findById(likeId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.LIKE_NOT_FOUND));
     }
 }
