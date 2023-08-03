@@ -3,12 +3,17 @@ package com.cupid.jikting.member.controller;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.service.MemberService;
+import com.cupid.jikting.member.service.SmsService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,6 +21,7 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final JwtService jwtService;
+    private final SmsService smsService;
     private final MemberService memberService;
 
     @PostMapping
@@ -77,8 +83,8 @@ public class MemberController {
     }
 
     @PostMapping("/code")
-    public ResponseEntity<Void> createVerificationCodeForSignup(@RequestBody SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
-        memberService.createVerificationCodeForSignup(signUpVerificationCodeRequest);
+    public ResponseEntity<Void> createVerificationCodeForSignup(@RequestBody SignUpVerificationCodeRequest signUpVerificationCodeRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        smsService.createVerificationCodeForSignup(signUpVerificationCodeRequest);
         return ResponseEntity.ok().build();
     }
 
