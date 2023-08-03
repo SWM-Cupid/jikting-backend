@@ -1,6 +1,8 @@
 package com.cupid.jikting.meeting.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.WrongAccessException;
 import com.cupid.jikting.team.entity.Team;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -41,5 +43,18 @@ public class Meeting extends BaseEntity {
             return acceptingTeam.getName();
         }
         return recommendedTeam.getName();
+    }
+
+    public void confirm(Long meetingId, LocalDateTime schedule, String place) {
+        validate(meetingId);
+        this.schedule = schedule;
+        this.place = place;
+        confirmStatus = ConfirmStatus.DECIDED;
+    }
+
+    private void validate(Long meetingId) {
+        if (!id.equals(meetingId)) {
+            throw new WrongAccessException(ApplicationError.WRONG_ACCESS);
+        }
     }
 }
