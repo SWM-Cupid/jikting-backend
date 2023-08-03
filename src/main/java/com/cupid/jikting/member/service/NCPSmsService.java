@@ -16,7 +16,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -32,7 +31,6 @@ import java.util.List;
 @Service
 public class NCPSmsService implements SmsService {
 
-    private static final RestTemplate REST_TEMPLATE = new RestTemplate();
     private static final int VERIFICATION_CODE_LENGTH = 6;
     private static final int EXPIRE_TIME = 3;
     private static final String TYPE = "SMS";
@@ -44,6 +42,7 @@ public class NCPSmsService implements SmsService {
 
     private final RedisConnector redisConnector;
     private final ObjectMapper objectMapper;
+    private final RestTemplate restTemplate;
 
     @Value("${ncp.accessKey}")
     private String accessKey;
@@ -65,8 +64,7 @@ public class NCPSmsService implements SmsService {
     }
 
     private SmsResponse sendSms(SignUpVerificationCodeRequest signUpVerificationCodeRequest) throws JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-        REST_TEMPLATE.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        return REST_TEMPLATE.postForObject(
+        return restTemplate.postForObject(
                 URI.create("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"),
                 new HttpEntity<>(objectMapper.writeValueAsString(getSmsRequest(signUpVerificationCodeRequest, generateVerificationCode(signUpVerificationCodeRequest))), getHttpHeaders()),
                 SmsResponse.class);
