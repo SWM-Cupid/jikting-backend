@@ -2,6 +2,7 @@ package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.SmsSendFailException;
+import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.common.util.VerificationCodeGenerator;
 import com.cupid.jikting.member.dto.SignUpVerificationCodeRequest;
 import com.cupid.jikting.member.dto.SmsRequest;
@@ -33,6 +34,7 @@ public class NCPSmsService implements SmsService {
 
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
     private static final int VERIFICATION_CODE_LENGTH = 6;
+    private static final int EXPIRE_TIME = 3;
     private static final String TYPE = "SMS";
     private static final String SMS_SEND_SUCCESS = "202";
     private static final String CHARSET_NAME = "UTF-8";
@@ -40,6 +42,7 @@ public class NCPSmsService implements SmsService {
     private static final String BLANK = " ";
     private static final String NEW_LINE = "\n";
 
+    private final RedisConnector redisConnector;
     private final ObjectMapper objectMapper;
 
     @Value("${ncp.accessKey}")
@@ -65,21 +68,27 @@ public class NCPSmsService implements SmsService {
         REST_TEMPLATE.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         return REST_TEMPLATE.postForObject(
                 URI.create("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"),
-                new HttpEntity<>(objectMapper.writeValueAsString(getSmsRequest(signUpVerificationCodeRequest)), getHttpHeaders()),
+                new HttpEntity<>(objectMapper.writeValueAsString(getSmsRequest(signUpVerificationCodeRequest, generateVerificationCode(signUpVerificationCodeRequest))), getHttpHeaders()),
                 SmsResponse.class);
     }
 
-    private SmsRequest getSmsRequest(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
+    private String generateVerificationCode(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
+        String verificationCode = VerificationCodeGenerator.generate(VERIFICATION_CODE_LENGTH);
+        redisConnector.set(signUpVerificationCodeRequest.getTo(), verificationCode, EXPIRE_TIME);
+        return verificationCode;
+    }
+
+    private SmsRequest getSmsRequest(SignUpVerificationCodeRequest signUpVerificationCodeRequest, String verificationCode) {
         return SmsRequest.builder()
                 .type(TYPE)
                 .from(phone)
-                .content(getVerificationCodeMessage())
+                .content(getVerificationCodeMessage(verificationCode))
                 .messages(List.of(signUpVerificationCodeRequest))
                 .build();
     }
 
-    private static String getVerificationCodeMessage() {
-        return String.format("[직팅]\n인증번호: %s", VerificationCodeGenerator.generate(VERIFICATION_CODE_LENGTH));
+    private String getVerificationCodeMessage(String verificationCode) {
+        return String.format("[직팅]\n인증번호: %s", verificationCode);
     }
 
     private HttpHeaders getHttpHeaders() throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
