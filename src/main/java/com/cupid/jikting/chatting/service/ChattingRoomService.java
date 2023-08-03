@@ -32,8 +32,7 @@ public class ChattingRoomService {
     private ChattingRoomRepository chattingRoomRepository;
 
     public List<ChattingRoomResponse> getAll(Long memberProfileId) {
-        MemberProfile memberProfile = memberProfileRepository.findById(memberProfileId)
-                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
+        MemberProfile memberProfile = getMemberProfileById(memberProfileId);
         return chattingRoomRepository.findAll()
                 .stream()
                 .map(chattingRoom -> toChattingRoomResponse(chattingRoom, memberProfile.getTeam()))
@@ -48,6 +47,11 @@ public class ChattingRoomService {
         ChattingRoom chattingRoom = getChattingRoomById(chattingRoomId);
         chattingRoom.confirmMeeting(meetingConfirmRequest.getMeetingId(), meetingConfirmRequest.getSchedule(), meetingConfirmRequest.getPlace());
         chattingRoomRepository.save(chattingRoom);
+    }
+
+    private MemberProfile getMemberProfileById(Long memberProfileId) {
+        return memberProfileRepository.findById(memberProfileId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 
     private ChattingRoomResponse toChattingRoomResponse(ChattingRoom chattingRoom, Team team) {
