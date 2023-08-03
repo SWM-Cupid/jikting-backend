@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PasswordUtil {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class PasswordGenerator {
 
     private static final char[] CHAT_SET = new char[]{
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -20,7 +20,7 @@ public class PasswordUtil {
     private static final int PASSWORD_LENGTH = 8;
     private static final Random RANDOM = new Random();
 
-    public static String generateRandomPassword() {
+    public static String generate() {
         return String.join(DELIMITER, IntStream.range(0, PASSWORD_LENGTH)
                 .mapToObj(i -> CHAT_SET[(int) (CHAT_SET.length * RANDOM.nextDouble())])
                 .toArray(CharSequence[]::new));
