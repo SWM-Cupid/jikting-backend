@@ -120,4 +120,20 @@ class ChattingRoomServiceTest {
                 () -> verify(chattingRoomRepository).save(any(ChattingRoom.class))
         );
     }
+
+    @Test
+    void 채팅방_내_미팅_화정_실패_채팅방_없음() {
+        // given
+        willReturn(Optional.of(chattingRoom)).given(chattingRoomRepository).findById(anyLong());
+        willThrow(new NotFoundException(ApplicationError.CHATTING_ROOM_NOT_FOUND)).given(chattingRoomRepository).findById(anyLong());
+        MeetingConfirmRequest meetingConfirmRequest = MeetingConfirmRequest.builder()
+                .meetingId(ID)
+                .schedule(SCHEDULE)
+                .place(PLACE)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> chattingRoomService.confirm(ID, meetingConfirmRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.CHATTING_ROOM_NOT_FOUND.getMessage());
+    }
 }
