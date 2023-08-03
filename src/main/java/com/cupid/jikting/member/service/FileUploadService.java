@@ -22,13 +22,12 @@ public class FileUploadService {
 
     public String save(MultipartFile file) throws IOException {
         validateExist(file);
-        String fileName = file.getOriginalFilename();
-        String fileUrl = "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/" + fileName;
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
+        String fileName = file.getOriginalFilename();
         amazonS3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
-        return fileUrl;
+        return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/" + fileName;
     }
 
     private void validateExist(MultipartFile file) {
