@@ -1,5 +1,7 @@
 package com.cupid.jikting.like.service;
 
+import com.cupid.jikting.chatting.entity.ChattingRoom;
+import com.cupid.jikting.chatting.repository.ChattingRoomRepository;
 import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
@@ -27,6 +29,7 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
@@ -60,6 +63,9 @@ class LikeServiceTest {
 
     @Mock
     private TeamLikeRepository teamLikeRepository;
+
+    @Mock
+    private ChattingRoomRepository chattingRoomRepository;
 
     @BeforeEach
     void setUp() {
@@ -177,6 +183,30 @@ class LikeServiceTest {
         assertThatThrownBy(() -> likeService.getAllSentLike(ID))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.NOT_EXIST_REGISTERED_TEAM.getMessage());
+    }
+
+    @Test
+    void 받은_호감_수락_성공() {
+        //given
+        willReturn(Optional.of(teamLike)).given(teamLikeRepository).findById(anyLong());
+        //when
+        likeService.acceptLike(ID);
+        //then
+        assertAll(
+                () -> verify(teamLikeRepository).findById(anyLong()),
+                () -> verify(teamLikeRepository).save(any(TeamLike.class)),
+                () -> verify(chattingRoomRepository).save(any(ChattingRoom.class))
+        );
+    }
+
+    @Test
+    void 받은_호감_수락_실패_호감_없음() {
+        //given
+        willThrow(new NotFoundException(ApplicationError.LIKE_NOT_FOUND)).given(teamLikeRepository).findById(anyLong());
+        //when & then
+        assertThatThrownBy(() -> likeService.acceptLike(ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.LIKE_NOT_FOUND.getMessage());
     }
 
     @Test

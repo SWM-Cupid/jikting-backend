@@ -1,5 +1,8 @@
 package com.cupid.jikting.like.service;
 
+import com.cupid.jikting.chatting.entity.ChattingRoom;
+import com.cupid.jikting.chatting.entity.MemberChattingRoom;
+import com.cupid.jikting.chatting.repository.ChattingRoomRepository;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
@@ -23,6 +26,7 @@ public class LikeService {
 
     private final TeamMemberRepository teamMemberRepository;
     private final TeamLikeRepository teamLikeRepository;
+    private final ChattingRoomRepository chattingRoomRepository;
 
     @Transactional(readOnly = true)
     public List<LikeResponse> getAllReceivedLike(Long memberProfileId) {
@@ -43,6 +47,14 @@ public class LikeService {
     }
 
     public void acceptLike(Long likeId) {
+        TeamLike teamLike = getTeamLikeById(likeId);
+        ChattingRoom chattingRoom = teamLike.accept();
+        teamLike.getReceivedTeamMemberProfiles()
+                .forEach(memberProfile -> MemberChattingRoom.of(memberProfile, chattingRoom));
+        teamLike.getSentTeamMemberProfiles()
+                .forEach(memberProfile -> MemberChattingRoom.of(memberProfile, chattingRoom));
+        teamLikeRepository.save(teamLike);
+        chattingRoomRepository.save(chattingRoom);
     }
 
     public void rejectLike(Long likeId) {

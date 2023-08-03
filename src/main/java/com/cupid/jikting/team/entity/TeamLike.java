@@ -1,6 +1,10 @@
 package com.cupid.jikting.team.entity;
 
+import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
+import com.cupid.jikting.meeting.entity.ConfirmStatus;
+import com.cupid.jikting.meeting.entity.Meeting;
+import com.cupid.jikting.member.entity.MemberProfile;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @SuperBuilder
@@ -30,7 +35,27 @@ public class TeamLike extends BaseEntity {
     @JoinColumn(name = "sent_team_id")
     private Team sentTeam;
 
+    public ChattingRoom accept() {
+        acceptStatus = AcceptStatus.ACCEPT;
+        Meeting meeting = Meeting.builder()
+                .acceptingTeam(receivedTeam)
+                .recommendedTeam(sentTeam)
+                .confirmStatus(ConfirmStatus.UNDECIDED)
+                .build();
+        return ChattingRoom.builder()
+                .meeting(meeting)
+                .build();
+    }
+
     public void reject() {
         acceptStatus = AcceptStatus.REJECT;
+    }
+
+    public List<MemberProfile> getReceivedTeamMemberProfiles() {
+        return receivedTeam.getMemberProfiles();
+    }
+
+    public List<MemberProfile> getSentTeamMemberProfiles() {
+        return sentTeam.getMemberProfiles();
     }
 }
