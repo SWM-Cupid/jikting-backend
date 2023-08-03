@@ -47,11 +47,11 @@ public class TeamLike extends BaseEntity {
                 .build();
     }
 
-    public List<MemberProfile> getReceivedMemberProfiles() {
+    public List<MemberProfile> getReceivedTeamMemberProfiles() {
         return receivedTeam.getMemberProfiles();
     }
 
-    public List<MemberProfile> getSentMemberProfiles() {
+    public List<MemberProfile> getSentTeamMemberProfiles() {
         return sentTeam.getMemberProfiles();
     }
 }
