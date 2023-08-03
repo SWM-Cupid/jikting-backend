@@ -7,6 +7,7 @@ import com.cupid.jikting.chatting.repository.ChattingRoomRepository;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.error.WrongAccessException;
 import com.cupid.jikting.meeting.entity.Meeting;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
@@ -38,6 +39,7 @@ import static org.mockito.Mockito.verify;
 class ChattingRoomServiceTest {
 
     private static final Long ID = 1L;
+    private static final Long WRONG_ID = 2L;
     private static final String TEAM_NAME = "팀 이름";
     private static final boolean LEADER = true;
     private static final LocalDateTime SCHEDULE = LocalDateTime.of(2023, 9, 10, 18, 30);
@@ -135,5 +137,20 @@ class ChattingRoomServiceTest {
         assertThatThrownBy(() -> chattingRoomService.confirm(ID, meetingConfirmRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.CHATTING_ROOM_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 채팅방_내_미팅_화정_실패_잘못된_미팅() {
+        // given
+        willReturn(Optional.of(chattingRoom)).given(chattingRoomRepository).findById(anyLong());
+        MeetingConfirmRequest meetingConfirmRequest = MeetingConfirmRequest.builder()
+                .meetingId(WRONG_ID)
+                .schedule(SCHEDULE)
+                .place(PLACE)
+                .build();
+        // when & then
+        assertThatThrownBy(() -> chattingRoomService.confirm(ID, meetingConfirmRequest))
+                .isInstanceOf(WrongAccessException.class)
+                .hasMessage(ApplicationError.WRONG_ACCESS.getMessage());
     }
 }
