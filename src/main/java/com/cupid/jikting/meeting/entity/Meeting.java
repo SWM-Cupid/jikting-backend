@@ -25,7 +25,6 @@ public class Meeting extends BaseEntity {
 
     private LocalDateTime schedule;
     private String place;
-    private LocalDateTime confirmAt;
 
     @Enumerated(EnumType.STRING)
     private ConfirmStatus confirmStatus;
