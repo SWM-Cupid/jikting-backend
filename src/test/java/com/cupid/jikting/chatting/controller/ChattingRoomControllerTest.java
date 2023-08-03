@@ -141,7 +141,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 미팅_확정_성공() throws Exception {
         //given
-        willDoNothing().given(chattingRoomService).confirm(anyLong());
+        willDoNothing().given(chattingRoomService).confirm(anyLong(), any(MeetingConfirmRequest.class));
         //when
         ResultActions resultActions = 미팅_확정_요청();
         //then
@@ -152,7 +152,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 미팅_확정_양식불일치_실패() throws Exception {
         //given
-        willThrow(wrongFormException).given(chattingRoomService).confirm(anyLong());
+        willThrow(wrongFormException).given(chattingRoomService).confirm(anyLong(), any(MeetingConfirmRequest.class));
         //when
         ResultActions resultActions = 미팅_확정_요청();
         //then
@@ -163,7 +163,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 미팅_확정_채팅방정보없음_실패() throws Exception {
         //given
-        willThrow(chattingRoomNotFoundException).given(chattingRoomService).confirm(anyLong());
+        willThrow(chattingRoomNotFoundException).given(chattingRoomService).confirm(anyLong(), any(MeetingConfirmRequest.class));
         //when
         ResultActions resultActions = 미팅_확정_요청();
         //then
