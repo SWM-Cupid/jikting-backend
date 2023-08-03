@@ -2,6 +2,7 @@ package com.cupid.jikting.chatting.service;
 
 import com.cupid.jikting.chatting.dto.ChattingRoomDetailResponse;
 import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
+import com.cupid.jikting.chatting.dto.MeetingConfirmRequest;
 import com.cupid.jikting.chatting.entity.Chatting;
 import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.chatting.entity.MemberChattingRoom;
@@ -41,7 +42,10 @@ public class ChattingRoomService {
         return null;
     }
 
-    public void confirm(Long chattingRoomId) {
+    public void confirm(Long chattingRoomId, MeetingConfirmRequest meetingConfirmRequest) {
+        ChattingRoom chattingRoom = getChattingRoomById(chattingRoomId);
+        chattingRoom.confirmMeeting(meetingConfirmRequest.getMeetingId(), meetingConfirmRequest.getSchedule(), meetingConfirmRequest.getPlace());
+        chattingRoomRepository.save(chattingRoom);
     }
 
     private ChattingRoomResponse toChattingRoomResponse(ChattingRoom chattingRoom, Team team) {
@@ -68,5 +72,10 @@ public class ChattingRoomService {
                         .map(ProfileImage::getUrl)
                         .toArray(String[]::new)))
                 .collect(Collectors.toList());
+    }
+
+    private ChattingRoom getChattingRoomById(Long chattingRoomId) {
+        return chattingRoomRepository.findById(chattingRoomId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.CHATTING_ROOM_NOT_FOUND));
     }
 }
