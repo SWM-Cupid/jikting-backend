@@ -31,7 +31,7 @@ public class FileUploadService {
         return fileUrl;
     }
 
-    private static void validateExist(MultipartFile file) {
+    private void validateExist(MultipartFile file) {
         if (file.isEmpty()) {
             throw new FileUploadException(ApplicationError.FILE_NOT_EXIST);
         }
