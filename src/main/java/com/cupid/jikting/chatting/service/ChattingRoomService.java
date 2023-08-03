@@ -2,6 +2,7 @@ package com.cupid.jikting.chatting.service;
 
 import com.cupid.jikting.chatting.dto.ChattingRoomDetailResponse;
 import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
+import com.cupid.jikting.chatting.dto.MeetingConfirmRequest;
 import com.cupid.jikting.chatting.entity.Chatting;
 import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.chatting.entity.MemberChattingRoom;
@@ -15,11 +16,13 @@ import com.cupid.jikting.team.entity.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class ChattingRoomService {
 
@@ -29,8 +32,7 @@ public class ChattingRoomService {
     private ChattingRoomRepository chattingRoomRepository;
 
     public List<ChattingRoomResponse> getAll(Long memberProfileId) {
-        MemberProfile memberProfile = memberProfileRepository.findById(memberProfileId)
-                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
+        MemberProfile memberProfile = getMemberProfileById(memberProfileId);
         return chattingRoomRepository.findAll()
                 .stream()
                 .map(chattingRoom -> toChattingRoomResponse(chattingRoom, memberProfile.getTeam()))
@@ -41,7 +43,15 @@ public class ChattingRoomService {
         return null;
     }
 
-    public void confirm(Long chattingRoomId) {
+    public void confirm(Long chattingRoomId, MeetingConfirmRequest meetingConfirmRequest) {
+        ChattingRoom chattingRoom = getChattingRoomById(chattingRoomId);
+        chattingRoom.confirmMeeting(meetingConfirmRequest.getMeetingId(), meetingConfirmRequest.getSchedule(), meetingConfirmRequest.getPlace());
+        chattingRoomRepository.save(chattingRoom);
+    }
+
+    private MemberProfile getMemberProfileById(Long memberProfileId) {
+        return memberProfileRepository.findById(memberProfileId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 
     private ChattingRoomResponse toChattingRoomResponse(ChattingRoom chattingRoom, Team team) {
@@ -68,5 +78,10 @@ public class ChattingRoomService {
                         .map(ProfileImage::getUrl)
                         .toArray(String[]::new)))
                 .collect(Collectors.toList());
+    }
+
+    private ChattingRoom getChattingRoomById(Long chattingRoomId) {
+        return chattingRoomRepository.findById(chattingRoomId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.CHATTING_ROOM_NOT_FOUND));
     }
 }

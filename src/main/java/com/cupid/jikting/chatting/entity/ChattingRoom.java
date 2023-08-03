@@ -10,6 +10,7 @@ import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,5 +49,9 @@ public class ChattingRoom extends BaseEntity implements Serializable {
 
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
         memberChattingRooms.add(memberChattingRoom);
+    }
+
+    public void confirmMeeting(Long meetingId, LocalDateTime schedule, String place) {
+        meeting.confirm(meetingId, schedule, place);
     }
 }

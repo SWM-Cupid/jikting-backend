@@ -2,6 +2,7 @@ package com.cupid.jikting.chatting.controller;
 
 import com.cupid.jikting.chatting.dto.ChattingRoomDetailResponse;
 import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
+import com.cupid.jikting.chatting.dto.MeetingConfirmRequest;
 import com.cupid.jikting.chatting.service.ChattingRoomService;
 import com.cupid.jikting.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,8 @@ public class ChattingRoomController {
     }
 
     @PostMapping("/{chattingRoomId}/confirm")
-    public ResponseEntity<Void> confirm(@PathVariable Long chattingRoomId) {
-        chattingRoomService.confirm(chattingRoomId);
+    public ResponseEntity<Void> confirm(@PathVariable Long chattingRoomId, MeetingConfirmRequest meetingConfirmRequest) {
+        chattingRoomService.confirm(chattingRoomId, meetingConfirmRequest);
         return ResponseEntity.ok().build();
     }
 }
