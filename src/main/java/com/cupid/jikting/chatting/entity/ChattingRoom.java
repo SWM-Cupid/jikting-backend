@@ -10,6 +10,7 @@ import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import java.util.List;
 @Entity
 public class ChattingRoom extends BaseEntity implements Serializable {
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "meeting_id")
     private Meeting meeting;
 
@@ -44,5 +45,9 @@ public class ChattingRoom extends BaseEntity implements Serializable {
 
     public String getOppositeTeamName(Team team) {
         return meeting.getOppositeTeamName(team);
+    }
+
+    public void confirmMeeting(Long meetingId, LocalDateTime schedule, String place) {
+        meeting.confirm(meetingId, schedule, place);
     }
 }
