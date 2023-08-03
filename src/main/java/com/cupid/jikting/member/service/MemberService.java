@@ -103,9 +103,6 @@ public class MemberService {
         }
     }
 
-    public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
-    }
-
     public void verifyPhoneForSignup(VerificationRequest verificationRequest) {
     }
 
