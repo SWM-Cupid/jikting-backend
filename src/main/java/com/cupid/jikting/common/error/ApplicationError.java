@@ -19,6 +19,7 @@ public enum ApplicationError {
     EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "C009", "token 유효기간이 만료되었습니다."),
     VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "C010", "인증번호가 유효하지 않습니다."),
     PERSONALITY_NOT_FOUND(HttpStatus.BAD_REQUEST, "C011", "성격 키워드를 찾을 수 없습니다."),
+    WRONG_ACCESS(HttpStatus.BAD_REQUEST, "C012", "잘못된 접근입니다."),
 
     UNAUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "U001", "인증되지 않은 사용자입니다."),
     FORBIDDEN_MEMBER(HttpStatus.FORBIDDEN, "U002", "권한이 없는 사용자입니다."),
