@@ -3,7 +3,7 @@ package com.cupid.jikting.jwt.filter;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.InvalidJwtException;
-import com.cupid.jikting.common.util.PasswordUtil;
+import com.cupid.jikting.common.util.PasswordGenerator;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
@@ -68,7 +68,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     public void saveAuthentication(Member member) {
         String password = member.getPassword();
         if (password == null && member.getSocialType() != null) {
-            password = PasswordUtil.generateRandomPassword();
+            password = PasswordGenerator.generate();
         }
         if (password == null) {
             throw new BadRequestException(ApplicationError.BAD_MEMBER);

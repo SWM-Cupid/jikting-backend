@@ -10,6 +10,7 @@ import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.service.MemberService;
+import com.cupid.jikting.member.service.SmsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -101,6 +102,9 @@ public class MemberControllerTest extends ApiDocument {
 
     @MockBean
     private JwtService jwtService;
+
+    @MockBean
+    private SmsService smsService;
 
     @MockBean
     private MemberService memberService;
@@ -209,7 +213,7 @@ public class MemberControllerTest extends ApiDocument {
                 .nickname(NICKNAME)
                 .build();
         signUpVerificationCodeRequest = SignUpVerificationCodeRequest.builder()
-                .phone(PHONE)
+                .to(PHONE)
                 .build();
         usernameSearchVerificationCodeRequest = UsernameSearchVerificationCodeRequest.builder()
                 .username(USERNAME)
@@ -526,7 +530,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 전화번호_인증번호_발급_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).createVerificationCodeForSignup(any(SignUpVerificationCodeRequest.class));
+        willDoNothing().given(smsService).createVerificationCodeForSignup(any(SignUpVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 전화번호_인증번호_발급_요청();
         // then
@@ -536,7 +540,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 전화번호_인증번호_발급_실패() throws Exception {
         // given
-        willThrow(wrongFormException).given(memberService).createVerificationCodeForSignup(any(SignUpVerificationCodeRequest.class));
+        willThrow(wrongFormException).given(smsService).createVerificationCodeForSignup(any(SignUpVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 전화번호_인증번호_발급_요청();
         // then

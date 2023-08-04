@@ -1,7 +1,10 @@
 package com.cupid.jikting.like.dto;
 
 import com.cupid.jikting.member.entity.MemberProfile;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;

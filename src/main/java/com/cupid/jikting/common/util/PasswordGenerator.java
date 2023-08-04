@@ -7,7 +7,7 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PasswordUtil {
+public class PasswordGenerator {
 
     private static final char[] CHAT_SET = new char[]{
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -16,11 +16,11 @@ public class PasswordUtil {
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
             'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
     };
+    private static final Random RANDOM = new Random();
     private static final String DELIMITER = "";
     private static final int PASSWORD_LENGTH = 8;
-    private static final Random RANDOM = new Random();
 
-    public static String generateRandomPassword() {
+    public static String generate() {
         return String.join(DELIMITER, IntStream.range(0, PASSWORD_LENGTH)
                 .mapToObj(i -> CHAT_SET[(int) (CHAT_SET.length * RANDOM.nextDouble())])
                 .toArray(CharSequence[]::new));

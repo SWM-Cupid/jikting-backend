@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .mvcMatchers("/").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/members").permitAll()
                 .mvcMatchers("/members/username/check").permitAll()
+                .mvcMatchers("/members/code").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()

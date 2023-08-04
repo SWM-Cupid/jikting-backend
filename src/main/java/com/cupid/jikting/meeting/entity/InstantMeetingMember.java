@@ -26,14 +26,14 @@ public class InstantMeetingMember extends BaseEntity {
     @JoinColumn(name = "instant_meeting_id")
     private InstantMeeting instantMeeting;
 
-    public boolean isSameMemberProfileId(Long memberProfileId) {
-        return memberProfile.isSameAs(memberProfileId);
-    }
-
     public static InstantMeetingMember of(InstantMeeting instantMeeting, MemberProfile memberProfile) {
         InstantMeetingMember instantMeetingMember = new InstantMeetingMember(memberProfile, instantMeeting);
         instantMeeting.addMemberProfile(instantMeetingMember);
         memberProfile.addInstantMeeting(instantMeetingMember);
         return instantMeetingMember;
+    }
+
+    public boolean isSameMemberProfileId(Long memberProfileId) {
+        return memberProfile.isSameAs(memberProfileId);
     }
 }
