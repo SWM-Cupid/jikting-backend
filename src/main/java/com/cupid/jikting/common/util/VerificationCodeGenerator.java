@@ -3,13 +3,14 @@ package com.cupid.jikting.common.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.stream.IntStream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class VerificationCodeGenerator {
 
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new SecureRandom();
     private static final String DELIMITER = "";
     private static final int VERIFICATION_CODE_RANGE = 9;
 
