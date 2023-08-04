@@ -7,6 +7,7 @@ import com.cupid.jikting.common.error.DuplicateException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.UnAuthorizedException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
+import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.HobbyRepository;
@@ -53,6 +54,8 @@ public class MemberServiceTest {
     private static final String PERSONALITY = "성격";
     private static final String HOBBY = "취미";
     private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
+    private static final String VERIFICATION_CODE = "인증번호";
+    private static final String WRONG_VERIFICATION_CODE = "잘못된" + VERIFICATION_CODE;
 
     private Member member;
     private MemberProfile memberProfile;
@@ -82,6 +85,9 @@ public class MemberServiceTest {
 
     @Mock
     private HobbyRepository hobbyRepository;
+
+    @Mock
+    private RedisConnector redisConnector;
 
     @BeforeEach
     void setUp() {
@@ -533,5 +539,19 @@ public class MemberServiceTest {
         assertThatThrownBy(() -> memberService.withdraw(ID, withdrawRequest))
                 .isInstanceOf(UnAuthorizedException.class)
                 .hasMessage(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD.getMessage());
+    }
+
+    @Test
+    void 전화번호_인증_성공() {
+        // given
+        PhoneVerificationRequest phoneVerificationRequest = PhoneVerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
+        // when
+        memberService.verifyPhoneForSignup(phoneVerificationRequest);
+        // then
+        verify(redisConnector).get(anyString());
     }
 }
