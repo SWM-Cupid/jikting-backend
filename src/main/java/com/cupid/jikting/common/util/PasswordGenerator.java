@@ -3,8 +3,8 @@ package com.cupid.jikting.common.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,11 +19,18 @@ public class PasswordGenerator {
     };
     private static final String DELIMITER = "";
     private static final int PASSWORD_LENGTH = 8;
-    private static final Random RANDOM = new SecureRandom();
 
     public static String generate() {
         return String.join(DELIMITER, IntStream.range(0, PASSWORD_LENGTH)
-                .mapToObj(i -> CHAT_SET[(int) (CHAT_SET.length * RANDOM.nextDouble())])
+                .mapToObj(i -> CHAT_SET[(int) (CHAT_SET.length * getSecureRandom().nextDouble())])
                 .toArray(CharSequence[]::new));
+    }
+
+    private static SecureRandom getSecureRandom() {
+        try {
+            return SecureRandom.getInstanceStrong();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
