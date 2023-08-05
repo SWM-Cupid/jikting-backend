@@ -79,6 +79,7 @@ public class MemberControllerTest extends ApiDocument {
     private NicknameCheckRequest nicknameCheckRequest;
     private SignUpVerificationCodeRequest signUpVerificationCodeRequest;
     private UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest;
+    private PhoneVerificationRequest phoneVerificationRequest;
     private VerificationRequest verificationRequest;
     private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
     private PasswordResetRequest passwordResetRequest;
@@ -218,6 +219,10 @@ public class MemberControllerTest extends ApiDocument {
         usernameSearchVerificationCodeRequest = UsernameSearchVerificationCodeRequest.builder()
                 .username(USERNAME)
                 .phone(PHONE)
+                .build();
+        phoneVerificationRequest = PhoneVerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
                 .build();
         verificationRequest = VerificationRequest.builder()
                 .verificationCode(VERIFICATION_CODE)
@@ -550,7 +555,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 전화번호_인증_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).verifyPhoneForSignup(any(VerificationRequest.class));
+        willDoNothing().given(memberService).verifyPhoneForSignup(any(PhoneVerificationRequest.class));
         // when
         ResultActions resultActions = 전화번호_인증_요청();
         // then
@@ -560,7 +565,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 전화번호_인증_실패() throws Exception {
         // given
-        willThrow(verificationCodeNotEqualException).given(memberService).verifyPhoneForSignup(any(VerificationRequest.class));
+        willThrow(verificationCodeNotEqualException).given(memberService).verifyPhoneForSignup(any(PhoneVerificationRequest.class));
         // when
         ResultActions resultActions = 전화번호_인증_요청();
         // then
@@ -1045,7 +1050,7 @@ public class MemberControllerTest extends ApiDocument {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/verification")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(verificationRequest)));
+                .content(toJson(phoneVerificationRequest)));
     }
 
     private void 전화번호_인증_요청_성공(ResultActions resultActions) throws Exception {
