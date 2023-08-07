@@ -3,6 +3,7 @@ package com.cupid.jikting.jwt.filter;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.InvalidJwtException;
+import com.cupid.jikting.common.error.JwtException;
 import com.cupid.jikting.common.util.PasswordGenerator;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
@@ -44,7 +45,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
             return;
         }
-        checkAccessTokenAndAuthentication(request, response, filterChain);
+        saveAccessTokenAuthentication(request, response, filterChain);
     }
 
     public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
@@ -54,14 +55,12 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()), reIssuedRefreshToken);
     }
 
-    public void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    public void saveAccessTokenAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        log.info("checkAccessTokenAndAuthentication() 호출");
-        jwtService.extractAccessToken(request)
-                .filter(jwtService::isTokenValid)
-                .flatMap(jwtService::extractMemberProfileId)
-                .flatMap(memberRepository::findById)
-                .ifPresent(this::saveAuthentication);
+        log.info("saveAccessTokenAuthentication() 호출");
+        Member member = memberRepository.findById(jwtService.extractMemberProfileId(request))
+                .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
+        saveAuthentication(member);
         filterChain.doFilter(request, response);
     }
 
