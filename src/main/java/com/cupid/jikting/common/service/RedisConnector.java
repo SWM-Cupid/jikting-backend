@@ -16,9 +16,9 @@ public class RedisConnector {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public void set(String key, String value, int expireTime) {
+    public void set(String key, String value, Duration expireTime) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(key, value, Duration.ofMinutes(expireTime));
+        valueOperations.set(key, value, expireTime);
     }
 
     public String get(String key) {
