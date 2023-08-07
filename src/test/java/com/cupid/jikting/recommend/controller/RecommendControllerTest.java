@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(RecommendController.class)
 public class RecommendControllerTest extends ApiDocument {
 
-    private static final String CONTEXT_PATH = "/api/v1";
+    private static final String CONTEXT_PATH = "/v1";
     private static final String DOMAIN_ROOT_PATH = "/recommends";
     private static final String PATH_DELIMITER = "/";
     private static final String NICKNAME = "닉네임";
