@@ -2,13 +2,15 @@ package com.cupid.jikting.jwt.filter;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
-import com.cupid.jikting.common.error.InvalidJwtException;
+import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.common.util.PasswordGenerator;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -23,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Duration;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -33,6 +36,10 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+    private final RedisConnector redisConnector;
+
+    @Value("${jwt.refreshToken.expiration}")
+    private Long refreshTokenExpiration;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -48,9 +55,10 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
-        Member member = memberRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new InvalidJwtException(ApplicationError.INVALID_TOKEN));
-        String reIssuedRefreshToken = reIssueRefreshToken(member);
+        String username = redisConnector.getUsernameByRefreshToken(refreshToken);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
+        String reIssuedRefreshToken = reIssueRefreshToken(username);
         jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()), reIssuedRefreshToken);
     }
 
@@ -83,10 +91,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private String reIssueRefreshToken(Member member) {
+    private String reIssueRefreshToken(String username) {
         String reIssuedRefreshToken = jwtService.createRefreshToken();
-        member.updateRefreshToken(reIssuedRefreshToken);
-        memberRepository.saveAndFlush(member);
+        redisConnector.set(username, reIssuedRefreshToken, Duration.ofMillis(refreshTokenExpiration));
         return reIssuedRefreshToken;
     }
 

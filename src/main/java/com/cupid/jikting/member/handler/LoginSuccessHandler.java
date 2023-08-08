@@ -29,7 +29,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private String accessTokenExpiration;
 
     @Value("${jwt.refreshToken.expiration}")
-    private String refreshTokenExpiration;
+    private Long refreshTokenExpiration;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -39,7 +39,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String refreshToken = jwtService.createRefreshToken();
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        redisConnector.set(username, refreshToken, Duration.ofMillis(Integer.parseInt(refreshTokenExpiration)));
+        redisConnector.set(refreshToken, username, Duration.ofMillis(refreshTokenExpiration));
         log.info("로그인에 성공하였습니다. 아이디 : {} AccessToken : {}", username, accessToken);
     }
 
