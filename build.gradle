@@ -48,19 +48,19 @@ dependencies {
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
     outputs.dir snippetsDir
     finalizedBy jacocoTestReport
+    useJUnitPlatform()
 }
 
 tasks.named('asciidoctor') {
-    inputs.dir snippetsDir
     dependsOn test
+    inputs.dir snippetsDir
 }
 
 tasks.named('bootJar') {
     dependsOn asciidoctor
-    from("${asciidoctor.outputDir}/html5") {
+    from("${asciidoctor.outputDir}") {
         into 'static/docs'
     }
 }
@@ -101,9 +101,9 @@ tasks.named('jacocoTestCoverageVerification') {
     finalizedBy asciidoctor
 }
 
-task copyDocument(type: Copy) {
+tasks.register('copyDocument', Copy) {
     dependsOn asciidoctor
-    from file("build/docs/asciidoc")
+    from file("${asciidoctor.outputDir}")
     into file("src/main/resources/static/docs")
 }
 
