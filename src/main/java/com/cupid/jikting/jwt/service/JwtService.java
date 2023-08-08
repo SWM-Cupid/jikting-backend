@@ -77,10 +77,9 @@ public class JwtService {
     }
 
     public Long extractMemberProfileId(HttpServletRequest request) {
-        String accessToken = extractAccessToken(request);
         return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                         .build()
-                        .verify(accessToken)
+                        .verify(extractAccessToken(request))
                         .getClaim(MEMBER_PROFILE_ID_CLAIM)
                         .asLong())
                 .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
