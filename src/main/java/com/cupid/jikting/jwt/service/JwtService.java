@@ -76,23 +76,13 @@ public class JwtService {
                 .map(refreshToken -> refreshToken.replace(BEARER, REMOVE));
     }
 
-    public Optional<String> extractAccessToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(accessHeader))
-                .filter(refreshToken -> refreshToken.startsWith(BEARER))
-                .map(refreshToken -> refreshToken.replace(BEARER, REMOVE));
-    }
-
-    public Optional<Long> extractMemberProfileId(String accessToken) {
-        try {
-            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
-                    .build()
-                    .verify(accessToken)
-                    .getClaim(MEMBER_PROFILE_ID_CLAIM)
-                    .asLong());
-        } catch (Exception e) {
-            log.error("액세스 토큰이 유효하지 않습니다.");
-            return Optional.empty();
-        }
+    public Long extractMemberProfileId(HttpServletRequest request) {
+        return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+                        .build()
+                        .verify(extractAccessToken(request))
+                        .getClaim(MEMBER_PROFILE_ID_CLAIM)
+                        .asLong())
+                .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
     }
 
     public Long extractValidMemberProfileId(String accessToken) {
@@ -130,5 +120,12 @@ public class JwtService {
 
     private void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
         response.setHeader(refreshHeader, refreshToken);
+    }
+
+    private String extractAccessToken(HttpServletRequest request) {
+        return Optional.ofNullable(request.getHeader(accessHeader))
+                .filter(accessToken -> accessToken.startsWith(BEARER))
+                .map(refreshToken -> refreshToken.replace(BEARER, REMOVE))
+                .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
     }
 }

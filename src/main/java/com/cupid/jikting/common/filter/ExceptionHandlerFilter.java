@@ -2,8 +2,7 @@ package com.cupid.jikting.common.filter;
 
 import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationException;
-import com.cupid.jikting.common.error.ExpiredJwtException;
-import com.cupid.jikting.common.error.InvalidJwtException;
+import com.cupid.jikting.common.error.JwtException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (ExpiredJwtException | InvalidJwtException exception) {
+        } catch (JwtException exception) {
             setErrorResponse(response, exception);
         }
     }
