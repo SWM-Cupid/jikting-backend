@@ -31,4 +31,8 @@ public class RedisConnector {
         return Optional.ofNullable(redisTemplate.opsForValue().get(key))
                 .orElseThrow(() -> new JwtException(ApplicationError.EXPIRED_TOKEN));
     }
+
+    public void delete(String key) {
+        redisTemplate.delete(key);
+    }
 }

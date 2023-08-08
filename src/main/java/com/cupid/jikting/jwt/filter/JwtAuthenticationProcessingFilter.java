@@ -58,7 +58,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         String username = redisConnector.getUsernameByRefreshToken(refreshToken);
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
-        String reIssuedRefreshToken = reIssueRefreshToken(username);
+        redisConnector.delete(refreshToken);
+        String reIssuedRefreshToken = jwtService.createRefreshToken();
+        redisConnector.set(reIssuedRefreshToken, username, Duration.ofMillis(refreshTokenExpiration));
         jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()), reIssuedRefreshToken);
     }
 
@@ -89,12 +91,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
                 userDetails, null, authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    private String reIssueRefreshToken(String username) {
-        String reIssuedRefreshToken = jwtService.createRefreshToken();
-        redisConnector.set(username, reIssuedRefreshToken, Duration.ofMillis(refreshTokenExpiration));
-        return reIssuedRefreshToken;
     }
 
     @Override
