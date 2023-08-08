@@ -2,6 +2,7 @@ package com.cupid.jikting.common.service;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.common.error.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -24,5 +25,10 @@ public class RedisConnector {
     public String get(String key) {
         return Optional.ofNullable(redisTemplate.opsForValue().get(key))
                 .orElseThrow(() -> new BadRequestException(ApplicationError.VERIFICATION_CODE_EXPIRED));
+    }
+
+    public String getUsernameByRefreshToken(String key) {
+        return Optional.ofNullable(redisTemplate.opsForValue().get(key))
+                .orElseThrow(() -> new JwtException(ApplicationError.EXPIRED_TOKEN));
     }
 }
