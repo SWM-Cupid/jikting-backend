@@ -167,4 +167,8 @@ public class MemberProfile extends BaseEntity {
     public void updatePassword(String newPassword) {
         member.updatePassword(newPassword);
     }
+
+    public String getType() {
+        return member.getType();
+    }
 }
