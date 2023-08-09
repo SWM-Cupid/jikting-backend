@@ -29,7 +29,8 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
-    private static final String LOGIN_URI = "/members/login";
+    private static final String LOGIN_URI = "/login";
+    private static final String OAUTH_LOGIN_URL = "/oauth";
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
@@ -38,6 +39,10 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        if (request.getRequestURI().contains(LOGIN_URI) || request.getRequestURI().contains(OAUTH_LOGIN_URL)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String refreshToken = jwtService.extractRefreshToken(request)
                 .filter(jwtService::isTokenValid)
                 .orElse(null);
