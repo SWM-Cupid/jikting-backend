@@ -1,4 +1,4 @@
-package com.cupid.jikting.common.ui;
+package com.cupid.jikting.common.resolver;
 
 import com.cupid.jikting.common.support.AuthorizedVariable;
 import com.cupid.jikting.jwt.service.JwtService;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RequiredArgsConstructor
 @Component
-public class AuthResolver implements HandlerMethodArgumentResolver {
+public class AuthorizationResolver implements HandlerMethodArgumentResolver {
 
     private final JwtService jwtService;
 
