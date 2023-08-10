@@ -1,5 +1,6 @@
 package com.cupid.jikting.chatting.dto;
 
+import com.cupid.jikting.chatting.entity.Chatting;
 import lombok.*;
 
 @Getter
@@ -11,4 +12,11 @@ public class ChattingRequest {
     private Long chattingRoomId;
     private Long senderId;
     private String content;
+
+    public Chatting toChatting() {
+        return Chatting.builder()
+                .senderId(senderId)
+                .content(content)
+                .build();
+    }
 }
