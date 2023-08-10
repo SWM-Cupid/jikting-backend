@@ -127,12 +127,6 @@ public class TeamControllerTest extends ApiDocument {
                     return memberProfile;
                 })
                 .forEach(memberProfile -> TeamMember.of(LEADER, team, memberProfile));
-//        MemberProfile memberProfile = MemberProfile.builder()
-//                .nickname(NICKNAME)
-//                .build();
-//        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-//                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
-//        TeamMember.of(LEADER, team, memberProfile);
         teamRegisterRequest = TeamRegisterRequest.builder()
                 .description(DESCRIPTION)
                 .keywords(keywords)
