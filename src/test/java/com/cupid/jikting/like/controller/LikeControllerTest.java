@@ -135,16 +135,11 @@ public class LikeControllerTest extends ApiDocument {
                         .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
-        List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
-                .mapToObj(n -> TeamMember.builder()
-                        .memberProfile(memberProfile)
-                        .build())
-                .collect(Collectors.toList());
         Team team = Team.builder()
                 .name(NAME)
-                .teamMembers(teamMembers)
                 .build();
         team.addTeamPersonalities(teamPersonalities);
+        TeamMember.of(false, team, memberProfile);
         TeamLike teamLike = TeamLike.builder()
                 .id(ID)
                 .sentTeam(team)
