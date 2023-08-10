@@ -17,8 +17,12 @@ public class RedisConfig {
     private List<String> clusterNodes;
 
     @Bean
-    public StringRedisTemplate redisTemplate() {
-        return new StringRedisTemplate(redisConnectionFactory());
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
+        return redisTemplate;
     }
 
     @Bean
