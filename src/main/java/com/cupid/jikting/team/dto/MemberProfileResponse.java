@@ -16,6 +16,12 @@ public class MemberProfileResponse {
     private int age;
     private String mbti;
     private String address;
+    private String type;
+    private int height;
+    private String description;
+    private String company;
+    private String smokeStatus;
+    private String drinkStatus;
 
     public static MemberProfileResponse from(MemberProfile memberProfile) {
         return new MemberProfileResponse(
@@ -23,6 +29,12 @@ public class MemberProfileResponse {
                 memberProfile.getMainImageUrl(),
                 memberProfile.getAge(),
                 memberProfile.getMbti().toString(),
-                memberProfile.getAddress());
+                memberProfile.getAddress(),
+                memberProfile.getType(),
+                memberProfile.getHeight(),
+                memberProfile.getDescription(),
+                memberProfile.getCompany(),
+                memberProfile.getSmokeStatus().getMessage(),
+                memberProfile.getDrinkStatus().getMessage());
     }
 }

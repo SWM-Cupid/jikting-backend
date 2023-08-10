@@ -49,6 +49,7 @@ public class TeamControllerTest extends ApiDocument {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
     private static final Long ID = 1L;
+    private static final String TEAM_NAME = "팀명";
     private static final String KEYWORD = "키워드";
     private static final String DESCRIPTION = "한줄 소개";
     private static final String INVITATION_URL = "초대 URL";
@@ -59,6 +60,8 @@ public class TeamControllerTest extends ApiDocument {
     private static final boolean LEADER = true;
     private static final int HEIGHT = 189;
     private static final String COLLEGE = "대학";
+    private static final String TYPE = "UNCERTIFIED";
+    private static final String COMPANY = "회사";
 
     private String accessToken;
     private TeamRegisterRequest teamRegisterRequest;
@@ -96,9 +99,20 @@ public class TeamControllerTest extends ApiDocument {
                 .collect(Collectors.toList());
         Team team = Team.builder()
                 .id(ID)
+                .name(TEAM_NAME)
                 .description(DESCRIPTION)
                 .build();
         team.addTeamPersonalities(teamPersonalities);
+        Company company = Company.builder()
+                .name(COMPANY)
+                .build();
+        MemberCompany memberCompany = MemberCompany.builder()
+                .company(company)
+                .build();
+        Member member = Member.builder()
+                .type(TYPE)
+                .memberCompanies(List.of(memberCompany))
+                .build();
         IntStream.range(0, 3)
                 .mapToObj(n -> {
                     MemberProfile memberProfile = MemberProfile.builder()
@@ -106,18 +120,13 @@ public class TeamControllerTest extends ApiDocument {
                             .birth(BIRTH)
                             .mbti(Mbti.ENFJ)
                             .address(ADDRESS)
+                            .member(member)
                             .build();
                     memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                             List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
                     return memberProfile;
                 })
                 .forEach(memberProfile -> TeamMember.of(LEADER, team, memberProfile));
-        MemberProfile memberProfile = MemberProfile.builder()
-                .nickname(NICKNAME)
-                .build();
-        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
-        TeamMember.of(LEADER, team, memberProfile);
         teamRegisterRequest = TeamRegisterRequest.builder()
                 .description(DESCRIPTION)
                 .keywords(keywords)

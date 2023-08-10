@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamResponse {
 
+    private String name;
     private String description;
     private List<String> keywords;
     private List<MemberProfileResponse> members;
@@ -26,6 +27,7 @@ public class TeamResponse {
                 .map(MemberProfileResponse::from)
                 .collect(Collectors.toList());
         return new TeamResponse(
+                team.getName(),
                 team.getDescription(),
                 team.getPersonalities(),
                 memberProfileResponses);

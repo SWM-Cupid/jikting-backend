@@ -50,9 +50,10 @@ class TeamServiceTest {
     private static final String COLLEGE = "대학";
     private static final int HEIGHT = 160;
     private static final String IMAGE_URL = "이미지 URL";
+    private static final String TYPE = "UNCERTIFIED";
 
     private MemberProfile leader;
-    private MemberProfile member;
+    private MemberProfile memberProfile;
     private Personality personality;
     private List<TeamPersonality> teamPersonalities;
     private Team team;
@@ -78,17 +79,28 @@ class TeamServiceTest {
                         .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
+        Company company = Company.builder()
+                .build();
+        MemberCompany memberCompany = MemberCompany.builder()
+                .company(company)
+                .build();
+        Member member = Member.builder()
+                .memberCompanies(List.of(memberCompany))
+                .type(TYPE)
+                .build();
         leader = MemberProfile.builder()
                 .id(ID)
                 .birth(BIRTH)
                 .mbti(Mbti.ENFJ)
                 .address(ADDRESS)
+                .member(member)
                 .build();
-        member = MemberProfile.builder()
+        memberProfile = MemberProfile.builder()
                 .id(ID)
                 .birth(BIRTH)
                 .mbti(Mbti.ENFJ)
                 .address(ADDRESS)
+                .member(member)
                 .build();
         personality = Personality.builder()
                 .keyword(KEYWORD)
@@ -101,7 +113,7 @@ class TeamServiceTest {
                 .collect(Collectors.toList());
         leader.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
-        member.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
         team = Team.builder()
                 .id(ID)
@@ -111,7 +123,7 @@ class TeamServiceTest {
                 .build();
         team.addTeamPersonalities(teamPersonalities);
         TeamMember.of(LEADER, team, leader);
-        TeamMember.of(!LEADER, team, member);
+        TeamMember.of(!LEADER, team, memberProfile);
         teamRegisterRequest = TeamRegisterRequest.builder()
                 .description(DESCRIPTION)
                 .memberCount(MEMBER_COUNT)
@@ -152,7 +164,7 @@ class TeamServiceTest {
     @Test
     void 팀_등록_실패_등록된_팀_존재() {
         // given
-        willReturn(Optional.of(member)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         Team team = Team.builder()
                 .id(ID)
                 .name(NAME)
@@ -162,7 +174,7 @@ class TeamServiceTest {
         team.addTeamPersonalities(teamPersonalities);
         team.getTeamMembers().add(TeamMember.builder()
                 .team(team)
-                .memberProfile(member)
+                .memberProfile(memberProfile)
                 .build());
         // when & then
         assertThatThrownBy(() -> teamService.register(ID, teamRegisterRequest))
@@ -187,9 +199,9 @@ class TeamServiceTest {
     @Test
     void 팀_참여_성공() {
         // given
-        willReturn(Optional.of(member)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
-        willReturn(member).given(memberProfileRepository).save(any(MemberProfile.class));
+        willReturn(memberProfile).given(memberProfileRepository).save(any(MemberProfile.class));
         // when
         teamService.attend(ID, ID);
         // then
@@ -213,7 +225,7 @@ class TeamServiceTest {
     @Test
     void 팀_참여_실패_팀_없음() {
         // given
-        willReturn(Optional.of(member)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(teamRepository).findById(anyLong());
         // when & then
         assertThatThrownBy(() -> teamService.attend(ID, ID))
