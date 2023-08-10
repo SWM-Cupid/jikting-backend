@@ -1,7 +1,6 @@
 package com.cupid.jikting.meeting.controller;
 
 import com.cupid.jikting.common.support.AuthorizedVariable;
-import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.meeting.dto.InstantMeetingResponse;
 import com.cupid.jikting.meeting.service.InstantMeetingService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import java.util.List;
 public class InstantMeetingController {
 
     private final InstantMeetingService instantMeetingService;
-    private final JwtService jwtService;
 
     @GetMapping
     public ResponseEntity<List<InstantMeetingResponse>> getAll(@AuthorizedVariable Long memberProfileId) {

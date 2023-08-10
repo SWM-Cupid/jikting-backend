@@ -21,7 +21,6 @@ import java.security.NoSuchAlgorithmException;
 @RequestMapping("/members")
 public class MemberController {
 
-    private final JwtService jwtService;
     private final SmsService smsService;
     private final MemberService memberService;
 

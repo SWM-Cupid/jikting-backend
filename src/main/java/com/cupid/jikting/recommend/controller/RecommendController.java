@@ -1,7 +1,6 @@
 package com.cupid.jikting.recommend.controller;
 
 import com.cupid.jikting.common.support.AuthorizedVariable;
-import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.recommend.dto.RecommendResponse;
 import com.cupid.jikting.recommend.service.RecommendService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import java.util.List;
 public class RecommendController {
 
     private final RecommendService recommendService;
-    private final JwtService jwtService;
 
     @GetMapping
     public ResponseEntity<List<RecommendResponse>> get(@AuthorizedVariable Long memberProfileId) {
