@@ -22,8 +22,7 @@ public class TeamController {
     @PostMapping
     public ResponseEntity<TeamRegisterResponse> register(@AuthorizedVariable Long memberProfileId,
                                                          @RequestBody TeamRegisterRequest teamRegisterRequest) {
-        return ResponseEntity.ok()
-                .body(teamService.register(memberProfileId, teamRegisterRequest));
+        return ResponseEntity.ok().body(teamService.register(memberProfileId, teamRegisterRequest));
     }
 
     @PostMapping("/{teamId}/attend")
