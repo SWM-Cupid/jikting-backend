@@ -3,12 +3,12 @@ package com.cupid.jikting.chatting.service;
 import com.cupid.jikting.chatting.dto.ChattingRoomDetailResponse;
 import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
 import com.cupid.jikting.chatting.dto.MeetingConfirmRequest;
-import com.cupid.jikting.chatting.entity.Chatting;
 import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.chatting.repository.ChattingRoomRepository;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.entity.ProfileImage;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
@@ -26,10 +26,11 @@ import java.util.stream.Collectors;
 @Service
 public class ChattingRoomService {
 
-    private static final String NO_MESSAGE = "";
+    private static final String CHATTING_ROOM_KEY_HEADER = "CHATTING_ROOM:";
 
-    private MemberProfileRepository memberProfileRepository;
-    private ChattingRoomRepository chattingRoomRepository;
+    private final MemberProfileRepository memberProfileRepository;
+    private final ChattingRoomRepository chattingRoomRepository;
+    private final RedisConnector redisConnector;
 
     public List<ChattingRoomResponse> getAll(Long memberProfileId) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
@@ -58,16 +59,9 @@ public class ChattingRoomService {
         return ChattingRoomResponse.builder()
                 .chattingRoomId(chattingRoom.getId())
                 .opposingTeamName(chattingRoom.getOppositeTeamName(team))
-                .lastMessage(getLastMessage(chattingRoom.getChattings()))
+                .lastMessage(redisConnector.getLastMessage(CHATTING_ROOM_KEY_HEADER + chattingRoom.getId()))
                 .images(getImages(chattingRoom.getMemberChattingRooms()))
                 .build();
-    }
-
-    private String getLastMessage(List<Chatting> chattings) {
-        if (chattings.isEmpty()) {
-            return NO_MESSAGE;
-        }
-        return chattings.get(chattings.size() - 1).getContent();
     }
 
     private List<String> getImages(List<MemberChattingRoom> memberChattingRooms) {
