@@ -28,8 +28,8 @@ public class ChattingRoomService {
 
     private static final String NO_MESSAGE = "";
 
-    private MemberProfileRepository memberProfileRepository;
-    private ChattingRoomRepository chattingRoomRepository;
+    private final MemberProfileRepository memberProfileRepository;
+    private final ChattingRoomRepository chattingRoomRepository;
 
     public List<ChattingRoomResponse> getAll(Long memberProfileId) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);

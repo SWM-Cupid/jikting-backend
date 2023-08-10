@@ -15,10 +15,10 @@ import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +35,7 @@ import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
-@WebMvcTest(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)
 class ChattingRoomServiceTest {
 
     private static final Long ID = 1L;
@@ -126,7 +126,6 @@ class ChattingRoomServiceTest {
     @Test
     void 채팅방_내_미팅_화정_실패_채팅방_없음() {
         // given
-        willReturn(Optional.of(chattingRoom)).given(chattingRoomRepository).findById(anyLong());
         willThrow(new NotFoundException(ApplicationError.CHATTING_ROOM_NOT_FOUND)).given(chattingRoomRepository).findById(anyLong());
         MeetingConfirmRequest meetingConfirmRequest = MeetingConfirmRequest.builder()
                 .meetingId(ID)

@@ -1,5 +1,6 @@
 package com.cupid.jikting.team.controller;
 
+import com.cupid.jikting.common.support.AuthorizedVariable;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
@@ -19,15 +20,14 @@ public class TeamController {
     private final JwtService jwtService;
 
     @PostMapping
-    public ResponseEntity<TeamRegisterResponse> register(@RequestHeader("Authorization") String token,
+    public ResponseEntity<TeamRegisterResponse> register(@AuthorizedVariable Long memberProfileId,
                                                          @RequestBody TeamRegisterRequest teamRegisterRequest) {
-        return ResponseEntity.ok()
-                .body(teamService.register(jwtService.extractValidMemberProfileId(token), teamRegisterRequest));
+        return ResponseEntity.ok().body(teamService.register(memberProfileId, teamRegisterRequest));
     }
 
     @PostMapping("/{teamId}/attend")
-    public ResponseEntity<Void> attend(@RequestHeader("Authorization") String token, @PathVariable Long teamId) {
-        teamService.attend(teamId, jwtService.extractValidMemberProfileId(token));
+    public ResponseEntity<Void> attend(@AuthorizedVariable Long memberProfileId, @PathVariable Long teamId) {
+        teamService.attend(teamId, memberProfileId);
         return ResponseEntity.ok().build();
     }
 

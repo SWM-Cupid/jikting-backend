@@ -1,5 +1,6 @@
 package com.cupid.jikting.member.controller;
 
+import com.cupid.jikting.common.support.AuthorizedVariable;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.service.MemberService;
@@ -41,20 +42,20 @@ public class MemberController {
     }
 
     @PatchMapping
-    public ResponseEntity<Void> update(@RequestHeader("Authorization") String token, @RequestBody NicknameUpdateRequest nicknameUpdateRequest) {
-        memberService.update(jwtService.extractValidMemberProfileId(token), nicknameUpdateRequest);
+    public ResponseEntity<Void> update(@AuthorizedVariable Long memberProfileId, @RequestBody NicknameUpdateRequest nicknameUpdateRequest) {
+        memberService.update(memberProfileId, nicknameUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/profile")
-    public ResponseEntity<Void> updateProfile(@RequestHeader("Authorization") String token, @RequestBody MemberProfileUpdateRequest memberProfileUpdateRequest) {
-        memberService.updateProfile(jwtService.extractValidMemberProfileId(token), memberProfileUpdateRequest);
+    public ResponseEntity<Void> updateProfile(@AuthorizedVariable Long memberProfileId, @RequestBody MemberProfileUpdateRequest memberProfileUpdateRequest) {
+        memberService.updateProfile(memberProfileId, memberProfileUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Void> updatePassword(@RequestHeader("Authorization") String token, @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
-        memberService.updatePassword(jwtService.extractValidMemberProfileId(token), passwordUpdateRequest);
+    public ResponseEntity<Void> updatePassword(@AuthorizedVariable Long memberProfileId, @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+        memberService.updatePassword(memberProfileId, passwordUpdateRequest);
         return ResponseEntity.ok().build();
     }
 

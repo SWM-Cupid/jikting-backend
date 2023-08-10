@@ -4,6 +4,7 @@ import com.cupid.jikting.chatting.dto.ChattingRoomDetailResponse;
 import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
 import com.cupid.jikting.chatting.dto.MeetingConfirmRequest;
 import com.cupid.jikting.chatting.service.ChattingRoomService;
+import com.cupid.jikting.common.support.AuthorizedVariable;
 import com.cupid.jikting.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ public class ChattingRoomController {
     private final JwtService jwtService;
 
     @GetMapping
-    public ResponseEntity<List<ChattingRoomResponse>> getAll(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok().body(chattingRoomService.getAll(jwtService.extractValidMemberProfileId(token)));
+    public ResponseEntity<List<ChattingRoomResponse>> getAll(@AuthorizedVariable Long memberProfileId) {
+        return ResponseEntity.ok().body(chattingRoomService.getAll(memberProfileId));
     }
 
     @GetMapping("/{chattingRoomId}")

@@ -13,10 +13,10 @@ import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,11 +30,11 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 
-@WebMvcTest(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class RecommendServiceTest {
 
     private static final Long ID = 1L;
-    private static final LocalDate BIRTH = LocalDate.now();
+    private static final LocalDate BIRTH = LocalDate.of(1997, 9, 11);
     private static final String ADDRESS = "지역";
     private static final String COMPANY = "회사";
     private static final int HEIGHT = 180;
