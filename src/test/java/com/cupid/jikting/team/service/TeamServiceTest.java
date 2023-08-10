@@ -160,10 +160,7 @@ class TeamServiceTest {
                 .memberCount(MEMBER_COUNT)
                 .build();
         team.addTeamPersonalities(teamPersonalities);
-        team.getTeamMembers().add(TeamMember.builder()
-                .team(team)
-                .memberProfile(member)
-                .build());
+        TeamMember.of(LEADER, team, member);
         // when & then
         assertThatThrownBy(() -> teamService.register(ID, teamRegisterRequest))
                 .isInstanceOf(BadRequestException.class)
