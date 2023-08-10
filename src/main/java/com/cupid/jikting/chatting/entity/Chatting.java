@@ -1,32 +1,28 @@
 package com.cupid.jikting.chatting.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
-import com.cupid.jikting.member.entity.MemberProfile;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLDelete;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import java.io.Serializable;
+import java.util.UUID;
 
 @Getter
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE chatting SET deleted = true WHERE id=?")
 @AttributeOverride(name = "id", column = @Column(name = "chatting_id"))
-@Entity
-public class Chatting extends BaseEntity {
+public class Chatting extends BaseEntity implements Serializable {
 
+    @Id
+    private UUID id = UUID.randomUUID();
+
+    private Long senderId;
     private String content;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_profile_id")
-    private MemberProfile memberProfile;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chatting_room_id")
-    private ChattingRoom chattingRoom;
 }
