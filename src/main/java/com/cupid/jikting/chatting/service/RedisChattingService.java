@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Primary
 @Transactional
 @Service
-public class ㄷ implements ChattingService {
+public class RedisChattingService implements ChattingService {
 
     private static final String CHATTING_ROOM = "CHATTING_ROOM";
     private static final String DELIMITER = ":";
