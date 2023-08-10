@@ -1,6 +1,6 @@
 package com.cupid.jikting.common.ui;
 
-import com.cupid.jikting.common.support.AuthVariable;
+import com.cupid.jikting.common.support.AuthorizedVariable;
 import com.cupid.jikting.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -20,7 +20,7 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(AuthVariable.class);
+        return parameter.hasParameterAnnotation(AuthorizedVariable.class);
     }
 
     @Override

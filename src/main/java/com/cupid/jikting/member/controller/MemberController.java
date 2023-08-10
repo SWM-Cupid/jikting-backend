@@ -1,6 +1,6 @@
 package com.cupid.jikting.member.controller;
 
-import com.cupid.jikting.common.support.AuthVariable;
+import com.cupid.jikting.common.support.AuthorizedVariable;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.service.MemberService;
@@ -42,19 +42,19 @@ public class MemberController {
     }
 
     @PatchMapping
-    public ResponseEntity<Void> update(@AuthVariable Long memberProfileId, @RequestBody NicknameUpdateRequest nicknameUpdateRequest) {
+    public ResponseEntity<Void> update(@AuthorizedVariable Long memberProfileId, @RequestBody NicknameUpdateRequest nicknameUpdateRequest) {
         memberService.update(memberProfileId, nicknameUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/profile")
-    public ResponseEntity<Void> updateProfile(@AuthVariable Long memberProfileId, @RequestBody MemberProfileUpdateRequest memberProfileUpdateRequest) {
+    public ResponseEntity<Void> updateProfile(@AuthorizedVariable Long memberProfileId, @RequestBody MemberProfileUpdateRequest memberProfileUpdateRequest) {
         memberService.updateProfile(memberProfileId, memberProfileUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Void> updatePassword(@AuthVariable Long memberProfileId, @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+    public ResponseEntity<Void> updatePassword(@AuthorizedVariable Long memberProfileId, @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
         memberService.updatePassword(memberProfileId, passwordUpdateRequest);
         return ResponseEntity.ok().build();
     }

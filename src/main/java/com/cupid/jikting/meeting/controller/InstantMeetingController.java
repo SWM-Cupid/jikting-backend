@@ -1,6 +1,6 @@
 package com.cupid.jikting.meeting.controller;
 
-import com.cupid.jikting.common.support.AuthVariable;
+import com.cupid.jikting.common.support.AuthorizedVariable;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.meeting.dto.InstantMeetingResponse;
 import com.cupid.jikting.meeting.service.InstantMeetingService;
@@ -19,12 +19,12 @@ public class InstantMeetingController {
     private final JwtService jwtService;
 
     @GetMapping
-    public ResponseEntity<List<InstantMeetingResponse>> getAll(@AuthVariable Long memberProfileId) {
+    public ResponseEntity<List<InstantMeetingResponse>> getAll(@AuthorizedVariable Long memberProfileId) {
         return ResponseEntity.ok().body(instantMeetingService.getAll(memberProfileId));
     }
 
     @PostMapping("/{instantMeetingId}")
-    public ResponseEntity<Void> attend(@AuthVariable Long memberProfileId, @PathVariable Long instantMeetingId) {
+    public ResponseEntity<Void> attend(@AuthorizedVariable Long memberProfileId, @PathVariable Long instantMeetingId) {
         instantMeetingService.attend(memberProfileId, instantMeetingId);
         return ResponseEntity.ok().build();
     }

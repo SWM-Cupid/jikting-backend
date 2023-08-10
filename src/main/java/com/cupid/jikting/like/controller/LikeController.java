@@ -1,6 +1,6 @@
 package com.cupid.jikting.like.controller;
 
-import com.cupid.jikting.common.support.AuthVariable;
+import com.cupid.jikting.common.support.AuthorizedVariable;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.like.dto.TeamDetailResponse;
@@ -20,12 +20,12 @@ public class LikeController {
     private final JwtService jwtService;
 
     @GetMapping("/received")
-    public ResponseEntity<List<LikeResponse>> getAllReceivedLike(@AuthVariable Long memberProfileId) {
+    public ResponseEntity<List<LikeResponse>> getAllReceivedLike(@AuthorizedVariable Long memberProfileId) {
         return ResponseEntity.ok().body(likeService.getAllReceivedLike(memberProfileId));
     }
 
     @GetMapping("/sent")
-    public ResponseEntity<List<LikeResponse>> getAllSentLike(@AuthVariable Long memberProfileId) {
+    public ResponseEntity<List<LikeResponse>> getAllSentLike(@AuthorizedVariable Long memberProfileId) {
         return ResponseEntity.ok().body(likeService.getAllSentLike(memberProfileId));
     }
 
