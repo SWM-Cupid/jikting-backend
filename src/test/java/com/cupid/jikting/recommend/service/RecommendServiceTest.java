@@ -9,6 +9,7 @@ import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.recommend.dto.RecommendResponse;
 import com.cupid.jikting.recommend.entity.Recommend;
+import com.cupid.jikting.recommend.repository.RecommendRepository;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +44,7 @@ public class RecommendServiceTest {
     private static final boolean LEADER = true;
 
     private MemberProfile memberProfile;
+    private Recommend recommend;
     private ApplicationException memberNotFoundException;
 
     @InjectMocks
@@ -50,6 +52,9 @@ public class RecommendServiceTest {
 
     @Mock
     private MemberProfileRepository memberProfileRepository;
+
+    @Mock
+    private RecommendRepository recommendRepository;
 
     @BeforeEach
     void setUp() {
@@ -117,5 +122,15 @@ public class RecommendServiceTest {
         assertThatThrownBy(() -> recommendService.get(ID))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 호감_보내기_성공() {
+        //given
+        willReturn(Optional.of(recommend)).given(recommendRepository).findById(anyLong());
+        //when
+        recommendService.sendLike(ID);
+        //then
+
     }
 }
