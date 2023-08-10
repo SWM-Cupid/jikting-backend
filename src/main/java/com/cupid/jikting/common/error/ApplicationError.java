@@ -43,6 +43,8 @@ public enum ApplicationError {
     ALREADY_IN_TEAM(HttpStatus.BAD_REQUEST, "T003", "이미 팀에 가입되었습니다."),
     TEAM_ALREADY_FULL(HttpStatus.BAD_REQUEST, "T004", "이미 팀 모집이 완료되었습니다."),
 
+    RECOMMEND_NOT_FOUND(HttpStatus.BAD_REQUEST, "R001", "추천을 찾을 수 없습니다."),
+
     LIKE_NOT_FOUND(HttpStatus.BAD_REQUEST, "L001", "호감을 찾을 수 없습니다."),
 
     MEETING_NOT_FOUND(HttpStatus.BAD_REQUEST, "M001", "미팅을 찾을 수 없습니다."),
