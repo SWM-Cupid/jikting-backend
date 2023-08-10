@@ -35,7 +35,6 @@ public class RecommendServiceTest {
 
     private static final Long ID = 1L;
     private static final LocalDate BIRTH = LocalDate.of(1997, 9, 11);
-    ;
     private static final String ADDRESS = "지역";
     private static final String COMPANY = "회사";
     private static final int HEIGHT = 180;
