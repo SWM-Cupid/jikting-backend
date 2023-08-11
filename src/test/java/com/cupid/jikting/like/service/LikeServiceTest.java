@@ -105,19 +105,14 @@ class LikeServiceTest {
                 .build();
         memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(memberPersonality), List.of(memberHobby), profileImages);
-        List<TeamMember> teamMembers = IntStream.rangeClosed(0, 2)
-                .mapToObj(n -> TeamMember.builder()
-                        .memberProfile(memberProfile)
-                        .build())
-                .collect(Collectors.toList());
         Team sentTeam = Team.builder()
+                .id(ID)
                 .name(NAME)
-                .teamMembers(teamMembers)
                 .build();
         sentTeam.addTeamPersonalities(List.of(teamPersonality));
         Team receivedTeam = Team.builder()
+                .id(ID)
                 .name(NAME)
-                .teamMembers(teamMembers)
                 .build();
         receivedTeam.addTeamPersonalities(List.of(teamPersonality));
         teamLike = TeamLike.builder()
@@ -131,9 +126,7 @@ class LikeServiceTest {
                 .receivedTeamLikes(List.of(teamLike))
                 .sentTeamLikes(List.of(teamLike))
                 .build();
-        teamMember = TeamMember.builder()
-                .team(team)
-                .build();
+        teamMember = TeamMember.of(false, team, memberProfile);
         teamLikes = List.of(TeamLike.builder()
                 .sentTeam(team)
                 .build());
