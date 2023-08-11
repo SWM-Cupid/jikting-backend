@@ -2,8 +2,8 @@ package com.cupid.jikting.jwt.filter;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
-import com.cupid.jikting.common.error.InvalidJwtException;
 import com.cupid.jikting.common.error.JwtException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.util.PasswordGenerator;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
@@ -47,17 +47,18 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .filter(jwtService::isTokenValid)
                 .orElse(null);
         if (refreshToken != null) {
-            checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
+            reissueAccessToken(response, refreshToken);
             return;
         }
         saveAccessTokenAuthentication(request, response, filterChain);
     }
 
-    public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
-        Member member = memberRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new InvalidJwtException(ApplicationError.INVALID_TOKEN));
-        String reIssuedRefreshToken = reIssueRefreshToken(member);
-        jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()), reIssuedRefreshToken);
+    public void reissueAccessToken(HttpServletResponse response, String refreshToken) {
+        String username = jwtService.getUsernameByRefreshToken(refreshToken);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
+        jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()),
+                jwtService.reissueRefreshToken(refreshToken, username));
     }
 
     public void saveAccessTokenAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -85,13 +86,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
                 userDetails, null, authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    private String reIssueRefreshToken(Member member) {
-        String reIssuedRefreshToken = jwtService.createRefreshToken();
-        member.updateRefreshToken(reIssuedRefreshToken);
-        memberRepository.saveAndFlush(member);
-        return reIssuedRefreshToken;
     }
 
     @Override

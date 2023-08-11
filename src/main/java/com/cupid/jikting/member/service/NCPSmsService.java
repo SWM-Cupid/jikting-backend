@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -72,7 +73,7 @@ public class NCPSmsService implements SmsService {
 
     private String generateVerificationCode(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
         String verificationCode = VerificationCodeGenerator.generate(VERIFICATION_CODE_LENGTH);
-        redisConnector.set(signUpVerificationCodeRequest.getTo(), verificationCode, EXPIRE_TIME);
+        redisConnector.set(signUpVerificationCodeRequest.getTo(), verificationCode, Duration.ofMinutes(EXPIRE_TIME));
         return verificationCode;
     }
 

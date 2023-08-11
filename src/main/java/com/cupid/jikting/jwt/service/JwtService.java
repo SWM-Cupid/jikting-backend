@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.JwtException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
 
@@ -32,6 +34,7 @@ public class JwtService {
     private static final String REMOVE = "";
 
     private final MemberRepository memberRepository;
+    private final RedisConnector redisConnector;
 
     @Value("${jwt.secretKey}")
     private String secretKey;
@@ -61,6 +64,13 @@ public class JwtService {
                 .withSubject(REFRESH_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(new Date().getTime() + refreshTokenExpirationPeriod))
                 .sign(Algorithm.HMAC512(secretKey));
+    }
+
+    public String reissueRefreshToken(String refreshToken, String username) {
+        redisConnector.delete(refreshToken);
+        String reissuedRefreshToken = createRefreshToken();
+        redisConnector.set(reissuedRefreshToken, username, Duration.ofMillis(refreshTokenExpirationPeriod));
+        return reissuedRefreshToken;
     }
 
     public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
@@ -94,14 +104,12 @@ public class JwtService {
                 .orElseThrow(() -> new JwtException(ApplicationError.INVALID_TOKEN));
     }
 
+    public String getUsernameByRefreshToken(String refreshToken) {
+        return redisConnector.getUsernameByRefreshToken(refreshToken);
+    }
+
     public void updateRefreshToken(String username, String refreshToken) {
-        memberRepository.findByUsername(username)
-                .ifPresentOrElse(
-                        member -> member.updateRefreshToken(refreshToken),
-                        () -> {
-                            throw new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
-                        }
-                );
+        redisConnector.set(username, refreshToken, Duration.ofMillis((refreshTokenExpirationPeriod)));
     }
 
     public boolean isTokenValid(String token) {
