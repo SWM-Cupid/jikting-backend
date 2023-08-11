@@ -34,7 +34,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String username = extractUsername(authentication);
         String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(username));
         String refreshToken = jwtService.createRefreshToken();
-
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         redisConnector.set(refreshToken, username, Duration.ofMillis(refreshTokenExpirationPeriod));
         log.info("로그인에 성공하였습니다. 아이디 : {} AccessToken : {}", username, accessToken);
