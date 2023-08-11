@@ -84,10 +84,6 @@ public class MemberService {
         memberProfile.updatePassword(passwordEncoder.encode(passwordUpdateRequest.getNewPassword()));
     }
 
-    public void updateImage(MultipartFile multipartFile) {
-
-    }
-
     public void withdraw(Long memberId, WithdrawRequest withdrawRequest) {
         Member member = getMemberProfileById(memberId).getMember();
         member.validatePassword(passwordEncoder, withdrawRequest.getPassword());
