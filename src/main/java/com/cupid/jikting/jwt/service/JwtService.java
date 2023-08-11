@@ -68,9 +68,9 @@ public class JwtService {
 
     public String reissueRefreshToken(String refreshToken, String username) {
         redisConnector.delete(refreshToken);
-        String reIssuedRefreshToken = createRefreshToken();
-        redisConnector.set(reIssuedRefreshToken, username, Duration.ofMillis(refreshTokenExpirationPeriod));
-        return reIssuedRefreshToken;
+        String reissuedRefreshToken = createRefreshToken();
+        redisConnector.set(reissuedRefreshToken, username, Duration.ofMillis(refreshTokenExpirationPeriod));
+        return reissuedRefreshToken;
     }
 
     public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
