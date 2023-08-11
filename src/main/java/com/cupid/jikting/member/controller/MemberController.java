@@ -1,7 +1,6 @@
 package com.cupid.jikting.member.controller;
 
 import com.cupid.jikting.common.support.AuthorizedVariable;
-import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.service.MemberService;
 import com.cupid.jikting.member.service.SmsService;
@@ -55,12 +54,6 @@ public class MemberController {
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(@AuthorizedVariable Long memberProfileId, @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
         memberService.updatePassword(memberProfileId, passwordUpdateRequest);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/image")
-    public ResponseEntity<Void> updateImage(@RequestPart("file") MultipartFile multipartFile) {
-        memberService.updateImage(multipartFile);
         return ResponseEntity.ok().build();
     }
 
