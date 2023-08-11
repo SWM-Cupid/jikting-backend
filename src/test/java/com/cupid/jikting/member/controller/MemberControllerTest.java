@@ -417,50 +417,6 @@ public class MemberControllerTest extends ApiDocument {
 
     @WithMockUser
     @Test
-    void 회원_이미지_수정_성공() throws Exception {
-        // given
-        willDoNothing().given(memberService).updateImage(any(MultipartFile.class));
-        // when
-        ResultActions resultActions = 회원_이미지_수정_요청();
-        // then
-        회원_이미지_수정_요청_성공(resultActions);
-    }
-
-    @WithMockUser
-    @Test
-    void 회원_이미지_수정_회원정보없음_실패() throws Exception {
-        // given
-        willThrow(memberNotFoundException).given(memberService).updateImage(any(MultipartFile.class));
-        // when
-        ResultActions resultActions = 회원_이미지_수정_요청();
-        // then
-        회원_이미지_수정_요청_회원정보없음_실패(resultActions);
-    }
-
-    @WithMockUser
-    @Test
-    void 회원_이미지_수정_파일형식미지원_실패() throws Exception {
-        // given
-        willThrow(wrongFileExtensionException).given(memberService).updateImage(any(MultipartFile.class));
-        // when
-        ResultActions resultActions = 회원_이미지_수정_요청();
-        // then
-        회원_이미지_수정_요청_파일형식미지원_실패(resultActions);
-    }
-
-    @WithMockUser
-    @Test
-    void 회원_이미지_수정_파일크기미지원_실패() throws Exception {
-        // given
-        willThrow(wrongFileSizeException).given(memberService).updateImage(any(MultipartFile.class));
-        // when
-        ResultActions resultActions = 회원_이미지_수정_요청();
-        // then
-        회원_이미지_수정_요청_파일크기미지원_실패(resultActions);
-    }
-
-    @WithMockUser
-    @Test
     void 회원_탈퇴_성공() throws Exception {
         // given
         willDoNothing().given(memberService).withdraw(anyLong(), any(WithdrawRequest.class));
@@ -812,6 +768,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private ResultActions 회원_조회_요청() throws Exception {
         return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH)
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH));
     }
 
@@ -831,6 +788,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private ResultActions 회원_프로필_조회_요청() throws Exception {
         return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/profile")
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH));
     }
 
@@ -925,42 +883,9 @@ public class MemberControllerTest extends ApiDocument {
                 "update-member-password-wrong-form-fail");
     }
 
-    private ResultActions 회원_이미지_수정_요청() throws Exception {
-        return mockMvc.perform(multipart(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/image")
-                .file(image)
-                .contextPath(CONTEXT_PATH)
-                .contentType(MediaType.MULTIPART_FORM_DATA));
-    }
-
-    private void 회원_이미지_수정_요청_성공(ResultActions resultActions) throws Exception {
-        printAndMakeSnippet(resultActions
-                        .andExpect(status().isOk()),
-                "update-member-image-success");
-    }
-
-    private void 회원_이미지_수정_요청_회원정보없음_실패(ResultActions resultActions) throws Exception {
-        printAndMakeSnippet(resultActions
-                        .andExpect(status().isBadRequest())
-                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
-                "update-member-image-not-found-member-fail");
-    }
-
-    private void 회원_이미지_수정_요청_파일형식미지원_실패(ResultActions resultActions) throws Exception {
-        printAndMakeSnippet(resultActions
-                        .andExpect(status().isBadRequest())
-                        .andExpect(content().json(toJson(ErrorResponse.from(wrongFileExtensionException)))),
-                "update-member-image-invalid-file-extension-fail");
-    }
-
-    private void 회원_이미지_수정_요청_파일크기미지원_실패(ResultActions resultActions) throws Exception {
-        printAndMakeSnippet(resultActions
-                        .andExpect(status().isBadRequest())
-                        .andExpect(content().json(toJson(ErrorResponse.from(wrongFileSizeException)))),
-                "update-member-image-invalid-file-size-fail");
-    }
-
     private ResultActions 회원_탈퇴_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/withdraw")
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(withdrawRequest)));
@@ -1176,6 +1101,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private ResultActions 회사_이메일_인증번호_발급_요청() throws Exception {
         return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/code")
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(companyVerificationCodeRequest)));
@@ -1196,6 +1122,7 @@ public class MemberControllerTest extends ApiDocument {
 
     private ResultActions 회사_이메일_인증_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/verification")
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(verificationRequest)));
@@ -1225,6 +1152,7 @@ public class MemberControllerTest extends ApiDocument {
         return mockMvc.perform(multipart(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/card")
                 .file(companyVerificationRequestPart)
                 .file(image)
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.MULTIPART_FORM_DATA));
     }
