@@ -66,6 +66,13 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
+    public String reissueRefreshToken(String refreshToken, String username) {
+        redisConnector.delete(refreshToken);
+        String reIssuedRefreshToken = createRefreshToken();
+        redisConnector.set(reIssuedRefreshToken, username, Duration.ofMillis(refreshTokenExpirationPeriod));
+        return reIssuedRefreshToken;
+    }
+
     public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
         response.setStatus(HttpServletResponse.SC_OK);
         setAccessTokenHeader(response, accessToken);
@@ -105,6 +112,10 @@ public class JwtService {
                         .getClaim(MEMBER_PROFILE_ID_CLAIM)
                         .asLong())
                 .orElseThrow(() -> new JwtException(ApplicationError.INVALID_TOKEN));
+    }
+
+    public String getUsernameByRefreshToken(String refreshToken) {
+        return redisConnector.getUsernameByRefreshToken(refreshToken);
     }
 
     public void updateRefreshToken(String username, String refreshToken) {
