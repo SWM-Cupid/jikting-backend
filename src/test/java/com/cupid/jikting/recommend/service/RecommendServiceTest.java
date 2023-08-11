@@ -11,9 +11,12 @@ import com.cupid.jikting.recommend.dto.RecommendResponse;
 import com.cupid.jikting.recommend.entity.Recommend;
 import com.cupid.jikting.recommend.repository.RecommendRepository;
 import com.cupid.jikting.team.entity.Team;
+import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.entity.TeamMember;
+import com.cupid.jikting.team.repository.TeamLikeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -27,11 +30,14 @@ import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.verify;
 
-@WebMvcTest(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class RecommendServiceTest {
 
     private static final Long ID = 1L;
@@ -46,6 +52,7 @@ public class RecommendServiceTest {
     private MemberProfile memberProfile;
     private Recommend recommend;
     private ApplicationException memberNotFoundException;
+    private ApplicationException recommendNotFoundException;
 
     @InjectMocks
     private RecommendService recommendService;
@@ -55,6 +62,9 @@ public class RecommendServiceTest {
 
     @Mock
     private RecommendRepository recommendRepository;
+
+    @Mock
+    private TeamLikeRepository teamLikeRepository;
 
     @BeforeEach
     void setUp() {
@@ -101,7 +111,10 @@ public class RecommendServiceTest {
                 .recommendsFrom(recommends)
                 .build();
         TeamMember.of(LEADER, teamTo, memberProfile);
+        recommend = Recommend.builder()
+                .build();
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
+        recommendNotFoundException = new NotFoundException(ApplicationError.RECOMMEND_NOT_FOUND);
     }
 
     @Test
@@ -131,6 +144,19 @@ public class RecommendServiceTest {
         //when
         recommendService.sendLike(ID);
         //then
+        assertAll(
+                () -> verify(recommendRepository).findById(anyLong()),
+                () -> verify(teamLikeRepository).save(any(TeamLike.class))
+        );
+    }
 
+    @Test
+    void 호감_보내기_실패_추천_없음() {
+        //given
+        willThrow(recommendNotFoundException).given(recommendRepository).findById(anyLong());
+        //when & then
+        assertThatThrownBy(() -> recommendService.sendLike(ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.RECOMMEND_NOT_FOUND.getMessage());
     }
 }
