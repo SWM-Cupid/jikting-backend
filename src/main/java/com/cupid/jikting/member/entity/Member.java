@@ -35,8 +35,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
-    private String refreshToken;
-
     @Builder.Default
     @OneToOne(mappedBy = "member", cascade = CascadeType.PERSIST)
     private MemberProfile memberProfile = new MemberProfile();
