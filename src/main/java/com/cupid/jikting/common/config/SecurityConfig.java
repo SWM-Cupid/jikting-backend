@@ -127,7 +127,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        return new JwtAuthenticationProcessingFilter(jwtService, memberRepository, redisConnector);
+        return new JwtAuthenticationProcessingFilter(jwtService, memberRepository);
     }
 
     @Bean
