@@ -32,6 +32,7 @@ import java.util.List;
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
+    private static final String SIGNUP_URL = "/members";
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
@@ -39,9 +40,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Value("${jwt.tokenAuthorizationWhiteList}")
     private List<String> tokenAUthorizationWhiteList;
-
-    @Value("${jwt.signupUri}")
-    private String signUpUri;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
