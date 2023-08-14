@@ -10,6 +10,7 @@ import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -24,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -31,6 +33,16 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private static final String LOGIN_URI = "/login";
     private static final String OAUTH_LOGIN_URL = "/oauth";
+    private static final String SIGNUP_URL = "/members";
+    private static final String CHECK_URL = "/check";
+    private static final String PHONE_VERIFICATION_CODE_URL = "/members/code";
+    private static final String PHONE_VERIFICATION_URL = "/members/verification";
+    private static final String SEARCH_USERNAME_CODE_URL = "/members/username/search/code";
+    private static final String SEARCH_USERNAME_VERIFICATION_URL = "/members/username/search/verification";
+    private static final String RESET_PASSWORD_URL = "/members/password/reset";
+    private static final List<String> TOKEN_AUTHORIZATION_WHITELIST = List.of(LOGIN_URI, OAUTH_LOGIN_URL, CHECK_URL,
+            PHONE_VERIFICATION_URL, PHONE_VERIFICATION_CODE_URL, SEARCH_USERNAME_CODE_URL,
+            SEARCH_USERNAME_VERIFICATION_URL, RESET_PASSWORD_URL);
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
@@ -39,7 +51,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        if (request.getRequestURI().contains(LOGIN_URI) || request.getRequestURI().contains(OAUTH_LOGIN_URL)) {
+        if (jwtAuthenticationNotRequired(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -51,6 +63,12 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             return;
         }
         saveAccessTokenAuthentication(request, response, filterChain);
+    }
+
+    private boolean jwtAuthenticationNotRequired(HttpServletRequest request) {
+        return TOKEN_AUTHORIZATION_WHITELIST.stream()
+                .anyMatch(uri -> request.getRequestURI().contains(uri)) ||
+                (request.getRequestURI().contains(SIGNUP_URL) && request.getMethod().equals(HttpMethod.POST.name()));
     }
 
     public void reissueAccessToken(HttpServletResponse response, String refreshToken) {
