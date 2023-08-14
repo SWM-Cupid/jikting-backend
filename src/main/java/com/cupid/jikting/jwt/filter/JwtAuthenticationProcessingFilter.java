@@ -10,6 +10,8 @@ import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -24,22 +26,25 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
-    private static final String LOGIN_URI = "/login";
-    private static final String OAUTH_LOGIN_URL = "/oauth";
+    private static final String SIGNUP_URL = "/members";
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
+    @Value("${jwt.tokenAuthorizationWhiteList}")
+    private List<String> tokenAUthorizationWhiteList;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        if (request.getRequestURI().contains(LOGIN_URI) || request.getRequestURI().contains(OAUTH_LOGIN_URL)) {
+        if (isNotRequiredJwtAuthentication(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -51,6 +56,11 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             return;
         }
         saveAccessTokenAuthentication(request, response, filterChain);
+    }
+
+    private boolean isNotRequiredJwtAuthentication(HttpServletRequest request) {
+        return tokenAUthorizationWhiteList.stream().anyMatch(uri -> request.getRequestURI().contains(uri))
+                || (request.getRequestURI().contains(SIGNUP_URL) && request.getMethod().equals(HttpMethod.POST.name()));
     }
 
     public void reissueAccessToken(HttpServletResponse response, String refreshToken) {
@@ -86,10 +96,5 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
                 userDetails, null, authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getServletPath().equals(LOGIN_URI);
     }
 }

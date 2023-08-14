@@ -23,6 +23,7 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private static final String TOKEN_TYPE = "Bearer ";
+    private static final String LOGIN_REDIRECT_URL = "https://jikting.com/kakao/signup";
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
@@ -35,7 +36,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         if (oAuth2User.getRole() == Role.GUEST) {
             String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
             response.addHeader(jwtService.getAccessHeader(), TOKEN_TYPE + accessToken);
-            response.sendRedirect("/oauth2/sign-up");
+            response.sendRedirect(LOGIN_REDIRECT_URL);
             jwtService.sendAccessAndRefreshToken(response, accessToken, null);
         } else {
             loginSuccess(response, oAuth2User);
