@@ -10,6 +10,7 @@ import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,27 +32,21 @@ import java.util.List;
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
-    private static final String LOGIN_URI = "/login";
-    private static final String OAUTH_LOGIN_URL = "/oauth";
-    private static final String SIGNUP_URL = "/members";
-    private static final String CHECK_URL = "/check";
-    private static final String PHONE_VERIFICATION_CODE_URL = "/members/code";
-    private static final String PHONE_VERIFICATION_URL = "/members/verification";
-    private static final String SEARCH_USERNAME_CODE_URL = "/members/username/search/code";
-    private static final String SEARCH_USERNAME_VERIFICATION_URL = "/members/username/search/verification";
-    private static final String RESET_PASSWORD_URL = "/members/password/reset";
-    private static final List<String> TOKEN_AUTHORIZATION_WHITELIST = List.of(LOGIN_URI, OAUTH_LOGIN_URL, CHECK_URL,
-            PHONE_VERIFICATION_URL, PHONE_VERIFICATION_CODE_URL, SEARCH_USERNAME_CODE_URL,
-            SEARCH_USERNAME_VERIFICATION_URL, RESET_PASSWORD_URL);
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
+    @Value("${jwt.tokenAuthorizationWhiteList}")
+    private List<String> tokenAUthorizationWhiteList;
+
+    @Value("${jwt.signupUri}")
+    private String signUpUri;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        if (jwtAuthenticationNotRequired(request)) {
+        if (isNotRequiredJwtAuthentication(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -65,10 +60,10 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         saveAccessTokenAuthentication(request, response, filterChain);
     }
 
-    private boolean jwtAuthenticationNotRequired(HttpServletRequest request) {
-        return TOKEN_AUTHORIZATION_WHITELIST.stream()
-                .anyMatch(uri -> request.getRequestURI().contains(uri)) ||
-                (request.getRequestURI().contains(SIGNUP_URL) && request.getMethod().equals(HttpMethod.POST.name()));
+    private boolean isNotRequiredJwtAuthentication(HttpServletRequest request) {
+        return tokenAUthorizationWhiteList.stream()
+                .anyMatch(uri -> request.getRequestURI().contains(uri))
+                || (request.getRequestURI().contains(signUpUri) && request.getMethod().equals(HttpMethod.POST.name()));
     }
 
     public void reissueAccessToken(HttpServletResponse response, String refreshToken) {
@@ -104,10 +99,5 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
                 userDetails, null, authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getServletPath().equals(LOGIN_URI);
     }
 }
