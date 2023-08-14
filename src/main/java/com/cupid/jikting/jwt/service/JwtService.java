@@ -87,12 +87,17 @@ public class JwtService {
     }
 
     public Long extractMemberProfileId(HttpServletRequest request) {
-        return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
-                        .build()
-                        .verify(extractAccessToken(request))
-                        .getClaim(MEMBER_PROFILE_ID_CLAIM)
-                        .asLong())
-                .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
+        try {
+            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+                            .build()
+                            .verify(extractAccessToken(request))
+                            .getClaim(MEMBER_PROFILE_ID_CLAIM)
+                            .asLong())
+                    .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
+        } catch (Exception e) {
+            log.error("유효하지 않은 토큰입니다. {}", e.getMessage());
+            throw new JwtException(ApplicationError.INVALID_TOKEN);
+        }
     }
 
     public Long extractValidMemberProfileId(String accessToken) {
