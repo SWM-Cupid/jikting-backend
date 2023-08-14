@@ -8,6 +8,7 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.WrongAccessException;
+import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.meeting.entity.Meeting;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
@@ -29,8 +30,7 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
@@ -44,6 +44,7 @@ class ChattingRoomServiceTest {
     private static final boolean LEADER = true;
     private static final LocalDateTime SCHEDULE = LocalDateTime.of(2023, 9, 10, 18, 30);
     private static final String PLACE = "장소";
+    private static final String LAST_MESSAGE = "마지막 메시지";
 
     private MemberProfile memberProfile;
     private ChattingRoom chattingRoom;
@@ -58,6 +59,9 @@ class ChattingRoomServiceTest {
 
     @Mock
     private ChattingRoomRepository chattingRoomRepository;
+
+    @Mock
+    private RedisConnector redisConnector;
 
     @BeforeEach
     void setUp() {
@@ -88,6 +92,7 @@ class ChattingRoomServiceTest {
         // given
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willReturn(chattingRooms).given(chattingRoomRepository).findAll();
+        willReturn(LAST_MESSAGE).given(redisConnector).getLastMessage(anyString());
         // when
         List<ChattingRoomResponse> chattingRoomResponses = chattingRoomService.getAll(ID);
         // then
