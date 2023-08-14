@@ -95,7 +95,7 @@ public class JwtService {
                             .asLong())
                     .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
         } catch (Exception e) {
-            log.error("유효하지 않은 토큰입니다. {}", e.getMessage());
+            log.info("유효하지 않은 토큰입니다. {}", e.getMessage());
             throw new JwtException(ApplicationError.INVALID_TOKEN);
         }
     }
@@ -122,7 +122,7 @@ public class JwtService {
             JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
             return true;
         } catch (Exception e) {
-            log.error("유효하지 않은 토큰입니다. {}", e.getMessage());
+            log.info("유효하지 않은 토큰입니다. {}", e.getMessage());
             throw new JwtException(ApplicationError.INVALID_TOKEN);
         }
     }
