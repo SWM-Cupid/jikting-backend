@@ -35,7 +35,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         if (oAuth2User.getRole() == Role.GUEST) {
             String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
             response.addHeader(jwtService.getAccessHeader(), TOKEN_TYPE + accessToken);
-            response.sendRedirect("/oauth2/sign-up");
+            response.sendRedirect("https://jikting.com/kakao/signup");
             jwtService.sendAccessAndRefreshToken(response, accessToken, null);
         } else {
             loginSuccess(response, oAuth2User);
