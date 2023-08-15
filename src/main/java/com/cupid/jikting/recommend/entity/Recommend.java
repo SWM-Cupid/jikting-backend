@@ -30,6 +30,14 @@ public class Recommend extends BaseEntity {
     @JoinColumn(name = "to_team_id")
     private Team to;
 
+    public String getFromTeamName() {
+        return from.getName();
+    }
+
+    public String getFromTeamDescription() {
+        return from.getDescription();
+    }
+
     public List<TeamPersonality> getFromTeamPersonalities() {
         return from.getTeamPersonalities();
     }

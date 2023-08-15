@@ -12,7 +12,11 @@ import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.recommend.dto.MemberResponse;
 import com.cupid.jikting.recommend.dto.RecommendResponse;
+import com.cupid.jikting.recommend.entity.Recommend;
 import com.cupid.jikting.recommend.service.RecommendService;
+import com.cupid.jikting.team.entity.Team;
+import com.cupid.jikting.team.entity.TeamMember;
+import com.cupid.jikting.team.entity.TeamPersonality;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -39,6 +43,10 @@ public class RecommendControllerTest extends ApiDocument {
     private static final String CONTEXT_PATH = "/v1";
     private static final String DOMAIN_ROOT_PATH = "/recommends";
     private static final String PATH_DELIMITER = "/";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+    private static final Long ID = 1L;
+    private static final String NAME = "이름";
     private static final String NICKNAME = "닉네임";
     private static final String HOBBY = "취미";
     private static final String PERSONALITY = "성격";
@@ -49,9 +57,6 @@ public class RecommendControllerTest extends ApiDocument {
     private static final String COLLEGE = "대학";
     private static final LocalDate BIRTH = LocalDate.of(1997, 9, 11);
     private static final int HEIGHT = 180;
-    private static final Long ID = 1L;
-    private static final String AUTHORIZATION = "Authorization";
-    private static final String BEARER = "Bearer ";
 
     private String accessToken;
     private List<RecommendResponse> recommendResponses;
@@ -109,11 +114,18 @@ public class RecommendControllerTest extends ApiDocument {
         List<MemberResponse> memberResponses = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> MemberResponse.from(memberProfile))
                 .collect(Collectors.toList());
-        RecommendResponse recommendResponse = RecommendResponse.builder()
-                .recommendId(ID)
-                .members(memberResponses)
-                .personalities(personalities)
+        TeamPersonality teamPersonality = TeamPersonality.builder().personality(personality).build();
+        Team team = Team.builder()
+                .name(NAME)
+                .description(DESCRIPTION)
                 .build();
+        team.update(DESCRIPTION, List.of(teamPersonality));
+        TeamMember.of(true, team, memberProfile);
+        Recommend recommend = Recommend.builder()
+                .id(ID)
+                .from(team)
+                .build();
+        RecommendResponse recommendResponse = RecommendResponse.from(recommend);
         this.recommendResponses = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> recommendResponse)
                 .collect(Collectors.toList());
