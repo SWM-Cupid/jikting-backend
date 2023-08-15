@@ -34,6 +34,10 @@ public class Recommend extends BaseEntity {
         return from.getName();
     }
 
+    public String getFromTeamDescription() {
+        return from.getDescription();
+    }
+
     public List<TeamPersonality> getFromTeamPersonalities() {
         return from.getTeamPersonalities();
     }
