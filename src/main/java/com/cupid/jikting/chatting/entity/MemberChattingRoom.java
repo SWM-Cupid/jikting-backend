@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE chatting SET deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE chatting SET is_deleted = true WHERE id=?")
 @AttributeOverride(name = "id", column = @Column(name = "member_chatting_room_id"))
 @Entity
 public class MemberChattingRoom extends BaseEntity {

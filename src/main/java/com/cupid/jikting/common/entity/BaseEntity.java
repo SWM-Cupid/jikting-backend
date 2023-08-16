@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Where(clause = "isDeleted = false")
+@Where(clause = "is_deleted = false")
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 public abstract class BaseEntity {
