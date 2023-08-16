@@ -30,13 +30,13 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<MemberResponse> get() {
-        return ResponseEntity.ok().body(memberService.get(1L));
+    public ResponseEntity<MemberResponse> get(@AuthorizedVariable Long memberProfileId) {
+        return ResponseEntity.ok().body(memberService.get(memberProfileId));
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<MemberProfileResponse> getProfile() {
-        return ResponseEntity.ok().body(memberService.getProfile(1L));
+    public ResponseEntity<MemberProfileResponse> getProfile(@AuthorizedVariable Long memberProfileId) {
+        return ResponseEntity.ok().body(memberService.getProfile(memberProfileId));
     }
 
     @PatchMapping
@@ -58,8 +58,8 @@ public class MemberController {
     }
 
     @PostMapping("/withdraw")
-    public ResponseEntity<Void> withdraw(@RequestBody WithdrawRequest withdrawRequest) {
-        memberService.withdraw(1L, withdrawRequest);
+    public ResponseEntity<Void> withdraw(@AuthorizedVariable Long memberProfileId, @RequestBody WithdrawRequest withdrawRequest) {
+        memberService.withdraw(memberProfileId, withdrawRequest);
         return ResponseEntity.ok().build();
     }
 
