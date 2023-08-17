@@ -65,6 +65,7 @@ public class SecurityConfig {
                 .mvcMatchers("/members/nickname/check").permitAll()
                 .mvcMatchers("/members/code").permitAll()
                 .mvcMatchers("/members/verification").permitAll()
+                .mvcMatchers("/chattings").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
