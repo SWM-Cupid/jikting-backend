@@ -22,7 +22,7 @@ public class RedisSubscriber implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         ChattingRequest chattingRequest = jsonParser.toChattingRequest((String) redisTemplate.getStringSerializer().deserialize(message.getBody()));
-        messagingTemplate.convertAndSend("/subscription/chattings/rooms/" + chattingRequest.getChattingRoomId(), chattingRequest.getContent());
+        messagingTemplate.convertAndSend("/subscription/chattings/rooms/" + chattingRequest.getChattingRoomId(), chattingRequest);
         log.info("Message [{}] send by member: {} to chatting room: {}", chattingRequest.getContent(), chattingRequest.getSenderId(), chattingRequest.getChattingRoomId());
     }
 }
