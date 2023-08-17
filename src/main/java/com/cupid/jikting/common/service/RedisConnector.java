@@ -14,6 +14,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -38,13 +39,13 @@ public class RedisConnector {
     }
 
     public void saveChatting(String chattingRoom, Chatting chatting) {
-        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        HashOperations<String, Long, Object> hashOperations = redisTemplate.opsForHash();
         hashOperations.put(chattingRoom, chatting.getId(), chatting);
         log.info("create new chatting [{}] int chatting room '{}'", chatting, chattingRoom);
     }
 
     public String getLastMessage(String chattingRoom) {
-        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        HashOperations<String, Long, ChattingRequest> hashOperations = redisTemplate.opsForHash();
         return hashOperations.values(chattingRoom)
                 .stream()
                 .map(String::valueOf)
@@ -62,5 +63,10 @@ public class RedisConnector {
 
     public void delete(String key) {
         redisTemplate.delete(key);
+    }
+
+    public List<Chatting> getMessages(String chattingRoomKey) {
+        HashOperations<String, Long, Chatting> hashOperations = redisTemplate.opsForHash();
+        return hashOperations.values(chattingRoomKey);
     }
 }

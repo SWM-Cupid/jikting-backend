@@ -2,6 +2,7 @@ package com.cupid.jikting.chatting.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.meeting.entity.Meeting;
+import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.team.entity.Team;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -33,11 +34,23 @@ public class ChattingRoom extends BaseEntity {
         return meeting.getOppositeTeamName(team);
     }
 
+    public String getOppositeTeamDescription(Team team) {
+        return meeting.getOppositeTeamDescription(team);
+    }
+
+    public List<String> getOppositeTeamKeywords(Team team) {
+        return meeting.getOppositeTeamKeywords(team);
+    }
+
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
         memberChattingRooms.add(memberChattingRoom);
     }
 
     public void confirmMeeting(Long meetingId, LocalDateTime schedule, String place) {
         meeting.confirm(meetingId, schedule, place);
+    }
+
+    public List<MemberProfile> getMemberProfiles() {
+        return meeting.getMemberProfiles();
     }
 }

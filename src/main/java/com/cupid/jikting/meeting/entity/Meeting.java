@@ -3,6 +3,7 @@ package com.cupid.jikting.meeting.entity;
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.WrongAccessException;
+import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.team.entity.Team;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,8 @@ import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @SuperBuilder
@@ -42,6 +45,26 @@ public class Meeting extends BaseEntity {
             return acceptingTeam.getName();
         }
         return recommendedTeam.getName();
+    }
+
+    public String getOppositeTeamDescription(Team team) {
+        if (recommendedTeam.equals(team)) {
+            return acceptingTeam.getDescription();
+        }
+        return recommendedTeam.getDescription();
+    }
+
+    public List<String> getOppositeTeamKeywords(Team team) {
+        if (recommendedTeam.equals(team)) {
+            return acceptingTeam.getPersonalities();
+        }
+        return recommendedTeam.getPersonalities();
+    }
+
+    public List<MemberProfile> getMemberProfiles() {
+        List<MemberProfile> memberProfiles = new ArrayList<>(recommendedTeam.getMemberProfiles());
+        memberProfiles.addAll(acceptingTeam.getMemberProfiles());
+        return memberProfiles;
     }
 
     public void confirm(Long meetingId, LocalDateTime schedule, String place) {

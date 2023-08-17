@@ -8,11 +8,14 @@ import com.cupid.jikting.chatting.dto.MeetingConfirmRequest;
 import com.cupid.jikting.chatting.dto.MemberResponse;
 import com.cupid.jikting.chatting.service.ChattingRoomService;
 import com.cupid.jikting.common.dto.ErrorResponse;
+import com.cupid.jikting.common.entity.Hobby;
+import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.WrongFormException;
 import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.member.entity.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
@@ -53,6 +57,12 @@ public class ChattingRoomControllerTest extends ApiDocument {
     private static final String DESCRIPTION = "팀소개";
     private static final String KEYWORD = "키워드";
     private static final String NICKNAME = "닉네임";
+    private static final String HOBBY = "취미";
+    private static final String PERSONALITY = "성격";
+    private static final String ADDRESS = "거주지";
+    private static final String COLLEGE = "대학";
+    private static final LocalDate BIRTH = LocalDate.of(1997, 9, 11);
+    private static final int HEIGHT = 180;
 
     private String accessToken;
     private MeetingConfirmRequest meetingConfirmRequest;
@@ -76,6 +86,31 @@ public class ChattingRoomControllerTest extends ApiDocument {
         List<String> keywords = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> KEYWORD + n)
                 .collect(Collectors.toList());
+        MemberProfile memberProfile = MemberProfile.builder()
+                .id(ID)
+                .nickname(NICKNAME)
+                .build();
+        List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
+                .mapToObj(n -> ProfileImage.builder()
+                        .memberProfile(memberProfile)
+                        .sequence(Sequence.MAIN)
+                        .url(URL)
+                        .build())
+                .collect(Collectors.toList());
+        Hobby hobby = Hobby.builder()
+                .keyword(HOBBY)
+                .build();
+        Personality personality = Personality.builder()
+                .keyword(PERSONALITY)
+                .build();
+        MemberHobby memberHobby = MemberHobby.builder()
+                .hobby(hobby)
+                .build();
+        MemberPersonality memberPersonality = MemberPersonality.builder()
+                .personality(personality)
+                .build();
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                List.of(memberPersonality), List.of(memberHobby), profileImages);
         meetingConfirmRequest = MeetingConfirmRequest.builder()
                 .meetingId(ID)
                 .place(PLACE)
@@ -93,11 +128,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
                 .description(DESCRIPTION)
                 .keywords(keywords)
                 .members(IntStream.rangeClosed(0, 2)
-                        .mapToObj(n -> MemberResponse.builder()
-                                .memberId(ID)
-                                .image(URL)
-                                .nickname(NICKNAME)
-                                .build())
+                        .mapToObj(n -> MemberResponse.from(memberProfile))
                         .collect(Collectors.toList()))
                 .build();
         wrongFormException = new WrongFormException(ApplicationError.INVALID_FORMAT);
@@ -119,7 +150,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 채팅방_입장_성공() throws Exception {
         //given
-        willReturn(chattingRoomDetailResponse).given(chattingRoomService).get(anyLong());
+        willReturn(chattingRoomDetailResponse).given(chattingRoomService).get(anyLong(), anyLong());
         //when
         ResultActions resultActions = 채팅방_입장_요청();
         //then
@@ -130,7 +161,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 채팅방_입장_실패() throws Exception {
         //given
-        willThrow(chattingRoomNotFoundException).given(chattingRoomService).get(anyLong());
+        willThrow(chattingRoomNotFoundException).given(chattingRoomService).get(anyLong(), anyLong());
         //when
         ResultActions resultActions = 채팅방_입장_요청();
         //then

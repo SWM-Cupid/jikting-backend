@@ -1,14 +1,21 @@
 package com.cupid.jikting.chatting.dto;
 
-import lombok.*;
+import com.cupid.jikting.member.entity.MemberProfile;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberResponse {
 
-    private Long memberId;
-    private String image;
+    private Long memberProfileId;
     private String nickname;
+    private String image;
+
+    public static MemberResponse from(MemberProfile memberProfile) {
+        return new MemberResponse(memberProfile.getId(), memberProfile.getNickname(), memberProfile.getMainImageUrl());
+    }
 }

@@ -10,7 +10,9 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChattingRoomDetailResponse {
 
+    private String name;
     private String description;
     private List<String> keywords;
     private List<MemberResponse> members;
+    private List<ChattingResponse> chattings;
 }
