@@ -33,6 +33,10 @@ public class ChattingRoom extends BaseEntity {
         return meeting.getOppositeTeamName(team);
     }
 
+    public String getOppositeTeamDescription(Team team) {
+        return meeting.getOppositeTeamDescription(team);
+    }
+
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
         memberChattingRooms.add(memberChattingRoom);
     }
