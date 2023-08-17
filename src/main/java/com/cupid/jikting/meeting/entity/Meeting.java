@@ -26,8 +26,6 @@ import java.util.List;
 @Entity
 public class Meeting extends BaseEntity {
 
-    private static final String CHATTING_ROOM_NAME_DELIMITER = " - ";
-
     private LocalDateTime schedule;
     private String place;
 
