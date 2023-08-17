@@ -206,7 +206,7 @@ class ChattingRoomServiceTest {
     }
 
     @Test
-    void 채팅방_내_미팅_화정_성공() {
+    void 채팅방_내_미팅_확정_성공() {
         // given
         willReturn(Optional.of(chattingRoom)).given(chattingRoomRepository).findById(anyLong());
         willReturn(chattingRoom).given(chattingRoomRepository).save(any(ChattingRoom.class));
@@ -225,7 +225,7 @@ class ChattingRoomServiceTest {
     }
 
     @Test
-    void 채팅방_내_미팅_화정_실패_채팅방_없음() {
+    void 채팅방_내_미팅_확정_실패_채팅방_없음() {
         // given
         willThrow(new NotFoundException(ApplicationError.CHATTING_ROOM_NOT_FOUND)).given(chattingRoomRepository).findById(anyLong());
         MeetingConfirmRequest meetingConfirmRequest = MeetingConfirmRequest.builder()
@@ -240,7 +240,7 @@ class ChattingRoomServiceTest {
     }
 
     @Test
-    void 채팅방_내_미팅_화정_실패_잘못된_미팅() {
+    void 채팅방_내_미팅_확정_실패_잘못된_미팅() {
         // given
         willReturn(Optional.of(chattingRoom)).given(chattingRoomRepository).findById(anyLong());
         MeetingConfirmRequest meetingConfirmRequest = MeetingConfirmRequest.builder()
