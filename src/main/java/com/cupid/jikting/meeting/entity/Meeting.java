@@ -13,6 +13,7 @@ import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @SuperBuilder
@@ -22,6 +23,8 @@ import java.time.LocalDateTime;
 @AttributeOverride(name = "id", column = @Column(name = "meeting_id"))
 @Entity
 public class Meeting extends BaseEntity {
+
+    private static final String CHATTING_ROOM_NAME_DELIMITER = " - ";
 
     private LocalDateTime schedule;
     private String place;
@@ -49,6 +52,13 @@ public class Meeting extends BaseEntity {
             return acceptingTeam.getDescription();
         }
         return recommendedTeam.getDescription();
+    }
+
+    public List<String> getOppositeTeamKeywords(Team team) {
+        if (recommendedTeam.equals(team)) {
+            return acceptingTeam.getPersonalities();
+        }
+        return recommendedTeam.getPersonalities();
     }
 
     public void confirm(Long meetingId, LocalDateTime schedule, String place) {
