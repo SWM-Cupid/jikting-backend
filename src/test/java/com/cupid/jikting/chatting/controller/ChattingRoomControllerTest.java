@@ -150,7 +150,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 채팅방_입장_성공() throws Exception {
         //given
-        willReturn(chattingRoomDetailResponse).given(chattingRoomService).get(anyLong());
+        willReturn(chattingRoomDetailResponse).given(chattingRoomService).get(anyLong(), anyLong());
         //when
         ResultActions resultActions = 채팅방_입장_요청();
         //then
@@ -161,7 +161,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
     @Test
     void 채팅방_입장_실패() throws Exception {
         //given
-        willThrow(chattingRoomNotFoundException).given(chattingRoomService).get(anyLong());
+        willThrow(chattingRoomNotFoundException).given(chattingRoomService).get(anyLong(), anyLong());
         //when
         ResultActions resultActions = 채팅방_입장_요청();
         //then
