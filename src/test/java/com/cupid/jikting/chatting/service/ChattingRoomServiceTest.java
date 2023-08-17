@@ -195,6 +195,17 @@ class ChattingRoomServiceTest {
     }
 
     @Test
+    void 채팅방_입장_실패_회원_프로필_없음() {
+        // given
+        willReturn(Optional.of(chattingRoom)).given(chattingRoomRepository).findById(anyLong());
+        willThrow(memberNotFoundException).given(memberProfileRepository).findById(anyLong());
+        // when & then
+        assertThatThrownBy(() -> chattingRoomService.get(ID, ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
     void 채팅방_내_미팅_화정_성공() {
         // given
         willReturn(Optional.of(chattingRoom)).given(chattingRoomRepository).findById(anyLong());
