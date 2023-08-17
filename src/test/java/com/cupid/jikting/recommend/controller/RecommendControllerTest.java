@@ -70,9 +70,6 @@ public class RecommendControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
-        List<String> personalities = IntStream.rangeClosed(1, 3)
-                .mapToObj(n -> PERSONALITY + n)
-                .collect(Collectors.toList());
         MemberProfile tmpMemberProfile = MemberProfile.builder()
                 .id(ID)
                 .build();
@@ -107,7 +104,6 @@ public class RecommendControllerTest extends ApiDocument {
         MemberProfile memberProfile = MemberProfile.builder()
                 .member(member)
                 .nickname(NICKNAME)
-                .member(member)
                 .build();
         memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(memberPersonality), List.of(memberHobby), profileImages);
