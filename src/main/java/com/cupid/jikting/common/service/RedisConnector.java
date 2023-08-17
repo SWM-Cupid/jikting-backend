@@ -39,13 +39,13 @@ public class RedisConnector {
     }
 
     public void saveChatting(String chattingRoom, Chatting chatting) {
-        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        HashOperations<String, Long, Object> hashOperations = redisTemplate.opsForHash();
         hashOperations.put(chattingRoom, chatting.getId(), chatting);
         log.info("create new chatting [{}] int chatting room '{}'", chatting, chattingRoom);
     }
 
     public String getLastMessage(String chattingRoom) {
-        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        HashOperations<String, Long, ChattingRequest> hashOperations = redisTemplate.opsForHash();
         return hashOperations.values(chattingRoom)
                 .stream()
                 .map(String::valueOf)
