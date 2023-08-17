@@ -24,8 +24,8 @@ public class ChattingRoomController {
     }
 
     @GetMapping("/{chattingRoomId}")
-    public ResponseEntity<ChattingRoomDetailResponse> get(@PathVariable Long chattingRoomId) {
-        return ResponseEntity.ok().body(chattingRoomService.get(chattingRoomId));
+    public ResponseEntity<ChattingRoomDetailResponse> get(@AuthorizedVariable Long memberProfileId, @PathVariable Long chattingRoomId) {
+        return ResponseEntity.ok().body(chattingRoomService.get(memberProfileId, chattingRoomId));
     }
 
     @PostMapping("/{chattingRoomId}/confirm")
