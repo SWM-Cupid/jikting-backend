@@ -59,6 +59,9 @@ public class MemberControllerTest extends ApiDocument {
     private static final String HOBBY = "취미";
     private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
     private static final String NEW_PASSWORD = "새 비밀번호";
+    private static final String MEMBER_PROFILE_UPDATE_REQUEST_PARAMETER_NAME = "memberProfileUpdateRequest";
+    private static final String MEMBER_PROFILE_UPDATE_REQUEST_FILENAME = "";
+    private static final String MEMBER_PROFILE_UPDATE_REQUEST_CONTENT_TYPE = "application/json";
     private static final String IMAGE_PARAMETER_NAME = "file";
     private static final String IMAGE_FILENAME = "image.png";
     private static final String IMAGE_CONTENT_TYPE = "image/png";
@@ -72,7 +75,7 @@ public class MemberControllerTest extends ApiDocument {
     private String accessToken;
     private SignupRequest signupRequest;
     private NicknameUpdateRequest nicknameUpdateRequest;
-    private MemberProfileUpdateRequest memberProfileUpdateRequest;
+    private MockMultipartFile memberProfileUpdateRequestPart;
     private PasswordUpdateRequest passwordUpdateRequest;
     private WithdrawRequest withdrawRequest;
     private UsernameCheckRequest usernameCheckRequest;
@@ -134,26 +137,15 @@ public class MemberControllerTest extends ApiDocument {
                 .collect(Collectors.toList());
         Member member = Member.builder()
                 .build();
+        member.addMemberProfile(NICKNAME);
         ProfileImage profileImage = ProfileImage.builder()
                 .id(ID)
                 .sequence(Sequence.MAIN)
                 .url(IMAGE_URL)
                 .build();
-        MemberProfile memberProfile = MemberProfile.builder()
-                .nickname(NICKNAME)
-                .birth(BIRTH)
-                .height(HEIGHT)
-                .gender(Gender.MALE)
-                .address(ADDRESS)
-                .mbti(Mbti.ENFJ)
-                .drinkStatus(DrinkStatus.OFTEN)
-                .smokeStatus(SmokeStatus.SMOKING)
-                .college(COLLEGE)
-                .description(DESCRIPTION)
-                .member(member)
-                .build();
+        MemberProfile memberProfile = member.getMemberProfile();
         memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-                memberPersonalities, memberHobbies, List.of(profileImage));
+                memberPersonalities, memberHobbies);
         MemberCompany memberCompany = MemberCompany.builder()
                 .member(member)
                 .company(company)
@@ -186,8 +178,7 @@ public class MemberControllerTest extends ApiDocument {
         nicknameUpdateRequest = NicknameUpdateRequest.builder()
                 .nickname(NICKNAME)
                 .build();
-        memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
-                .images(images)
+        MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
                 .birth(BIRTH)
                 .height(HEIGHT)
                 .gender(Gender.MALE.getMessage())
@@ -200,6 +191,7 @@ public class MemberControllerTest extends ApiDocument {
                 .hobbies(hobbies)
                 .description(DESCRIPTION)
                 .build();
+        memberProfileUpdateRequestPart = new MockMultipartFile(MEMBER_PROFILE_UPDATE_REQUEST_PARAMETER_NAME, MEMBER_PROFILE_UPDATE_REQUEST_FILENAME, MEMBER_PROFILE_UPDATE_REQUEST_CONTENT_TYPE, toJson(memberProfileUpdateRequest).getBytes());
         passwordUpdateRequest = PasswordUpdateRequest.builder()
                 .password(PASSWORD)
                 .newPassword(NEW_PASSWORD)
@@ -353,7 +345,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_프로필_수정_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).updateProfile(anyLong(), any(MemberProfileUpdateRequest.class));
+        willDoNothing().given(memberService).updateProfile(anyLong(), any(MultipartFile.class), any(MemberProfileUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_프로필_수정_요청();
         // then
@@ -364,7 +356,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_프로필_수정_실패() throws Exception {
         // given
-        willThrow(memberNotFoundException).given(memberService).updateProfile(anyLong(), any(MemberProfileUpdateRequest.class));
+        willThrow(memberNotFoundException).given(memberService).updateProfile(anyLong(), any(MultipartFile.class), any(MemberProfileUpdateRequest.class));
         // when
         ResultActions resultActions = 회원_프로필_수정_요청();
         // then
@@ -828,11 +820,12 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 회원_프로필_수정_요청() throws Exception {
-        return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/profile")
+        return mockMvc.perform(multipart(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/profile")
+                .file(image)
+                .file(memberProfileUpdateRequestPart)
                 .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(memberProfileUpdateRequest)));
+                .contentType(MediaType.MULTIPART_FORM_DATA));
     }
 
     private void 회원_프로필_수정_요청_성공(ResultActions resultActions) throws Exception {
