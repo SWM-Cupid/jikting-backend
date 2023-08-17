@@ -41,7 +41,7 @@ public class ProfileImage extends BaseEntity {
         this.sequence = sequence;
     }
 
-    public boolean isSameAs(Long id) {
-        return this.id.equals(id);
+    public boolean isSameSequence(String sequence) {
+        return this.sequence.name().equals(sequence);
     }
 }

@@ -19,14 +19,20 @@ public class ProfileImages {
     @OneToMany(mappedBy = "memberProfile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<ProfileImage> profileImages = new ArrayList<>();
 
-    public void update(List<ProfileImage> profileImages) {
-        if (this.profileImages.isEmpty()) {
-            this.profileImages.addAll(profileImages);
-            return;
-        }
-        profileImages.forEach(updateProfileImage -> {
-            ProfileImage profileImage = findById(updateProfileImage.getId());
-            profileImage.update(updateProfileImage.getUrl(), updateProfileImage.getSequence());
+    public void setDefaultImages(MemberProfile memberProfile) {
+        profileImages = Stream.of(Sequence.MAIN, Sequence.FIRST, Sequence.SECOND)
+                .map(sequence -> ProfileImage.builder()
+                        .memberProfile(memberProfile)
+                        .url("https://cupid-images.s3.ap-northeast-2.amazonaws.com/default.png")
+                        .sequence(sequence)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public void update(List<ImageRequest> imageRequests) {
+        imageRequests.forEach(updateProfileImage -> {
+            ProfileImage profileImage = findBySequence(updateProfileImage.getSequence());
+            profileImage.update(updateProfileImage.getUrl(), Sequence.valueOf(updateProfileImage.getSequence()));
         });
     }
 
@@ -42,9 +48,9 @@ public class ProfileImages {
                 .orElseThrow(() -> new NotFoundException(ApplicationError.NOT_EXIST_REGISTERED_IMAGES));
     }
 
-    private ProfileImage findById(Long profileImageId) {
+    private ProfileImage findBySequence(String sequence) {
         return profileImages.stream()
-                .filter(profileImage -> profileImage.isSameAs(profileImageId))
+                .filter(profileImage -> profileImage.isSameSequence(sequence))
                 .findAny()
                 .orElseThrow(() -> new NotFoundException(ApplicationError.PROFILE_IMAGE_NOT_FOUND));
     }

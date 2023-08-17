@@ -141,7 +141,10 @@ public class MemberProfile extends BaseEntity {
         this.description = description;
         this.memberPersonalities.update(memberPersonalities);
         this.memberHobbies.update(memberHobbies);
-        this.profileImages.update(profileImages);
+    }
+
+    public void updateProfileImage(List<ImageRequest> imageRequests) {
+        this.profileImages.update(imageRequests);
     }
 
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {
@@ -154,6 +157,10 @@ public class MemberProfile extends BaseEntity {
 
     public void addInstantMeeting(InstantMeetingMember instantMeetingMember) {
         instantMeetingMembers.add(instantMeetingMember);
+    }
+
+    public void addDefaultProfileImages() {
+        profileImages.setDefaultImages(this);
     }
 
     public Long getTeamId() {
