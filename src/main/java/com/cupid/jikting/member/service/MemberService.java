@@ -2,10 +2,7 @@ package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
-import com.cupid.jikting.common.error.ApplicationError;
-import com.cupid.jikting.common.error.BadRequestException;
-import com.cupid.jikting.common.error.DuplicateException;
-import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.error.*;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.dto.*;
@@ -19,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 public class MemberService {
 
+    private final FileUploadService fileUploadService;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
@@ -61,7 +61,8 @@ public class MemberService {
         memberProfileRepository.save(memberProfile);
     }
 
-    public void updateProfile(Long memberProfileId, MemberProfileUpdateRequest memberProfileUpdateRequest) {
+    public void updateProfile(Long memberProfileId, MultipartFile file,
+                              MemberProfileUpdateRequest memberProfileUpdateRequest) throws IOException {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
         memberProfile.updateProfile(memberProfileUpdateRequest.getBirth(),
                 memberProfileUpdateRequest.getHeight(),
@@ -73,8 +74,19 @@ public class MemberService {
                 DrinkStatus.find(memberProfileUpdateRequest.getDrinkStatus()),
                 memberProfileUpdateRequest.getDescription(),
                 getMemberPersonalities(memberProfile, memberProfileUpdateRequest.getPersonalities()),
-                getMemberHobbies(memberProfile, memberProfileUpdateRequest.getHobbies()),
-                getProfileImages(memberProfile, memberProfileUpdateRequest.getImages()));
+                getMemberHobbies(memberProfile, memberProfileUpdateRequest.getHobbies()));
+        if (!file.isEmpty()) {
+            fileUploadService.delete(memberProfile.getMainImageUrl());
+            String url = fileUploadService.save(file);
+            ImageRequest imageRequest = ImageRequest.builder()
+                    .url(url)
+                    .sequence(Sequence.MAIN.name())
+                    .build();
+            List<ImageRequest> imageRequests = new ArrayList<>();
+            imageRequests.add(imageRequest);
+            memberProfile.updateProfileImage(imageRequests);
+
+        }
         memberProfileRepository.save(memberProfile);
     }
 
@@ -169,16 +181,5 @@ public class MemberService {
     private Hobby getHobbyByKeyword(String keyword) {
         return hobbyRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.HOBBY_NOT_FOUND));
-    }
-
-    private List<ProfileImage> getProfileImages(MemberProfile memberProfile, List<ImageRequest> images) {
-        return images.stream()
-                .map(imageRequest -> ProfileImage.builder()
-                        .memberProfile(memberProfile)
-                        .id(imageRequest.getProfileImageId())
-                        .url(imageRequest.getUrl())
-                        .sequence(Sequence.valueOf(imageRequest.getSequence()))
-                        .build())
-                .collect(Collectors.toList());
     }
 }
