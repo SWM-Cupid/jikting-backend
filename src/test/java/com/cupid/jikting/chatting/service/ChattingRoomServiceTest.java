@@ -139,7 +139,7 @@ class ChattingRoomServiceTest {
     }
 
     @Test
-    void 채팅_목록_조회_성공() {
+    void 채팅방_목록_조회_성공() {
         // given
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willReturn(chattingRooms).given(chattingRoomRepository).findAll();
@@ -151,7 +151,7 @@ class ChattingRoomServiceTest {
     }
 
     @Test
-    void 채팅_목록_조회_실패_회원_프로필_없음() {
+    void 채팅방_목록_조회_실패_회원_프로필_없음() {
         // given
         willThrow(memberNotFoundException).given(memberProfileRepository).findById(anyLong());
         // when & then
