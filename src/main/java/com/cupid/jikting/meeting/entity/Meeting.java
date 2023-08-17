@@ -44,6 +44,13 @@ public class Meeting extends BaseEntity {
         return recommendedTeam.getName();
     }
 
+    public String getOppositeTeamDescription(Team team) {
+        if (recommendedTeam.equals(team)) {
+            return acceptingTeam.getDescription();
+        }
+        return recommendedTeam.getDescription();
+    }
+
     public void confirm(Long meetingId, LocalDateTime schedule, String place) {
         validate(meetingId);
         this.schedule = schedule;
