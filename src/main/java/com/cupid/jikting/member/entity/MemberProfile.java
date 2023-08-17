@@ -6,6 +6,7 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.WrongAccessException;
 import com.cupid.jikting.meeting.entity.InstantMeetingMember;
+import com.cupid.jikting.member.dto.ImageRequest;
 import com.cupid.jikting.recommend.entity.Recommend;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
@@ -129,7 +130,7 @@ public class MemberProfile extends BaseEntity {
 
     public void updateProfile(LocalDate birth, int height, Mbti mbti, String address, Gender gender, String college,
                               SmokeStatus smokeStatus, DrinkStatus drinkStatus, String description,
-                              List<MemberPersonality> memberPersonalities, List<MemberHobby> memberHobbies, List<ProfileImage> profileImages) {
+                              List<MemberPersonality> memberPersonalities, List<MemberHobby> memberHobbies) {
         this.birth = birth;
         this.height = height;
         this.mbti = mbti;

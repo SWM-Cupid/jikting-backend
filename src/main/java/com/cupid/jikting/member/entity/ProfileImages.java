@@ -2,6 +2,7 @@ package com.cupid.jikting.member.entity;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.member.dto.ImageRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,8 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
