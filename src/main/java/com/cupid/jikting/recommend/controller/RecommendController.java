@@ -26,4 +26,10 @@ public class RecommendController {
         recommendService.sendLike(recommendId);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/{recommendId}/pass")
+    public ResponseEntity<Void> passLike(@PathVariable Long recommendId) {
+        recommendService.passLike(recommendId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -46,11 +46,7 @@ public class Team extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "from")
-    private List<Recommend> recommendsFrom = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "to")
-    private List<Recommend> recommendsTo = new ArrayList<>();
+    private List<Recommend> recommends = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "recommendedTeam")

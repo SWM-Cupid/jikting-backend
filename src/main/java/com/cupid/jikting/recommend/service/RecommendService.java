@@ -10,31 +10,32 @@ import com.cupid.jikting.recommend.repository.RecommendRepository;
 import com.cupid.jikting.team.entity.AcceptStatus;
 import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.repository.TeamLikeRepository;
+import com.cupid.jikting.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class RecommendService {
 
     private final MemberProfileRepository memberProfileRepository;
     private final RecommendRepository recommendRepository;
     private final TeamLikeRepository teamLikeRepository;
+    private final TeamRepository teamRepository;
 
+    @Transactional(readOnly = true)
     public List<RecommendResponse> get(Long memberProfileId) {
-        MemberProfile memberProfile = memberProfileRepository.findById(memberProfileId)
-                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
-        return memberProfile.getRecommends()
+        return getMemberProfileById(memberProfileId).getRecommends()
                 .stream()
                 .map(RecommendResponse::from)
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public void sendLike(Long recommendId) {
         Recommend recommend = recommendRepository.findById(recommendId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.RECOMMEND_NOT_FOUND));
@@ -44,5 +45,15 @@ public class RecommendService {
                 .acceptStatus(AcceptStatus.INITIAL)
                 .build();
         teamLikeRepository.save(teamLike);
+        recommendRepository.deleteById(recommendId);
+    }
+
+    public void passLike(Long recommendId) {
+        recommendRepository.deleteById(recommendId);
+    }
+
+    private MemberProfile getMemberProfileById(Long memberProfileId) {
+        return memberProfileRepository.findById(memberProfileId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 }

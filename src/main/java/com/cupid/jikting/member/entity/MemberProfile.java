@@ -92,7 +92,7 @@ public class MemberProfile extends BaseEntity {
     }
 
     public List<Recommend> getRecommends() {
-        return getTeam().getRecommendsFrom();
+        return getTeam().getRecommends();
     }
 
     public int getAge() {
