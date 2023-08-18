@@ -124,6 +124,10 @@ public class MemberProfile extends BaseEntity {
         return profileImages.getMainImageUrl();
     }
 
+    public void addDefaultProfileImages() {
+        profileImages.createDefaultImages(this);
+    }
+
     public void update(String nickname) {
         this.nickname = nickname;
     }
@@ -158,10 +162,6 @@ public class MemberProfile extends BaseEntity {
 
     public void addInstantMeeting(InstantMeetingMember instantMeetingMember) {
         instantMeetingMembers.add(instantMeetingMember);
-    }
-
-    public void addDefaultProfileImages() {
-        profileImages.setDefaultImages(this);
     }
 
     public Long getTeamId() {
