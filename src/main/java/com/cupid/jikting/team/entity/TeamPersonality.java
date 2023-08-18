@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -16,6 +17,7 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE team_personality SET is_deleted = true WHERE team_personality_id = ?")
+@Where(clause = "is_deleted = false")
 @AttributeOverride(name = "id", column = @Column(name = "team_personality_id"))
 @Entity
 public class TeamPersonality extends BaseEntity {

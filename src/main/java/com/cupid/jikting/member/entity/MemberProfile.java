@@ -13,6 +13,7 @@ import com.cupid.jikting.team.entity.TeamMember;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE member_profile SET is_deleted = true WHERE member_profile_id = ?")
+@Where(clause = "is_deleted = false")
 @AttributeOverride(name = "id", column = @Column(name = "member_profile_id"))
 @Entity
 public class MemberProfile extends BaseEntity {

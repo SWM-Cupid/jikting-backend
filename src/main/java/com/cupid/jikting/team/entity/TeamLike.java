@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE team_like SET is_deleted = true WHERE team_like_id = ?")
+@Where(clause = "is_deleted = false")
 @AttributeOverride(name = "id", column = @Column(name = "team_Like_id"))
 @Entity
 public class TeamLike extends BaseEntity {

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE instant_meeting_member SET is_deleted = true WHERE instant_meeting_member_id = ?")
+@Where(clause = "is_deleted = false")
 @AttributeOverride(name = "id", column = @Column(name = "instant_meeting_member_id"))
 @Entity
 public class InstantMeetingMember extends BaseEntity {
