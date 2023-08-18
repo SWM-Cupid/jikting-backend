@@ -10,6 +10,7 @@ import com.cupid.jikting.recommend.repository.RecommendRepository;
 import com.cupid.jikting.team.entity.AcceptStatus;
 import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.repository.TeamLikeRepository;
+import com.cupid.jikting.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ public class RecommendService {
     private final MemberProfileRepository memberProfileRepository;
     private final RecommendRepository recommendRepository;
     private final TeamLikeRepository teamLikeRepository;
+    private final TeamRepository teamRepository;
 
     @Transactional(readOnly = true)
     public List<RecommendResponse> get(Long memberProfileId) {
@@ -34,20 +36,20 @@ public class RecommendService {
                 .collect(Collectors.toList());
     }
 
-    public void sendLike(Long memberProfileId, Long recommendId) {
+    public void sendLike(Long recommendId) {
         Recommend recommend = recommendRepository.findById(recommendId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.RECOMMEND_NOT_FOUND));
-        getMemberProfileById(memberProfileId).deleteRecommend(recommendId);
         TeamLike teamLike = TeamLike.builder()
                 .sentTeam(recommend.getTo())
                 .receivedTeam(recommend.getFrom())
                 .acceptStatus(AcceptStatus.INITIAL)
                 .build();
         teamLikeRepository.save(teamLike);
+        recommendRepository.deleteById(recommendId);
     }
 
-    public void passLike(Long memberProfileId, Long recommendId) {
-        getMemberProfileById(memberProfileId).deleteRecommend(recommendId);
+    public void passLike(Long recommendId) {
+        recommendRepository.deleteById(recommendId);
     }
 
     private MemberProfile getMemberProfileById(Long memberProfileId) {
