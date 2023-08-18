@@ -55,6 +55,7 @@ public class MemberServiceTest {
     private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
     private static final String VERIFICATION_CODE = "인증번호";
     private static final String WRONG_VERIFICATION_CODE = "잘못된" + VERIFICATION_CODE;
+    private static final int PROFILE_IMAGE_SIZE = 3;
 
     private Member member;
     private MemberProfile memberProfile;
@@ -192,7 +193,7 @@ public class MemberServiceTest {
         // then
         assertAll(
                 () -> verify(memberProfileRepository).findById(anyLong()),
-                () -> assertThat(memberProfileResponse.getImages().size()).isEqualTo(3),
+                () -> assertThat(memberProfileResponse.getImages().size()).isEqualTo(PROFILE_IMAGE_SIZE),
                 () -> assertThat(memberProfileResponse.getAge()).isEqualTo(memberProfile.getAge()),
                 () -> assertThat(memberProfileResponse.getHeight()).isEqualTo(memberProfile.getHeight()),
                 () -> assertThat(memberProfileResponse.getAddress()).isEqualTo(memberProfile.getAddress()),
