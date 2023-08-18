@@ -47,6 +47,7 @@ class ChattingRoomServiceTest {
     private static final Long ID = 1L;
     private static final Long WRONG_ID = 2L;
     private static final String NAME = "이름";
+    private static final String NICKNAME = "닉네임";
     private static final String KEYWORD = "키워드";
     private static final String URL = "url";
     private static final int YEAR = 1967;
@@ -106,18 +107,11 @@ class ChattingRoomServiceTest {
         MemberHobby memberHobby = MemberHobby.builder()
                 .hobby(hobby)
                 .build();
-        List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
-                .mapToObj(n -> ProfileImage.builder()
-                        .id(ID)
-                        .url(URL)
-                        .sequence(Sequence.MAIN)
-                        .build())
-                .collect(Collectors.toList());
-        memberProfile = MemberProfile.builder()
-                .id(ID)
-                .build();
+        Member member = Member.builder().build();
+        member.addMemberProfile(NICKNAME);
+        memberProfile = member.getMemberProfile();
         memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-                List.of(memberPersonality), List.of(memberHobby), profileImages);
+                List.of(memberPersonality), List.of(memberHobby));
         TeamMember.of(LEADER, team, memberProfile);
         chattingRoom = ChattingRoom.builder()
                 .id(ID)
