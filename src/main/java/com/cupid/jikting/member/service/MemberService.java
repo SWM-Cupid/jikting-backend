@@ -76,16 +76,12 @@ public class MemberService {
                 getMemberPersonalities(memberProfile, memberProfileUpdateRequest.getPersonalities()),
                 getMemberHobbies(memberProfile, memberProfileUpdateRequest.getHobbies()));
         if (!file.isEmpty()) {
-            fileUploadService.delete(memberProfile.getMainImageUrl());
-            String url = fileUploadService.save(file);
+            String url = fileUploadService.update(file, memberProfile.getMainImageUrl());
             ImageRequest imageRequest = ImageRequest.builder()
                     .url(url)
                     .sequence(Sequence.MAIN.name())
                     .build();
-            List<ImageRequest> imageRequests = new ArrayList<>();
-            imageRequests.add(imageRequest);
-            memberProfile.updateProfileImage(imageRequests);
-
+            memberProfile.updateProfileImage(List.of(imageRequest));
         }
         memberProfileRepository.save(memberProfile);
     }

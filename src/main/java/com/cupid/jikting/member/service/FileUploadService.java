@@ -33,13 +33,19 @@ public class FileUploadService {
         return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/" + fileName;
     }
 
-    public void delete(String url) {
+    private void delete(String url) {
         String key = extractKeyFromImageUrl(url);
         try {
             amazonS3Client.deleteObject(bucket, key);
         } catch (AmazonServiceException e) {
             throw new FileUploadException(ApplicationError.AWS_S3_DELETE_ERROR);
         }
+    }
+
+    public String update(MultipartFile file, String url) throws IOException {
+        String savedUrl = save(file);
+        delete(url);
+        return savedUrl;
     }
 
     private void validateExist(MultipartFile file) {
