@@ -36,9 +36,8 @@ public class ProfileImage extends BaseEntity {
         return sequence.equals(Sequence.MAIN);
     }
 
-    public void update(String url, Sequence sequence) {
+    public void update(String url) {
         this.url = url;
-        this.sequence = sequence;
     }
 
     public boolean isSameSequence(String sequence) {
