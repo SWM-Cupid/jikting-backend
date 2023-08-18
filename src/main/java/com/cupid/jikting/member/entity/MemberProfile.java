@@ -87,7 +87,12 @@ public class MemberProfile extends BaseEntity {
     }
 
     public List<Recommend> getRecommends() {
-        return getTeam().getRecommendsFrom();
+        return getTeam().getRecommends();
+    }
+
+    public void deleteRecommend(Long recommendId) {
+        getTeam().deleteRecommend(recommendId);
+
     }
 
     public int getAge() {

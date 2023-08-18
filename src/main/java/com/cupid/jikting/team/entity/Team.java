@@ -86,4 +86,8 @@ public class Team extends BaseEntity {
         this.description = description;
         this.teamPersonalities.update(teamPersonalities);
     }
+
+    public void deleteRecommend(Long recommendId) {
+        recommends.removeIf(recommend -> recommend.getId().equals(recommendId));
+    }
 }
