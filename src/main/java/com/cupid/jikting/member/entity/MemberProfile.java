@@ -1,5 +1,6 @@
 package com.cupid.jikting.member.entity;
 
+import com.cupid.jikting.chatting.entity.ChattingRoom;
 import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.common.error.ApplicationError;
@@ -18,6 +19,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @SuperBuilder
@@ -170,5 +172,11 @@ public class MemberProfile extends BaseEntity {
 
     public String getType() {
         return member.getType();
+    }
+
+    public List<ChattingRoom> getChattingRooms() {
+        return memberChattingRooms.stream()
+                .map(MemberChattingRoom::getChattingRoom)
+                .collect(Collectors.toList());
     }
 }
