@@ -15,7 +15,9 @@ import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.WrongFormException;
 import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.meeting.entity.Meeting;
 import com.cupid.jikting.member.entity.*;
+import com.cupid.jikting.team.entity.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -86,17 +88,10 @@ public class ChattingRoomControllerTest extends ApiDocument {
         List<String> keywords = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> KEYWORD + n)
                 .collect(Collectors.toList());
-        MemberProfile memberProfile = MemberProfile.builder()
+        Member member = Member.builder()
                 .id(ID)
-                .nickname(NICKNAME)
                 .build();
-        List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
-                .mapToObj(n -> ProfileImage.builder()
-                        .memberProfile(memberProfile)
-                        .sequence(Sequence.MAIN)
-                        .url(URL)
-                        .build())
-                .collect(Collectors.toList());
+        member.addMemberProfile(NICKNAME);
         Hobby hobby = Hobby.builder()
                 .keyword(HOBBY)
                 .build();
@@ -109,8 +104,9 @@ public class ChattingRoomControllerTest extends ApiDocument {
         MemberPersonality memberPersonality = MemberPersonality.builder()
                 .personality(personality)
                 .build();
+        MemberProfile memberProfile = member.getMemberProfile();
         memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-                List.of(memberPersonality), List.of(memberHobby), profileImages);
+                List.of(memberPersonality), List.of(memberHobby));
         meetingConfirmRequest = MeetingConfirmRequest.builder()
                 .meetingId(ID)
                 .place(PLACE)
@@ -125,6 +121,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
                         .build())
                 .collect(Collectors.toList());
         chattingRoomDetailResponse = ChattingRoomDetailResponse.builder()
+                .name(TEAM_NAME)
                 .description(DESCRIPTION)
                 .keywords(keywords)
                 .members(IntStream.rangeClosed(0, 2)
