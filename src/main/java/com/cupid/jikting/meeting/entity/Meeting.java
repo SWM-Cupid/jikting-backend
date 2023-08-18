@@ -61,6 +61,13 @@ public class Meeting extends BaseEntity {
         return recommendedTeam.getPersonalities();
     }
 
+    public List<String> getOppositeTeamImageUrls(Team team) {
+        if (recommendedTeam.equals(team)) {
+            return acceptingTeam.getMainImageUrls();
+        }
+        return recommendedTeam.getMainImageUrls();
+    }
+
     public List<MemberProfile> getMemberProfiles() {
         List<MemberProfile> memberProfiles = new ArrayList<>(recommendedTeam.getMemberProfiles());
         memberProfiles.addAll(acceptingTeam.getMemberProfiles());
