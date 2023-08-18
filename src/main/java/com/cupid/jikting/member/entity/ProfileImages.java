@@ -19,14 +19,16 @@ import java.util.stream.Stream;
 @Embeddable
 public class ProfileImages {
 
+    private static final String DEFAULT_IMAGE_URL = "https://cupid-images.s3.ap-northeast-2.amazonaws.com/default.png";
+
     @OneToMany(mappedBy = "memberProfile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<ProfileImage> profileImages = new ArrayList<>();
 
-    public void setDefaultImages(MemberProfile memberProfile) {
+    public void createDefaultImages(MemberProfile memberProfile) {
         profileImages = Stream.of(Sequence.MAIN, Sequence.FIRST, Sequence.SECOND)
                 .map(sequence -> ProfileImage.builder()
                         .memberProfile(memberProfile)
-                        .url("https://cupid-images.s3.ap-northeast-2.amazonaws.com/default.png")
+                        .url(DEFAULT_IMAGE_URL)
                         .sequence(sequence)
                         .build())
                 .collect(Collectors.toList());
@@ -35,7 +37,7 @@ public class ProfileImages {
     public void update(List<ImageRequest> imageRequests) {
         imageRequests.forEach(updateProfileImage -> {
             ProfileImage profileImage = findBySequence(updateProfileImage.getSequence());
-            profileImage.update(updateProfileImage.getUrl(), Sequence.valueOf(updateProfileImage.getSequence()));
+            profileImage.update(updateProfileImage.getUrl());
         });
     }
 
