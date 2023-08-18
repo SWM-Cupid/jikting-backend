@@ -60,7 +60,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private boolean isNotRequiredJwtAuthentication(HttpServletRequest request) {
         return tokenAUthorizationWhiteList.stream().anyMatch(uri -> request.getRequestURI().contains(uri))
-                || (request.getRequestURI().contains(SIGNUP_URL) && request.getMethod().equals(HttpMethod.POST.name()));
+                || (request.getRequestURI().equals(SIGNUP_URL) && request.getMethod().equals(HttpMethod.POST.name()));
     }
 
     public void reissueAccessToken(HttpServletResponse response, String refreshToken) {
