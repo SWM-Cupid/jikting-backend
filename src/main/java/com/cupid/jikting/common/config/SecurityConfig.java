@@ -65,7 +65,7 @@ public class SecurityConfig {
                 .mvcMatchers("/members/nickname/check").permitAll()
                 .mvcMatchers("/members/code").permitAll()
                 .mvcMatchers("/members/verification").permitAll()
-                .mvcMatchers("/ws").permitAll()
+                .mvcMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
@@ -82,7 +82,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://jikting.com", "https://www.jikting.com"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://jikting.com", "https://www.jikting.com", "chrome-extension://fgponpodhbmadfljofbimhhlengambbn"));
         configuration.addAllowedHeader("*");
         configuration.setAllowedMethods(List.of(
                 HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.PATCH.name(), HttpMethod.OPTIONS.name()));
