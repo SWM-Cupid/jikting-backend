@@ -49,8 +49,7 @@ public class MemberController {
     @PostMapping("/profile")
     public ResponseEntity<Void> updateProfile(@AuthorizedVariable Long memberProfileId,
                                               @RequestPart MultipartFile file,
-                                              @RequestPart MemberProfileUpdateRequest memberProfileUpdateRequest)
-            throws IOException {
+                                              @RequestPart MemberProfileUpdateRequest memberProfileUpdateRequest) throws IOException {
         memberService.updateProfile(memberProfileId, file, memberProfileUpdateRequest);
         return ResponseEntity.ok().build();
     }
