@@ -166,13 +166,11 @@ public class RecommendServiceTest {
         //when
         recommendService.sendLike(ID);
         //then
-        assertAll(
-                () -> verify(recommendRepository).findById(anyLong())
-        );
+        verify(recommendRepository).findById(anyLong());
     }
 
     @Test
-    void 호감_넘기기_실패_추천_없음() {
+    void 호감_넘기정_실패_추천_없음() {
         //given
         willThrow(recommendNotFoundException).given(recommendRepository).findById(anyLong());
         //when & then
