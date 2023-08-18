@@ -22,14 +22,14 @@ public class RecommendController {
     }
 
     @PostMapping("/{recommendId}/like")
-    public ResponseEntity<Void> sendLike(@PathVariable Long recommendId) {
-        recommendService.sendLike(recommendId);
+    public ResponseEntity<Void> sendLike(@AuthorizedVariable Long memberProfileId, @PathVariable Long recommendId) {
+        recommendService.sendLike(memberProfileId, recommendId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{recommendId}/pass")
-    public ResponseEntity<Void> passLike(@PathVariable Long recommendId) {
-        recommendService.passLike(recommendId);
+    public ResponseEntity<Void> passLike(@AuthorizedVariable Long memberProfileId, @PathVariable Long recommendId) {
+        recommendService.passLike(memberProfileId, recommendId);
         return ResponseEntity.ok().build();
     }
 }
