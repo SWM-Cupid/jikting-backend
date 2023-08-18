@@ -5,6 +5,7 @@ import com.cupid.jikting.chatting.dto.ChattingRoomResponse;
 import com.cupid.jikting.chatting.dto.MeetingConfirmRequest;
 import com.cupid.jikting.chatting.entity.Chatting;
 import com.cupid.jikting.chatting.entity.ChattingRoom;
+import com.cupid.jikting.chatting.entity.MemberChattingRoom;
 import com.cupid.jikting.chatting.repository.ChattingRoomRepository;
 import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
@@ -132,9 +133,10 @@ class ChattingRoomServiceTest {
                 .content(CONTENT)
                 .createdAt(LocalDateTime.now())
                 .build();
-        chattingRooms = IntStream.range(0, 3)
+        chattingRooms = IntStream.range(0, 1)
                 .mapToObj(n -> chattingRoom)
                 .collect(Collectors.toList());
+        MemberChattingRoom.of(memberProfile, chattingRoom);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
     }
 
@@ -142,7 +144,6 @@ class ChattingRoomServiceTest {
     void 채팅방_목록_조회_성공() {
         // given
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
-        willReturn(chattingRooms).given(chattingRoomRepository).findAll();
         willReturn(LAST_MESSAGE).given(redisConnector).getLastMessage(anyString());
         // when
         List<ChattingRoomResponse> chattingRoomResponses = chattingRoomService.getAll(ID);
