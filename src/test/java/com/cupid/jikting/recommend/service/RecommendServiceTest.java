@@ -107,7 +107,7 @@ public class RecommendServiceTest {
                         .build())
                 .collect(Collectors.toList());
         Team teamTo = Team.builder()
-                .recommendsFrom(recommends)
+                .recommends(recommends)
                 .build();
         TeamMember.of(LEADER, teamTo, memberProfile);
         recommend = Recommend.builder()
@@ -151,6 +151,28 @@ public class RecommendServiceTest {
 
     @Test
     void 호감_보내기_실패_추천_없음() {
+        //given
+        willThrow(recommendNotFoundException).given(recommendRepository).findById(anyLong());
+        //when & then
+        assertThatThrownBy(() -> recommendService.sendLike(ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.RECOMMEND_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 호감_넘기기_성공() {
+        //given
+        willReturn(Optional.of(recommend)).given(recommendRepository).findById(anyLong());
+        //when
+        recommendService.sendLike(ID);
+        //then
+        assertAll(
+                () -> verify(recommendRepository).findById(anyLong())
+        );
+    }
+
+    @Test
+    void 호감_넘기기_실패_추천_없음() {
         //given
         willThrow(recommendNotFoundException).given(recommendRepository).findById(anyLong());
         //when & then

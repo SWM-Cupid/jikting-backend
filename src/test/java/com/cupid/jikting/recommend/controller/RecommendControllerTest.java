@@ -60,7 +60,7 @@ public class RecommendControllerTest extends ApiDocument {
 
     private String accessToken;
     private List<RecommendResponse> recommendResponses;
-    private ApplicationException teamNotFoundException;
+    private ApplicationException recommendNotFound;
 
     @MockBean
     private RecommendService recommendService;
@@ -129,7 +129,7 @@ public class RecommendControllerTest extends ApiDocument {
         this.recommendResponses = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> recommendResponse)
                 .collect(Collectors.toList());
-        teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
+        recommendNotFound = new NotFoundException(ApplicationError.RECOMMEND_NOT_FOUND);
         accessToken = jwtService.createAccessToken(ID);
     }
 
@@ -148,7 +148,7 @@ public class RecommendControllerTest extends ApiDocument {
     @Test
     void 추천팀_조회_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(recommendService).get(anyLong());
+        willThrow(recommendNotFound).given(recommendService).get(anyLong());
         //when
         ResultActions resultActions = 추천팀_조회_요청();
         //then
@@ -170,11 +170,33 @@ public class RecommendControllerTest extends ApiDocument {
     @Test
     void 호감_보내기_실패() throws Exception {
         //given
-        willThrow(teamNotFoundException).given(recommendService).sendLike(anyLong());
+        willThrow(recommendNotFound).given(recommendService).sendLike(anyLong());
         //when
         ResultActions resultActions = 호감_보내기_요청();
         //then
         호감_보내기_요청_실패(resultActions);
+    }
+
+    @WithMockUser
+    @Test
+    void 호감_넘기기_성공() throws Exception {
+        //given
+        willDoNothing().given(recommendService).passLike(anyLong());
+        //when
+        ResultActions resultActions = 호감_넘기기_요청();
+        //then
+        호감_넘기기_요청_성공(resultActions);
+    }
+
+    @WithMockUser
+    @Test
+    void 호감_넘기기_실패() throws Exception {
+        //given
+        willThrow(recommendNotFound).given(recommendService).passLike(anyLong());
+        //when
+        ResultActions resultActions = 호감_넘기기_요청();
+        //then
+        호감_넘기기_요청_실패(resultActions);
     }
 
     private ResultActions 추천팀_조회_요청() throws Exception {
@@ -193,7 +215,7 @@ public class RecommendControllerTest extends ApiDocument {
     private void 추천팀_조회_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
-                        .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
+                        .andExpect(content().json(toJson(ErrorResponse.from(recommendNotFound)))),
                 "get-recommends-fail");
     }
 
@@ -211,7 +233,25 @@ public class RecommendControllerTest extends ApiDocument {
     private void 호감_보내기_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isBadRequest())
-                        .andExpect(content().json(toJson(ErrorResponse.from(teamNotFoundException)))),
+                        .andExpect(content().json(toJson(ErrorResponse.from(recommendNotFound)))),
                 "send-like-fail");
+    }
+
+    private ResultActions 호감_넘기기_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID + "/pass")
+                .contextPath(CONTEXT_PATH));
+    }
+
+    private void 호감_넘기기_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "pass-like-success");
+    }
+
+    private void 호감_넘기기_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(recommendNotFound)))),
+                "pass-like-fail");
     }
 }
