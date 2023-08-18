@@ -43,7 +43,7 @@ public class Team extends BaseEntity {
     private List<TeamLike> sentTeamLikes = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "from", orphanRemoval = true)
+    @OneToMany(mappedBy = "from")
     private List<Recommend> recommends = new ArrayList<>();
 
     @Builder.Default
@@ -85,9 +85,5 @@ public class Team extends BaseEntity {
     public void update(String description, List<TeamPersonality> teamPersonalities) {
         this.description = description;
         this.teamPersonalities.update(teamPersonalities);
-    }
-
-    public void deleteRecommend(Long recommendId) {
-        recommends.removeIf(recommend -> recommend.getId().equals(recommendId));
     }
 }

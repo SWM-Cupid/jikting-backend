@@ -90,11 +90,6 @@ public class MemberProfile extends BaseEntity {
         return getTeam().getRecommends();
     }
 
-    public void deleteRecommend(Long recommendId) {
-        getTeam().deleteRecommend(recommendId);
-
-    }
-
     public int getAge() {
         return LocalDate.now().getYear() - birth.getYear() + 1;
     }
