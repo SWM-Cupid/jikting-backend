@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ImageRequest {
 
-    private Long profileImageId;
     private String url;
     private String sequence;
 }
