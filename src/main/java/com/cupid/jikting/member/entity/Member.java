@@ -57,7 +57,7 @@ public class Member extends BaseEntity {
                 .nickname(nickname)
                 .member(this)
                 .build();
-        memberProfile.addDefaultProfileImages();
+        memberProfile.createDefaultProfileImages();
     }
 
     public void validatePassword(PasswordEncoder passwordEncoder, String password) {

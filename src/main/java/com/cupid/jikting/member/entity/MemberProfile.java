@@ -124,7 +124,7 @@ public class MemberProfile extends BaseEntity {
         return profileImages.getMainImageUrl();
     }
 
-    public void addDefaultProfileImages() {
+    public void createDefaultProfileImages() {
         profileImages.createDefaultImages(this);
     }
 
