@@ -113,17 +113,12 @@ public class TeamControllerTest extends ApiDocument {
                 .type(TYPE)
                 .memberCompanies(List.of(memberCompany))
                 .build();
+        member.addMemberProfile(NICKNAME);
         IntStream.range(0, 3)
                 .mapToObj(n -> {
-                    MemberProfile memberProfile = MemberProfile.builder()
-                            .nickname(NICKNAME)
-                            .birth(BIRTH)
-                            .mbti(Mbti.ENFJ)
-                            .address(ADDRESS)
-                            .member(member)
-                            .build();
+                    MemberProfile memberProfile = member.getMemberProfile();
                     memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-                            List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
+                            List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()));
                     return memberProfile;
                 })
                 .forEach(memberProfile -> TeamMember.of(LEADER, team, memberProfile));

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Embeddable
 public class MemberPersonalities {
 
-    @OneToMany(mappedBy = "memberProfile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "memberProfile", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private final List<MemberPersonality> memberPersonalities = new ArrayList<>();
 
     public void update(List<MemberPersonality> memberPersonalities) {

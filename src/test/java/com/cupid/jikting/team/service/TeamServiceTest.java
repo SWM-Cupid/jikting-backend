@@ -41,6 +41,7 @@ class TeamServiceTest {
     private static final String KEYWORD = "성격 키워드";
     private static final Long ID = 1L;
     private static final String NAME = "이름";
+    private static final String NICKNAME = "닉네임";
     private static final String DESCRIPTION = "한줄소개";
     private static final int MEMBER_COUNT = 3;
     private static final boolean LEADER = true;
@@ -88,20 +89,9 @@ class TeamServiceTest {
                 .memberCompanies(List.of(memberCompany))
                 .type(TYPE)
                 .build();
-        leader = MemberProfile.builder()
-                .id(ID)
-                .birth(BIRTH)
-                .mbti(Mbti.ENFJ)
-                .address(ADDRESS)
-                .member(member)
-                .build();
-        memberProfile = MemberProfile.builder()
-                .id(ID)
-                .birth(BIRTH)
-                .mbti(Mbti.ENFJ)
-                .address(ADDRESS)
-                .member(member)
-                .build();
+        member.addMemberProfile(NICKNAME);
+        leader = member.getMemberProfile();
+        memberProfile = member.getMemberProfile();
         personality = Personality.builder()
                 .keyword(KEYWORD)
                 .build();
@@ -112,9 +102,9 @@ class TeamServiceTest {
                         .build())
                 .collect(Collectors.toList());
         leader.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
+                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()));
         memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()), profileImages);
+                List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()));
         team = Team.builder()
                 .id(ID)
                 .name(NAME)

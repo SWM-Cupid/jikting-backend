@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -45,9 +46,11 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/profile")
-    public ResponseEntity<Void> updateProfile(@AuthorizedVariable Long memberProfileId, @RequestBody MemberProfileUpdateRequest memberProfileUpdateRequest) {
-        memberService.updateProfile(memberProfileId, memberProfileUpdateRequest);
+    @PostMapping("/profile")
+    public ResponseEntity<Void> updateProfile(@AuthorizedVariable Long memberProfileId,
+                                              @RequestPart MultipartFile file,
+                                              @RequestPart MemberProfileUpdateRequest memberProfileUpdateRequest) throws IOException {
+        memberService.updateProfile(memberProfileId, file, memberProfileUpdateRequest);
         return ResponseEntity.ok().build();
     }
 

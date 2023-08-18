@@ -7,12 +7,14 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.WrongAccessException;
 import com.cupid.jikting.meeting.entity.InstantMeetingMember;
+import com.cupid.jikting.member.dto.ImageRequest;
 import com.cupid.jikting.recommend.entity.Recommend;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamMember;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE member_profile SET is_deleted = true WHERE member_profile_id = ?")
+@Where(clause = "is_deleted = false")
 @AttributeOverride(name = "id", column = @Column(name = "member_profile_id"))
 @Entity
 public class MemberProfile extends BaseEntity {
@@ -125,13 +128,17 @@ public class MemberProfile extends BaseEntity {
         return profileImages.getMainImageUrl();
     }
 
+    public void createDefaultProfileImages() {
+        profileImages.createDefaultImages(this);
+    }
+
     public void update(String nickname) {
         this.nickname = nickname;
     }
 
     public void updateProfile(LocalDate birth, int height, Mbti mbti, String address, Gender gender, String college,
                               SmokeStatus smokeStatus, DrinkStatus drinkStatus, String description,
-                              List<MemberPersonality> memberPersonalities, List<MemberHobby> memberHobbies, List<ProfileImage> profileImages) {
+                              List<MemberPersonality> memberPersonalities, List<MemberHobby> memberHobbies) {
         this.birth = birth;
         this.height = height;
         this.mbti = mbti;
@@ -143,7 +150,10 @@ public class MemberProfile extends BaseEntity {
         this.description = description;
         this.memberPersonalities.update(memberPersonalities);
         this.memberHobbies.update(memberHobbies);
-        this.profileImages.update(profileImages);
+    }
+
+    public void updateProfileImage(List<ImageRequest> imageRequests) {
+        this.profileImages.update(imageRequests);
     }
 
     public void addMemberChattingRoom(MemberChattingRoom memberChattingRoom) {

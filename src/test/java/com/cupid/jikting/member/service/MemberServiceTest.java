@@ -17,8 +17,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +44,7 @@ public class MemberServiceTest {
     private static final String NAME = "홍길동";
     private static final String PHONE = "01000000000";
     private static final Long ID = 1L;
-    private static final String IMAGE_URL = "사진 URL";
+    private static final String IMAGE_URL = "https://cupid-images.s3.ap-northeast-2.amazonaws.com/default.png";
     private static final String NICKNAME = "닉네임";
     private static final String COMPANY = "회사";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
@@ -53,17 +56,18 @@ public class MemberServiceTest {
     private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
     private static final String VERIFICATION_CODE = "인증번호";
     private static final String WRONG_VERIFICATION_CODE = "잘못된" + VERIFICATION_CODE;
+    private static final int PROFILE_IMAGE_SIZE = 3;
 
     private Member member;
     private MemberProfile memberProfile;
     private Personality personality;
     private Hobby hobby;
-    private List<ProfileImage> profileImages;
     private List<MemberPersonality> memberPersonalities;
     private List<MemberHobby> memberHobbies;
     private SignupRequest signupRequest;
     private UsernameCheckRequest usernameCheckRequest;
     private NicknameCheckRequest nicknameCheckRequest;
+    private MultipartFile multipartFile;
 
     @InjectMocks
     private MemberService memberService;
@@ -105,13 +109,7 @@ public class MemberServiceTest {
                 .phone(PHONE)
                 .memberCompanies(memberCompanies)
                 .build();
-        profileImages = IntStream.range(0, 1)
-                .mapToObj(n -> ProfileImage.builder()
-                        .id(ID)
-                        .url(IMAGE_URL)
-                        .sequence(Sequence.MAIN)
-                        .build())
-                .collect(Collectors.toList());
+        member.addMemberProfile(NICKNAME);
         personality = Personality.builder()
                 .keyword(PERSONALITY)
                 .build();
@@ -128,12 +126,9 @@ public class MemberServiceTest {
                         .hobby(hobby)
                         .build())
                 .collect(Collectors.toList());
-        memberProfile = MemberProfile.builder()
-                .nickname(NICKNAME)
-                .member(member)
-                .build();
+        memberProfile = member.getMemberProfile();
         memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-                memberPersonalities, memberHobbies, profileImages);
+                memberPersonalities, memberHobbies);
         signupRequest = SignupRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD)
@@ -148,6 +143,7 @@ public class MemberServiceTest {
         nicknameCheckRequest = NicknameCheckRequest.builder()
                 .nickname(NICKNAME)
                 .build();
+        multipartFile = new MockMultipartFile("test.jpg", new byte[0]);
     }
 
     @Test
@@ -198,7 +194,7 @@ public class MemberServiceTest {
         // then
         assertAll(
                 () -> verify(memberProfileRepository).findById(anyLong()),
-                () -> assertThat(memberProfileResponse.getImages().size()).isEqualTo(profileImages.size()),
+                () -> assertThat(memberProfileResponse.getImages().size()).isEqualTo(PROFILE_IMAGE_SIZE),
                 () -> assertThat(memberProfileResponse.getAge()).isEqualTo(memberProfile.getAge()),
                 () -> assertThat(memberProfileResponse.getHeight()).isEqualTo(memberProfile.getHeight()),
                 () -> assertThat(memberProfileResponse.getAddress()).isEqualTo(memberProfile.getAddress()),
@@ -292,19 +288,12 @@ public class MemberServiceTest {
     }
 
     @Test
-    void 회원_프로필_수정_성공() {
+    void 회원_프로필_수정_성공() throws IOException {
         // given
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
         willReturn(Optional.of(hobby)).given(hobbyRepository).findByKeyword(anyString());
         MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
-                .images(profileImages.stream()
-                        .map(profileImage -> ImageRequest.builder()
-                                .profileImageId(profileImage.getId())
-                                .url(profileImage.getUrl())
-                                .sequence(profileImage.getSequence().name())
-                                .build())
-                        .collect(Collectors.toList()))
                 .birth(BIRTH)
                 .height(HEIGHT)
                 .gender(Gender.MALE.getMessage())
@@ -324,7 +313,7 @@ public class MemberServiceTest {
                 .description(DESCRIPTION)
                 .build();
         // when
-        memberService.updateProfile(ID, memberProfileUpdateRequest);
+        memberService.updateProfile(ID, multipartFile, memberProfileUpdateRequest);
         // then
         assertAll(
                 () -> verify(memberProfileRepository).findById(anyLong()),
@@ -338,13 +327,6 @@ public class MemberServiceTest {
         // given
         willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
         MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
-                .images(profileImages.stream()
-                        .map(profileImage -> ImageRequest.builder()
-                                .profileImageId(profileImage.getId())
-                                .url(profileImage.getUrl())
-                                .sequence(profileImage.getSequence().name())
-                                .build())
-                        .collect(Collectors.toList()))
                 .birth(BIRTH)
                 .height(HEIGHT)
                 .gender(Gender.MALE.getMessage())
@@ -364,7 +346,7 @@ public class MemberServiceTest {
                 .description(DESCRIPTION)
                 .build();
         // when & then
-        assertThatThrownBy(() -> memberService.updateProfile(ID, memberProfileUpdateRequest))
+        assertThatThrownBy(() -> memberService.updateProfile(ID, multipartFile, memberProfileUpdateRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
@@ -375,13 +357,6 @@ public class MemberServiceTest {
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willThrow(new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND)).given(personalityRepository).findByKeyword(anyString());
         MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
-                .images(profileImages.stream()
-                        .map(profileImage -> ImageRequest.builder()
-                                .profileImageId(profileImage.getId())
-                                .url(profileImage.getUrl())
-                                .sequence(profileImage.getSequence().name())
-                                .build())
-                        .collect(Collectors.toList()))
                 .birth(BIRTH)
                 .height(HEIGHT)
                 .gender(Gender.MALE.getMessage())
@@ -401,7 +376,7 @@ public class MemberServiceTest {
                 .description(DESCRIPTION)
                 .build();
         // when & then
-        assertThatThrownBy(() -> memberService.updateProfile(ID, memberProfileUpdateRequest))
+        assertThatThrownBy(() -> memberService.updateProfile(ID, multipartFile, memberProfileUpdateRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.PERSONALITY_NOT_FOUND.getMessage());
     }
@@ -413,13 +388,6 @@ public class MemberServiceTest {
         willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
         willThrow(new NotFoundException(ApplicationError.HOBBY_NOT_FOUND)).given(hobbyRepository).findByKeyword(anyString());
         MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
-                .images(profileImages.stream()
-                        .map(profileImage -> ImageRequest.builder()
-                                .profileImageId(profileImage.getId())
-                                .url(profileImage.getUrl())
-                                .sequence(profileImage.getSequence().name())
-                                .build())
-                        .collect(Collectors.toList()))
                 .birth(BIRTH)
                 .height(HEIGHT)
                 .gender(Gender.MALE.getMessage())
@@ -439,7 +407,7 @@ public class MemberServiceTest {
                 .description(DESCRIPTION)
                 .build();
         // when & then
-        assertThatThrownBy(() -> memberService.updateProfile(ID, memberProfileUpdateRequest))
+        assertThatThrownBy(() -> memberService.updateProfile(ID, multipartFile, memberProfileUpdateRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.HOBBY_NOT_FOUND.getMessage());
     }

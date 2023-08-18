@@ -104,7 +104,7 @@ class LikeServiceTest {
                 .member(member)
                 .build();
         memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-                List.of(memberPersonality), List.of(memberHobby), profileImages);
+                List.of(memberPersonality), List.of(memberHobby));
         Team sentTeam = Team.builder()
                 .id(ID)
                 .name(NAME)

@@ -23,7 +23,8 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private static final String TOKEN_TYPE = "Bearer ";
-    private static final String LOGIN_REDIRECT_URL = "https://jikting.com/kakao/signup";
+    private static final String OAUTH_SIGNUP_REDIRECT_URL = "https://jikting.com/signup/kakao";
+    private static final String LOGIN_REDIRECT_URL = "https://jikting.com/main";
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
@@ -36,20 +37,21 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         if (oAuth2User.getRole() == Role.GUEST) {
             String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
             response.addHeader(jwtService.getAccessHeader(), TOKEN_TYPE + accessToken);
-            response.sendRedirect(LOGIN_REDIRECT_URL);
+            response.sendRedirect(OAUTH_SIGNUP_REDIRECT_URL);
             jwtService.sendAccessAndRefreshToken(response, accessToken, null);
         } else {
             loginSuccess(response, oAuth2User);
         }
     }
 
-    private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) {
+    private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException {
         String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
         String refreshToken = jwtService.createRefreshToken();
         response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
         response.addHeader(jwtService.getRefreshHeader(), "Bearer " + refreshToken);
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getUsername(), refreshToken);
+        response.sendRedirect(LOGIN_REDIRECT_URL);
     }
 
     private Long getMemberProfileIdByUsername(String username) {

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -15,6 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE profile_image SET is_deleted = true WHERE profile_image_id = ?")
+@Where(clause = "is_deleted = false")
 @AttributeOverride(name = "id", column = @Column(name = "profile_image_id"))
 @Entity
 public class ProfileImage extends BaseEntity {
@@ -36,12 +38,11 @@ public class ProfileImage extends BaseEntity {
         return sequence.equals(Sequence.MAIN);
     }
 
-    public void update(String url, Sequence sequence) {
+    public void update(String url) {
         this.url = url;
-        this.sequence = sequence;
     }
 
-    public boolean isSameAs(Long id) {
-        return this.id.equals(id);
+    public boolean isSameSequence(String sequence) {
+        return this.sequence.name().equals(sequence);
     }
 }

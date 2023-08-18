@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.JwtException;
-import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.Getter;

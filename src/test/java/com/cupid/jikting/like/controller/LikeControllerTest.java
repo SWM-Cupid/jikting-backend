@@ -109,17 +109,15 @@ public class LikeControllerTest extends ApiDocument {
                 .id(ID)
                 .memberCompanies(List.of(memberCompany))
                 .build();
-        MemberProfile memberProfile = MemberProfile.builder()
-                .id(ID)
-                .member(member)
-                .build();
+        member.addMemberProfile(NICKNAME);
+        MemberProfile memberProfile = member.getMemberProfile();
         ProfileImage profileImage = ProfileImage.builder()
                 .id(ID)
                 .sequence(Sequence.MAIN)
                 .url(URL)
                 .build();
         memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
-                memberPersonalities, memberHobbies, List.of(profileImage));
+                memberPersonalities, memberHobbies);
         List<MemberProfileResponse> memberProfileResponses = IntStream.rangeClosed(1, 2)
                 .mapToObj(n -> MemberProfileResponse.from(memberProfile))
                 .collect(Collectors.toList());

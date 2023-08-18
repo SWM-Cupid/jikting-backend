@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class MemberService {
 
+    private final FileUploadService fileUploadService;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
@@ -61,7 +63,8 @@ public class MemberService {
         memberProfileRepository.save(memberProfile);
     }
 
-    public void updateProfile(Long memberProfileId, MemberProfileUpdateRequest memberProfileUpdateRequest) {
+    public void updateProfile(Long memberProfileId, MultipartFile file,
+                              MemberProfileUpdateRequest memberProfileUpdateRequest) throws IOException {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
         memberProfile.updateProfile(memberProfileUpdateRequest.getBirth(),
                 memberProfileUpdateRequest.getHeight(),
@@ -73,8 +76,15 @@ public class MemberService {
                 DrinkStatus.find(memberProfileUpdateRequest.getDrinkStatus()),
                 memberProfileUpdateRequest.getDescription(),
                 getMemberPersonalities(memberProfile, memberProfileUpdateRequest.getPersonalities()),
-                getMemberHobbies(memberProfile, memberProfileUpdateRequest.getHobbies()),
-                getProfileImages(memberProfile, memberProfileUpdateRequest.getImages()));
+                getMemberHobbies(memberProfile, memberProfileUpdateRequest.getHobbies()));
+        if (!file.isEmpty()) {
+            String url = fileUploadService.update(file, memberProfile.getMainImageUrl());
+            ImageRequest imageRequest = ImageRequest.builder()
+                    .url(url)
+                    .sequence(Sequence.MAIN.name())
+                    .build();
+            memberProfile.updateProfileImage(List.of(imageRequest));
+        }
         memberProfileRepository.save(memberProfile);
     }
 
@@ -169,16 +179,5 @@ public class MemberService {
     private Hobby getHobbyByKeyword(String keyword) {
         return hobbyRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.HOBBY_NOT_FOUND));
-    }
-
-    private List<ProfileImage> getProfileImages(MemberProfile memberProfile, List<ImageRequest> images) {
-        return images.stream()
-                .map(imageRequest -> ProfileImage.builder()
-                        .memberProfile(memberProfile)
-                        .id(imageRequest.getProfileImageId())
-                        .url(imageRequest.getUrl())
-                        .sequence(Sequence.valueOf(imageRequest.getSequence()))
-                        .build())
-                .collect(Collectors.toList());
     }
 }

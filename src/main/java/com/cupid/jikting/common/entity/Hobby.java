@@ -4,6 +4,7 @@ import com.cupid.jikting.member.entity.MemberHobby;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE hobby SET is_deleted = true WHERE hobby_id = ?")
+@Where(clause = "is_deleted = false")
 @AttributeOverride(name = "id", column = @Column(name = "hobby_id"))
 @Entity
 public class Hobby extends BaseEntity {
