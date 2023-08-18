@@ -3,6 +3,7 @@ package com.cupid.jikting.member.entity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 @Embeddable
 public class MemberHobbies {
 
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<MemberHobby> memberHobbies = new ArrayList<>();
 
     public void update(List<MemberHobby> memberHobbies) {
