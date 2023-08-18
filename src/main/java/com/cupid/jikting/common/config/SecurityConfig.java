@@ -82,7 +82,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://jikting.com", "https://www.jikting.com", "chrome-extension://fgponpodhbmadfljofbimhhlengambbn"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://jikting.com", "https://www.jikting.com"));
         configuration.addAllowedHeader("*");
         configuration.setAllowedMethods(List.of(
                 HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.PATCH.name(), HttpMethod.OPTIONS.name()));
