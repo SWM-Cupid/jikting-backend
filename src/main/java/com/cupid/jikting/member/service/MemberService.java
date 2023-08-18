@@ -2,7 +2,10 @@ package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
-import com.cupid.jikting.common.error.*;
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.common.error.DuplicateException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.dto.*;
@@ -17,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

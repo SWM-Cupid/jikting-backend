@@ -153,7 +153,6 @@ public class MemberControllerTest extends ApiDocument {
         memberProfile.getMember().getMemberCompanies().add(memberCompany);
         List<ImageRequest> images = IntStream.range(0, 1)
                 .mapToObj(n -> ImageRequest.builder()
-                        .profileImageId(profileImage.getId())
                         .url(profileImage.getUrl())
                         .sequence(profileImage.getSequence().name())
                         .build())
