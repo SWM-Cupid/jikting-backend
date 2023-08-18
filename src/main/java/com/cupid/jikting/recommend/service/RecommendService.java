@@ -28,17 +28,16 @@ public class RecommendService {
 
     @Transactional(readOnly = true)
     public List<RecommendResponse> get(Long memberProfileId) {
-        MemberProfile memberProfile = memberProfileRepository.findById(memberProfileId)
-                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
-        return memberProfile.getRecommends()
+        return getMemberProfileById(memberProfileId).getRecommends()
                 .stream()
                 .map(RecommendResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public void sendLike(Long recommendId) {
+    public void sendLike(Long memberProfileId, Long recommendId) {
         Recommend recommend = recommendRepository.findById(recommendId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.RECOMMEND_NOT_FOUND));
+        getMemberProfileById(memberProfileId).deleteRecommend(recommendId);
         TeamLike teamLike = TeamLike.builder()
                 .sentTeam(recommend.getTo())
                 .receivedTeam(recommend.getFrom())
@@ -47,7 +46,12 @@ public class RecommendService {
         teamLikeRepository.save(teamLike);
     }
 
-    public void passLike(Long recommendId) {
+    public void passLike(Long memberProfileId, Long recommendId) {
+        getMemberProfileById(memberProfileId).deleteRecommend(recommendId);
+    }
 
+    private MemberProfile getMemberProfileById(Long memberProfileId) {
+        return memberProfileRepository.findById(memberProfileId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 }
