@@ -12,12 +12,13 @@ import com.cupid.jikting.team.entity.TeamLike;
 import com.cupid.jikting.team.repository.TeamLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class RecommendService {
 
@@ -25,6 +26,7 @@ public class RecommendService {
     private final RecommendRepository recommendRepository;
     private final TeamLikeRepository teamLikeRepository;
 
+    @Transactional(readOnly = true)
     public List<RecommendResponse> get(Long memberProfileId) {
         MemberProfile memberProfile = memberProfileRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
@@ -34,7 +36,6 @@ public class RecommendService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public void sendLike(Long recommendId) {
         Recommend recommend = recommendRepository.findById(recommendId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.RECOMMEND_NOT_FOUND));
@@ -44,5 +45,9 @@ public class RecommendService {
                 .acceptStatus(AcceptStatus.INITIAL)
                 .build();
         teamLikeRepository.save(teamLike);
+    }
+
+    public void passLike(Long recommendId) {
+
     }
 }
