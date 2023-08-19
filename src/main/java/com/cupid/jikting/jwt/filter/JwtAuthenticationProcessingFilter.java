@@ -32,7 +32,8 @@ import java.util.List;
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
-    private static final String SIGNUP_URL = "/members";
+    private static final String CONTEXT_PATH = "/v1";
+    private static final String SIGNUP_URL = CONTEXT_PATH + "/members";
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
@@ -59,6 +60,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     private boolean isNotRequiredJwtAuthentication(HttpServletRequest request) {
+        System.out.println(request.getRequestURI());
         return tokenAUthorizationWhiteList.stream().anyMatch(uri -> request.getRequestURI().contains(uri))
                 || (request.getRequestURI().equals(SIGNUP_URL) && request.getMethod().equals(HttpMethod.POST.name()));
     }
