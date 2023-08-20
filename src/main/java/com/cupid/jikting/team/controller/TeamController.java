@@ -30,8 +30,8 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}")
-    public ResponseEntity<TeamResponse> get(@PathVariable Long teamId) {
-        return ResponseEntity.ok().body(teamService.get(teamId));
+    public ResponseEntity<TeamResponse> get(@AuthorizedVariable Long memberProfileId, @PathVariable Long teamId) {
+        return ResponseEntity.ok().body(teamService.get(memberProfileId, teamId));
     }
 
     @PatchMapping("/{teamId}")
