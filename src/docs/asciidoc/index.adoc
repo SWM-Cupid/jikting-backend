@@ -561,6 +561,17 @@ include::{snippets}/send-like-fail/http-request.adoc[]
 .response
 include::{snippets}/send-like-fail/http-response.adoc[]
 
+==== 호감 넘기기
+----
+/v1/recommends/{recommendId}/pass
+----
+===== 성공
+.request
+include::{snippets}/pass-like-success/http-request.adoc[]
+
+.response
+include::{snippets}/pass-like-success/http-response.adoc[]
+
 === 호감 관련 기능
 ==== 받은 호감 목록 조회
 ----
