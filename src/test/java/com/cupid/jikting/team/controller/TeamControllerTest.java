@@ -117,7 +117,7 @@ public class TeamControllerTest extends ApiDocument {
         IntStream.range(0, 3)
                 .mapToObj(n -> {
                     MemberProfile memberProfile = member.getMemberProfile();
-                    memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                    memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                             List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()));
                     return memberProfile;
                 })

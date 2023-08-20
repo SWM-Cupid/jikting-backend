@@ -127,7 +127,7 @@ public class MemberServiceTest {
                         .build())
                 .collect(Collectors.toList());
         memberProfile = member.getMemberProfile();
-        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 memberPersonalities, memberHobbies);
         signupRequest = SignupRequest.builder()
                 .username(USERNAME)
@@ -296,7 +296,6 @@ public class MemberServiceTest {
         MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(Gender.MALE.getMessage())
                 .address(ADDRESS)
                 .mbti(Mbti.ENFJ.name())
                 .drinkStatus(DrinkStatus.OFTEN.getMessage())
@@ -329,7 +328,6 @@ public class MemberServiceTest {
         MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(Gender.MALE.getMessage())
                 .address(ADDRESS)
                 .mbti(Mbti.ENFJ.name())
                 .drinkStatus(DrinkStatus.OFTEN.getMessage())
@@ -359,7 +357,6 @@ public class MemberServiceTest {
         MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(Gender.MALE.getMessage())
                 .address(ADDRESS)
                 .mbti(Mbti.ENFJ.name())
                 .drinkStatus(DrinkStatus.OFTEN.getMessage())
@@ -390,7 +387,6 @@ public class MemberServiceTest {
         MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(Gender.MALE.getMessage())
                 .address(ADDRESS)
                 .mbti(Mbti.ENFJ.name())
                 .drinkStatus(DrinkStatus.OFTEN.getMessage())

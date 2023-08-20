@@ -15,9 +15,7 @@ import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.WrongFormException;
 import com.cupid.jikting.jwt.service.JwtService;
-import com.cupid.jikting.meeting.entity.Meeting;
 import com.cupid.jikting.member.entity.*;
-import com.cupid.jikting.team.entity.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -105,7 +103,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
                 .personality(personality)
                 .build();
         MemberProfile memberProfile = member.getMemberProfile();
-        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(memberPersonality), List.of(memberHobby));
         meetingConfirmRequest = MeetingConfirmRequest.builder()
                 .meetingId(ID)

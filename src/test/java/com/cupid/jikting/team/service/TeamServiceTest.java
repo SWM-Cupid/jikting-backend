@@ -101,9 +101,9 @@ class TeamServiceTest {
                         .personality(personality)
                         .build())
                 .collect(Collectors.toList());
-        leader.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+        leader.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()));
-        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.NONSMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()));
         team = Team.builder()
                 .id(ID)

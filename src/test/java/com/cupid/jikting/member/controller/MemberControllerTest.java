@@ -136,6 +136,7 @@ public class MemberControllerTest extends ApiDocument {
                         .build())
                 .collect(Collectors.toList());
         Member member = Member.builder()
+                .gender(Gender.MALE)
                 .build();
         member.addMemberProfile(NICKNAME);
         ProfileImage profileImage = ProfileImage.builder()
@@ -144,7 +145,7 @@ public class MemberControllerTest extends ApiDocument {
                 .url(IMAGE_URL)
                 .build();
         MemberProfile memberProfile = member.getMemberProfile();
-        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 memberPersonalities, memberHobbies);
         MemberCompany memberCompany = MemberCompany.builder()
                 .member(member)
@@ -180,7 +181,6 @@ public class MemberControllerTest extends ApiDocument {
         MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
                 .birth(BIRTH)
                 .height(HEIGHT)
-                .gender(Gender.MALE.getMessage())
                 .address(ADDRESS)
                 .mbti(Mbti.ENFJ.name())
                 .drinkStatus(DrinkStatus.OFTEN.getMessage())

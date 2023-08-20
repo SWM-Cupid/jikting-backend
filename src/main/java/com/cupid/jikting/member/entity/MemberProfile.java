@@ -136,14 +136,13 @@ public class MemberProfile extends BaseEntity {
         this.nickname = nickname;
     }
 
-    public void updateProfile(LocalDate birth, int height, Mbti mbti, String address, Gender gender, String college,
+    public void updateProfile(LocalDate birth, int height, Mbti mbti, String address, String college,
                               SmokeStatus smokeStatus, DrinkStatus drinkStatus, String description,
                               List<MemberPersonality> memberPersonalities, List<MemberHobby> memberHobbies) {
         this.birth = birth;
         this.height = height;
         this.mbti = mbti;
         this.address = address;
-        this.gender = gender;
         this.college = college;
         this.smokeStatus = smokeStatus;
         this.drinkStatus = drinkStatus;

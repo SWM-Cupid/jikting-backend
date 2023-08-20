@@ -70,7 +70,6 @@ public class MemberService {
                 memberProfileUpdateRequest.getHeight(),
                 Mbti.valueOf(memberProfileUpdateRequest.getMbti()),
                 memberProfileUpdateRequest.getAddress(),
-                Gender.find(memberProfileUpdateRequest.getGender()),
                 memberProfileUpdateRequest.getCollege(),
                 SmokeStatus.find(memberProfileUpdateRequest.getSmokeStatus()),
                 DrinkStatus.find(memberProfileUpdateRequest.getDrinkStatus()),

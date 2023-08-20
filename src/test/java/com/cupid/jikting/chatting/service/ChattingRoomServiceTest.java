@@ -110,7 +110,7 @@ class ChattingRoomServiceTest {
         Member member = Member.builder().build();
         member.addMemberProfile(NICKNAME);
         memberProfile = member.getMemberProfile();
-        memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+        memberProfile.updateProfile(LocalDate.of(YEAR, MONTH, DATE), HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(memberPersonality), List.of(memberHobby));
         TeamMember.of(LEADER, team, memberProfile);
         chattingRoom = ChattingRoom.builder()
