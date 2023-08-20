@@ -55,6 +55,7 @@ public class Member extends BaseEntity {
     public void addMemberProfile(String nickname) {
         memberProfile = MemberProfile.builder()
                 .nickname(nickname)
+                .gender(gender)
                 .member(this)
                 .build();
         memberProfile.createDefaultProfileImages();
