@@ -223,12 +223,12 @@ class TeamServiceTest {
     @Test
     void 팀_조회_성공() {
         // given
-        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         // when
-        TeamResponse teamResponse = teamService.get(ID);
+        TeamResponse teamResponse = teamService.get(ID, ID);
         // then
         assertAll(
-                () -> verify(teamRepository).findById(anyLong()),
+                () -> verify(memberProfileRepository).findById(anyLong()),
                 () -> assertThat(teamResponse.getDescription()).isEqualTo(DESCRIPTION),
                 () -> assertThat(teamResponse.getKeywords().size()).isEqualTo(teamPersonalities.size()),
                 () -> assertThat(teamResponse.getMembers().size()).isEqualTo(team.getTeamMembers().size())
@@ -236,13 +236,13 @@ class TeamServiceTest {
     }
 
     @Test
-    void 팀_조회_실패_팀_없음() {
+    void 팀_조회_실패_회원_없음() {
         // given
-        willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(teamRepository).findById(anyLong());
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
         // when & then
-        assertThatThrownBy(() -> teamService.get(ID))
+        assertThatThrownBy(() -> teamService.get(ID, ID))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage(ApplicationError.TEAM_NOT_FOUND.getMessage());
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
 
     @Test
