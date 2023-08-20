@@ -571,6 +571,12 @@ include::{snippets}/pass-like-success/http-request.adoc[]
 
 .response
 include::{snippets}/pass-like-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/pass-like-fail/http-request.adoc[]
+
+.response
+include::{snippets}/pass-like-fail/http-response.adoc[]
 
 === 호감 관련 기능
 ==== 받은 호감 목록 조회
