@@ -13,6 +13,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -28,7 +29,7 @@ public class FileUploadService {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
-        String fileName = file.getOriginalFilename();
+        String fileName = UUID.randomUUID().toString();
         amazonS3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
         return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/" + fileName;
     }
