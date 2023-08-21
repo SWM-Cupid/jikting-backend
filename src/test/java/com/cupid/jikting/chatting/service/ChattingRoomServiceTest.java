@@ -49,7 +49,6 @@ class ChattingRoomServiceTest {
     private static final String NAME = "이름";
     private static final String NICKNAME = "닉네임";
     private static final String KEYWORD = "키워드";
-    private static final String URL = "url";
     private static final int YEAR = 1967;
     private static final int MONTH = 5;
     private static final int DATE = 10;
