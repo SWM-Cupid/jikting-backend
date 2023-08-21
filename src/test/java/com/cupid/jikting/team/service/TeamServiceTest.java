@@ -225,7 +225,7 @@ class TeamServiceTest {
         // given
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         // when
-        TeamResponse teamResponse = teamService.get(ID, ID);
+        TeamResponse teamResponse = teamService.get(ID);
         // then
         assertAll(
                 () -> verify(memberProfileRepository).findById(anyLong()),
@@ -240,7 +240,7 @@ class TeamServiceTest {
         // given
         willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
         // when & then
-        assertThatThrownBy(() -> teamService.get(ID, ID))
+        assertThatThrownBy(() -> teamService.get(ID))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
