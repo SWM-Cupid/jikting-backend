@@ -15,7 +15,6 @@ public class MemberProfileUpdateRequest {
     private int height;
     private String mbti;
     private String address;
-    private String gender;
     private String college;
     private String smokeStatus;
     private String drinkStatus;

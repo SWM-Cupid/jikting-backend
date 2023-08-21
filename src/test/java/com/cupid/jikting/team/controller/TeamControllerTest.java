@@ -117,7 +117,7 @@ public class TeamControllerTest extends ApiDocument {
         IntStream.range(0, 3)
                 .mapToObj(n -> {
                     MemberProfile memberProfile = member.getMemberProfile();
-                    memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+                    memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                             List.of(MemberPersonality.builder().build()), List.of(MemberHobby.builder().build()));
                     return memberProfile;
                 })
@@ -322,7 +322,7 @@ public class TeamControllerTest extends ApiDocument {
     }
 
     private ResultActions 팀_조회_요청() throws Exception {
-        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID)
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH));
     }
 

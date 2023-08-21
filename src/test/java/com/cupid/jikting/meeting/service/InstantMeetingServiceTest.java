@@ -37,19 +37,15 @@ public class InstantMeetingServiceTest {
     private static final Long ID = 1L;
     private static final LocalDateTime SCHEDULE = LocalDateTime.of(2023, Month.JUNE, 30, 18, 0);
     private static final String PLACE = "장소";
-
+    @InjectMocks
+    InstantMeetingService instantMeetingService;
+    @Mock
+    InstantMeetingRepository instantMeetingRepository;
+    @Mock
+    MemberProfileRepository memberProfileRepository;
     private List<InstantMeeting> instantMeetings;
     private MemberProfile memberProfile;
     private InstantMeeting instantMeeting;
-
-    @InjectMocks
-    InstantMeetingService instantMeetingService;
-
-    @Mock
-    InstantMeetingRepository instantMeetingRepository;
-
-    @Mock
-    MemberProfileRepository memberProfileRepository;
 
     @BeforeEach
     void setUp() {

@@ -59,8 +59,8 @@ public class TeamService {
     }
 
     @Transactional(readOnly = true)
-    public TeamResponse get(Long teamId) {
-        return TeamResponse.from(getTeamById(teamId));
+    public TeamResponse get(Long memberProfileId) {
+        return TeamResponse.from(getMemberProfileById(memberProfileId).getTeam());
     }
 
     public void update(Long teamId, TeamUpdateRequest teamUpdateRequest) {

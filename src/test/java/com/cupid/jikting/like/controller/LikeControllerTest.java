@@ -116,7 +116,7 @@ public class LikeControllerTest extends ApiDocument {
                 .sequence(Sequence.MAIN)
                 .url(URL)
                 .build();
-        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, Gender.MALE, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
+        memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 memberPersonalities, memberHobbies);
         List<MemberProfileResponse> memberProfileResponses = IntStream.rangeClosed(1, 2)
                 .mapToObj(n -> MemberProfileResponse.from(memberProfile))
