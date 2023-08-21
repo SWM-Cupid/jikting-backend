@@ -25,6 +25,8 @@ public class RedisChattingService implements ChattingService {
     @Override
     public void sendMessage(Long chattingRoomId, ChattingRequest chattingRequest) {
         redisPublisher.publish(redisMessageListener.getTopic(chattingRoomId), chattingRequest);
+        log.info("chatting is published to chatting room: {}", chattingRoomId);
         redisConnector.saveChatting(CHATTING_ROOM + DELIMITER + chattingRoomId, chattingRequest.toChatting());
+        log.info("chatting is saved");
     }
 }
