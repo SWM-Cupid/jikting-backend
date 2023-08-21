@@ -45,7 +45,7 @@ public class Team extends BaseEntity {
     private List<TeamLike> sentTeamLikes = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "from")
+    @OneToMany(mappedBy = "to")
     private List<Recommend> recommends = new ArrayList<>();
 
     @Builder.Default
