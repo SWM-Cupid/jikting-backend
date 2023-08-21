@@ -21,6 +21,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    private static final String MEMBER_PROFILE_ID_HEADER_NAME = "MemberProfileId";
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
     private final RedisConnector redisConnector;
@@ -36,6 +37,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String refreshToken = jwtService.createRefreshToken();
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         redisConnector.set(refreshToken, username, Duration.ofMillis(refreshTokenExpirationPeriod));
+        response.addHeader(MEMBER_PROFILE_ID_HEADER_NAME, String.valueOf(jwtService.extractValidMemberProfileId(accessToken)));
         log.info("로그인에 성공하였습니다. 아이디 : {} AccessToken : {}", username, accessToken);
     }
 
