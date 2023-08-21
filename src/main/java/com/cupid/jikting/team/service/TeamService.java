@@ -59,7 +59,7 @@ public class TeamService {
     }
 
     @Transactional(readOnly = true)
-    public TeamResponse get(Long memberProfileId, Long teamId) {
+    public TeamResponse get(Long memberProfileId) {
         return TeamResponse.from(getMemberProfileById(memberProfileId).getTeam());
     }
 
