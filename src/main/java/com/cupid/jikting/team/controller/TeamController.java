@@ -29,9 +29,9 @@ public class TeamController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{teamId}")
-    public ResponseEntity<TeamResponse> get(@AuthorizedVariable Long memberProfileId, @PathVariable Long teamId) {
-        return ResponseEntity.ok().body(teamService.get(memberProfileId, teamId));
+    @GetMapping
+    public ResponseEntity<TeamResponse> get(@AuthorizedVariable Long memberProfileId) {
+        return ResponseEntity.ok().body(teamService.get(memberProfileId));
     }
 
     @PatchMapping("/{teamId}")
