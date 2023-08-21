@@ -4,6 +4,7 @@ import com.cupid.jikting.chatting.entity.Chatting;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -17,6 +18,7 @@ public class ChattingRequest {
 
     public Chatting toChatting() {
         return Chatting.builder()
+                .id(UUID.randomUUID().toString())
                 .senderId(senderId)
                 .content(content)
                 .createdAt(LocalDateTime.now())
