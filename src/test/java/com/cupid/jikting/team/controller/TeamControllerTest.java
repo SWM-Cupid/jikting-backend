@@ -322,7 +322,7 @@ public class TeamControllerTest extends ApiDocument {
     }
 
     private ResultActions 팀_조회_요청() throws Exception {
-        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH + PATH_DELIMITER + ID)
+        return mockMvc.perform(get(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH));
     }
 
