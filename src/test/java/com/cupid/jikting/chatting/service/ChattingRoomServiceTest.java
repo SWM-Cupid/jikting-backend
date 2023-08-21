@@ -122,7 +122,7 @@ class ChattingRoomServiceTest {
                         .build())
                 .build();
         chatting = Chatting.builder()
-                .id(ID)
+                .id(String.valueOf(ID))
                 .senderId(ID)
                 .content(CONTENT)
                 .createdAt(LocalDateTime.now())
