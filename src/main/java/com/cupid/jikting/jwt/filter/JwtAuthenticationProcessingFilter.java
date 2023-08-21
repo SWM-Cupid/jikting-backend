@@ -60,7 +60,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     private boolean isNotRequiredJwtAuthentication(HttpServletRequest request) {
-        System.out.println(request.getRequestURI());
         return tokenAUthorizationWhiteList.stream().anyMatch(uri -> request.getRequestURI().contains(uri))
                 || (request.getRequestURI().equals(CONTEXT_PATH + SIGNUP_URI) && request.getMethod().equals(HttpMethod.POST.name()));
     }
