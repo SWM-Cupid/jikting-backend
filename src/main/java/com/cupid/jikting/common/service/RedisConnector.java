@@ -47,8 +47,6 @@ public class RedisConnector {
         HashOperations<String, String, Chatting> hashOperations = redisTemplate.opsForHash();
         return hashOperations.values(chattingRoom)
                 .stream()
-                .map(String::valueOf)
-                .map(jsonParser::toChatting)
                 .findFirst()
                 .map(Chatting::getContent)
                 .orElse(NO_MESSAGE);
