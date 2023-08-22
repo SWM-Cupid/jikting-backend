@@ -16,6 +16,7 @@ public class LikeResponse {
 
     private Long likeId;
     private String name;
+    private String description;
     private List<String> keywords;
     private List<String> imageUrls;
 
@@ -31,6 +32,7 @@ public class LikeResponse {
         return new LikeResponse(
                 teamLike.getId(),
                 team.getName(),
+                team.getDescription(),
                 team.getPersonalities(),
                 team.getMainImageUrls());
     }
