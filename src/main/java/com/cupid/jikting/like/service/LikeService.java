@@ -63,6 +63,8 @@ public class LikeService {
         TeamLike teamLike = getTeamLikeById(likeId);
         teamLike.reject();
         teamLikeRepository.save(teamLike);
+        teamLikeRepository.flush();
+        teamLikeRepository.delete(teamLike);
     }
 
     public TeamDetailResponse getSentTeamDetail(Long likeId) {
