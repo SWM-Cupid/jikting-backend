@@ -39,7 +39,7 @@ public class RedisConnector {
     }
 
     public void saveChatting(String chattingRoom, Chatting chatting) {
-        HashOperations<String, String, Chatting> hashOperations = redisTemplate.opsForHash();
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
         hashOperations.put(chattingRoom, chatting.getId(), chatting);
         log.info("create new chatting [{}] int chatting room '{}'", chatting, chattingRoom);
     }
