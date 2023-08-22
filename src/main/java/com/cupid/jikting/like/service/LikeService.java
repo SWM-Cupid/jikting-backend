@@ -54,6 +54,8 @@ public class LikeService {
         teamLike.getSentTeamMemberProfiles()
                 .forEach(memberProfile -> MemberChattingRoom.of(memberProfile, chattingRoom));
         teamLikeRepository.save(teamLike);
+        teamLikeRepository.flush();
+        teamLikeRepository.delete(teamLike);
         chattingRoomRepository.save(chattingRoom);
     }
 
