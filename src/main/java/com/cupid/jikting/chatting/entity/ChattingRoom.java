@@ -7,6 +7,7 @@ import com.cupid.jikting.team.entity.Team;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE chatting_room SET is_deleted = true WHERE id=?")
+@Where(clause = "is_deleted = false")
 @AttributeOverride(name = "id", column = @Column(name = "chatting_room_id"))
 @Entity
 public class ChattingRoom extends BaseEntity {
