@@ -1,6 +1,5 @@
 package com.cupid.jikting.common.service;
 
-import com.cupid.jikting.chatting.dto.ChattingRequest;
 import com.cupid.jikting.chatting.entity.Chatting;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
@@ -39,19 +38,19 @@ public class RedisConnector {
     }
 
     public void saveChatting(String chattingRoom, Chatting chatting) {
-        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        HashOperations<String, String, Chatting> hashOperations = redisTemplate.opsForHash();
         hashOperations.put(chattingRoom, chatting.getId(), chatting);
         log.info("create new chatting [{}] int chatting room '{}'", chatting, chattingRoom);
     }
 
     public String getLastMessage(String chattingRoom) {
-        HashOperations<String, String, ChattingRequest> hashOperations = redisTemplate.opsForHash();
+        HashOperations<String, String, Chatting> hashOperations = redisTemplate.opsForHash();
         return hashOperations.values(chattingRoom)
                 .stream()
                 .map(String::valueOf)
-                .map(jsonParser::toChattingRequest)
+                .map(jsonParser::toChatting)
                 .findFirst()
-                .map(ChattingRequest::getContent)
+                .map(Chatting::getContent)
                 .orElse(NO_MESSAGE);
     }
 
