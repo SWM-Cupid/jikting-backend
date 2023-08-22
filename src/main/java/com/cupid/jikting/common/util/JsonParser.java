@@ -1,6 +1,7 @@
 package com.cupid.jikting.common.util;
 
 import com.cupid.jikting.chatting.dto.ChattingRequest;
+import com.cupid.jikting.chatting.entity.Chatting;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,17 @@ public class JsonParser {
         }
     }
 
-    public ChattingRequest toChattingRequest(String chattingMessage) {
+    public ChattingRequest toChattingRequest(String chatting) {
         try {
-            return objectMapper.readValue(chattingMessage, ChattingRequest.class);
+            return objectMapper.readValue(chatting, ChattingRequest.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Chatting toChatting(String chatting) {
+        try {
+            return objectMapper.readValue(chatting, Chatting.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
