@@ -135,6 +135,7 @@ public class LikeControllerTest extends ApiDocument {
                 .collect(Collectors.toList());
         Team team = Team.builder()
                 .name(NAME)
+                .description(DESCRIPTION)
                 .build();
         team.addTeamPersonalities(teamPersonalities);
         TeamMember.of(false, team, memberProfile);
