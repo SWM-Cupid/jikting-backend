@@ -4,7 +4,6 @@ import com.cupid.jikting.chatting.entity.Chatting;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.JwtException;
-import com.cupid.jikting.common.util.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
@@ -13,6 +12,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +24,6 @@ public class RedisConnector {
     private static final String NO_MESSAGE = "";
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private final JsonParser jsonParser;
 
     public void set(String key, String value, Duration expireTime) {
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
@@ -47,7 +46,7 @@ public class RedisConnector {
         HashOperations<String, String, Chatting> hashOperations = redisTemplate.opsForHash();
         return hashOperations.values(chattingRoom)
                 .stream()
-                .findFirst()
+                .max(Comparator.comparing(Chatting::getCreatedAt))
                 .map(Chatting::getContent)
                 .orElse(NO_MESSAGE);
     }
