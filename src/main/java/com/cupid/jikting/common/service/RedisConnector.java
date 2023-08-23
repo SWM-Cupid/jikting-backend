@@ -12,6 +12,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ public class RedisConnector {
         HashOperations<String, String, Chatting> hashOperations = redisTemplate.opsForHash();
         return hashOperations.values(chattingRoom)
                 .stream()
-                .findFirst()
+                .max(Comparator.comparing(Chatting::getCreatedAt))
                 .map(Chatting::getContent)
                 .orElse(NO_MESSAGE);
     }
