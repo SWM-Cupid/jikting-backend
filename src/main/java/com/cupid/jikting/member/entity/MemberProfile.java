@@ -69,7 +69,7 @@ public class MemberProfile extends BaseEntity {
     private MemberHobbies memberHobbies = new MemberHobbies();
 
     @Builder.Default
-    @OneToMany(mappedBy = "memberProfile", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "memberProfile")
     private List<TeamMember> teamMembers = new ArrayList<>();
 
     @Builder.Default
