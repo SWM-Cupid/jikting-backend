@@ -33,7 +33,7 @@ public class Team extends BaseEntity {
     private TeamPersonalities teamPersonalities = new TeamPersonalities();
 
     @Builder.Default
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST)
     private List<TeamMember> teamMembers = new ArrayList<>();
 
     @Builder.Default
