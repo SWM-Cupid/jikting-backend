@@ -129,14 +129,14 @@ class TeamServiceTest {
                 .build();
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
-        willReturn(leader).given(memberProfileRepository).save(any(MemberProfile.class));
+        willReturn(team).given(teamRepository).save(any(Team.class));
         // when
         TeamRegisterResponse teamRegisterResponse = teamService.register(ID, teamRegisterRequest);
         // then
         assertAll(
                 () -> verify(memberProfileRepository).findById(anyLong()),
                 () -> verify(personalityRepository).findByKeyword(anyString()),
-                () -> verify(memberProfileRepository).save(any(MemberProfile.class)),
+                () -> verify(teamRepository).save(any(Team.class)),
                 () -> assertThat(teamRegisterResponse.getInvitationUrl()).isEqualTo(INVITATION_URL)
         );
     }
