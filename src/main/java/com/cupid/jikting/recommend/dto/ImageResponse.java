@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ImageResponse {
 
     private String sequence;
-    private Long memberId;
+    private Long memberProfileId;
     private String url;
 
     public static ImageResponse from(ProfileImage profileImage) {
