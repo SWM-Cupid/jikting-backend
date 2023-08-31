@@ -508,7 +508,7 @@ include::{snippets}/delete-team-fail/http-response.adoc[]
 
 ==== 팀원 삭제
 ----
-/v1/teams/{teamId}/members/{memberId}
+/v1/teams/{teamId}/members/{memberProfileId}
 ----
 ===== 성공
 .request
