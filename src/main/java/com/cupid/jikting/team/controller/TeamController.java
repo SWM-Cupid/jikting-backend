@@ -46,9 +46,9 @@ public class TeamController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{teamId}/members/{memberId}")
-    public ResponseEntity<Void> deleteMember(@PathVariable Long teamId, @PathVariable Long memberId) {
-        teamService.deleteMember(teamId, memberId);
+    @DeleteMapping("/{teamId}/members/{memberProfileId}")
+    public ResponseEntity<Void> deleteMember(@PathVariable Long teamId, @PathVariable Long memberProfileId) {
+        teamService.deleteMember(teamId, memberProfileId);
         return ResponseEntity.ok().build();
     }
 }
