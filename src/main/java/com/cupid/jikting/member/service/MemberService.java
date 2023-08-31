@@ -92,8 +92,8 @@ public class MemberService {
         memberProfile.updatePassword(passwordEncoder.encode(passwordUpdateRequest.getNewPassword()));
     }
 
-    public void withdraw(Long memberId, WithdrawRequest withdrawRequest) {
-        Member member = getMemberProfileById(memberId).getMember();
+    public void withdraw(Long memberProfileId, WithdrawRequest withdrawRequest) {
+        Member member = getMemberProfileById(memberProfileId).getMember();
         member.validatePassword(passwordEncoder, withdrawRequest.getPassword());
         memberRepository.delete(member);
     }
