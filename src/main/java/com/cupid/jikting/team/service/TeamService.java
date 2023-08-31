@@ -73,7 +73,7 @@ public class TeamService {
         teamRepository.delete(getTeamById(teamId));
     }
 
-    public void deleteMember(Long teamId, Long memberId) {
+    public void deleteMember(Long teamId, Long memberProfileId) {
     }
 
     private MemberProfile getMemberProfileById(Long memberProfileId) {
