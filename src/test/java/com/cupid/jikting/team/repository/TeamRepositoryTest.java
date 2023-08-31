@@ -1,6 +1,7 @@
 package com.cupid.jikting.team.repository;
 
 import com.cupid.jikting.common.repository.PersonalityRepository;
+import com.cupid.jikting.member.entity.Gender;
 import com.cupid.jikting.team.entity.Team;
 import com.cupid.jikting.team.entity.TeamPersonality;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ class TeamRepositoryTest {
                 .name(NAME)
                 .memberCount(MEMBER_COUNT)
                 .description(DESCRIPTION)
+                .gender(Gender.MALE)
                 .build();
         List<TeamPersonality> teamPersonalities = personalityRepository.findAll()
                 .stream()
@@ -51,6 +53,7 @@ class TeamRepositoryTest {
                 () -> assertThat(savedTeam.getName()).isEqualTo(NAME),
                 () -> assertThat(savedTeam.getMemberCount()).isEqualTo(MEMBER_COUNT),
                 () -> assertThat(savedTeam.getDescription()).isEqualTo(DESCRIPTION),
+                () -> assertThat(savedTeam.getGender()).isEqualTo(Gender.MALE),
                 () -> assertThat(savedTeam.getTeamPersonalities().size()).isEqualTo(teamPersonalities.size())
         );
     }

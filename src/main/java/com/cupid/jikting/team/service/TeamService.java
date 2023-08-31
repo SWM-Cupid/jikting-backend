@@ -45,6 +45,7 @@ public class TeamService {
                 .name(String.valueOf(UUID.randomUUID()))
                 .description(teamRegisterRequest.getDescription())
                 .memberCount(teamRegisterRequest.getMemberCount())
+                .gender(memberProfile.getGender())
                 .build();
         team.addTeamPersonalities(toTeamPersonalities(toPersonalities(teamRegisterRequest.getKeywords()), team));
         TeamMember.of(LEADER, team, memberProfile);
