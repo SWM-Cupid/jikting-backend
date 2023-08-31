@@ -2,6 +2,7 @@ package com.cupid.jikting.team.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.meeting.entity.Meeting;
+import com.cupid.jikting.member.entity.Gender;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.recommend.entity.Recommend;
 import lombok.*;
@@ -27,6 +28,9 @@ public class Team extends BaseEntity {
     private String name;
     private String description;
     private int memberCount;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Builder.Default
     @Embedded
