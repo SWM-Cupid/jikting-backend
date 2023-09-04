@@ -33,10 +33,11 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) {
         String username = extractUsername(authentication);
-        String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(username));
+        Long memberProfileId = getMemberProfileIdByUsername(username);
+        String accessToken = jwtService.createAccessToken(memberProfileId);
         String refreshToken = jwtService.createRefreshToken();
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        redisConnector.set(refreshToken, username, Duration.ofMillis(refreshTokenExpirationPeriod));
+        redisConnector.set(memberProfileId.toString(), refreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
         response.addHeader(MEMBER_PROFILE_ID_HEADER_NAME, String.valueOf(jwtService.extractValidMemberProfileId(accessToken)));
         log.info("로그인에 성공하였습니다. 아이디 : {} AccessToken : {}", username, accessToken);
     }
