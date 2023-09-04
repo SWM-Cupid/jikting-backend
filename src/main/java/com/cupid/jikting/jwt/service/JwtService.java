@@ -11,11 +11,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 
@@ -65,10 +68,9 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-    public String reissueRefreshToken(String refreshToken, String username) {
-        redisConnector.delete(refreshToken);
+    public String reissueRefreshToken(Long memberProfileId) {
         String reissuedRefreshToken = createRefreshToken();
-        redisConnector.set(reissuedRefreshToken, username, Duration.ofMillis(refreshTokenExpirationPeriod));
+        redisConnector.set(memberProfileId.toString(), reissuedRefreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
         return reissuedRefreshToken;
     }
 
@@ -108,10 +110,6 @@ public class JwtService {
                 .orElseThrow(() -> new JwtException(ApplicationError.INVALID_TOKEN));
     }
 
-    public String getUsernameByRefreshToken(String refreshToken) {
-        return redisConnector.getUsernameByRefreshToken(refreshToken);
-    }
-
     public void updateRefreshToken(String username, String refreshToken) {
         redisConnector.set(username, refreshToken, Duration.ofMillis((refreshTokenExpirationPeriod)));
     }
@@ -126,6 +124,30 @@ public class JwtService {
         }
     }
 
+    public String extractAccessToken(HttpServletRequest request) {
+        log.info("extractAccessToken() 호출");
+        return Optional.ofNullable(request.getHeader(accessHeader))
+                .filter(accessToken -> accessToken.startsWith(BEARER))
+                .map(accessToken -> accessToken.replace(BEARER, REMOVE))
+                .filter(this::isTokenBlackList)
+                .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
+    }
+
+    public Duration getExpirationDuration(String accessToken) {
+        return Duration.ofMillis(getExpiration(accessToken).getTime() - getTimeFrom(LocalDateTime.now()));
+    }
+
+    private static long getTimeFrom(LocalDateTime now) {
+        return Date.from(now.atZone(ZoneId.systemDefault()).toInstant()).getTime();
+    }
+
+    private Date getExpiration(String accessToken) {
+        return JWT.require(Algorithm.HMAC512(secretKey))
+                .build()
+                .verify(accessToken)
+                .getExpiresAt();
+    }
+
     private void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
         response.setHeader(accessHeader, accessToken);
     }
@@ -134,10 +156,10 @@ public class JwtService {
         response.setHeader(refreshHeader, refreshToken);
     }
 
-    private String extractAccessToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(accessHeader))
-                .filter(accessToken -> accessToken.startsWith(BEARER))
-                .map(refreshToken -> refreshToken.replace(BEARER, REMOVE))
-                .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
+    private boolean isTokenBlackList(String accessToken) {
+        if(ObjectUtils.isEmpty(redisConnector.checkLogout(accessToken))){
+            return true;
+        }
+        throw new JwtException(ApplicationError.LOGGED_OUT_TOKEN);
     }
 }
