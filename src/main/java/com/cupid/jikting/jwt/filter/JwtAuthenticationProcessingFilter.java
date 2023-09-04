@@ -53,7 +53,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .filter(jwtService::isTokenValid)
                 .orElse(null);
         if (refreshToken != null) {
-            reissueAccessToken(response, refreshToken);
+            reissueAccessToken(request, response);
             return;
         }
         saveAccessTokenAuthentication(request, response, filterChain);
@@ -64,12 +64,12 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 || (request.getRequestURI().equals(CONTEXT_PATH + SIGNUP_URI) && request.getMethod().equals(HttpMethod.POST.name()));
     }
 
-    public void reissueAccessToken(HttpServletResponse response, String refreshToken) {
-        String username = jwtService.getUsernameByRefreshToken(refreshToken);
-        Member member = memberRepository.findByUsername(username)
+    public void reissueAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        Long memberProfileId = jwtService.extractMemberProfileId(request);
+        Member member = memberRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
         jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()),
-                jwtService.reissueRefreshToken(refreshToken, username));
+                jwtService.reissueRefreshToken(memberProfileId));
     }
 
     public void saveAccessTokenAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -82,6 +82,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     public void saveAuthentication(Member member) {
+        log.info("saveAuthentication() 호출");
         String password = member.getPassword();
         if (password == null && member.getSocialType() != null) {
             password = PasswordGenerator.generate();
