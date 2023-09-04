@@ -36,6 +36,10 @@ public class RedisConnector {
                 .orElseThrow(() -> new BadRequestException(ApplicationError.VERIFICATION_CODE_EXPIRED));
     }
 
+    public String checkLogout(String key) {
+        return (String) redisTemplate.opsForValue().get(key);
+    }
+
     public void saveChatting(String chattingRoom, Chatting chatting) {
         HashOperations<String, String, Chatting> hashOperations = redisTemplate.opsForHash();
         hashOperations.put(chattingRoom, chatting.getId(), chatting);
@@ -49,12 +53,6 @@ public class RedisConnector {
                 .max(Comparator.comparing(Chatting::getCreatedAt))
                 .map(Chatting::getContent)
                 .orElse(NO_MESSAGE);
-    }
-
-    public String getUsernameByRefreshToken(String key) {
-        return Optional.ofNullable(redisTemplate.opsForValue().get(key))
-                .map(String::valueOf)
-                .orElseThrow(() -> new JwtException(ApplicationError.EXPIRED_TOKEN));
     }
 
     public void delete(String key) {
