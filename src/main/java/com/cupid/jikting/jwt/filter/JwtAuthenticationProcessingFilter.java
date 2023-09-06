@@ -49,19 +49,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        String refreshToken = jwtService.extractRefreshToken(request)
-                .filter(jwtService::isTokenValid)
-                .orElse(null);
+        String accessToken = jwtService.extractAccessToken(request);
+        String refreshToken = jwtService.extractRefreshToken(request);
         if (refreshToken != null) {
-            reissueAccessToken(request, response);
+            jwtService.validateRefreshToken(refreshToken);
+            reissueAccessToken(response, accessToken);
             return;
         }
-        saveAccessTokenAuthentication(request, response, filterChain);
-    }
-
-    private boolean isNotRequiredJwtAuthentication(HttpServletRequest request) {
-        return tokenAUthorizationWhiteList.stream().anyMatch(uri -> request.getRequestURI().contains(uri))
-                || (request.getRequestURI().equals(CONTEXT_PATH + SIGNUP_URI) && request.getMethod().equals(HttpMethod.POST.name()));
+        jwtService.validateAccessTokenInBlackList(accessToken);
+        saveAccessTokenAuthentication(request, response, filterChain, accessToken);
     }
 
     public void reissueAccessToken(HttpServletResponse response, String accessToken) {
@@ -75,7 +71,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     public void saveAccessTokenAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String accessToken)
             throws ServletException, IOException {
         log.info("saveAccessTokenAuthentication() 호출");
-        Member member = memberRepository.findById(jwtService.extractMemberProfileId(request))
+        Member member = memberRepository.findById(jwtService.extractMemberProfileId(accessToken))
                 .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
         saveAuthentication(member);
         filterChain.doFilter(request, response);
@@ -98,5 +94,10 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
                 userDetails, null, authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    private boolean isNotRequiredJwtAuthentication(HttpServletRequest request) {
+        return tokenAUthorizationWhiteList.stream().anyMatch(uri -> request.getRequestURI().contains(uri))
+                || (request.getRequestURI().equals(CONTEXT_PATH + SIGNUP_URI) && request.getMethod().equals(HttpMethod.POST.name()));
     }
 }
