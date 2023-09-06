@@ -51,17 +51,17 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         }
         String accessToken = jwtService.extractAccessToken(request);
         String refreshToken = jwtService.extractRefreshToken(request);
+        Long memberProfileId = jwtService.extractMemberProfileId(accessToken);
         if (refreshToken != null) {
-            jwtService.validateRefreshToken(refreshToken);
-            reissueAccessToken(response, accessToken);
+            jwtService.validateRefreshToken(refreshToken, memberProfileId);
+            reissueAccessToken(response, memberProfileId);
             return;
         }
         jwtService.validateAccessTokenInBlackList(accessToken);
         saveAccessTokenAuthentication(request, response, filterChain, accessToken);
     }
 
-    public void reissueAccessToken(HttpServletResponse response, String accessToken) {
-        Long memberProfileId = jwtService.extractMemberProfileId(accessToken);
+    public void reissueAccessToken(HttpServletResponse response, Long memberProfileId) {
         Member member = memberRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
         jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()),

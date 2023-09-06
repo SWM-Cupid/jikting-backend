@@ -24,6 +24,10 @@ public class RedisJwtRepository {
         return redisTemplate.opsForValue().get(key) != null;
     }
 
+    public boolean existRefreshToken(String key) {
+        return redisTemplate.opsForValue().get(key) != null;
+    }
+
     public void delete(String key) {
         redisTemplate.delete(key);
     }

@@ -106,9 +106,12 @@ public class JwtService {
         redisJwtRepository.set(username, refreshToken, Duration.ofMillis((refreshTokenExpirationPeriod)));
     }
 
-    public void validateRefreshToken(String token) {
+    public void validateRefreshToken(String token, Long memberProfileId) {
         try {
             JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
+            if (!redisJwtRepository.existRefreshToken(String.valueOf(memberProfileId))) {
+                throw new JwtException(ApplicationError.LOGGED_OUT_TOKEN);
+            }
         } catch (Exception e) {
             log.info("유효하지 않은 토큰입니다. {}", e.getMessage());
             throw new JwtException(ApplicationError.INVALID_REFRESH_TOKEN);
