@@ -27,6 +27,6 @@ public class AuthorizationResolver implements HandlerMethodArgumentResolver {
     public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
                                 WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        return jwtService.extractValidMemberProfileId(request.getHeader("Authorization"));
+        return jwtService.extractMemberProfileId(jwtService.extractAccessToken(request));
     }
 }

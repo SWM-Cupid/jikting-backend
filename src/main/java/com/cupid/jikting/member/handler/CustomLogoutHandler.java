@@ -17,14 +17,14 @@ public class CustomLogoutHandler implements LogoutHandler {
     private static final String LOGOUT_VALUE = "logout";
 
     private final JwtService jwtService;
-    private final RedisConnector redisConnector;
+    private final RedisJwtRepository redisJwtRepository;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         log.info("logout() 호출");
         String accessToken = jwtService.extractAccessToken(request);
-        Long memberProfileId = jwtService.extractValidMemberProfileId(accessToken);
-        redisConnector.set(accessToken, LOGOUT_VALUE, jwtService.getExpirationDuration(accessToken));
-        redisConnector.delete(memberProfileId.toString());
+        Long memberProfileId = jwtService.extractMemberProfileId(accessToken);
+        redisJwtRepository.set(accessToken, LOGOUT_VALUE, jwtService.getRemainingExpirationDuration(accessToken));
+        redisJwtRepository.delete(memberProfileId.toString());
     }
 }

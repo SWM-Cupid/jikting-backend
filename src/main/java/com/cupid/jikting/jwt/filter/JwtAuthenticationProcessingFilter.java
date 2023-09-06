@@ -64,15 +64,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 || (request.getRequestURI().equals(CONTEXT_PATH + SIGNUP_URI) && request.getMethod().equals(HttpMethod.POST.name()));
     }
 
-    public void reissueAccessToken(HttpServletRequest request, HttpServletResponse response) {
-        Long memberProfileId = jwtService.extractMemberProfileId(request);
+    public void reissueAccessToken(HttpServletResponse response, String accessToken) {
+        Long memberProfileId = jwtService.extractMemberProfileId(accessToken);
         Member member = memberRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
         jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()),
                 jwtService.reissueRefreshToken(memberProfileId));
     }
 
-    public void saveAccessTokenAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    public void saveAccessTokenAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String accessToken)
             throws ServletException, IOException {
         log.info("saveAccessTokenAuthentication() 호출");
         Member member = memberRepository.findById(jwtService.extractMemberProfileId(request))
