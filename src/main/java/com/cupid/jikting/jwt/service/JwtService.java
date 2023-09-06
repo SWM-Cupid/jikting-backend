@@ -81,10 +81,13 @@ public class JwtService {
         log.info("Access Token, Refresh Token 헤더 설정 완료");
     }
 
-    public Optional<String> extractRefreshToken(HttpServletRequest request) {
+    public String extractRefreshToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(refreshHeader))
-                .filter(refreshToken -> refreshToken.startsWith(BEARER))
-                .map(refreshToken -> refreshToken.replace(BEARER, REMOVE));
+                .map(refreshToken -> {
+                    validateTokenType(refreshToken);
+                    return refreshToken.replace(BEARER, REMOVE);
+                })
+                .orElse(null);
     }
 
     public Long extractMemberProfileId(String accessToken) {
@@ -117,9 +120,10 @@ public class JwtService {
     public String extractAccessToken(HttpServletRequest request) {
         log.info("extractAccessToken() 호출");
         return Optional.ofNullable(request.getHeader(accessHeader))
-                .filter(accessToken -> accessToken.startsWith(BEARER))
-                .map(accessToken -> accessToken.replace(BEARER, REMOVE))
-                .filter(this::isTokenBlackList)
+                .map(accessToken -> {
+                    validateTokenType(accessToken);
+                    return accessToken.replace(BEARER, REMOVE);
+                })
                 .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
     }
 
@@ -127,7 +131,13 @@ public class JwtService {
         return Duration.ofMillis(getExpiration(accessToken).getTime() - getTimeFrom(LocalDateTime.now()));
     }
 
-    private static long getTimeFrom(LocalDateTime now) {
+    private void validateTokenType(String token) {
+        if (!token.startsWith(BEARER)) {
+            throw new JwtException(ApplicationError.INVALID_TOKEN_TYPE);
+        }
+    }
+
+    private long getTimeFrom(LocalDateTime now) {
         return Date.from(now.atZone(ZoneId.systemDefault()).toInstant()).getTime();
     }
 
