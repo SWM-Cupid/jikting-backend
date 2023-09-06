@@ -1,7 +1,7 @@
 package com.cupid.jikting.common.config;
 
 import com.cupid.jikting.common.filter.ExceptionHandlerFilter;
-import com.cupid.jikting.common.service.RedisConnector;
+import com.cupid.jikting.common.repository.RedisJwtRepository;
 import com.cupid.jikting.jwt.filter.JwtAuthenticationProcessingFilter;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.filter.CustomJsonUsernamePasswordAuthenticationFilter;
@@ -40,7 +40,7 @@ public class SecurityConfig {
     private final LoginService loginService;
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
-    private final RedisConnector redisConnector;
+    private final RedisJwtRepository redisJwtRepository;
     private final ObjectMapper objectMapper;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
@@ -70,8 +70,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureHandler(oAuth2LoginFailureHandler)
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService)))
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)))
                 .logout(logout -> logout
                         .logoutUrl("/members/logout")
                         .addLogoutHandler(customLogoutHandler())
@@ -111,7 +110,7 @@ public class SecurityConfig {
 
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(jwtService, memberRepository, redisConnector);
+        return new LoginSuccessHandler(jwtService, memberRepository, redisJwtRepository);
     }
 
     @Bean
@@ -121,7 +120,7 @@ public class SecurityConfig {
 
     @Bean
     public CustomLogoutHandler customLogoutHandler() {
-        return new CustomLogoutHandler(jwtService, redisConnector);
+        return new CustomLogoutHandler(jwtService, redisJwtRepository);
     }
 
     @Bean

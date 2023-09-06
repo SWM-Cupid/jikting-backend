@@ -36,7 +36,7 @@ public class JwtService {
     private static final String REMOVE = "";
 
     private final MemberRepository memberRepository;
-    private final RedisConnector redisConnector;
+    private final RedisJwtRepository redisJwtRepository;
 
     @Value("${jwt.secretKey}")
     private String secretKey;
@@ -70,7 +70,7 @@ public class JwtService {
 
     public String reissueRefreshToken(Long memberProfileId) {
         String reissuedRefreshToken = createRefreshToken();
-        redisConnector.set(memberProfileId.toString(), reissuedRefreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
+        redisJwtRepository.set(memberProfileId.toString(), reissuedRefreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
         return reissuedRefreshToken;
     }
 
@@ -100,17 +100,8 @@ public class JwtService {
         }
     }
 
-    public Long extractValidMemberProfileId(String accessToken) {
-        return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
-                        .build()
-                        .verify(accessToken.replace(BEARER, REMOVE))
-                        .getClaim(MEMBER_PROFILE_ID_CLAIM)
-                        .asLong())
-                .orElseThrow(() -> new JwtException(ApplicationError.INVALID_TOKEN));
-    }
-
     public void updateRefreshToken(String username, String refreshToken) {
-        redisConnector.set(username, refreshToken, Duration.ofMillis((refreshTokenExpirationPeriod)));
+        redisJwtRepository.set(username, refreshToken, Duration.ofMillis((refreshTokenExpirationPeriod)));
     }
 
     public boolean isTokenValid(String token) {
@@ -155,10 +146,9 @@ public class JwtService {
         response.setHeader(refreshHeader, refreshToken);
     }
 
-    private boolean isTokenBlackList(String accessToken) {
-        if(ObjectUtils.isEmpty(redisConnector.checkLogout(accessToken))){
-            return true;
+    public void validateAccessTokenInBlackList(String accessToken) {
+        if (redisJwtRepository.existAccessToken(accessToken)) {
+            throw new JwtException(ApplicationError.LOGGED_OUT_TOKEN);
         }
-        throw new JwtException(ApplicationError.LOGGED_OUT_TOKEN);
     }
 }

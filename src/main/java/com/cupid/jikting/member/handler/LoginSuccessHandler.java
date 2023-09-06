@@ -2,7 +2,7 @@ package com.cupid.jikting.member.handler;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.common.service.RedisConnector;
+import com.cupid.jikting.common.repository.RedisJwtRepository;
 import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
@@ -22,9 +22,10 @@ import java.time.Duration;
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private static final String MEMBER_PROFILE_ID_HEADER_NAME = "MemberProfileId";
+
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
-    private final RedisConnector redisConnector;
+    private final RedisJwtRepository redisJwtRepository;
 
     @Value("${jwt.refreshToken.expiration}")
     private long refreshTokenExpirationPeriod;
@@ -37,8 +38,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String accessToken = jwtService.createAccessToken(memberProfileId);
         String refreshToken = jwtService.createRefreshToken();
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        redisConnector.set(memberProfileId.toString(), refreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
-        response.addHeader(MEMBER_PROFILE_ID_HEADER_NAME, String.valueOf(jwtService.extractValidMemberProfileId(accessToken)));
+        redisJwtRepository.set(memberProfileId.toString(), refreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
+        response.addHeader(MEMBER_PROFILE_ID_HEADER_NAME, String.valueOf(jwtService.extractMemberProfileId(accessToken)));
         log.info("로그인에 성공하였습니다. 아이디 : {} AccessToken : {}", username, accessToken);
     }
 
