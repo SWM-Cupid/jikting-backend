@@ -3,7 +3,7 @@ package com.cupid.jikting.member.handler;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.RedisJwtRepository;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +35,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                                         Authentication authentication) {
         String username = extractUsername(authentication);
         Long memberProfileId = getMemberProfileIdByUsername(username);
-        String accessToken = jwtService.createAccessToken(memberProfileId);
-        String refreshToken = jwtService.createRefreshToken();
+        String accessToken = jwtService.issueAccessToken(memberProfileId);
+        String refreshToken = jwtService.issueRefreshToken();
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        redisJwtRepository.set(memberProfileId.toString(), refreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
+        redisJwtRepository.save(memberProfileId.toString(), refreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
         response.addHeader(MEMBER_PROFILE_ID_HEADER_NAME, String.valueOf(jwtService.extractMemberProfileId(accessToken)));
         log.info("로그인에 성공하였습니다. 아이디 : {} AccessToken : {}", username, accessToken);
     }

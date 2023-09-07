@@ -8,7 +8,7 @@ import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.like.dto.LikeResponse;
 import com.cupid.jikting.like.dto.MemberProfileResponse;
 import com.cupid.jikting.like.dto.TeamDetailResponse;
@@ -80,7 +80,7 @@ public class LikeControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
-        accessToken = jwtService.createAccessToken(ID);
+        accessToken = jwtService.issueAccessToken(ID);
         Hobby hobby = Hobby.builder()
                 .keyword(HOBBY)
                 .build();

@@ -1,7 +1,7 @@
 package com.cupid.jikting.member.handler;
 
 import com.cupid.jikting.common.repository.RedisJwtRepository;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

@@ -1,7 +1,7 @@
 package com.cupid.jikting.common.resolver;
 
 import com.cupid.jikting.common.support.AuthorizedVariable;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,6 @@ public class AuthorizationResolver implements HandlerMethodArgumentResolver {
     @Override
     public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
                                 WebDataBinderFactory binderFactory) {
-        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        return jwtService.extractMemberProfileId(jwtService.extractAccessToken(request));
+        return jwtService.extractMemberProfileId(jwtService.extractAccessToken((HttpServletRequest)webRequest.getNativeRequest()));
     }
 }

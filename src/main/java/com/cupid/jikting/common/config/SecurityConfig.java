@@ -2,8 +2,8 @@ package com.cupid.jikting.common.config;
 
 import com.cupid.jikting.common.filter.ExceptionHandlerFilter;
 import com.cupid.jikting.common.repository.RedisJwtRepository;
-import com.cupid.jikting.jwt.filter.JwtAuthenticationProcessingFilter;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.jwt.filter.JwtAuthenticationProcessingFilter;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.filter.CustomJsonUsernamePasswordAuthenticationFilter;
 import com.cupid.jikting.member.handler.*;
 import com.cupid.jikting.member.repository.MemberRepository;

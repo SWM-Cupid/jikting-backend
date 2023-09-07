@@ -1,4 +1,4 @@
-package com.cupid.jikting.jwt.service;
+package com.cupid.jikting.common.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

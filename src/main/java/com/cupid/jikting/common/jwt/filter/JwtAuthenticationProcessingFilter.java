@@ -1,11 +1,11 @@
-package com.cupid.jikting.jwt.filter;
+package com.cupid.jikting.common.jwt.filter;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.JwtException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.common.util.PasswordGenerator;
-import com.cupid.jikting.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
