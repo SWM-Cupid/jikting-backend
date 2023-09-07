@@ -1,31 +1,37 @@
 package com.cupid.jikting.common.repository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.time.Duration;
 
-@Slf4j
 @RequiredArgsConstructor
-@Component
+@Repository
 public class RedisJwtRepository {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void set(String key, String value, Duration expireTime) {
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+    private ValueOperations<String, Object> tokens;
+
+    @PostConstruct
+    private void init() {
+        tokens = redisTemplate.opsForValue();
+    }
+
+    public void save(String key, String value, Duration expireTime) {
+        ValueOperations<String, Object> valueOperations = tokens;
         valueOperations.set(key, value, expireTime);
     }
 
     public boolean existAccessToken(String key) {
-        return redisTemplate.opsForValue().get(key) != null;
+        return tokens.get(key) != null;
     }
 
     public boolean existRefreshToken(String key) {
-        return redisTemplate.opsForValue().get(key) != null;
+        return tokens.get(key) != null;
     }
 
     public void delete(String key) {

@@ -21,10 +21,9 @@ public class CustomLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        log.info("logout() 호출");
         String accessToken = jwtService.extractAccessToken(request);
         Long memberProfileId = jwtService.extractMemberProfileId(accessToken);
-        redisJwtRepository.set(accessToken, LOGOUT_VALUE, jwtService.getRemainingExpirationDuration(accessToken));
+        redisJwtRepository.save(accessToken, LOGOUT_VALUE, jwtService.getRemainingExpirationDuration(accessToken));
         redisJwtRepository.delete(memberProfileId.toString());
     }
 }
