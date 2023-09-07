@@ -61,14 +61,14 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         saveAccessTokenAuthentication(request, response, filterChain, accessToken);
     }
 
-    public void reissueAccessToken(HttpServletResponse response, Long memberProfileId) {
+입    private void reissueAccessToken(HttpServletResponse response, Long memberProfileId) {
         Member member = memberRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
         jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()),
                 jwtService.reissueRefreshToken(memberProfileId));
     }
 
-    public void saveAccessTokenAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String accessToken)
+    private void saveAccessTokenAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String accessToken)
             throws ServletException, IOException {
         log.info("saveAccessTokenAuthentication() 호출");
         Member member = memberRepository.findById(jwtService.extractMemberProfileId(accessToken))
@@ -77,8 +77,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    public void saveAuthentication(Member member) {
-        log.info("saveAuthentication() 호출");
+    private void saveAuthentication(Member member) {
         String password = member.getPassword();
         if (password == null && member.getSocialType() != null) {
             password = PasswordGenerator.generate();
