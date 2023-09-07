@@ -159,7 +159,7 @@ public class JwtService {
 
     public void validateAccessTokenInBlackList(String accessToken) {
         if (redisJwtRepository.existAccessToken(accessToken)) {
-            throw new JwtException(ApplicationError.LOGGED_OUT_TOKEN);
+            throw new JwtException(ApplicationError.UNAUTHORIZED_MEMBER);
         }
     }
 }
