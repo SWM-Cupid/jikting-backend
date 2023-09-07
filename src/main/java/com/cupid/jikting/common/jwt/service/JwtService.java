@@ -52,7 +52,7 @@ public class JwtService {
     @Value("${jwt.refreshToken.header}")
     private String refreshHeader;
 
-    public String createAccessToken(Long memberProfileId) {
+    public String issueAccessToken(Long memberProfileId) {
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(new Date().getTime() + accessTokenExpirationPeriod))
@@ -60,7 +60,7 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-    public String createRefreshToken() {
+    public String issueRefreshToken() {
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(new Date().getTime() + refreshTokenExpirationPeriod))
@@ -68,8 +68,8 @@ public class JwtService {
     }
 
     public String reissueRefreshToken(Long memberProfileId) {
-        String reissuedRefreshToken = createRefreshToken();
-        redisJwtRepository.set(memberProfileId.toString(), reissuedRefreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
+        String reissuedRefreshToken = issueRefreshToken();
+        redisJwtRepository.save(memberProfileId.toString(), reissuedRefreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
         return reissuedRefreshToken;
     }
 
@@ -77,7 +77,6 @@ public class JwtService {
         response.setStatus(HttpServletResponse.SC_OK);
         setAccessTokenHeader(response, accessToken);
         setRefreshTokenHeader(response, refreshToken);
-        log.info("Access Token, Refresh Token 헤더 설정 완료");
     }
 
     public String extractRefreshToken(HttpServletRequest request) {
@@ -103,14 +102,14 @@ public class JwtService {
     }
 
     public void updateRefreshToken(String username, String refreshToken) {
-        redisJwtRepository.set(username, refreshToken, Duration.ofMillis((refreshTokenExpirationPeriod)));
+        redisJwtRepository.save(username, refreshToken, Duration.ofMillis((refreshTokenExpirationPeriod)));
     }
 
     public void validateRefreshToken(String token, Long memberProfileId) {
         try {
             JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
             if (!redisJwtRepository.existRefreshToken(String.valueOf(memberProfileId))) {
-                throw new JwtException(ApplicationError.LOGGED_OUT_TOKEN);
+                throw new JwtException(ApplicationError.UNAUTHORIZED_MEMBER);
             }
         } catch (Exception e) {
             log.info("유효하지 않은 토큰입니다. {}", e.getMessage());
@@ -119,7 +118,6 @@ public class JwtService {
     }
 
     public String extractAccessToken(HttpServletRequest request) {
-        log.info("extractAccessToken() 호출");
         return Optional.ofNullable(request.getHeader(accessHeader))
                 .map(accessToken -> {
                     validateTokenType(accessToken);
@@ -128,8 +126,8 @@ public class JwtService {
                 .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
     }
 
-    public Duration getRemainingExpirationDuration(String accessToken) {
-        return Duration.ofMillis(getExpiration(accessToken).getTime() - getTimeFrom(LocalDateTime.now()));
+    public Duration getRemainingExpirationDuration(String token) {
+        return Duration.ofMillis(getExpiration(token).getTime() - getTimeFrom(LocalDateTime.now()));
     }
 
     private void validateTokenType(String token) {
@@ -142,10 +140,10 @@ public class JwtService {
         return Date.from(now.atZone(ZoneId.systemDefault()).toInstant()).getTime();
     }
 
-    private Date getExpiration(String accessToken) {
+    private Date getExpiration(String token) {
         return JWT.require(Algorithm.HMAC512(secretKey))
                 .build()
-                .verify(accessToken)
+                .verify(token)
                 .getExpiresAt();
     }
 
