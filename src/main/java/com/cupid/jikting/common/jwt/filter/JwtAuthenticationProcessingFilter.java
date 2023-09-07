@@ -61,7 +61,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         saveAccessTokenAuthentication(request, response, filterChain, accessToken);
     }
 
-입    private void reissueAccessToken(HttpServletResponse response, Long memberProfileId) {
+    private void reissueAccessToken(HttpServletResponse response, Long memberProfileId) {
         Member member = memberRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
         jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getMemberProfileId()),
