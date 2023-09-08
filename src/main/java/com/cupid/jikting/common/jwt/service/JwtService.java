@@ -96,7 +96,6 @@ public class JwtService {
                     .getClaim(MEMBER_PROFILE_ID_CLAIM)
                     .asLong();
         } catch (Exception e) {
-            log.info("유효하지 않은 토큰입니다. {}", e.getMessage());
             throw new JwtException(ApplicationError.INVALID_ACCESS_TOKEN);
         }
     }
@@ -110,7 +109,6 @@ public class JwtService {
             JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
             checkRefreshTokenExist(memberProfileId);
         } catch (Exception e) {
-            log.info("유효하지 않은 토큰입니다. {}", e.getMessage());
             throw new JwtException(ApplicationError.INVALID_REFRESH_TOKEN);
         }
     }
