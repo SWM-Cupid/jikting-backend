@@ -52,31 +52,13 @@ public class JwtService {
     @Value("${jwt.refreshToken.header}")
     private String refreshHeader;
 
-    public String issueAccessToken(Long memberProfileId) {
-        return JWT.create()
-                .withSubject(ACCESS_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(new Date().getTime() + accessTokenExpirationPeriod))
-                .withClaim(MEMBER_PROFILE_ID_CLAIM, memberProfileId)
-                .sign(Algorithm.HMAC512(secretKey));
-    }
-
-    public String issueRefreshToken() {
-        return JWT.create()
-                .withSubject(REFRESH_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(new Date().getTime() + refreshTokenExpirationPeriod))
-                .sign(Algorithm.HMAC512(secretKey));
-    }
-
-    public String reissueRefreshToken(Long memberProfileId) {
-        String reissuedRefreshToken = issueRefreshToken();
-        jwtRepository.save(memberProfileId.toString(), reissuedRefreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
-        return reissuedRefreshToken;
-    }
-
-    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
-        response.setStatus(HttpServletResponse.SC_OK);
-        setAccessTokenHeader(response, accessToken);
-        setRefreshTokenHeader(response, refreshToken);
+    public String extractAccessToken(HttpServletRequest request) {
+        return Optional.ofNullable(request.getHeader(accessHeader))
+                .map(accessToken -> {
+                    validateTokenType(accessToken);
+                    return accessToken.replace(BEARER, REMOVE);
+                })
+                .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
     }
 
     public String extractRefreshToken(HttpServletRequest request) {
@@ -100,10 +82,6 @@ public class JwtService {
         }
     }
 
-    public void updateRefreshToken(String username, String refreshToken) {
-        jwtRepository.save(username, refreshToken, Duration.ofMillis((refreshTokenExpirationPeriod)));
-    }
-
     public void validateRefreshToken(String token, Long memberProfileId) {
         try {
             JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
@@ -113,19 +91,41 @@ public class JwtService {
         }
     }
 
-    private void checkRefreshTokenExist(Long memberProfileId) {
-        if (!jwtRepository.existBy(String.valueOf(memberProfileId))) {
+    public void validateAccessTokenInBlackList(String accessToken) {
+        if (jwtRepository.existByKey(accessToken)) {
             throw new JwtException(ApplicationError.UNAUTHORIZED_MEMBER);
         }
     }
 
-    public String extractAccessToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(accessHeader))
-                .map(accessToken -> {
-                    validateTokenType(accessToken);
-                    return accessToken.replace(BEARER, REMOVE);
-                })
-                .orElseThrow(() -> new JwtException(ApplicationError.UNAUTHORIZED_MEMBER));
+    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
+        response.setStatus(HttpServletResponse.SC_OK);
+        setAccessTokenHeader(response, accessToken);
+        setRefreshTokenHeader(response, refreshToken);
+    }
+
+    public String issueAccessToken(Long memberProfileId) {
+        return JWT.create()
+                .withSubject(ACCESS_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(new Date().getTime() + accessTokenExpirationPeriod))
+                .withClaim(MEMBER_PROFILE_ID_CLAIM, memberProfileId)
+                .sign(Algorithm.HMAC512(secretKey));
+    }
+
+    public String issueRefreshToken() {
+        return JWT.create()
+                .withSubject(REFRESH_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(new Date().getTime() + refreshTokenExpirationPeriod))
+                .sign(Algorithm.HMAC512(secretKey));
+    }
+
+    public String reissueRefreshToken(Long memberProfileId) {
+        String reissuedRefreshToken = issueRefreshToken();
+        jwtRepository.save(memberProfileId.toString(), reissuedRefreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
+        return reissuedRefreshToken;
+    }
+
+    public void updateRefreshToken(String username, String refreshToken) {
+        jwtRepository.save(username, refreshToken, Duration.ofMillis((refreshTokenExpirationPeriod)));
     }
 
     public Duration getRemainingExpirationDuration(String token) {
@@ -138,15 +138,10 @@ public class JwtService {
         }
     }
 
-    private long getTimeFrom(LocalDateTime now) {
-        return Date.from(now.atZone(ZoneId.systemDefault()).toInstant()).getTime();
-    }
-
-    private Date getExpiration(String token) {
-        return JWT.require(Algorithm.HMAC512(secretKey))
-                .build()
-                .verify(token)
-                .getExpiresAt();
+    private void checkRefreshTokenExist(Long memberProfileId) {
+        if (!jwtRepository.existByKey(String.valueOf(memberProfileId))) {
+            throw new JwtException(ApplicationError.UNAUTHORIZED_MEMBER);
+        }
     }
 
     private void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
@@ -157,9 +152,14 @@ public class JwtService {
         response.setHeader(refreshHeader, refreshToken);
     }
 
-    public void validateAccessTokenInBlackList(String accessToken) {
-        if (jwtRepository.existBy(accessToken)) {
-            throw new JwtException(ApplicationError.UNAUTHORIZED_MEMBER);
-        }
+    private long getTimeFrom(LocalDateTime now) {
+        return Date.from(now.atZone(ZoneId.systemDefault()).toInstant()).getTime();
+    }
+
+    private Date getExpiration(String token) {
+        return JWT.require(Algorithm.HMAC512(secretKey))
+                .build()
+                .verify(token)
+                .getExpiresAt();
     }
 }
