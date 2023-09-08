@@ -26,11 +26,7 @@ public class JwtRepository {
         valueOperations.set(key, value, expireTime);
     }
 
-    public boolean existAccessToken(String key) {
-        return tokens.get(key) != null;
-    }
-
-    public boolean existRefreshToken(String key) {
+    public boolean existBy(String key) {
         return tokens.get(key) != null;
     }
 
