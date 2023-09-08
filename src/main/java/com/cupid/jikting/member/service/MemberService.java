@@ -144,6 +144,9 @@ public class MemberService {
     public void login(LoginRequest loginRequest) {
     }
 
+    public void blockCompany(Long memberProfileId) {
+    }
+
     private MemberProfile getMemberProfileById(Long memberProfileId) {
         return memberProfileRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
@@ -177,8 +180,5 @@ public class MemberService {
     private Hobby getHobbyByKeyword(String keyword) {
         return hobbyRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.HOBBY_NOT_FOUND));
-    }
-
-    public void blockCompany(Long memberProfileId) {
     }
 }
