@@ -61,6 +61,11 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         saveAccessTokenAuthentication(request, response, filterChain, accessToken);
     }
 
+    private boolean isNotRequiredJwtAuthentication(HttpServletRequest request) {
+        return tokenAUthorizationWhiteList.stream().anyMatch(uri -> request.getRequestURI().contains(uri))
+                || (request.getRequestURI().equals(CONTEXT_PATH + SIGNUP_URI) && request.getMethod().equals(HttpMethod.POST.name()));
+    }
+
     private void reissueAccessToken(HttpServletResponse response, Long memberProfileId) {
         Member member = memberRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
@@ -92,10 +97,5 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
                 userDetails, null, authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    private boolean isNotRequiredJwtAuthentication(HttpServletRequest request) {
-        return tokenAUthorizationWhiteList.stream().anyMatch(uri -> request.getRequestURI().contains(uri))
-                || (request.getRequestURI().equals(CONTEXT_PATH + SIGNUP_URI) && request.getMethod().equals(HttpMethod.POST.name()));
     }
 }
