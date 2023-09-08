@@ -108,12 +108,16 @@ public class JwtService {
     public void validateRefreshToken(String token, Long memberProfileId) {
         try {
             JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
-            if (!redisJwtRepository.existRefreshToken(String.valueOf(memberProfileId))) {
-                throw new JwtException(ApplicationError.UNAUTHORIZED_MEMBER);
-            }
+            checkRefreshTokenExist(memberProfileId);
         } catch (Exception e) {
             log.info("유효하지 않은 토큰입니다. {}", e.getMessage());
             throw new JwtException(ApplicationError.INVALID_REFRESH_TOKEN);
+        }
+    }
+
+    private void checkRefreshTokenExist(Long memberProfileId) {
+        if (!jwtRepository.existBy(String.valueOf(memberProfileId))) {
+            throw new JwtException(ApplicationError.UNAUTHORIZED_MEMBER);
         }
     }
 
