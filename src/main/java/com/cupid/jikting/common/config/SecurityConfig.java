@@ -1,7 +1,7 @@
 package com.cupid.jikting.common.config;
 
 import com.cupid.jikting.common.filter.ExceptionHandlerFilter;
-가import com.cupid.jikting.common.repository.JwtRepository;
+import com.cupid.jikting.common.repository.JwtRepository;
 import com.cupid.jikting.common.jwt.filter.JwtAuthenticationProcessingFilter;
 import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.filter.CustomJsonUsernamePasswordAuthenticationFilter;
