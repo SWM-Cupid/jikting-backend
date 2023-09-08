@@ -22,8 +22,7 @@ public class JwtRepository {
     }
 
     public void save(String key, String value, Duration expireTime) {
-        ValueOperations<String, Object> valueOperations = tokens;
-        valueOperations.set(key, value, expireTime);
+        tokens.set(key, value, expireTime);
     }
 
     public boolean existBy(String key) {
