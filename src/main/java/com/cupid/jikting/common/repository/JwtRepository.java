@@ -25,7 +25,7 @@ public class JwtRepository {
         tokens.set(key, value, expireTime);
     }
 
-    public boolean existBy(String key) {
+    public boolean existByKey(String key) {
         return tokens.get(key) != null;
     }
 
