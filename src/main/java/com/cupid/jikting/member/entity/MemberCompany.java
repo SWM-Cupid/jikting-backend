@@ -21,6 +21,8 @@ import javax.persistence.*;
 @Entity
 public class MemberCompany extends BaseEntity {
 
+    private boolean isBlock;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
