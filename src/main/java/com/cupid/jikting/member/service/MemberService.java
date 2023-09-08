@@ -178,4 +178,7 @@ public class MemberService {
         return hobbyRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.HOBBY_NOT_FOUND));
     }
+
+    public void blockCompany(Long memberProfileId) {
+    }
 }
