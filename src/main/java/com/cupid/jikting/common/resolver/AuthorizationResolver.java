@@ -26,6 +26,6 @@ public class AuthorizationResolver implements HandlerMethodArgumentResolver {
     @Override
     public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
                                 WebDataBinderFactory binderFactory) {
-        return jwtService.extractMemberProfileId(jwtService.extractAccessToken((HttpServletRequest)webRequest.getNativeRequest()));
+        return jwtService.extractMemberProfileId(jwtService.extractAccessToken((HttpServletRequest) webRequest.getNativeRequest()));
     }
 }
