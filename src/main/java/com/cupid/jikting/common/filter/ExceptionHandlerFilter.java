@@ -29,6 +29,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (JwtException exception) {
+            log.info("{}: {}", exception.getClass().getSimpleName(), exception.getMessage(), exception);
             setErrorResponse(response, exception);
         }
     }
