@@ -1214,9 +1214,8 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 같은_회사_차단_요청() throws Exception {
-        return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/block")
-                .contextPath(CONTEXT_PATH)
-                .contentType(MediaType.APPLICATION_JSON));
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/block")
+                .contextPath(CONTEXT_PATH));
     }
 
     private void 같은_회사_차단_요청_성공(ResultActions resultActions) throws Exception {
