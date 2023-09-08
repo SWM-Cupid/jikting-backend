@@ -10,7 +10,7 @@ import java.time.Duration;
 
 @RequiredArgsConstructor
 @Repository
-public class RedisJwtRepository {
+public class JwtRepository {
 
     private final RedisTemplate<String, Object> redisTemplate;
 

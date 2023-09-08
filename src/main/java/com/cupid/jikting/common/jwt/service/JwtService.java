@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.JwtException;
-import com.cupid.jikting.common.repository.RedisJwtRepository;
+import com.cupid.jikting.common.repository.JwtRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class JwtService {
     private static final String REMOVE = "";
 
     private final MemberRepository memberRepository;
-    private final RedisJwtRepository redisJwtRepository;
+    private final JwtRepository jwtRepository;
 
     @Value("${jwt.secretKey}")
     private String secretKey;
@@ -69,7 +69,7 @@ public class JwtService {
 
     public String reissueRefreshToken(Long memberProfileId) {
         String reissuedRefreshToken = issueRefreshToken();
-        redisJwtRepository.save(memberProfileId.toString(), reissuedRefreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
+        jwtRepository.save(memberProfileId.toString(), reissuedRefreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
         return reissuedRefreshToken;
     }
 
@@ -102,7 +102,7 @@ public class JwtService {
     }
 
     public void updateRefreshToken(String username, String refreshToken) {
-        redisJwtRepository.save(username, refreshToken, Duration.ofMillis((refreshTokenExpirationPeriod)));
+        jwtRepository.save(username, refreshToken, Duration.ofMillis((refreshTokenExpirationPeriod)));
     }
 
     public void validateRefreshToken(String token, Long memberProfileId) {
@@ -156,7 +156,7 @@ public class JwtService {
     }
 
     public void validateAccessTokenInBlackList(String accessToken) {
-        if (redisJwtRepository.existAccessToken(accessToken)) {
+        if (jwtRepository.existBy(accessToken)) {
             throw new JwtException(ApplicationError.UNAUTHORIZED_MEMBER);
         }
     }
