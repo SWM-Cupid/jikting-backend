@@ -143,7 +143,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/company/block")
+    @PostMapping("/company/block")
     public ResponseEntity<Void> blockCompany(@AuthorizedVariable Long memberProfileId) {
         memberService.blockCompany(memberProfileId);
         return ResponseEntity.ok().build();
