@@ -114,6 +114,16 @@ public class MemberService {
         }
     }
 
+    public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest)
+            throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+        SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
+                .to(signUpVerificationCodeRequest.getPhone())
+                .build();
+        if (!smsService.sendSms(sendSmsRequest).getStatusCode().equals(SMS_SEND_SUCCESS)) {
+            throw new SmsSendFailException(ApplicationError.SMS_SEND_FAIL);
+        }
+    }
+
     public void verifyPhoneForSignup(PhoneVerificationRequest verificationRequest) {
         if (!redisConnector.get(verificationRequest.getPhone()).equals(verificationRequest.getVerificationCode())) {
             throw new BadRequestException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
