@@ -208,7 +208,7 @@ public class MemberControllerTest extends ApiDocument {
                 .to(PHONE)
                 .build();
         usernameSearchVerificationCodeRequest = UsernameSearchVerificationCodeRequest.builder()
-                .username(USERNAME)
+                .name(NAME)
                 .phone(PHONE)
                 .build();
         phoneVerificationRequest = PhoneVerificationRequest.builder()
