@@ -90,7 +90,8 @@ public class MemberController {
     }
 
     @PostMapping("/username/search/code")
-    public ResponseEntity<Void> createVerificationCodeForSearchUsername(@RequestBody UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest) {
+    public ResponseEntity<Void> createVerificationCodeForSearchUsername(@RequestBody UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         memberService.createVerificationCodeForSearchUsername(usernameSearchVerificationCodeRequest);
         return ResponseEntity.ok().build();
     }
