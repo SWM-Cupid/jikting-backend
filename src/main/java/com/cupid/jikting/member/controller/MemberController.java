@@ -3,7 +3,6 @@ package com.cupid.jikting.member.controller;
 import com.cupid.jikting.common.support.AuthorizedVariable;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.service.MemberService;
-import com.cupid.jikting.member.service.SmsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import java.security.NoSuchAlgorithmException;
 @RequestMapping("/members")
 public class MemberController {
 
-    private final SmsService smsService;
     private final MemberService memberService;
 
     @PostMapping
@@ -79,8 +77,9 @@ public class MemberController {
     }
 
     @PostMapping("/code")
-    public ResponseEntity<Void> createVerificationCodeForSignup(@RequestBody SignUpVerificationCodeRequest signUpVerificationCodeRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
-        smsService.createVerificationCodeForSignup(signUpVerificationCodeRequest);
+    public ResponseEntity<Void> createVerificationCodeForSignup(@RequestBody SignUpVerificationCodeRequest signUpVerificationCodeRequest)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        memberService.createVerificationCodeForSignup(signUpVerificationCodeRequest);
         return ResponseEntity.ok().build();
     }
 
