@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UsernameSearchVerificationCodeRequest {
 
-    private String username;
+    private String name;
     private String phone;
 }
