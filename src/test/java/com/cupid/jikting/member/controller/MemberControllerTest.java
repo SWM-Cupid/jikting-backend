@@ -205,7 +205,7 @@ public class MemberControllerTest extends ApiDocument {
                 .nickname(NICKNAME)
                 .build();
         signUpVerificationCodeRequest = SignUpVerificationCodeRequest.builder()
-                .to(PHONE)
+                .phone(PHONE)
                 .build();
         usernameSearchVerificationCodeRequest = UsernameSearchVerificationCodeRequest.builder()
                 .name(NAME)
