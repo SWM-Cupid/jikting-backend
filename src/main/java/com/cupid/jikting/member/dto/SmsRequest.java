@@ -13,5 +13,5 @@ public class SmsRequest {
     private String type;
     private String from;
     private String content;
-    private List<SignUpVerificationCodeRequest> messages;
+    private List<SendSmsRequest> messages;
 }
