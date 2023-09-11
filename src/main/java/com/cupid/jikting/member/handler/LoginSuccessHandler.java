@@ -37,7 +37,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         Long memberProfileId = getMemberProfileIdByUsername(username);
         String accessToken = jwtService.issueAccessToken(memberProfileId);
         String refreshToken = jwtService.issueRefreshToken();
-        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+        jwtService.setAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtRepository.save(memberProfileId.toString(), refreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
         response.addHeader(MEMBER_PROFILE_ID_HEADER_NAME, String.valueOf(jwtService.extractMemberProfileId(accessToken)));
         log.info("로그인에 성공하였습니다. 아이디 : {} AccessToken : {}", username, accessToken);
