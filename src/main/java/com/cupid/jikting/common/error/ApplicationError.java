@@ -23,7 +23,7 @@ public enum ApplicationError {
     WRONG_ACCESS(HttpStatus.BAD_REQUEST, "C013", "잘못된 접근입니다."),
 
     UNAUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "U001", "인증되지 않은 사용자입니다."),
-    FORBIDDEN_MEMBER(HttpStatus.BAD_REQUEST, "U002", "권한이 없는 사용자입니다."),
+    FORBIDDEN_MEMBER(HttpStatus.FORBIDDEN, "U002", "권한이 없는 사용자입니다."),
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "U003", "사용자를 찾을 수 없습니다."),
     DUPLICATE_USERNAME(HttpStatus.BAD_REQUEST, "U004", "해당 아이디가 이미 존재합니다."),
     DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "U005", "해당 닉네임이 이미 존재합니다."),
