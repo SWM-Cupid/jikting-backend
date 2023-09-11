@@ -51,12 +51,6 @@ public class RedisConnector {
                 .orElse(NO_MESSAGE);
     }
 
-    public String getUsernameByRefreshToken(String key) {
-        return Optional.ofNullable(redisTemplate.opsForValue().get(key))
-                .map(String::valueOf)
-                .orElseThrow(() -> new JwtException(ApplicationError.EXPIRED_TOKEN));
-    }
-
     public void delete(String key) {
         redisTemplate.delete(key);
     }

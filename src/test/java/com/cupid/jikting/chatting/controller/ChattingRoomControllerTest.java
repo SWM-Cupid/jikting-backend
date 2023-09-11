@@ -14,7 +14,7 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.error.WrongFormException;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,7 +79,7 @@ public class ChattingRoomControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
-        accessToken = jwtService.createAccessToken(ID);
+        accessToken = jwtService.issueAccessToken(ID);
         List<String> images = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> URL)
                 .collect(Collectors.toList());

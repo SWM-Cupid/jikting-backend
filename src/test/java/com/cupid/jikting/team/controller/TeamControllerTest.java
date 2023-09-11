@@ -8,7 +8,7 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamRegisterResponse;
@@ -80,7 +80,7 @@ public class TeamControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
-        accessToken = jwtService.createAccessToken(ID);
+        accessToken = jwtService.issueAccessToken(ID);
         List<String> keywords = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> KEYWORD + n)
                 .collect(Collectors.toList());

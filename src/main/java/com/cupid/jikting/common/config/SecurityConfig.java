@@ -1,14 +1,11 @@
 package com.cupid.jikting.common.config;
 
 import com.cupid.jikting.common.filter.ExceptionHandlerFilter;
-import com.cupid.jikting.common.service.RedisConnector;
-import com.cupid.jikting.jwt.filter.JwtAuthenticationProcessingFilter;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.repository.JwtRepository;
+import com.cupid.jikting.common.jwt.filter.JwtAuthenticationProcessingFilter;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.filter.CustomJsonUsernamePasswordAuthenticationFilter;
-import com.cupid.jikting.member.handler.LoginFailureHandler;
-import com.cupid.jikting.member.handler.LoginSuccessHandler;
-import com.cupid.jikting.member.handler.OAuth2LoginFailureHandler;
-import com.cupid.jikting.member.handler.OAuth2LoginSuccessHandler;
+import com.cupid.jikting.member.handler.*;
 import com.cupid.jikting.member.repository.MemberRepository;
 import com.cupid.jikting.member.service.CustomOAuth2UserService;
 import com.cupid.jikting.member.service.LoginService;
@@ -17,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,6 +24,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -41,7 +40,7 @@ public class SecurityConfig {
     private final LoginService loginService;
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
-    private final RedisConnector redisConnector;
+    private final JwtRepository jwtRepository;
     private final ObjectMapper objectMapper;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
@@ -49,7 +48,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .formLogin().disable()
                 .httpBasic().disable()
                 .csrf().disable()
@@ -68,11 +67,14 @@ public class SecurityConfig {
                 .mvcMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .oauth2Login()
-                .successHandler(oAuth2LoginSuccessHandler)
-                .failureHandler(oAuth2LoginFailureHandler)
-                .userInfoEndpoint().userService(customOAuth2UserService);
-        return http
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        .failureHandler(oAuth2LoginFailureHandler)
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)))
+                .logout(logout -> logout
+                        .logoutUrl("/members/logout")
+                        .addLogoutHandler(customLogoutHandler())
+                        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
                 .addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(exceptionHandlerFilter(), JwtAuthenticationProcessingFilter.class)
@@ -108,12 +110,17 @@ public class SecurityConfig {
 
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(jwtService, memberRepository, redisConnector);
+        return new LoginSuccessHandler(jwtService, memberRepository, jwtRepository);
     }
 
     @Bean
     public LoginFailureHandler loginFailureHandler() {
         return new LoginFailureHandler();
+    }
+
+    @Bean
+    public CustomLogoutHandler customLogoutHandler() {
+        return new CustomLogoutHandler(jwtService, jwtRepository);
     }
 
     @Bean

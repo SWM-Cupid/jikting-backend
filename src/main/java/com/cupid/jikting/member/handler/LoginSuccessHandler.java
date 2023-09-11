@@ -2,8 +2,8 @@ package com.cupid.jikting.member.handler;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.common.service.RedisConnector;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.repository.JwtRepository;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +22,10 @@ import java.time.Duration;
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private static final String MEMBER_PROFILE_ID_HEADER_NAME = "MemberProfileId";
+
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
-    private final RedisConnector redisConnector;
+    private final JwtRepository jwtRepository;
 
     @Value("${jwt.refreshToken.expiration}")
     private long refreshTokenExpirationPeriod;
@@ -33,11 +34,12 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) {
         String username = extractUsername(authentication);
-        String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(username));
-        String refreshToken = jwtService.createRefreshToken();
-        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        redisConnector.set(refreshToken, username, Duration.ofMillis(refreshTokenExpirationPeriod));
-        response.addHeader(MEMBER_PROFILE_ID_HEADER_NAME, String.valueOf(jwtService.extractValidMemberProfileId(accessToken)));
+        Long memberProfileId = getMemberProfileIdByUsername(username);
+        String accessToken = jwtService.issueAccessToken(memberProfileId);
+        String refreshToken = jwtService.issueRefreshToken();
+        jwtService.setAccessAndRefreshToken(response, accessToken, refreshToken);
+        jwtRepository.save(memberProfileId.toString(), refreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
+        response.addHeader(MEMBER_PROFILE_ID_HEADER_NAME, String.valueOf(jwtService.extractMemberProfileId(accessToken)));
         log.info("로그인에 성공하였습니다. 아이디 : {} AccessToken : {}", username, accessToken);
     }
 

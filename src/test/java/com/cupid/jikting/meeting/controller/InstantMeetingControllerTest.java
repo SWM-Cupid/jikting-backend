@@ -6,7 +6,7 @@ import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.BadRequestException;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.meeting.dto.InstantMeetingResponse;
 import com.cupid.jikting.meeting.entity.InstantMeeting;
 import com.cupid.jikting.meeting.service.InstantMeetingService;
@@ -56,7 +56,7 @@ public class InstantMeetingControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
-        accessToken = jwtService.createAccessToken(ID);
+        accessToken = jwtService.issueAccessToken(ID);
         InstantMeeting instantMeeting = InstantMeeting.builder()
                 .id(ID)
                 .schedule(SCHEDULE)

@@ -2,7 +2,7 @@ package com.cupid.jikting.member.handler;
 
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.NotFoundException;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.entity.Role;
 import com.cupid.jikting.member.oauth2.CustomOAuth2User;
@@ -35,21 +35,18 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         log.info("OAuth2 Login 성공!");
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         if (oAuth2User.getRole() == Role.GUEST) {
-            String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
-            response.addHeader(jwtService.getAccessHeader(), TOKEN_TYPE + accessToken);
+            String accessToken = jwtService.issueAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
             response.sendRedirect(OAUTH_SIGNUP_REDIRECT_URL);
-            jwtService.sendAccessAndRefreshToken(response, accessToken, null);
+            jwtService.setAccessAndRefreshToken(response, accessToken, null);
         } else {
             loginSuccess(response, oAuth2User);
         }
     }
 
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException {
-        String accessToken = jwtService.createAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
-        String refreshToken = jwtService.createRefreshToken();
-        response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-        response.addHeader(jwtService.getRefreshHeader(), "Bearer " + refreshToken);
-        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+        String accessToken = jwtService.issueAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
+        String refreshToken = jwtService.issueRefreshToken();
+        jwtService.setAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getUsername(), refreshToken);
         response.sendRedirect(LOGIN_REDIRECT_URL);
     }

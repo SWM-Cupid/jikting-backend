@@ -6,7 +6,7 @@ import com.cupid.jikting.common.dto.ErrorResponse;
 import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.*;
-import com.cupid.jikting.jwt.service.JwtService;
+import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.service.MemberService;
@@ -115,7 +115,7 @@ public class MemberControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
-        accessToken = jwtService.createAccessToken(ID);
+        accessToken = jwtService.issueAccessToken(ID);
         Company company = Company.builder()
                 .name(COMPANY)
                 .build();
