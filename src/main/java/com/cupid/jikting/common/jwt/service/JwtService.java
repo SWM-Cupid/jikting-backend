@@ -33,6 +33,8 @@ public class JwtService {
     private static final String MEMBER_PROFILE_ID_CLAIM = "MemberProfileId";
     private static final String BEARER = "Bearer ";
     private static final String REMOVE = "";
+    private static final String ACCESS_TOKEN_HEADER = "Authorization";
+    private static final String REFRESH_TOKEN_HEADER = "Authorization-refresh";
 
     private final MemberRepository memberRepository;
     private final JwtRepository jwtRepository;
@@ -46,14 +48,8 @@ public class JwtService {
     @Value("${jwt.refreshToken.expiration}")
     private Long refreshTokenExpirationPeriod;
 
-    @Value("${jwt.accessToken.header}")
-    private String accessHeader;
-
-    @Value("${jwt.refreshToken.header}")
-    private String refreshHeader;
-
     public String extractAccessToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(accessHeader))
+        return Optional.ofNullable(request.getHeader(ACCESS_TOKEN_HEADER))
                 .map(accessToken -> {
                     validateTokenType(accessToken);
                     return accessToken.replace(BEARER, REMOVE);
@@ -62,7 +58,7 @@ public class JwtService {
     }
 
     public String extractRefreshToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(refreshHeader))
+        return Optional.ofNullable(request.getHeader(REFRESH_TOKEN_HEADER))
                 .map(refreshToken -> {
                     validateTokenType(refreshToken);
                     return refreshToken.replace(BEARER, REMOVE);
