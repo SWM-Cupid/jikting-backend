@@ -253,7 +253,7 @@ public class MemberControllerTest extends ApiDocument {
         duplicatedUsernameException = new DuplicateException(ApplicationError.DUPLICATE_USERNAME);
         duplicatedNicknameException = new DuplicateException(ApplicationError.DUPLICATE_NICKNAME);
         verificationCodeExpiredException = new BadRequestException(ApplicationError.VERIFICATION_CODE_EXPIRED);
-        companyNotFoundException = new NotFoundException(ApplicationError.COMPANY_NOT_FOUND);
+        companyNotFoundException = new BadRequestException(ApplicationError.FORBIDDEN_MEMBER);
     }
 
     @Test
