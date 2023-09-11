@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 public class VerificationCodeGenerator {
 
     private static final String DELIMITER = "";
-    private static final int VERIFICATION_CODE_RANGE = 9;
+    private static final int VERIFICATION_CODE_RANGE = 10;
 
     public static String generate(int verificationCodeLength) {
         return String.join(DELIMITER, IntStream.range(0, verificationCodeLength)
