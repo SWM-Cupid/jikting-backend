@@ -97,12 +97,6 @@ public class JwtService {
         }
     }
 
-    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
-        response.setStatus(HttpServletResponse.SC_OK);
-        setAccessTokenHeader(response, accessToken);
-        setRefreshTokenHeader(response, refreshToken);
-    }
-
     public String issueAccessToken(Long memberProfileId) {
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
@@ -132,6 +126,12 @@ public class JwtService {
         return Duration.ofMillis(getExpiration(token).getTime() - getTimeFrom(LocalDateTime.now()));
     }
 
+    public void setAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setHeader(ACCESS_TOKEN_HEADER, accessToken);
+        response.setHeader(REFRESH_TOKEN_HEADER, refreshToken);
+    }
+
     private void validateTokenType(String token) {
         if (!token.startsWith(BEARER)) {
             throw new JwtException(ApplicationError.INVALID_TOKEN_TYPE);
@@ -142,14 +142,6 @@ public class JwtService {
         if (!jwtRepository.existByKey(String.valueOf(memberProfileId))) {
             throw new JwtException(ApplicationError.UNAUTHORIZED_MEMBER);
         }
-    }
-
-    private void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
-        response.setHeader(accessHeader, accessToken);
-    }
-
-    private void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
-        response.setHeader(refreshHeader, refreshToken);
     }
 
     private long getTimeFrom(LocalDateTime now) {
