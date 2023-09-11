@@ -741,24 +741,24 @@ public class MemberControllerTest extends ApiDocument {
 
     @WithMockUser
     @Test
-    void 같은_회사_차단_성공() throws Exception {
+    void 재직중인_회사_차단_성공() throws Exception {
         //given
         willDoNothing().given(memberService).blockCompany(anyLong());
         //when
-        ResultActions resultActions = 같은_회사_차단_요청();
+        ResultActions resultActions = 재직중인_회사_차단_요청();
         //then
-        같은_회사_차단_요청_성공(resultActions);
+        재직중인_회사_차단_요청_성공(resultActions);
     }
 
     @WithMockUser
     @Test
-    void 같은_회사_차단_실패() throws Exception {
+    void 재직중인_회사_차단_실패() throws Exception {
         //given
         willThrow(companyNotFoundException).given(memberService).blockCompany(anyLong());
         //when
-        ResultActions resultActions = 같은_회사_차단_요청();
+        ResultActions resultActions = 재직중인_회사_차단_요청();
         //then
-        같은_회사_차단_요청_실패(resultActions);
+        재직중인_회사_차단_요청_실패(resultActions);
     }
 
     private ResultActions 회원_가입_요청() throws Exception {
@@ -1213,20 +1213,20 @@ public class MemberControllerTest extends ApiDocument {
                 "login-fail");
     }
 
-    private ResultActions 같은_회사_차단_요청() throws Exception {
+    private ResultActions 재직중인_회사_차단_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/block")
                 .contextPath(CONTEXT_PATH));
     }
 
-    private void 같은_회사_차단_요청_성공(ResultActions resultActions) throws Exception {
+    private void 재직중인_회사_차단_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
                         .andExpect(status().isOk()),
                 "block-company-success");
     }
 
-    private void 같은_회사_차단_요청_실패(ResultActions resultActions) throws Exception {
+    private void 재직중인_회사_차단_요청_실패(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
-                        .andExpect(status().isBadRequest())
+                        .andExpect(status().isForbidden())
                         .andExpect(content().json(toJson(ErrorResponse.from(companyNotFoundException)))),
                 "block-company-fail");
     }
