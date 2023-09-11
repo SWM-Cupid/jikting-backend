@@ -73,6 +73,9 @@ public class MemberServiceTest {
     private MemberService memberService;
 
     @Mock
+    private FileUploadService fileUploadService;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @Mock
@@ -129,6 +132,10 @@ public class MemberServiceTest {
         memberProfile = member.getMemberProfile();
         memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 memberPersonalities, memberHobbies);
+        memberProfile.updateProfileImage(List.of(ImageRequest.builder()
+                .url(IMAGE_URL)
+                .sequence(Sequence.MAIN.name())
+                .build()));
         signupRequest = SignupRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD)
@@ -143,7 +150,7 @@ public class MemberServiceTest {
         nicknameCheckRequest = NicknameCheckRequest.builder()
                 .nickname(NICKNAME)
                 .build();
-        multipartFile = new MockMultipartFile("test.jpg", new byte[0]);
+        multipartFile = new MockMultipartFile("test.jpg", IMAGE_URL.getBytes());
     }
 
     @Test
@@ -293,6 +300,7 @@ public class MemberServiceTest {
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
         willReturn(Optional.of(hobby)).given(hobbyRepository).findByKeyword(anyString());
+        willReturn(IMAGE_URL).given(fileUploadService).update(any(MultipartFile.class), anyString());
         MemberProfileUpdateRequest memberProfileUpdateRequest = MemberProfileUpdateRequest.builder()
                 .birth(BIRTH)
                 .height(HEIGHT)

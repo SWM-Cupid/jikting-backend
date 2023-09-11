@@ -76,7 +76,7 @@ public class MemberService {
                 memberProfileUpdateRequest.getDescription(),
                 getMemberPersonalities(memberProfile, memberProfileUpdateRequest.getPersonalities()),
                 getMemberHobbies(memberProfile, memberProfileUpdateRequest.getHobbies()));
-        if (!file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             ImageRequest imageRequest = ImageRequest.builder()
                     .url(fileUploadService.update(file, memberProfile.getMainImageUrl()))
                     .sequence(Sequence.MAIN.name())
