@@ -125,9 +125,7 @@ public class MemberService {
     }
 
     public void verifyPhoneForSignup(PhoneVerificationRequest verificationRequest) {
-        if (!redisConnector.get(verificationRequest.getPhone()).equals(verificationRequest.getVerificationCode())) {
-            throw new BadRequestException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
-        }
+        validateVerificationCode(verificationRequest.getPhone(), verificationRequest.getVerificationCode());
     }
 
     public void createVerificationCodeForSearchUsername(UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest)
