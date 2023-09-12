@@ -2,10 +2,7 @@ package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
-import com.cupid.jikting.common.error.ApplicationError;
-import com.cupid.jikting.common.error.BadRequestException;
-import com.cupid.jikting.common.error.DuplicateException;
-import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.error.*;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.dto.*;
@@ -13,6 +10,7 @@ import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.HobbyRepository;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,10 @@ import java.util.stream.Collectors;
 @Service
 public class MemberService {
 
+    private static final String SMS_SEND_SUCCESS = "202";
+
     private final FileUploadService fileUploadService;
+    private final SmsService smsService;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
@@ -110,13 +114,33 @@ public class MemberService {
         }
     }
 
+    public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest)
+            throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+        SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
+                .to(signUpVerificationCodeRequest.getPhone())
+                .build();
+        if (!smsService.sendSms(sendSmsRequest).getStatusCode().equals(SMS_SEND_SUCCESS)) {
+            throw new SmsSendFailException(ApplicationError.SMS_SEND_FAIL);
+        }
+    }
+
     public void verifyPhoneForSignup(PhoneVerificationRequest verificationRequest) {
         if (!redisConnector.get(verificationRequest.getPhone()).equals(verificationRequest.getVerificationCode())) {
             throw new BadRequestException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
         }
     }
 
-    public void createVerificationCodeForSearchUsername(UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest) {
+    public void createVerificationCodeForSearchUsername(UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        if (!memberRepository.existsByNameAndPhone(usernameSearchVerificationCodeRequest.getName(), usernameSearchVerificationCodeRequest.getPhone())) {
+            throw new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
+        }
+        SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
+                .to(usernameSearchVerificationCodeRequest.getPhone())
+                .build();
+        if (!smsService.sendSms(sendSmsRequest).getStatusCode().equals(SMS_SEND_SUCCESS)) {
+            throw new SmsSendFailException(ApplicationError.SMS_SEND_FAIL);
+        }
     }
 
     public UsernameResponse verifyForSearchUsername(VerificationRequest verificationRequest) {

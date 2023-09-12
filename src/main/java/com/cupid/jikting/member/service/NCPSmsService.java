@@ -1,10 +1,8 @@
 package com.cupid.jikting.member.service;
 
-import com.cupid.jikting.common.error.ApplicationError;
-import com.cupid.jikting.common.error.SmsSendFailException;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.common.util.VerificationCodeGenerator;
-import com.cupid.jikting.member.dto.SignUpVerificationCodeRequest;
+import com.cupid.jikting.member.dto.SendSmsRequest;
 import com.cupid.jikting.member.dto.SmsRequest;
 import com.cupid.jikting.member.dto.SmsResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,7 +33,6 @@ public class NCPSmsService implements SmsService {
     private static final int VERIFICATION_CODE_LENGTH = 6;
     private static final int EXPIRE_TIME = 3;
     private static final String TYPE = "SMS";
-    private static final String SMS_SEND_SUCCESS = "202";
     private static final String CHARSET_NAME = "UTF-8";
     private static final String SECRET_KEY_ALGORITHM = "HmacSHA256";
     private static final String BLANK = " ";
@@ -58,31 +55,25 @@ public class NCPSmsService implements SmsService {
     private String phone;
 
     @Override
-    public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest) throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
-        if (!sendSms(signUpVerificationCodeRequest).getStatusCode().equals(SMS_SEND_SUCCESS)) {
-            throw new SmsSendFailException(ApplicationError.SMS_SEND_FAIL);
-        }
-    }
-
-    private SmsResponse sendSms(SignUpVerificationCodeRequest signUpVerificationCodeRequest) throws JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+    public SmsResponse sendSms(SendSmsRequest sendSmsRequest) throws JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         return restTemplate.postForObject(
                 URI.create("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"),
-                new HttpEntity<>(objectMapper.writeValueAsString(getSmsRequest(signUpVerificationCodeRequest, generateVerificationCode(signUpVerificationCodeRequest))), getHttpHeaders()),
+                new HttpEntity<>(objectMapper.writeValueAsString(getSmsRequest(sendSmsRequest, generateVerificationCode(sendSmsRequest.getTo()))), getHttpHeaders()),
                 SmsResponse.class);
     }
 
-    private String generateVerificationCode(SignUpVerificationCodeRequest signUpVerificationCodeRequest) {
+    private String generateVerificationCode(String phone) {
         String verificationCode = VerificationCodeGenerator.generate(VERIFICATION_CODE_LENGTH);
-        redisConnector.set(signUpVerificationCodeRequest.getTo(), verificationCode, Duration.ofMinutes(EXPIRE_TIME));
+        redisConnector.set(phone, verificationCode, Duration.ofMinutes(EXPIRE_TIME));
         return verificationCode;
     }
 
-    private SmsRequest getSmsRequest(SignUpVerificationCodeRequest signUpVerificationCodeRequest, String verificationCode) {
+    private SmsRequest getSmsRequest(SendSmsRequest sendSmsRequest, String verificationCode) {
         return SmsRequest.builder()
                 .type(TYPE)
                 .from(phone)
                 .content(getVerificationCodeMessage(verificationCode))
-                .messages(List.of(signUpVerificationCodeRequest))
+                .messages(List.of(sendSmsRequest))
                 .build();
     }
 
