@@ -143,7 +143,7 @@ public class MemberService {
 
     public UsernameResponse verifyForSearchUsername(VerificationRequest verificationRequest) {
         validateVerificationCode(verificationRequest.getPhone(), verificationRequest.getVerificationCode());
-        return memberRepository.findByPhoneOrderByCreatedAtDesc(verificationRequest.getPhone())
+        return memberRepository.findByPhone(verificationRequest.getPhone())
                 .map(UsernameResponse::from)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
