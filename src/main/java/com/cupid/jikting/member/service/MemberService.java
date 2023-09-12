@@ -144,7 +144,10 @@ public class MemberService {
     }
 
     public UsernameResponse verifyForSearchUsername(VerificationRequest verificationRequest) {
-        return null;
+        validateVerificationCode(verificationRequest.getPhone(), verificationRequest.getVerificationCode());
+        return memberRepository.findByPhoneOrderByCreatedAtDesc(verificationRequest.getPhone())
+                .map(UsernameResponse::from)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 
     public void createVerificationCodeForResetPassword(PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest) {
@@ -204,5 +207,11 @@ public class MemberService {
     private Hobby getHobbyByKeyword(String keyword) {
         return hobbyRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.HOBBY_NOT_FOUND));
+    }
+
+    private void validateVerificationCode(String phone, String verificationCode) {
+        if (!redisConnector.get(phone).equals(verificationCode)) {
+            throw new BadRequestException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
+        }
     }
 }
