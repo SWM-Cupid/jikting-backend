@@ -8,5 +8,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class VerificationRequest {
 
+    private String phone;
     private String verificationCode;
 }
