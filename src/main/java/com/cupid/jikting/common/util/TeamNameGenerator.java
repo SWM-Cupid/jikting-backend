@@ -16,9 +16,10 @@ public class TeamNameGenerator extends RandomGenerator {
     private static final int RANDOM_NUMBER_RANGE = 10000;
 
     public static String generate() {
-        return String.format("%s%s%04d",
-                COLORS[RANDOM.nextInt(COLORS.length)],
-                ANIMALS[RANDOM.nextInt(ANIMALS.length)],
-                RANDOM.nextInt(RANDOM_NUMBER_RANGE));
+        StringBuilder teamName = new StringBuilder();
+        teamName.append(COLORS[RANDOM.nextInt(COLORS.length)])
+                .append(ANIMALS[RANDOM.nextInt(ANIMALS.length)])
+                .append(String.format("%04d", RANDOM.nextInt(RANDOM_NUMBER_RANGE)));
+        return teamName.toString();
     }
 }
