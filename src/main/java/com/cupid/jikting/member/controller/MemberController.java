@@ -142,4 +142,10 @@ public class MemberController {
         memberService.login(loginRequest);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/company/block")
+    public ResponseEntity<Void> blockCompany(@AuthorizedVariable Long memberProfileId) {
+        memberService.blockCompany(memberProfileId);
+        return ResponseEntity.ok().build();
+    }
 }

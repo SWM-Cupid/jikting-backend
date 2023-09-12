@@ -420,6 +420,23 @@ include::{snippets}/login-fail/http-request.adoc[]
 .response
 include::{snippets}/login-fail/http-response.adoc[]
 
+==== 회사 차단
+----
+/v1/members/company/block
+----
+===== 성공
+.request
+include::{snippets}/block-company-success/http-request.adoc[]
+
+.response
+include::{snippets}/block-company-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/block-company-fail/http-request.adoc[]
+
+.response
+include::{snippets}/block-company-fail/http-response.adoc[]
+
 === 팀 관련 기능
 ==== 팀 등록
 ----

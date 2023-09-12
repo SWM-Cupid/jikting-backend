@@ -103,6 +103,7 @@ public class MemberControllerTest extends ApiDocument {
     private ApplicationException duplicatedUsernameException;
     private ApplicationException duplicatedNicknameException;
     private ApplicationException verificationCodeExpiredException;
+    private ApplicationException companyNotFoundException;
 
     @MockBean
     private JwtService jwtService;
@@ -252,6 +253,7 @@ public class MemberControllerTest extends ApiDocument {
         duplicatedUsernameException = new DuplicateException(ApplicationError.DUPLICATE_USERNAME);
         duplicatedNicknameException = new DuplicateException(ApplicationError.DUPLICATE_NICKNAME);
         verificationCodeExpiredException = new BadRequestException(ApplicationError.VERIFICATION_CODE_EXPIRED);
+        companyNotFoundException = new BadRequestException(ApplicationError.FORBIDDEN_MEMBER);
     }
 
     @Test
@@ -737,6 +739,28 @@ public class MemberControllerTest extends ApiDocument {
         로그인_요청_실패(resultActions);
     }
 
+    @WithMockUser
+    @Test
+    void 재직중인_회사_차단_성공() throws Exception {
+        //given
+        willDoNothing().given(memberService).blockCompany(anyLong());
+        //when
+        ResultActions resultActions = 재직중인_회사_차단_요청();
+        //then
+        재직중인_회사_차단_요청_성공(resultActions);
+    }
+
+    @WithMockUser
+    @Test
+    void 재직중인_회사_차단_실패() throws Exception {
+        //given
+        willThrow(companyNotFoundException).given(memberService).blockCompany(anyLong());
+        //when
+        ResultActions resultActions = 재직중인_회사_차단_요청();
+        //then
+        재직중인_회사_차단_요청_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -1187,5 +1211,23 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isBadRequest())
                         .andExpect(content().json(toJson(ErrorResponse.from(idOrPasswordNotEqualException)))),
                 "login-fail");
+    }
+
+    private ResultActions 재직중인_회사_차단_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/block")
+                .contextPath(CONTEXT_PATH));
+    }
+
+    private void 재직중인_회사_차단_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "block-company-success");
+    }
+
+    private void 재직중인_회사_차단_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isForbidden())
+                        .andExpect(content().json(toJson(ErrorResponse.from(companyNotFoundException)))),
+                "block-company-fail");
     }
 }
