@@ -10,4 +10,5 @@ public class LoginResponse {
 
     private Long memberProfileId;
     private String role;
+    private String socialType;
 }
