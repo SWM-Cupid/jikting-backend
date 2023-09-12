@@ -3,11 +3,10 @@ package com.cupid.jikting.common.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.Random;
 import java.util.stream.IntStream;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PasswordGenerator {
+public class PasswordGenerator extends RandomGenerator {
 
     private static final char[] CHAT_SET = new char[]{
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -16,8 +15,6 @@ public class PasswordGenerator {
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
             'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
     };
-    private static final Random RANDOM = new Random();
-    private static final String DELIMITER = "";
     private static final int PASSWORD_LENGTH = 8;
 
     public static String generate() {
