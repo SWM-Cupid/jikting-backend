@@ -48,6 +48,7 @@ public class MemberService {
                 .gender(Gender.find(signupRequest.getGender()))
                 .name(signupRequest.getName())
                 .role(Role.UNCERTIFIED)
+                .socialType(SocialType.NORMAL)
                 .build();
         member.addMemberProfile(signupRequest.getNickname());
         memberRepository.save(member);

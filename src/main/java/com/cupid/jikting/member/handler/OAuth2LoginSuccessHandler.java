@@ -36,43 +36,37 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             throws IOException {
         log.info("OAuth2 Login 성공!");
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+        Member member = getMemberByUsername(oAuth2User.getUsername());
         if (oAuth2User.getRole() == Role.GUEST) {
-            String accessToken = jwtService.issueAccessToken(getMemberProfileIdByUsername(oAuth2User.getUsername()));
+            String accessToken = jwtService.issueAccessToken(member.getMemberProfileId());
             response.sendRedirect(OAUTH_SIGNUP_REDIRECT_URL);
             jwtService.setAccessAndRefreshToken(response, accessToken, null);
         } else {
-            loginSuccess(response, oAuth2User);
+            loginSuccess(response, member);
         }
     }
 
-    private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException {
-        String username = oAuth2User.getUsername();
-        Long memberProfileId = getMemberProfileIdByUsername(username);
-        String accessToken = jwtService.issueAccessToken(memberProfileId);
+    private void loginSuccess(HttpServletResponse response, Member member) throws IOException {
+        String accessToken = jwtService.issueAccessToken(member.getMemberProfileId());
         String refreshToken = jwtService.issueRefreshToken();
         jwtService.setAccessAndRefreshToken(response, accessToken, refreshToken);
-        jwtService.updateRefreshToken(username, refreshToken);
-        setResponseBody(response, memberProfileId);
+        jwtService.updateRefreshToken(member.getUsername(), refreshToken);
+        setResponseBody(response, member);
         response.sendRedirect(LOGIN_REDIRECT_URL);
     }
 
-    private Long getMemberProfileIdByUsername(String username) {
+    private Member getMemberByUsername(String username) {
         return memberRepository.findByUsername(username)
-                .map(Member::getMemberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
-    private void setResponseBody(HttpServletResponse response, Long memberProfileId) throws IOException {
+
+    private void setResponseBody(HttpServletResponse response, Member member) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
         response.getWriter().write(objectMapper.writeValueAsString(LoginResponse.builder()
-                .memberProfileId(memberProfileId)
-                .role(getRoleByMemberProfileId(memberProfileId).getKey())
+                .memberProfileId(member.getMemberProfileId())
+                .role(member.getRole().getKey())
+                .socialType(member.getSocialType().name())
                 .build()));
-    }
-
-    private Role getRoleByMemberProfileId(Long memberProfileId) {
-        return memberRepository.findById(memberProfileId)
-                .map(Member::getRole)
-                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 }
