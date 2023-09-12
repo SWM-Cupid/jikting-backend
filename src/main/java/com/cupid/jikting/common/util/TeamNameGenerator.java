@@ -3,11 +3,8 @@ package com.cupid.jikting.common.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TeamNameGenerator {
+public class TeamNameGenerator extends RandomGenerator {
 
     private static final String[] COLORS = new String[]{
             "하양", "검정", "빨강", "주황", "노랑", "초록", "파랑", "보라", "분홍"
@@ -20,16 +17,8 @@ public class TeamNameGenerator {
 
     public static String generate() {
         return String.format("%s%s%04d",
-                COLORS[getSecureRandom().nextInt(COLORS.length)],
-                ANIMALS[getSecureRandom().nextInt(ANIMALS.length)],
-                getSecureRandom().nextInt(RANDOM_NUMBER_RANGE));
-    }
-
-    private static SecureRandom getSecureRandom() {
-        try {
-            return SecureRandom.getInstanceStrong();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+                COLORS[RANDOM.nextInt(COLORS.length)],
+                ANIMALS[RANDOM.nextInt(ANIMALS.length)],
+                RANDOM.nextInt(RANDOM_NUMBER_RANGE));
     }
 }
