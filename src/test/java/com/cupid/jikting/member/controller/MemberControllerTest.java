@@ -213,6 +213,7 @@ public class MemberControllerTest extends ApiDocument {
                 .verificationCode(VERIFICATION_CODE)
                 .build();
         verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
         passwordResetVerificationCodeRequest = PasswordResetVerificationCodeRequest.builder()
