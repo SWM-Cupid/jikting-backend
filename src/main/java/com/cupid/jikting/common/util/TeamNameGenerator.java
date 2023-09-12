@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class RandomTeamNameGenerator {
+public class TeamNameGenerator {
 
     private static final String[] COLORS = new String[]{
             "하양", "검정", "빨강", "주황", "노랑", "초록", "파랑", "보라", "분홍"

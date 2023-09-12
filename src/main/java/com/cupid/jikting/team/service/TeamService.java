@@ -5,7 +5,7 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
-import com.cupid.jikting.common.util.RandomTeamNameGenerator;
+import com.cupid.jikting.common.util.TeamNameGenerator;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
@@ -83,9 +83,9 @@ public class TeamService {
     }
 
     private String getRandomTeamName() {
-        String randomTeamName = RandomTeamNameGenerator.generate();
+        String randomTeamName = TeamNameGenerator.generate();
         while (teamRepository.existsByName(randomTeamName)) {
-            randomTeamName = RandomTeamNameGenerator.generate();
+            randomTeamName = TeamNameGenerator.generate();
         }
         return randomTeamName;
     }
