@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.stream.IntStream;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PasswordGenerator extends RandomGenerator {
 
     private static final char[] CHAT_SET = new char[]{
