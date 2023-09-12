@@ -21,10 +21,13 @@ public class Member extends BaseEntity {
 
     private String username;
     private String password;
-    private String phone;
+
     private String name;
     private String type;
     private String socialId;
+
+    @Column(unique = true)
+    private String phone;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
