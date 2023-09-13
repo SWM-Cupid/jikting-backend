@@ -641,4 +641,19 @@ public class MemberServiceTest {
                 () -> assertDoesNotThrow(() -> smsService.sendSms(any(SendSmsRequest.class)))
         );
     }
+
+    @Test
+    void 비밀번호_재설정_인증번호_발급_실패_회원_없음() throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        // given
+        PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest = PasswordResetVerificationCodeRequest.builder()
+                .username(USERNAME)
+                .name(NAME)
+                .phone(PHONE)
+                .build();
+        willReturn(false).given(memberRepository).existsByUsernameAndNameAndPhone(anyString(), anyString(), anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.createVerificationCodeForResetPassword(passwordResetVerificationCodeRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
 }
