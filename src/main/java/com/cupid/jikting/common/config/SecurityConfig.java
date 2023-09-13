@@ -66,6 +66,7 @@ public class SecurityConfig {
                 .mvcMatchers("/members/verification").permitAll()
                 .mvcMatchers("/members/username/search/code").permitAll()
                 .mvcMatchers("/members/username/search/verification").permitAll()
+                .mvcMatchers("/members/password/reset/code").permitAll()
                 .mvcMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
