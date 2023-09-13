@@ -69,4 +69,19 @@ public class MemberRepositoryTest {
         // then
         assertThat(memberFoundByPhone).isEmpty();
     }
+
+    @Test
+    void 아이디와_이름과_전화번호로_회원_조회_성공() {
+        // given
+        Member member = Member.builder()
+                .username(USERNAME)
+                .name(NAME)
+                .phone(PHONE)
+                .build();
+        memberRepository.save(member);
+        // when
+        boolean existsByUsernameAndNameAndPhone = memberRepository.existsByUsernameAndNameAndPhone(USERNAME, NAME, PHONE);
+        // then
+        assertThat(existsByUsernameAndNameAndPhone).isTrue();
+    }
 }
