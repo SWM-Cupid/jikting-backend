@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -50,5 +52,21 @@ public class MemberRepositoryTest {
         memberRepository.save(member);
         // when & then
         assertDoesNotThrow(() -> memberRepository.findByPhone(PHONE));
+    }
+
+    @Test
+    void 전화번호로_회원_조회_실패() {
+        // given
+        Member member = Member.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .name(NAME)
+                .phone(PHONE)
+                .build();
+        memberRepository.save(member);
+        // when
+        Optional<Member> memberFoundByPhone = memberRepository.findByPhone(WRONG_PHONE);
+        // then
+        assertThat(memberFoundByPhone).isEmpty();
     }
 }
