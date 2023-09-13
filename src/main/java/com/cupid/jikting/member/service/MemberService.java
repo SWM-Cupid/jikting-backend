@@ -126,9 +126,7 @@ public class MemberService {
     }
 
     public void verifyPhoneForSignup(PhoneVerificationRequest verificationRequest) {
-        if (!redisConnector.get(verificationRequest.getPhone()).equals(verificationRequest.getVerificationCode())) {
-            throw new BadRequestException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
-        }
+        validateVerificationCode(verificationRequest.getPhone(), verificationRequest.getVerificationCode());
     }
 
     public void createVerificationCodeForSearchUsername(UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest)
@@ -145,7 +143,10 @@ public class MemberService {
     }
 
     public UsernameResponse verifyForSearchUsername(VerificationRequest verificationRequest) {
-        return null;
+        validateVerificationCode(verificationRequest.getPhone(), verificationRequest.getVerificationCode());
+        return memberRepository.findByPhone(verificationRequest.getPhone())
+                .map(UsernameResponse::from)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 
     public void createVerificationCodeForResetPassword(PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest) {
@@ -205,5 +206,11 @@ public class MemberService {
     private Hobby getHobbyByKeyword(String keyword) {
         return hobbyRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.HOBBY_NOT_FOUND));
+    }
+
+    private void validateVerificationCode(String phone, String verificationCode) {
+        if (!redisConnector.get(phone).equals(verificationCode)) {
+            throw new BadRequestException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
+        }
     }
 }

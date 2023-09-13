@@ -133,6 +133,7 @@ public class MemberControllerTest extends ApiDocument {
                         .build())
                 .collect(Collectors.toList());
         Member member = Member.builder()
+                .username(USERNAME)
                 .gender(Gender.MALE)
                 .build();
         member.addMemberProfile(NICKNAME);
@@ -213,6 +214,7 @@ public class MemberControllerTest extends ApiDocument {
                 .verificationCode(VERIFICATION_CODE)
                 .build();
         verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
         passwordResetVerificationCodeRequest = PasswordResetVerificationCodeRequest.builder()
@@ -234,9 +236,7 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         memberResponse = MemberResponse.of(memberProfile);
         memberProfileResponse = MemberProfileResponse.of(memberProfile);
-        usernameResponse = UsernameResponse.builder()
-                .username(USERNAME)
-                .build();
+        usernameResponse = UsernameResponse.from(member);
         companyVerificationRequestPart = new MockMultipartFile(COMPANY_VERIFICATION_REQUEST_PARAMETER_NAME, COMPANY_VERIFICATION_REQUEST_FILENAME, COMPANY_VERIFICATION_CONTENT_TYPE, toJson(companyVerificationRequest).getBytes(StandardCharsets.UTF_8));
         image = new MockMultipartFile(IMAGE_PARAMETER_NAME, IMAGE_FILENAME, IMAGE_CONTENT_TYPE, IMAGE_FILE.getBytes());
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);

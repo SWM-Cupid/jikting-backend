@@ -551,4 +551,64 @@ public class MemberServiceTest {
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.VERIFICATION_CODE_EXPIRED.getMessage());
     }
+
+    @Test
+    void 아이디찾기_인증번호_인증_성공() {
+        // given
+        VerificationRequest verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
+        willReturn(Optional.of(member)).given(memberRepository).findByPhone(anyString());
+        // when
+        memberService.verifyForSearchUsername(verificationRequest);
+        // then
+        assertAll(
+                () -> verify(redisConnector).get(anyString()),
+                () -> verify(memberRepository).findByPhone(anyString())
+        );
+    }
+
+    @Test
+    void 아이디찾기_인증번호_인증_실패_인증번호_불일치() {
+        // given
+        VerificationRequest verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(WRONG_VERIFICATION_CODE).given(redisConnector).get(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationRequest))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.VERIFICATION_CODE_NOT_EQUAL.getMessage());
+    }
+
+    @Test
+    void 아이디찾기_인증번호_인증_실패_인증번호_만료() {
+        // given
+        VerificationRequest verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willThrow(new BadRequestException(ApplicationError.VERIFICATION_CODE_EXPIRED)).given(redisConnector).get(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationRequest))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.VERIFICATION_CODE_EXPIRED.getMessage());
+    }
+
+    @Test
+    void 아이디찾기_인증번호_인증_실패_회원_없음() {
+        // given
+        VerificationRequest verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(redisConnector).get(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
 }
