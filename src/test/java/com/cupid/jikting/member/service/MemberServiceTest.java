@@ -551,4 +551,22 @@ public class MemberServiceTest {
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.VERIFICATION_CODE_EXPIRED.getMessage());
     }
+
+    @Test
+    void 아이디찾기_인증번호_인증_성공() {
+        // given
+        VerificationRequest verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
+        willReturn(Optional.of(member)).given(memberRepository).findByPhone(anyString());
+        // when
+        memberService.verifyForSearchUsername(verificationRequest);
+        // then
+        assertAll(
+                () -> verify(redisConnector).get(anyString()),
+                () -> verify(memberRepository).findByPhone(anyString())
+        );
+    }
 }
