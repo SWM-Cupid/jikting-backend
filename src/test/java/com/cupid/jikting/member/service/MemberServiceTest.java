@@ -569,4 +569,18 @@ public class MemberServiceTest {
                 () -> verify(memberRepository).findByPhone(anyString())
         );
     }
+
+    @Test
+    void 아이디찾기_인증번호_인증_실패_인증번호_불일치() {
+        // given
+        VerificationRequest verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(WRONG_VERIFICATION_CODE).given(redisConnector).get(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationRequest))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.VERIFICATION_CODE_NOT_EQUAL.getMessage());
+    }
 }
