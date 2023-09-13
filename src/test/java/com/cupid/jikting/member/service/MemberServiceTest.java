@@ -583,4 +583,18 @@ public class MemberServiceTest {
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.VERIFICATION_CODE_NOT_EQUAL.getMessage());
     }
+
+    @Test
+    void 아이디찾기_인증번호_인증_실패_인증번호_만료() {
+        // given
+        VerificationRequest verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willThrow(new BadRequestException(ApplicationError.VERIFICATION_CODE_EXPIRED)).given(redisConnector).get(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationRequest))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.VERIFICATION_CODE_EXPIRED.getMessage());
+    }
 }
