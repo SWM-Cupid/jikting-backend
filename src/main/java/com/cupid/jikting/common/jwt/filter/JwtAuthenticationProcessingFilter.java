@@ -7,6 +7,7 @@ import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.common.util.PasswordGenerator;
 import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.member.entity.SocialType;
 import com.cupid.jikting.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +84,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private void saveAuthentication(Member member) {
         String password = member.getPassword();
-        if (member.getSocialType() != null) {
+        if (member.getSocialType() != SocialType.NORMAL) {
             password = PasswordGenerator.generate();
         }
         if (password == null) {
