@@ -102,7 +102,8 @@ public class MemberController {
     }
 
     @PostMapping("/password/reset/code")
-    public ResponseEntity<Void> createVerificationCodeForResetPassword(@RequestBody PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest) {
+    public ResponseEntity<Void> createVerificationCodeForResetPassword(@RequestBody PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         memberService.createVerificationCodeForResetPassword(passwordResetVerificationCodeRequest);
         return ResponseEntity.ok().build();
     }
