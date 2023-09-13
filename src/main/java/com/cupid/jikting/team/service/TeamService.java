@@ -5,6 +5,7 @@ import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
+import com.cupid.jikting.common.util.TeamNameGenerator;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -42,7 +42,7 @@ public class TeamService {
             throw new BadRequestException(ApplicationError.ALREADY_IN_TEAM);
         }
         Team team = Team.builder()
-                .name(String.valueOf(UUID.randomUUID()))
+                .name(getRandomTeamName())
                 .description(teamRegisterRequest.getDescription())
                 .memberCount(teamRegisterRequest.getMemberCount())
                 .gender(memberProfile.getGender())
@@ -80,6 +80,14 @@ public class TeamService {
     private MemberProfile getMemberProfileById(Long memberProfileId) {
         return memberProfileRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
+    }
+
+    private String getRandomTeamName() {
+        String randomTeamName = TeamNameGenerator.generate();
+        while (teamRepository.existsByName(randomTeamName)) {
+            randomTeamName = TeamNameGenerator.generate();
+        }
+        return randomTeamName;
     }
 
     private List<TeamPersonality> toTeamPersonalities(List<Personality> personalities, Team team) {
