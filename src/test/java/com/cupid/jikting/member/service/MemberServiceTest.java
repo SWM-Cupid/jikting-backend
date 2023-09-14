@@ -98,11 +98,12 @@ public class MemberServiceTest {
         Company company = Company.builder()
                 .name(COMPANY)
                 .build();
+        MemberCompany memberCompany = MemberCompany.builder()
+                .member(member)
+                .company(company)
+                .build();
         List<MemberCompany> memberCompanies = IntStream.range(0, 3)
-                .mapToObj(n -> MemberCompany.builder()
-                        .member(member)
-                        .company(company)
-                        .build())
+                .mapToObj(n -> memberCompany)
                 .collect(Collectors.toList());
         member = Member.builder()
                 .username(USERNAME)
@@ -550,5 +551,34 @@ public class MemberServiceTest {
         assertThatThrownBy(() -> memberService.verifyPhoneForSignup(phoneVerificationRequest))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.VERIFICATION_CODE_EXPIRED.getMessage());
+    }
+
+    @Test
+    void 재직중인_회사_차단_성공() {
+        //given
+        List<MemberCompany> memberCompanies = IntStream.range(0, 3)
+                .mapToObj(n -> mock(MemberCompany.class))
+                .collect(Collectors.toList());
+         Member member1 = Member.builder()
+                .memberCompanies(memberCompanies)
+                .build();
+        member1.addMemberProfile(NICKNAME);
+        memberProfile = member1.getMemberProfile();
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        //when
+        memberService.blockCompany(ID);
+        //then
+        verify(memberProfileRepository).findById(anyLong());
+        memberCompanies.forEach(memberCompany -> verify(memberCompany).block());
+    }
+
+    @Test
+    void 재직중인_회사_차단_실페_회원_없음() {
+        // given
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        // when & then
+        assertThatThrownBy(() -> memberService.blockCompany(ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
 }
