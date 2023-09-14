@@ -559,7 +559,7 @@ public class MemberServiceTest {
         List<MemberCompany> memberCompanies = IntStream.range(0, 3)
                 .mapToObj(n -> mock(MemberCompany.class))
                 .collect(Collectors.toList());
-         Member member1 = Member.builder()
+        Member member1 = Member.builder()
                 .memberCompanies(memberCompanies)
                 .build();
         member1.addMemberProfile(NICKNAME);
