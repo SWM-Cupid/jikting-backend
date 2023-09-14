@@ -674,4 +674,18 @@ public class MemberServiceTest {
                 () -> verify(memberRepository).save(any(Member.class))
         );
     }
+
+    @Test
+    void 비밀번호_재설정_실패_회원_없음() {
+        // given
+        PasswordResetRequest passwordResetRequest = PasswordResetRequest.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .build();
+        willReturn(Optional.empty()).given(memberRepository).findByUsername(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.resetPassword(passwordResetRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
 }
