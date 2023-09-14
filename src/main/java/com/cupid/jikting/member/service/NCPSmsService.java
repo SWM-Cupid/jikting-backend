@@ -1,5 +1,7 @@
 package com.cupid.jikting.member.service;
 
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.SmsSendFailException;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.common.util.VerificationCodeGenerator;
 import com.cupid.jikting.member.dto.SendSmsRequest;
@@ -30,6 +32,7 @@ import java.util.List;
 @Service
 public class NCPSmsService implements SmsService {
 
+    private static final String SMS_SEND_SUCCESS = "202";
     private static final int VERIFICATION_CODE_LENGTH = 6;
     private static final int EXPIRE_TIME = 3;
     private static final String TYPE = "SMS";
@@ -55,11 +58,14 @@ public class NCPSmsService implements SmsService {
     private String phone;
 
     @Override
-    public SmsResponse sendSms(SendSmsRequest sendSmsRequest) throws JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-        return restTemplate.postForObject(
+    public void sendSms(SendSmsRequest sendSmsRequest) throws JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+        SmsResponse smsResponse = restTemplate.postForObject(
                 URI.create("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"),
                 new HttpEntity<>(objectMapper.writeValueAsString(getSmsRequest(sendSmsRequest, generateVerificationCode(sendSmsRequest.getTo()))), getHttpHeaders()),
                 SmsResponse.class);
+        if (!smsResponse.getStatusCode().equals(SMS_SEND_SUCCESS)) {
+            throw new SmsSendFailException(ApplicationError.SMS_SEND_FAIL);
+        }
     }
 
     private String generateVerificationCode(String phone) {
