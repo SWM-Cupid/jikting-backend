@@ -149,7 +149,17 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 
-    public void createVerificationCodeForResetPassword(PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest) {
+    public void createVerificationCodeForResetPassword(PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        if (!memberRepository.existsByUsernameAndNameAndPhone(passwordResetVerificationCodeRequest.getUsername(), passwordResetVerificationCodeRequest.getName(), passwordResetVerificationCodeRequest.getPhone())) {
+            throw new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
+        }
+        SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
+                .to(passwordResetVerificationCodeRequest.getPhone())
+                .build();
+        if (!smsService.sendSms(sendSmsRequest).getStatusCode().equals(SMS_SEND_SUCCESS)) {
+            throw new SmsSendFailException(ApplicationError.SMS_SEND_FAIL);
+        }
     }
 
     public void verifyForResetPassword(VerificationRequest verificationRequest) {

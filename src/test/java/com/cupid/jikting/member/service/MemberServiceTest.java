@@ -10,6 +10,7 @@ import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.HobbyRepository;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +35,7 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.verify;
@@ -57,6 +62,7 @@ public class MemberServiceTest {
     private static final String VERIFICATION_CODE = "인증번호";
     private static final String WRONG_VERIFICATION_CODE = "잘못된" + VERIFICATION_CODE;
     private static final int PROFILE_IMAGE_SIZE = 3;
+    private static final String SMS_SEND_SUCCESS = "202";
 
     private Member member;
     private MemberProfile memberProfile;
@@ -74,6 +80,9 @@ public class MemberServiceTest {
 
     @Mock
     private FileUploadService fileUploadService;
+
+    @Mock
+    private SmsService smsService;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -608,6 +617,42 @@ public class MemberServiceTest {
         willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(redisConnector).get(anyString());
         // when & then
         assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 비밀번호_재설정_인증번호_발급_성공() throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        // given
+        PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest = PasswordResetVerificationCodeRequest.builder()
+                .username(USERNAME)
+                .name(NAME)
+                .phone(PHONE)
+                .build();
+        SmsResponse smsResponse = SmsResponse.builder()
+                .statusCode(SMS_SEND_SUCCESS)
+                .build();
+        willReturn(true).given(memberRepository).existsByUsernameAndNameAndPhone(anyString(), anyString(), anyString());
+        willReturn(smsResponse).given(smsService).sendSms(any(SendSmsRequest.class));
+        // when & then
+        assertAll(
+                () -> assertDoesNotThrow(() -> memberService.createVerificationCodeForResetPassword(passwordResetVerificationCodeRequest)),
+                () -> verify(memberRepository).existsByUsernameAndNameAndPhone(anyString(), anyString(), anyString()),
+                () -> assertDoesNotThrow(() -> smsService.sendSms(any(SendSmsRequest.class)))
+        );
+    }
+
+    @Test
+    void 비밀번호_재설정_인증번호_발급_실패_회원_없음() throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        // given
+        PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest = PasswordResetVerificationCodeRequest.builder()
+                .username(USERNAME)
+                .name(NAME)
+                .phone(PHONE)
+                .build();
+        willReturn(false).given(memberRepository).existsByUsernameAndNameAndPhone(anyString(), anyString(), anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.createVerificationCodeForResetPassword(passwordResetVerificationCodeRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
