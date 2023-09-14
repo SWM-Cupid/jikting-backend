@@ -633,7 +633,7 @@ public class MemberServiceTest {
                 .statusCode(SMS_SEND_SUCCESS)
                 .build();
         willReturn(true).given(memberRepository).existsByUsernameAndNameAndPhone(anyString(), anyString(), anyString());
-        willReturn(smsResponse).given(smsService).sendSms(any(SendSmsRequest.class));
+        willDoNothing().given(smsService).sendSms(any(SendSmsRequest.class));
         // when & then
         assertAll(
                 () -> assertDoesNotThrow(() -> memberService.createVerificationCodeForResetPassword(passwordResetVerificationCodeRequest)),
@@ -655,5 +655,47 @@ public class MemberServiceTest {
         assertThatThrownBy(() -> memberService.createVerificationCodeForResetPassword(passwordResetVerificationCodeRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 비밀번호_재설정_인증번호_인증_성공() {
+        // given
+        VerificationRequest verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
+        // when
+        memberService.verifyForResetPassword(verificationRequest);
+        // then
+        verify(redisConnector).get(anyString());
+    }
+
+    @Test
+    void 비밀번호_재설정_인증번호_인증_실패_인증번호_불일치() {
+        // given
+        VerificationRequest verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(WRONG_VERIFICATION_CODE).given(redisConnector).get(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.verifyForResetPassword(verificationRequest))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.VERIFICATION_CODE_NOT_EQUAL.getMessage());
+    }
+
+    @Test
+    void 비밀번호_재설정_인증번호_인증_실패_인증번호_만료() {
+        // given
+        VerificationRequest verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willThrow(new BadRequestException(ApplicationError.VERIFICATION_CODE_EXPIRED)).given(redisConnector).get(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.verifyForResetPassword(verificationRequest))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.VERIFICATION_CODE_EXPIRED.getMessage());
     }
 }
