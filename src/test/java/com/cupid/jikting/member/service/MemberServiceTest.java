@@ -633,7 +633,7 @@ public class MemberServiceTest {
                 .statusCode(SMS_SEND_SUCCESS)
                 .build();
         willReturn(true).given(memberRepository).existsByUsernameAndNameAndPhone(anyString(), anyString(), anyString());
-        willReturn(smsResponse).given(smsService).sendSms(any(SendSmsRequest.class));
+        willDoNothing().given(smsService).sendSms(any(SendSmsRequest.class));
         // when & then
         assertAll(
                 () -> assertDoesNotThrow(() -> memberService.createVerificationCodeForResetPassword(passwordResetVerificationCodeRequest)),
