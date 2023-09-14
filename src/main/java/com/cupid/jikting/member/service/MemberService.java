@@ -170,6 +170,9 @@ public class MemberService {
     }
 
     public void blockCompany(Long memberProfileId) {
+        Member member = getMemberProfileById(memberProfileId).getMember();
+        member.getMemberCompanies()
+                .forEach(MemberCompany::block);
     }
 
     private MemberProfile getMemberProfileById(Long memberProfileId) {
