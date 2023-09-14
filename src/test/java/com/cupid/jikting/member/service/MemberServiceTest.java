@@ -698,4 +698,36 @@ public class MemberServiceTest {
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.VERIFICATION_CODE_EXPIRED.getMessage());
     }
+
+    @Test
+    void 비밀번호_재설정_성공() {
+        // given
+        PasswordResetRequest passwordResetRequest = PasswordResetRequest.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .build();
+        willReturn(Optional.of(member)).given(memberRepository).findByUsername(anyString());
+        willReturn(member).given(memberRepository).save(any(Member.class));
+        // when
+        memberService.resetPassword(passwordResetRequest);
+        // then
+        assertAll(
+                () -> verify(memberRepository).findByUsername(anyString()),
+                () -> verify(memberRepository).save(any(Member.class))
+        );
+    }
+
+    @Test
+    void 비밀번호_재설정_실패_회원_없음() {
+        // given
+        PasswordResetRequest passwordResetRequest = PasswordResetRequest.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .build();
+        willReturn(Optional.empty()).given(memberRepository).findByUsername(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.resetPassword(passwordResetRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
 }

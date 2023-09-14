@@ -153,6 +153,9 @@ public class MemberService {
     }
 
     public void resetPassword(PasswordResetRequest passwordResetRequest) {
+        Member member = getMemberByUsername(passwordResetRequest.getUsername());
+        member.updatePassword(passwordResetRequest.getPassword());
+        memberRepository.save(member);
     }
 
     public void createVerificationCodeForCompany(CompanyVerificationCodeRequest companyVerificationCodeRequest) {
@@ -209,5 +212,10 @@ public class MemberService {
         if (!redisConnector.get(phone).equals(verificationCode)) {
             throw new BadRequestException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
         }
+    }
+
+    private Member getMemberByUsername(String username) {
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 }
