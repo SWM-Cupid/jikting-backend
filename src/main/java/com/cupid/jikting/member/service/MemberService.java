@@ -163,6 +163,7 @@ public class MemberService {
     }
 
     public void verifyForResetPassword(VerificationRequest verificationRequest) {
+        validateVerificationCode(verificationRequest.getPhone(), verificationRequest.getVerificationCode());
     }
 
     public void resetPassword(PasswordResetRequest passwordResetRequest) {
