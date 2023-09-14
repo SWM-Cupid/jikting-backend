@@ -656,4 +656,18 @@ public class MemberServiceTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
+
+    @Test
+    void 비밀번호_재설정_인증번호_인증_성공() {
+        // given
+        VerificationRequest verificationRequest = VerificationRequest.builder()
+                .phone(PHONE)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
+        // when
+        memberService.verifyForResetPassword(verificationRequest);
+        // then
+        verify(redisConnector).get(anyString());
+    }
 }
