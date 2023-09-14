@@ -2,7 +2,10 @@ package com.cupid.jikting.member.service;
 
 import com.cupid.jikting.common.entity.Hobby;
 import com.cupid.jikting.common.entity.Personality;
-import com.cupid.jikting.common.error.*;
+import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.BadRequestException;
+import com.cupid.jikting.common.error.DuplicateException;
+import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.dto.*;
@@ -28,8 +31,6 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 public class MemberService {
-
-    private static final String SMS_SEND_SUCCESS = "202";
 
     private final FileUploadService fileUploadService;
     private final SmsService smsService;
@@ -117,12 +118,7 @@ public class MemberService {
 
     public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest)
             throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
-        SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
-                .to(signUpVerificationCodeRequest.getPhone())
-                .build();
-        if (!smsService.sendSms(sendSmsRequest).getStatusCode().equals(SMS_SEND_SUCCESS)) {
-            throw new SmsSendFailException(ApplicationError.SMS_SEND_FAIL);
-        }
+        smsService.sendSms(SendSmsRequest.from(signUpVerificationCodeRequest.getPhone()));
     }
 
     public void verifyPhoneForSignup(PhoneVerificationRequest verificationRequest) {
@@ -134,12 +130,7 @@ public class MemberService {
         if (!memberRepository.existsByNameAndPhone(usernameSearchVerificationCodeRequest.getName(), usernameSearchVerificationCodeRequest.getPhone())) {
             throw new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         }
-        SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
-                .to(usernameSearchVerificationCodeRequest.getPhone())
-                .build();
-        if (!smsService.sendSms(sendSmsRequest).getStatusCode().equals(SMS_SEND_SUCCESS)) {
-            throw new SmsSendFailException(ApplicationError.SMS_SEND_FAIL);
-        }
+        smsService.sendSms(SendSmsRequest.from(usernameSearchVerificationCodeRequest.getPhone()));
     }
 
     public UsernameResponse verifyForSearchUsername(VerificationRequest verificationRequest) {
@@ -154,12 +145,7 @@ public class MemberService {
         if (!memberRepository.existsByUsernameAndNameAndPhone(passwordResetVerificationCodeRequest.getUsername(), passwordResetVerificationCodeRequest.getName(), passwordResetVerificationCodeRequest.getPhone())) {
             throw new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         }
-        SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
-                .to(passwordResetVerificationCodeRequest.getPhone())
-                .build();
-        if (!smsService.sendSms(sendSmsRequest).getStatusCode().equals(SMS_SEND_SUCCESS)) {
-            throw new SmsSendFailException(ApplicationError.SMS_SEND_FAIL);
-        }
+        smsService.sendSms(SendSmsRequest.from(passwordResetVerificationCodeRequest.getPhone()));
     }
 
     public void verifyForResetPassword(VerificationRequest verificationRequest) {
