@@ -18,7 +18,6 @@ public class MemberProfileResponse {
     private List<ImageResponse> images;
     private LocalDate birth;
     private int height;
-    private String gender;
     private String address;
     private String mbti;
     private String smokeStatus;
@@ -37,7 +36,6 @@ public class MemberProfileResponse {
                 images,
                 memberProfile.getBirth(),
                 memberProfile.getHeight(),
-                memberProfile.getGender().getMessage(),
                 memberProfile.getAddress(),
                 memberProfile.getMbti().name(),
                 memberProfile.getSmokeStatus().getMessage(),
