@@ -211,7 +211,7 @@ public class MemberServiceTest {
         assertAll(
                 () -> verify(memberProfileRepository).findById(anyLong()),
                 () -> assertThat(memberProfileResponse.getImages().size()).isEqualTo(PROFILE_IMAGE_SIZE),
-                () -> assertThat(memberProfileResponse.getAge()).isEqualTo(memberProfile.getAge()),
+                () -> assertThat(memberProfileResponse.getBirth()).isEqualTo(memberProfile.getBirth()),
                 () -> assertThat(memberProfileResponse.getHeight()).isEqualTo(memberProfile.getHeight()),
                 () -> assertThat(memberProfileResponse.getAddress()).isEqualTo(memberProfile.getAddress()),
                 () -> assertThat(memberProfileResponse.getMbti()).isEqualTo(memberProfile.getMbti().name()),
