@@ -123,7 +123,7 @@ public class RecommendServiceTest {
         //when
         List<RecommendResponse> recommendResponses = recommendService.get(ID);
         //then
-        assertThat(recommendResponses.size()).isEqualTo(memberProfile.getRecommends().size());
+        assertThat(recommendResponses).hasSize(memberProfile.getRecommends().size());
     }
 
     @Test

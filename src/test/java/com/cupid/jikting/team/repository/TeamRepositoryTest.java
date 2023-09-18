@@ -54,7 +54,7 @@ class TeamRepositoryTest {
                 () -> assertThat(savedTeam.getMemberCount()).isEqualTo(MEMBER_COUNT),
                 () -> assertThat(savedTeam.getDescription()).isEqualTo(DESCRIPTION),
                 () -> assertThat(savedTeam.getGender()).isEqualTo(Gender.MALE),
-                () -> assertThat(savedTeam.getTeamPersonalities().size()).isEqualTo(teamPersonalities.size())
+                () -> assertThat(savedTeam.getTeamPersonalities()).hasSize(teamPersonalities.size())
         );
     }
 

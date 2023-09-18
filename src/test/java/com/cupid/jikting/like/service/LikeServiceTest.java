@@ -141,7 +141,7 @@ class LikeServiceTest {
         // then
         assertAll(
                 () -> verify(teamMemberRepository).getTeamMemberByMemberProfileId(anyLong()),
-                () -> assertThat(likeResponses.size()).isEqualTo(teamLikes.size())
+                () -> assertThat(likeResponses).hasSize(teamLikes.size())
         );
     }
 
@@ -164,7 +164,7 @@ class LikeServiceTest {
         // then
         assertAll(
                 () -> verify(teamMemberRepository).getTeamMemberByMemberProfileId(anyLong()),
-                () -> assertThat(likeResponses.size()).isEqualTo(teamLikes.size())
+                () -> assertThat(likeResponses).hasSize(teamLikes.size())
         );
     }
 
