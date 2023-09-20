@@ -150,12 +150,6 @@ public class MemberControllerTest extends ApiDocument {
                 .company(company)
                 .build();
         memberProfile.getMember().getMemberCompanies().add(memberCompany);
-        List<ImageRequest> images = IntStream.range(0, 1)
-                .mapToObj(n -> ImageRequest.builder()
-                        .url(profileImage.getUrl())
-                        .sequence(profileImage.getSequence().name())
-                        .build())
-                .collect(Collectors.toList());
         List<String> personalities = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> PERSONALITY + n)
                 .collect(Collectors.toList());
@@ -227,7 +221,6 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .build();
         companyVerificationCodeRequest = CompanyVerificationCodeRequest.builder()
-                .company(COMPANY)
                 .companyEmail(COMPANY_EMAIL)
                 .build();
         loginRequest = LoginRequest.builder()
