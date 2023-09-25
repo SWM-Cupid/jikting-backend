@@ -568,8 +568,10 @@ public class MemberServiceTest {
         //when
         memberService.blockCompany(ID);
         //then
-        verify(memberProfileRepository).findById(anyLong());
-        memberCompanies.forEach(memberCompany -> verify(memberCompany).block());
+        assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> memberCompanies.forEach(memberCompany -> verify(memberCompany).block())
+        );
     }
 
     @Test
