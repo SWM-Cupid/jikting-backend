@@ -230,8 +230,8 @@ class TeamServiceTest {
         assertAll(
                 () -> verify(memberProfileRepository).findById(anyLong()),
                 () -> assertThat(teamResponse.getDescription()).isEqualTo(DESCRIPTION),
-                () -> assertThat(teamResponse.getKeywords().size()).isEqualTo(teamPersonalities.size()),
-                () -> assertThat(teamResponse.getMembers().size()).isEqualTo(team.getTeamMembers().size())
+                () -> assertThat(teamResponse.getKeywords()).hasSize(teamPersonalities.size()),
+                () -> assertThat(teamResponse.getMembers()).hasSize(team.getTeamMembers().size())
         );
     }
 

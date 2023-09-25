@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,9 +16,8 @@ import java.util.stream.Collectors;
 public class MemberProfileResponse {
 
     private List<ImageResponse> images;
-    private int age;
+    private LocalDate birth;
     private int height;
-    private String gender;
     private String address;
     private String mbti;
     private String smokeStatus;
@@ -34,9 +34,8 @@ public class MemberProfileResponse {
                 .collect(Collectors.toList());
         return new MemberProfileResponse(
                 images,
-                memberProfile.getAge(),
+                memberProfile.getBirth(),
                 memberProfile.getHeight(),
-                memberProfile.getGender().getMessage(),
                 memberProfile.getAddress(),
                 memberProfile.getMbti().name(),
                 memberProfile.getSmokeStatus().getMessage(),

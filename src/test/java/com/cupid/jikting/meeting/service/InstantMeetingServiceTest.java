@@ -72,7 +72,7 @@ public class InstantMeetingServiceTest {
         // then
         assertAll(
                 () -> verify(instantMeetingRepository).findAll(),
-                () -> assertThat(instantMeetingResponses.size()).isEqualTo(instantMeetings.size())
+                () -> assertThat(instantMeetingResponses).hasSize(instantMeetings.size())
         );
     }
 

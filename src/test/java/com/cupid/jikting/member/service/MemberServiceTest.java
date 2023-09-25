@@ -210,16 +210,16 @@ public class MemberServiceTest {
         // then
         assertAll(
                 () -> verify(memberProfileRepository).findById(anyLong()),
-                () -> assertThat(memberProfileResponse.getImages().size()).isEqualTo(PROFILE_IMAGE_SIZE),
-                () -> assertThat(memberProfileResponse.getAge()).isEqualTo(memberProfile.getAge()),
+                () -> assertThat(memberProfileResponse.getImages()).hasSize(PROFILE_IMAGE_SIZE),
+                () -> assertThat(memberProfileResponse.getBirth()).isEqualTo(memberProfile.getBirth()),
                 () -> assertThat(memberProfileResponse.getHeight()).isEqualTo(memberProfile.getHeight()),
                 () -> assertThat(memberProfileResponse.getAddress()).isEqualTo(memberProfile.getAddress()),
                 () -> assertThat(memberProfileResponse.getMbti()).isEqualTo(memberProfile.getMbti().name()),
                 () -> assertThat(memberProfileResponse.getSmokeStatus()).isEqualTo(memberProfile.getSmokeStatus().getMessage()),
                 () -> assertThat(memberProfileResponse.getDrinkStatus()).isEqualTo(memberProfile.getDrinkStatus().getMessage()),
                 () -> assertThat(memberProfileResponse.getCollege()).isEqualTo(memberProfile.getCollege()),
-                () -> assertThat(memberProfileResponse.getPersonalities().size()).isEqualTo(memberPersonalities.size()),
-                () -> assertThat(memberProfileResponse.getHobbies().size()).isEqualTo(memberHobbies.size()),
+                () -> assertThat(memberProfileResponse.getPersonalities()).hasSize(memberPersonalities.size()),
+                () -> assertThat(memberProfileResponse.getHobbies()).hasSize(memberHobbies.size()),
                 () -> assertThat(memberProfileResponse.getDescription()).isEqualTo(memberProfile.getDescription())
         );
     }

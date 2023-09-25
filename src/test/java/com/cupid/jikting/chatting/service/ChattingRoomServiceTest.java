@@ -141,7 +141,7 @@ class ChattingRoomServiceTest {
         // when
         List<ChattingRoomResponse> chattingRoomResponses = chattingRoomService.getAll(ID);
         // then
-        assertThat(chattingRoomResponses.size()).isEqualTo(chattingRooms.size());
+        assertThat(chattingRoomResponses).hasSize(chattingRooms.size());
     }
 
     @Test
@@ -172,9 +172,9 @@ class ChattingRoomServiceTest {
                 () -> verify(redisConnector).getMessages(anyString()),
                 () -> assertThat(chattingRoomDetailResponse.getName()).isEqualTo(NAME),
                 () -> assertThat(chattingRoomDetailResponse.getDescription()).isEqualTo(DESCRIPTION),
-                () -> assertThat(chattingRoomDetailResponse.getKeywords().size()).isEqualTo(chattingRoom.getOppositeTeamKeywords(memberProfile.getTeam()).size()),
-                () -> assertThat(chattingRoomDetailResponse.getMembers().size()).isEqualTo(chattingRoom.getMemberProfiles().size()),
-                () -> assertThat(chattingRoomDetailResponse.getChattings().size()).isEqualTo(chattings.size())
+                () -> assertThat(chattingRoomDetailResponse.getKeywords()).hasSize(chattingRoom.getOppositeTeamKeywords(memberProfile.getTeam()).size()),
+                () -> assertThat(chattingRoomDetailResponse.getMembers()).hasSize(chattingRoom.getMemberProfiles().size()),
+                () -> assertThat(chattingRoomDetailResponse.getChattings()).hasSize(chattings.size())
         );
     }
 
