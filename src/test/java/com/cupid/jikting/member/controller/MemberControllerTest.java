@@ -221,7 +221,7 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .build();
         companyVerificationCodeRequest = CompanyVerificationCodeRequest.builder()
-                .companyEmail(COMPANY_EMAIL)
+                .email(COMPANY_EMAIL)
                 .build();
         loginRequest = LoginRequest.builder()
                 .username(USERNAME)
