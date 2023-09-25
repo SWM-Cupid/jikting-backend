@@ -170,8 +170,7 @@ public class MemberService {
     }
 
     public void blockCompany(Long memberProfileId) {
-        Member member = getMemberProfileById(memberProfileId).getMember();
-        member.blockCompanies();
+        getMemberProfileById(memberProfileId).getMember().blockCompanies();
     }
 
     private MemberProfile getMemberProfileById(Long memberProfileId) {
