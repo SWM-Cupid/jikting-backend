@@ -10,6 +10,7 @@ import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
+import com.cupid.jikting.member.repository.CompanyRepository;
 import com.cupid.jikting.member.repository.HobbyRepository;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
@@ -32,11 +33,16 @@ import java.util.stream.Collectors;
 @Service
 public class MemberService {
 
+    private static final String EMAIL_DELIMITER = "@";
+    private static final int DOMAIN = 1;
+
     private final FileUploadService fileUploadService;
     private final SmsService smsService;
+    private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
+    private final CompanyRepository companyRepository;
     private final PersonalityRepository personalityRepository;
     private final HobbyRepository hobbyRepository;
     private final RedisConnector redisConnector;
@@ -158,7 +164,11 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public void createVerificationCodeForCompany(CompanyVerificationCodeRequest companyVerificationCodeRequest) {
+    public void createVerificationCodeForCompany(Long memberProfileId, CompanyVerificationCodeRequest companyVerificationCodeRequest)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        String email = companyVerificationCodeRequest.getEmail();
+        validateCompanyDomain(email);
+        mailService.sendMail(getMemberProfileById(memberProfileId).getMemberName(), email);
     }
 
     public void verifyForCompany(VerificationRequest verificationRequest) {
@@ -217,5 +227,15 @@ public class MemberService {
     private Member getMemberByUsername(String username) {
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
+    }
+
+    private void validateCompanyDomain(String email) {
+        if (!companyRepository.existsByEmail(extractDomain(email))) {
+            throw new NotFoundException(ApplicationError.INVALID_COMPANY);
+        }
+    }
+
+    private String extractDomain(String email) {
+        return email.split(EMAIL_DELIMITER)[DOMAIN];
     }
 }
