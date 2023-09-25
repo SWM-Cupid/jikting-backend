@@ -15,6 +15,6 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getGender() {
-        return null;
+        return ((String) attributes.get("gender")).toUpperCase();
     }
 }
