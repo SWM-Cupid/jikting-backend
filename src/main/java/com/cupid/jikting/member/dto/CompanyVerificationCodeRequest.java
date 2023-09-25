@@ -8,5 +8,5 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CompanyVerificationCodeRequest {
 
-    private String companyEmail;
+    private String email;
 }
