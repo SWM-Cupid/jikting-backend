@@ -70,4 +70,8 @@ public class Member extends BaseEntity {
     public void updatePassword(String newPassword) {
         this.password = newPassword;
     }
+
+    public void blockCompanies() {
+        memberCompanies.forEach(MemberCompany::block);
+    }
 }
