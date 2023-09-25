@@ -573,7 +573,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    void 재직중인_회사_차단_실페_회원_없음() {
+    void 재직중인_회사_차단_실패_회원_없음() {
         // given
         willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
         // when & then
