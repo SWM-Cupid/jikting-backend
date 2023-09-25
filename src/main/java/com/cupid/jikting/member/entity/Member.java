@@ -73,11 +73,11 @@ public class Member extends BaseEntity {
     }
 
     public void blockCompanies() {
-        verifyCompanyExists();
+        validateCompanyExists();
         memberCompanies.forEach(MemberCompany::block);
     }
 
-    private void verifyCompanyExists() {
+    private void validateCompanyExists() {
         if (memberCompanies.isEmpty()) {
             throw new BadRequestException(ApplicationError.FORBIDDEN_MEMBER);
         }
