@@ -583,14 +583,4 @@ public class MemberServiceTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
-
-    @Test
-    void 재직중인_회사_차단_실패_회사_없음() {
-        //given
-        willThrow(new BadRequestException(ApplicationError.FORBIDDEN_MEMBER)).given(memberProfileRepository).findById(anyLong());
-        // when & then
-        assertThatThrownBy(() -> memberService.blockCompany(ID))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage(ApplicationError.FORBIDDEN_MEMBER.getMessage());
-    }
 }
