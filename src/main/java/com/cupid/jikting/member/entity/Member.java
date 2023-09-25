@@ -2,6 +2,7 @@ package com.cupid.jikting.member.entity;
 
 import com.cupid.jikting.common.entity.BaseEntity;
 import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.UnAuthorizedException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -71,5 +72,16 @@ public class Member extends BaseEntity {
 
     public void updatePassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    public void blockCompanies() {
+        validateCompanyExists();
+        memberCompanies.forEach(MemberCompany::block);
+    }
+
+    private void validateCompanyExists() {
+        if (memberCompanies.isEmpty()) {
+            throw new BadRequestException(ApplicationError.FORBIDDEN_MEMBER);
+        }
     }
 }

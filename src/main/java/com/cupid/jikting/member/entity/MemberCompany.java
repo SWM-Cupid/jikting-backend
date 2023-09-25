@@ -30,4 +30,8 @@ public class MemberCompany extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    public void block() {
+        isBlock = true;
+    }
 }
