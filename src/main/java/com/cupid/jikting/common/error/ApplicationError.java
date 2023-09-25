@@ -22,6 +22,7 @@ public enum ApplicationError {
     SMS_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "C012", "SMS 전송 요청에 실패했습니다."),
     WRONG_ACCESS(HttpStatus.BAD_REQUEST, "C013", "잘못된 접근입니다."),
     INVALID_TOKEN_TYPE(HttpStatus.BAD_REQUEST, "C014", "Token 타입이 올바르지 않습니다."),
+    MAIL_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "C015", "메일 전송 요청에 실패했습니다."),
 
     UNAUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "U001", "인증되지 않은 사용자입니다."),
     FORBIDDEN_MEMBER(HttpStatus.FORBIDDEN, "U002", "권한이 없는 사용자입니다."),
