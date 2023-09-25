@@ -188,4 +188,8 @@ public class MemberProfile extends BaseEntity {
                 .map(MemberChattingRoom::getChattingRoom)
                 .collect(Collectors.toList());
     }
+
+    public String getMemberName() {
+        return member.getName();
+    }
 }
