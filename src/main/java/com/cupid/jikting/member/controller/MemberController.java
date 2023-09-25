@@ -120,9 +120,10 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/company/code")
-    public ResponseEntity<Void> createVerificationCodeForCompany(@RequestBody CompanyVerificationCodeRequest companyVerificationCodeRequest) {
-        memberService.createVerificationCodeForCompany(companyVerificationCodeRequest);
+    @PostMapping("/company/code")
+    public ResponseEntity<Void> createVerificationCodeForCompany(@AuthorizedVariable Long memberProfileId, @RequestBody CompanyVerificationCodeRequest companyVerificationCodeRequest)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        memberService.createVerificationCodeForCompany(memberProfileId, companyVerificationCodeRequest);
         return ResponseEntity.ok().build();
     }
 
