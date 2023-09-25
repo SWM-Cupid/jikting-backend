@@ -559,11 +559,11 @@ public class MemberServiceTest {
         List<MemberCompany> memberCompanies = IntStream.range(0, 3)
                 .mapToObj(n -> mock(MemberCompany.class))
                 .collect(Collectors.toList());
-        Member member1 = Member.builder()
+        Member member = Member.builder()
                 .memberCompanies(memberCompanies)
                 .build();
-        member1.addMemberProfile(NICKNAME);
-        memberProfile = member1.getMemberProfile();
+        member.addMemberProfile(NICKNAME);
+        memberProfile = member.getMemberProfile();
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         //when
         memberService.blockCompany(ID);
