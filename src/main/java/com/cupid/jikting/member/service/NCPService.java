@@ -27,6 +27,9 @@ public abstract class NCPService {
     protected static final String SECRET_KEY_ALGORITHM = "HmacSHA256";
     protected static final String BLANK = " ";
     protected static final String NEW_LINE = "\n";
+    protected static final String SERVICE_NAME = "직팅";
+
+    private static final String VERIFICATION_CODE_MESSAGE = "[" + SERVICE_NAME + "]\n인증번호: ";
 
     protected final RedisConnector redisConnector;
     protected final ObjectMapper objectMapper;
@@ -45,7 +48,7 @@ public abstract class NCPService {
     }
 
     protected String getVerificationCodeMessage(String verificationCode) {
-        return "[직팅]\n인증번호: " + verificationCode;
+        return VERIFICATION_CODE_MESSAGE + verificationCode;
     }
 
     protected HttpHeaders getHttpHeaders(String url) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
