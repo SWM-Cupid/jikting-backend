@@ -14,7 +14,6 @@ import com.cupid.jikting.member.repository.CompanyRepository;
 import com.cupid.jikting.member.repository.HobbyRepository;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,9 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -122,8 +118,7 @@ public class MemberService {
         }
     }
 
-    public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest)
-            throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+    public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest) throws Exception {
         smsService.sendSms(SendSmsRequest.from(signUpVerificationCodeRequest.getPhone()));
     }
 
@@ -132,7 +127,7 @@ public class MemberService {
     }
 
     public void createVerificationCodeForSearchUsername(UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest)
-            throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+            throws Exception {
         if (!memberRepository.existsByNameAndPhone(usernameSearchVerificationCodeRequest.getName(), usernameSearchVerificationCodeRequest.getPhone())) {
             throw new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         }
@@ -147,7 +142,7 @@ public class MemberService {
     }
 
     public void createVerificationCodeForResetPassword(PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest)
-            throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+            throws Exception {
         if (!memberRepository.existsByUsernameAndNameAndPhone(passwordResetVerificationCodeRequest.getUsername(), passwordResetVerificationCodeRequest.getName(), passwordResetVerificationCodeRequest.getPhone())) {
             throw new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         }
