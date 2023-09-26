@@ -1,7 +1,7 @@
 package com.cupid.jikting.common.resolver;
 
-import com.cupid.jikting.common.support.AuthorizedVariable;
 import com.cupid.jikting.common.jwt.service.JwtService;
+import com.cupid.jikting.common.support.AuthorizedVariable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

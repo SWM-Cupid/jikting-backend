@@ -3,7 +3,6 @@ package com.cupid.jikting.common.service;
 import com.cupid.jikting.chatting.entity.Chatting;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
-import com.cupid.jikting.common.error.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
