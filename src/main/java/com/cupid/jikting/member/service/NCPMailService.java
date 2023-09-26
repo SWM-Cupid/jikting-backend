@@ -23,6 +23,7 @@ import java.util.List;
 public class NCPMailService extends NCPService implements MailService {
 
     private static final String TYPE = "R";
+    private static final String MAIL_TITLE = "[" + SERVICE_NAME + "] 회사 인증번호 안내 메일";
 
     @Value("${ncp.mail.senderAddress}")
     private String senderAddress;
@@ -44,10 +45,10 @@ public class NCPMailService extends NCPService implements MailService {
 
     private MailRequest getMailRequest(String name, String email, String verificationCode) {
         return MailRequest.builder()
-                .title("[직팅] 회사 인증번호 안내 메일")
+                .title(MAIL_TITLE)
                 .body(getVerificationCodeMessage(verificationCode))
                 .senderAddress(senderAddress)
-                .senderName("직팅")
+                .senderName(SERVICE_NAME)
                 .recipients(List.of(MailRequestRecipient.of(name, email, TYPE)))
                 .build();
     }
