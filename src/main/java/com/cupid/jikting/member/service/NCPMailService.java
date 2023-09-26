@@ -24,6 +24,7 @@ public class NCPMailService extends NCPService implements MailService {
 
     private static final String TYPE = "R";
     private static final String MAIL_TITLE = "[" + SERVICE_NAME + "] 회사 인증번호 안내 메일";
+    private static final int SUCCESS = 1;
 
     @Value("${ncp.mail.senderAddress}")
     private String senderAddress;
@@ -38,7 +39,7 @@ public class NCPMailService extends NCPService implements MailService {
                 URI.create("https://mail.apigw.ntruss.com/api/v1/mails"),
                 new HttpEntity<>(objectMapper.writeValueAsString(getMailRequest(name, email, generateVerificationCode(email))), getHttpHeaders("/api/v1/mails")),
                 MailResponse.class);
-        if (mailResponse.getCount() != 1) {
+        if (mailResponse.getCount() != SUCCESS) {
             throw new MailSendFailException(ApplicationError.MAIL_SEND_FAIL);
         }
     }
