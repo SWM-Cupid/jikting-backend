@@ -8,5 +8,5 @@ import java.security.NoSuchAlgorithmException;
 
 public interface MailService {
 
-    void sendMail(String name, String email) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException;
+    void sendMail(String name, String email) throws Exception;
 }
