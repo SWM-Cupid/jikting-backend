@@ -1,5 +1,6 @@
 package com.cupid.jikting.member.oauth2;
 
+import com.cupid.jikting.member.entity.Gender;
 import com.cupid.jikting.member.entity.Member;
 import com.cupid.jikting.member.entity.Role;
 import com.cupid.jikting.member.entity.SocialType;
@@ -47,6 +48,7 @@ public class OAuthAttributes {
                 .socialType(socialType)
                 .socialId(oauth2UserInfo.getId())
                 .username(UUID.randomUUID().toString())
+                .gender(Gender.valueOf(oauth2UserInfo.getGender()))
                 .role(Role.GUEST)
                 .build();
     }

@@ -12,4 +12,9 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
     public String getId() {
         return String.valueOf(attributes.get("id"));
     }
+
+    @Override
+    public String getGender() {
+        return String.valueOf(attributes.get("gender")).toUpperCase();
+    }
 }
