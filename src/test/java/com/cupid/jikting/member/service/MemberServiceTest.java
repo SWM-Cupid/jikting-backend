@@ -622,7 +622,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    void 비밀번호_재설정_인증번호_발급_성공() throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+    void 비밀번호_재설정_인증번호_발급_성공() throws Exception {
         // given
         PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest = PasswordResetVerificationCodeRequest.builder()
                 .username(USERNAME)
