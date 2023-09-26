@@ -164,8 +164,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public void createVerificationCodeForCompany(Long memberProfileId, CompanyVerificationCodeRequest companyVerificationCodeRequest)
-            throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+    public void createVerificationCodeForCompany(Long memberProfileId, CompanyVerificationCodeRequest companyVerificationCodeRequest) throws Exception {
         String email = companyVerificationCodeRequest.getEmail();
         validateCompanyDomain(email);
         mailService.sendMail(getMemberProfileById(memberProfileId).getMemberName(), email);
