@@ -150,12 +150,6 @@ public class MemberControllerTest extends ApiDocument {
                 .company(company)
                 .build();
         memberProfile.getMember().getMemberCompanies().add(memberCompany);
-        List<ImageRequest> images = IntStream.range(0, 1)
-                .mapToObj(n -> ImageRequest.builder()
-                        .url(profileImage.getUrl())
-                        .sequence(profileImage.getSequence().name())
-                        .build())
-                .collect(Collectors.toList());
         List<String> personalities = IntStream.rangeClosed(1, 3)
                 .mapToObj(n -> PERSONALITY + n)
                 .collect(Collectors.toList());
@@ -227,8 +221,7 @@ public class MemberControllerTest extends ApiDocument {
                 .password(PASSWORD)
                 .build();
         companyVerificationCodeRequest = CompanyVerificationCodeRequest.builder()
-                .company(COMPANY)
-                .companyEmail(COMPANY_EMAIL)
+                .email(COMPANY_EMAIL)
                 .build();
         loginRequest = LoginRequest.builder()
                 .username(USERNAME)
@@ -631,7 +624,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회사_이메일_인증번호_발급_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).createVerificationCodeForCompany(any(CompanyVerificationCodeRequest.class));
+        willDoNothing().given(memberService).createVerificationCodeForCompany(anyLong(), any(CompanyVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 회사_이메일_인증번호_발급_요청();
         // then
@@ -642,7 +635,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회사_이메일_인증번호_발급_실패() throws Exception {
         // given
-        willThrow(wrongFormException).given(memberService).createVerificationCodeForCompany(any(CompanyVerificationCodeRequest.class));
+        willThrow(wrongFormException).given(memberService).createVerificationCodeForCompany(anyLong(), any(CompanyVerificationCodeRequest.class));
         // when
         ResultActions resultActions = 회사_이메일_인증번호_발급_요청();
         // then
@@ -1112,7 +1105,7 @@ public class MemberControllerTest extends ApiDocument {
     }
 
     private ResultActions 회사_이메일_인증번호_발급_요청() throws Exception {
-        return mockMvc.perform(patch(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/code")
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/code")
                 .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)

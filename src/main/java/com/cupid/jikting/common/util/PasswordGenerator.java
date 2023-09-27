@@ -19,7 +19,7 @@ public class PasswordGenerator extends RandomGenerator {
 
     public static String generate() {
         return String.join(DELIMITER, IntStream.range(0, PASSWORD_LENGTH)
-                .mapToObj(i -> CHARACTERS[(int) (CHARACTERS.length * RANDOM.nextDouble())])
+                .mapToObj(i -> CHARACTERS[RANDOM.nextInt(CHARACTERS.length)])
                 .toArray(String[]::new));
     }
 }

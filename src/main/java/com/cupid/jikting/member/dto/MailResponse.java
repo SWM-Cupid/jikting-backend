@@ -6,7 +6,8 @@ import lombok.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CompanyVerificationCodeRequest {
+public class MailResponse {
 
-    private String email;
+    private String requestId;
+    private int count;
 }
