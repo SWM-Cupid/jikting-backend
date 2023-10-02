@@ -12,13 +12,11 @@ import lombok.NoArgsConstructor;
 public class ImageResponse {
 
     private String sequence;
-    private Long memberProfileId;
     private String url;
 
     public static ImageResponse from(ProfileImage profileImage) {
         return new ImageResponse(
                 profileImage.getSequence().name(),
-                profileImage.getMemberProfileId(),
                 profileImage.getUrl());
     }
 }
