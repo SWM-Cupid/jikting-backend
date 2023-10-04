@@ -756,6 +756,20 @@ public class MemberServiceTest {
     }
 
     @Test
+    void 회사_이메일_인증번호_인증_실패_회사_없음() {
+        // given
+        VerificationEmailRequest verificationEmailRequest = VerificationEmailRequest.builder()
+                .email(EMAIL)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(false).given(companyRepository).existsByEmail(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.verifyForCompany(verificationEmailRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.INVALID_COMPANY.getMessage());
+    }
+
+    @Test
     void 재직중인_회사_차단_성공() {
         //given
         List<MemberCompany> memberCompanies = IntStream.range(0, 3)
