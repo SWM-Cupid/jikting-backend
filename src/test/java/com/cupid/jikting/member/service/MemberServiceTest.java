@@ -7,6 +7,7 @@ import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
+import com.cupid.jikting.member.repository.CompanyRepository;
 import com.cupid.jikting.member.repository.HobbyRepository;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
@@ -63,6 +64,7 @@ public class MemberServiceTest {
     private static final String WRONG_VERIFICATION_CODE = "잘못된" + VERIFICATION_CODE;
     private static final int PROFILE_IMAGE_SIZE = 3;
     private static final String SMS_SEND_SUCCESS = "202";
+    private static final String EMAIL = "email@soma.com";
 
     private Member member;
     private MemberProfile memberProfile;
@@ -92,6 +94,9 @@ public class MemberServiceTest {
 
     @Mock
     private MemberProfileRepository memberProfileRepository;
+
+    @Mock
+    private CompanyRepository companyRepository;
 
     @Mock
     private PersonalityRepository personalityRepository;
@@ -730,6 +735,24 @@ public class MemberServiceTest {
         assertThatThrownBy(() -> memberService.resetPassword(passwordResetRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 회사_이메일_인증번호_인증_성공() {
+        // given
+        VerificationEmailRequest verificationEmailRequest = VerificationEmailRequest.builder()
+                .email(EMAIL)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(true).given(companyRepository).existsByEmail(anyString());
+        willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
+        // when
+        memberService.verifyForCompany(verificationEmailRequest);
+        // then
+        assertAll(
+                () -> verify(companyRepository).existsByEmail(anyString()),
+                () -> verify(redisConnector).get(anyString())
+        );
     }
 
     @Test
