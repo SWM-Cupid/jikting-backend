@@ -139,9 +139,9 @@ public class MemberService {
         smsService.sendSms(SendSmsRequest.from(usernameSearchVerificationCodeRequest.getPhone()));
     }
 
-    public UsernameResponse verifyForSearchUsername(VerificationRequest verificationRequest) {
-        validateVerificationCode(verificationRequest.getPhone(), verificationRequest.getVerificationCode());
-        return memberRepository.findByPhone(verificationRequest.getPhone())
+    public UsernameResponse verifyForSearchUsername(VerificationPhoneRequest verificationPhoneRequest) {
+        validateVerificationCode(verificationPhoneRequest.getPhone(), verificationPhoneRequest.getVerificationCode());
+        return memberRepository.findByPhone(verificationPhoneRequest.getPhone())
                 .map(UsernameResponse::from)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
@@ -154,8 +154,8 @@ public class MemberService {
         smsService.sendSms(SendSmsRequest.from(passwordResetVerificationCodeRequest.getPhone()));
     }
 
-    public void verifyForResetPassword(VerificationRequest verificationRequest) {
-        validateVerificationCode(verificationRequest.getPhone(), verificationRequest.getVerificationCode());
+    public void verifyForResetPassword(VerificationPhoneRequest verificationPhoneRequest) {
+        validateVerificationCode(verificationPhoneRequest.getPhone(), verificationPhoneRequest.getVerificationCode());
     }
 
     public void resetPassword(PasswordResetRequest passwordResetRequest) {

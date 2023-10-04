@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class VerificationRequest {
+public class VerificationPhoneRequest {
 
     private String phone;
     private String verificationCode;

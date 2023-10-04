@@ -97,8 +97,8 @@ public class MemberController {
     }
 
     @PostMapping("/username/search/verification")
-    public ResponseEntity<UsernameResponse> verifyForSearchUsername(@RequestBody VerificationRequest verificationRequest) {
-        return ResponseEntity.ok().body(memberService.verifyForSearchUsername(verificationRequest));
+    public ResponseEntity<UsernameResponse> verifyForSearchUsername(@RequestBody VerificationPhoneRequest verificationPhoneRequest) {
+        return ResponseEntity.ok().body(memberService.verifyForSearchUsername(verificationPhoneRequest));
     }
 
     @PostMapping("/password/reset/code")
@@ -109,8 +109,8 @@ public class MemberController {
     }
 
     @PostMapping("/password/reset/verification")
-    public ResponseEntity<Void> verifyForResetPassword(@RequestBody VerificationRequest verificationRequest) {
-        memberService.verifyForResetPassword(verificationRequest);
+    public ResponseEntity<Void> verifyForResetPassword(@RequestBody VerificationPhoneRequest verificationPhoneRequest) {
+        memberService.verifyForResetPassword(verificationPhoneRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -129,8 +129,8 @@ public class MemberController {
     }
 
     @PostMapping("/company/verification")
-    public ResponseEntity<Void> verifyForCompany(@RequestBody VerificationRequest verificationRequest) {
-        memberService.verifyForCompany(verificationRequest);
+    public ResponseEntity<Void> verifyForCompany(@RequestBody VerificationEmailRequest verificationEmailRequest) {
+        memberService.verifyForCompany(verificationEmailRequest);
         return ResponseEntity.ok().build();
     }
 
