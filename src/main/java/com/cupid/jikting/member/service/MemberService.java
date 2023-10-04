@@ -171,7 +171,10 @@ public class MemberService {
         mailService.sendMail(getMemberProfileById(memberProfileId).getMemberName(), email);
     }
 
-    public void verifyForCompany(VerificationRequest verificationRequest) {
+    public void verifyForCompany(VerificationEmailRequest verificationPhoneRequest) {
+        String email = verificationPhoneRequest.getEmail();
+        validateCompanyDomain(email);
+        validateVerificationCode(email, verificationPhoneRequest.getVerificationCode());
     }
 
     public void verifyCardForCompany(CompanyVerificationRequest companyVerificationRequest, MultipartFile multipartFile) {
