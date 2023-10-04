@@ -222,8 +222,8 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundException(ApplicationError.HOBBY_NOT_FOUND));
     }
 
-    private void validateVerificationCode(String phone, String verificationCode) {
-        if (!redisConnector.get(phone).equals(verificationCode)) {
+    private void validateVerificationCode(String key, String verificationCode) {
+        if (!redisConnector.get(key).equals(verificationCode)) {
             throw new BadRequestException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
         }
     }
