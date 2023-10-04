@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 
 @Slf4j
-@Component
 @Aspect
+@Component
 public class LogAspect {
 
     @Before(value = "within(com.cupid.jikting..controller.*)")
