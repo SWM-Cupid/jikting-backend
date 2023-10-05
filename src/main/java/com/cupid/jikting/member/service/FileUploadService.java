@@ -1,9 +1,13 @@
 package com.cupid.jikting.member.service;
 
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.rekognition.AmazonRekognition;
+import com.amazonaws.services.rekognition.AmazonRekognitionClientBuilder;
+import com.amazonaws.services.rekognition.model.*;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.FileUploadException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +17,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -31,6 +36,7 @@ public class FileUploadService {
         metadata.setContentLength(file.getSize());
         String fileName = UUID.randomUUID().toString();
         amazonS3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
+        validIsFace(fileName);
         return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/" + fileName;
     }
 
@@ -58,5 +64,28 @@ public class FileUploadService {
     private String extractKeyFromImageUrl(String imageUrl) {
         UriComponents components = UriComponentsBuilder.fromUriString(imageUrl).build();
         return components.getPathSegments().get(components.getPathSegments().size() - 1);
+    }
+
+    private void validIsFace(String fileName) {
+        AmazonRekognition rekognitionClient = AmazonRekognitionClientBuilder.defaultClient();
+        DetectFacesRequest request = new DetectFacesRequest()
+                .withImage(new Image()
+                        .withS3Object(new S3Object()
+                                .withName(fileName)
+                                .withBucket(bucket)))
+                .withAttributes(Attribute.DEFAULT);
+        try {
+            DetectFacesResult result = rekognitionClient.detectFaces(request);
+            List<FaceDetail> faceDetails = result.getFaceDetails();
+            if (faceDetails.isEmpty()) {
+                throw new BadRequestException(ApplicationError.PROFILE_IMAGE_NOT_FACE);
+            }
+            faceDetails.stream()
+                    .filter(face -> face.getConfidence() >= 90)
+                    .findFirst()
+                    .orElseThrow(() -> new BadRequestException(ApplicationError.PROFILE_IMAGE_NOT_FACE));
+        } catch (AmazonRekognitionException e) {
+            throw new BadRequestException(ApplicationError.PROFILE_IMAGE_NOT_FACE);
+        }
     }
 }
