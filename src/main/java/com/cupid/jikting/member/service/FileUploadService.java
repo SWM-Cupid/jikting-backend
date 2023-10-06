@@ -36,7 +36,7 @@ public class FileUploadService {
         metadata.setContentLength(file.getSize());
         String fileName = UUID.randomUUID().toString();
         amazonS3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
-        validIsFace(fileName);
+        validateFace(fileName);
         return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/" + fileName;
     }
 
@@ -52,22 +52,7 @@ public class FileUploadService {
         }
     }
 
-    private void delete(String url) {
-        String key = extractKeyFromImageUrl(url);
-        try {
-            amazonS3Client.deleteObject(bucket, key);
-        } catch (AmazonServiceException e) {
-            throw new FileUploadException(ApplicationError.AWS_S3_DELETE_ERROR);
-        }
-    }
-
-    private String extractKeyFromImageUrl(String imageUrl) {
-        UriComponents components = UriComponentsBuilder.fromUriString(imageUrl).build();
-        return components.getPathSegments().get(components.getPathSegments().size() - 1);
-    }
-
-    private void validIsFace(String fileName) {
-        AmazonRekognition rekognitionClient = AmazonRekognitionClientBuilder.defaultClient();
+    private void validateFace(String fileName) {
         DetectFacesRequest request = new DetectFacesRequest()
                 .withImage(new Image()
                         .withS3Object(new S3Object()
@@ -87,5 +72,19 @@ public class FileUploadService {
         } catch (AmazonRekognitionException e) {
             throw new BadRequestException(ApplicationError.AWS_REKOGNITION_ERROR);
         }
+    }
+
+    private void delete(String url) {
+        String key = extractKeyFromImageUrl(url);
+        try {
+            amazonS3Client.deleteObject(bucket, key);
+        } catch (AmazonServiceException e) {
+            throw new FileUploadException(ApplicationError.AWS_S3_DELETE_ERROR);
+        }
+    }
+
+    private String extractKeyFromImageUrl(String imageUrl) {
+        UriComponents components = UriComponentsBuilder.fromUriString(imageUrl).build();
+        return components.getPathSegments().get(components.getPathSegments().size() - 1);
     }
 }
