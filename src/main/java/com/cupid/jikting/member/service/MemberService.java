@@ -139,9 +139,9 @@ public class MemberService {
         smsService.sendSms(SendSmsRequest.from(usernameSearchVerificationCodeRequest.getPhone()));
     }
 
-    public UsernameResponse verifyForSearchUsername(VerificationRequest verificationRequest) {
-        validateVerificationCode(verificationRequest.getPhone(), verificationRequest.getVerificationCode());
-        return memberRepository.findByPhone(verificationRequest.getPhone())
+    public UsernameResponse verifyForSearchUsername(VerificationPhoneRequest verificationPhoneRequest) {
+        validateVerificationCode(verificationPhoneRequest.getPhone(), verificationPhoneRequest.getVerificationCode());
+        return memberRepository.findByPhone(verificationPhoneRequest.getPhone())
                 .map(UsernameResponse::from)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
@@ -154,8 +154,8 @@ public class MemberService {
         smsService.sendSms(SendSmsRequest.from(passwordResetVerificationCodeRequest.getPhone()));
     }
 
-    public void verifyForResetPassword(VerificationRequest verificationRequest) {
-        validateVerificationCode(verificationRequest.getPhone(), verificationRequest.getVerificationCode());
+    public void verifyForResetPassword(VerificationPhoneRequest verificationPhoneRequest) {
+        validateVerificationCode(verificationPhoneRequest.getPhone(), verificationPhoneRequest.getVerificationCode());
     }
 
     public void resetPassword(PasswordResetRequest passwordResetRequest) {
@@ -171,7 +171,10 @@ public class MemberService {
         mailService.sendMail(getMemberProfileById(memberProfileId).getMemberName(), email);
     }
 
-    public void verifyForCompany(VerificationRequest verificationRequest) {
+    public void verifyForCompany(VerificationEmailRequest verificationPhoneRequest) {
+        String email = verificationPhoneRequest.getEmail();
+        validateCompanyDomain(email);
+        validateVerificationCode(email, verificationPhoneRequest.getVerificationCode());
     }
 
     public void verifyCardForCompany(CompanyVerificationRequest companyVerificationRequest, MultipartFile multipartFile) {
@@ -219,8 +222,8 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundException(ApplicationError.HOBBY_NOT_FOUND));
     }
 
-    private void validateVerificationCode(String phone, String verificationCode) {
-        if (!redisConnector.get(phone).equals(verificationCode)) {
+    private void validateVerificationCode(String key, String verificationCode) {
+        if (!redisConnector.get(key).equals(verificationCode)) {
             throw new BadRequestException(ApplicationError.VERIFICATION_CODE_NOT_EQUAL);
         }
     }

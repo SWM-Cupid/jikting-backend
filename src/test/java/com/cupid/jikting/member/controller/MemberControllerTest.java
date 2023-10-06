@@ -82,7 +82,7 @@ public class MemberControllerTest extends ApiDocument {
     private SignUpVerificationCodeRequest signUpVerificationCodeRequest;
     private UsernameSearchVerificationCodeRequest usernameSearchVerificationCodeRequest;
     private PhoneVerificationRequest phoneVerificationRequest;
-    private VerificationRequest verificationRequest;
+    private VerificationPhoneRequest verificationPhoneRequest;
     private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
     private PasswordResetRequest passwordResetRequest;
     private CompanyVerificationCodeRequest companyVerificationCodeRequest;
@@ -207,7 +207,7 @@ public class MemberControllerTest extends ApiDocument {
                 .phone(PHONE)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
-        verificationRequest = VerificationRequest.builder()
+        verificationPhoneRequest = VerificationPhoneRequest.builder()
                 .phone(PHONE)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
@@ -533,7 +533,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 아이디_찾기_인증_성공() throws Exception {
         // given
-        willReturn(usernameResponse).given(memberService).verifyForSearchUsername(any(VerificationRequest.class));
+        willReturn(usernameResponse).given(memberService).verifyForSearchUsername(any(VerificationPhoneRequest.class));
         // when
         ResultActions resultActions = 아이디_찾기_인증_요청();
         // then
@@ -543,7 +543,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 아이디_찾기_인증_실패() throws Exception {
         // given
-        willThrow(verificationCodeNotEqualException).given(memberService).verifyForSearchUsername(any(VerificationRequest.class));
+        willThrow(verificationCodeNotEqualException).given(memberService).verifyForSearchUsername(any(VerificationPhoneRequest.class));
         // when
         ResultActions resultActions = 아이디_찾기_인증_요청();
         // then
@@ -573,7 +573,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_인증_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).verifyForResetPassword(any(VerificationRequest.class));
+        willDoNothing().given(memberService).verifyForResetPassword(any(VerificationPhoneRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_인증_요청();
         // then
@@ -583,7 +583,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 비밀번호_재설정_인증_실패() throws Exception {
         // given
-        willThrow(verificationCodeNotEqualException).given(memberService).verifyForResetPassword(any(VerificationRequest.class));
+        willThrow(verificationCodeNotEqualException).given(memberService).verifyForResetPassword(any(VerificationPhoneRequest.class));
         // when
         ResultActions resultActions = 비밀번호_재설정_인증_요청();
         // then
@@ -646,7 +646,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회사_이메일_인증_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).verifyForCompany(any(VerificationRequest.class));
+        willDoNothing().given(memberService).verifyForCompany(any(VerificationEmailRequest.class));
         // when
         ResultActions resultActions = 회사_이메일_인증_요청();
         // then
@@ -657,7 +657,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회사_이메일_인증_인증번호불일치_실패() throws Exception {
         // given
-        willThrow(verificationCodeNotEqualException).given(memberService).verifyForCompany(any(VerificationRequest.class));
+        willThrow(verificationCodeNotEqualException).given(memberService).verifyForCompany(any(VerificationEmailRequest.class));
         // when
         ResultActions resultActions = 회사_이메일_인증_요청();
         // then
@@ -668,7 +668,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회사_이메일_인증_시간초과_실패() throws Exception {
         // given
-        willThrow(verificationCodeExpiredException).given(memberService).verifyForCompany(any(VerificationRequest.class));
+        willThrow(verificationCodeExpiredException).given(memberService).verifyForCompany(any(VerificationEmailRequest.class));
         // when
         ResultActions resultActions = 회사_이메일_인증_요청();
         // then
@@ -1020,7 +1020,7 @@ public class MemberControllerTest extends ApiDocument {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/username/search/verification")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(verificationRequest)));
+                .content(toJson(verificationPhoneRequest)));
     }
 
     private void 아이디_찾기_인증_요청_성공(ResultActions resultActions) throws Exception {
@@ -1061,7 +1061,7 @@ public class MemberControllerTest extends ApiDocument {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/password/reset/verification")
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(verificationRequest)));
+                .content(toJson(verificationPhoneRequest)));
     }
 
     private void 비밀번호_재설정_인증_요청_성공(ResultActions resultActions) throws Exception {
@@ -1130,7 +1130,7 @@ public class MemberControllerTest extends ApiDocument {
                 .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(verificationRequest)));
+                .content(toJson(verificationPhoneRequest)));
     }
 
     private void 회사_이메일_인증_요청_성공(ResultActions resultActions) throws Exception {

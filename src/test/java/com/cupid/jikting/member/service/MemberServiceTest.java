@@ -7,6 +7,7 @@ import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
+import com.cupid.jikting.member.repository.CompanyRepository;
 import com.cupid.jikting.member.repository.HobbyRepository;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.member.repository.MemberRepository;
@@ -63,6 +64,7 @@ public class MemberServiceTest {
     private static final String WRONG_VERIFICATION_CODE = "잘못된" + VERIFICATION_CODE;
     private static final int PROFILE_IMAGE_SIZE = 3;
     private static final String SMS_SEND_SUCCESS = "202";
+    private static final String EMAIL = "email@soma.com";
 
     private Member member;
     private MemberProfile memberProfile;
@@ -92,6 +94,9 @@ public class MemberServiceTest {
 
     @Mock
     private MemberProfileRepository memberProfileRepository;
+
+    @Mock
+    private CompanyRepository companyRepository;
 
     @Mock
     private PersonalityRepository personalityRepository;
@@ -565,14 +570,14 @@ public class MemberServiceTest {
     @Test
     void 아이디찾기_인증번호_인증_성공() {
         // given
-        VerificationRequest verificationRequest = VerificationRequest.builder()
+        VerificationPhoneRequest verificationPhoneRequest = VerificationPhoneRequest.builder()
                 .phone(PHONE)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
         willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
         willReturn(Optional.of(member)).given(memberRepository).findByPhone(anyString());
         // when
-        memberService.verifyForSearchUsername(verificationRequest);
+        memberService.verifyForSearchUsername(verificationPhoneRequest);
         // then
         assertAll(
                 () -> verify(redisConnector).get(anyString()),
@@ -583,13 +588,13 @@ public class MemberServiceTest {
     @Test
     void 아이디찾기_인증번호_인증_실패_인증번호_불일치() {
         // given
-        VerificationRequest verificationRequest = VerificationRequest.builder()
+        VerificationPhoneRequest verificationPhoneRequest = VerificationPhoneRequest.builder()
                 .phone(PHONE)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
         willReturn(WRONG_VERIFICATION_CODE).given(redisConnector).get(anyString());
         // when & then
-        assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationRequest))
+        assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationPhoneRequest))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.VERIFICATION_CODE_NOT_EQUAL.getMessage());
     }
@@ -597,13 +602,13 @@ public class MemberServiceTest {
     @Test
     void 아이디찾기_인증번호_인증_실패_인증번호_만료() {
         // given
-        VerificationRequest verificationRequest = VerificationRequest.builder()
+        VerificationPhoneRequest verificationPhoneRequest = VerificationPhoneRequest.builder()
                 .phone(PHONE)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
         willThrow(new BadRequestException(ApplicationError.VERIFICATION_CODE_EXPIRED)).given(redisConnector).get(anyString());
         // when & then
-        assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationRequest))
+        assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationPhoneRequest))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.VERIFICATION_CODE_EXPIRED.getMessage());
     }
@@ -611,13 +616,13 @@ public class MemberServiceTest {
     @Test
     void 아이디찾기_인증번호_인증_실패_회원_없음() {
         // given
-        VerificationRequest verificationRequest = VerificationRequest.builder()
+        VerificationPhoneRequest verificationPhoneRequest = VerificationPhoneRequest.builder()
                 .phone(PHONE)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
         willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(redisConnector).get(anyString());
         // when & then
-        assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationRequest))
+        assertThatThrownBy(() -> memberService.verifyForSearchUsername(verificationPhoneRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
@@ -661,13 +666,13 @@ public class MemberServiceTest {
     @Test
     void 비밀번호_재설정_인증번호_인증_성공() {
         // given
-        VerificationRequest verificationRequest = VerificationRequest.builder()
+        VerificationPhoneRequest verificationPhoneRequest = VerificationPhoneRequest.builder()
                 .phone(PHONE)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
         willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
         // when
-        memberService.verifyForResetPassword(verificationRequest);
+        memberService.verifyForResetPassword(verificationPhoneRequest);
         // then
         verify(redisConnector).get(anyString());
     }
@@ -675,13 +680,13 @@ public class MemberServiceTest {
     @Test
     void 비밀번호_재설정_인증번호_인증_실패_인증번호_불일치() {
         // given
-        VerificationRequest verificationRequest = VerificationRequest.builder()
+        VerificationPhoneRequest verificationPhoneRequest = VerificationPhoneRequest.builder()
                 .phone(PHONE)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
         willReturn(WRONG_VERIFICATION_CODE).given(redisConnector).get(anyString());
         // when & then
-        assertThatThrownBy(() -> memberService.verifyForResetPassword(verificationRequest))
+        assertThatThrownBy(() -> memberService.verifyForResetPassword(verificationPhoneRequest))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.VERIFICATION_CODE_NOT_EQUAL.getMessage());
     }
@@ -689,13 +694,13 @@ public class MemberServiceTest {
     @Test
     void 비밀번호_재설정_인증번호_인증_실패_인증번호_만료() {
         // given
-        VerificationRequest verificationRequest = VerificationRequest.builder()
+        VerificationPhoneRequest verificationPhoneRequest = VerificationPhoneRequest.builder()
                 .phone(PHONE)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
         willThrow(new BadRequestException(ApplicationError.VERIFICATION_CODE_EXPIRED)).given(redisConnector).get(anyString());
         // when & then
-        assertThatThrownBy(() -> memberService.verifyForResetPassword(verificationRequest))
+        assertThatThrownBy(() -> memberService.verifyForResetPassword(verificationPhoneRequest))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.VERIFICATION_CODE_EXPIRED.getMessage());
     }
@@ -730,6 +735,53 @@ public class MemberServiceTest {
         assertThatThrownBy(() -> memberService.resetPassword(passwordResetRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 회사_이메일_인증번호_인증_성공() {
+        // given
+        VerificationEmailRequest verificationEmailRequest = VerificationEmailRequest.builder()
+                .email(EMAIL)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(true).given(companyRepository).existsByEmail(anyString());
+        willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
+        // when
+        memberService.verifyForCompany(verificationEmailRequest);
+        // then
+        assertAll(
+                () -> verify(companyRepository).existsByEmail(anyString()),
+                () -> verify(redisConnector).get(anyString())
+        );
+    }
+
+    @Test
+    void 회사_이메일_인증번호_인증_실패_회사_없음() {
+        // given
+        VerificationEmailRequest verificationEmailRequest = VerificationEmailRequest.builder()
+                .email(EMAIL)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(false).given(companyRepository).existsByEmail(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.verifyForCompany(verificationEmailRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.INVALID_COMPANY.getMessage());
+    }
+
+    @Test
+    void 회사_이메일_인증번호_인증_실패_인증번호_불일치() {
+        // given
+        VerificationEmailRequest verificationEmailRequest = VerificationEmailRequest.builder()
+                .email(EMAIL)
+                .verificationCode(WRONG_VERIFICATION_CODE)
+                .build();
+        willReturn(true).given(companyRepository).existsByEmail(anyString());
+        willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.verifyForCompany(verificationEmailRequest))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.VERIFICATION_CODE_NOT_EQUAL.getMessage());
     }
 
     @Test

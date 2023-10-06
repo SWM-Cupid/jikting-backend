@@ -2,13 +2,12 @@ package com.cupid.jikting.member.dto;
 
 import lombok.*;
 
-@ToString
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class VerificationRequest {
+public class VerificationEmailRequest {
 
-    private String phone;
+    private String email;
     private String verificationCode;
 }
