@@ -1,7 +1,6 @@
 package com.cupid.jikting.member.service;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.rekognition.AmazonRekognition;
 import com.amazonaws.services.rekognition.AmazonRekognitionClientBuilder;
 import com.amazonaws.services.rekognition.model.*;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -17,7 +16,6 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -60,12 +58,10 @@ public class FileUploadService {
                                 .withBucket(bucket)))
                 .withAttributes(Attribute.DEFAULT);
         try {
-            DetectFacesResult result = rekognitionClient.detectFaces(request);
-            List<FaceDetail> faceDetails = result.getFaceDetails();
-            if (faceDetails.isEmpty()) {
-                throw new BadRequestException(ApplicationError.PROFILE_IMAGE_NOT_FACE);
-            }
-            faceDetails.stream()
+            AmazonRekognitionClientBuilder.defaultClient()
+                    .detectFaces(request)
+                    .getFaceDetails()
+                    .stream()
                     .filter(face -> face.getConfidence() >= 90)
                     .findFirst()
                     .orElseThrow(() -> new BadRequestException(ApplicationError.PROFILE_IMAGE_NOT_FACE));
