@@ -85,7 +85,7 @@ public class FileUploadService {
                     .findFirst()
                     .orElseThrow(() -> new BadRequestException(ApplicationError.PROFILE_IMAGE_NOT_FACE));
         } catch (AmazonRekognitionException e) {
-            throw new BadRequestException(ApplicationError.PROFILE_IMAGE_NOT_FACE);
+            throw new BadRequestException(ApplicationError.AWS_REKOGNITION_ERROR);
         }
     }
 }
