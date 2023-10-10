@@ -1,9 +1,12 @@
 package com.cupid.jikting.member.service;
 
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.rekognition.AmazonRekognitionClientBuilder;
+import com.amazonaws.services.rekognition.model.*;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.cupid.jikting.common.error.ApplicationError;
+import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.FileUploadException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +34,7 @@ public class FileUploadService {
         metadata.setContentLength(file.getSize());
         String fileName = UUID.randomUUID().toString();
         amazonS3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
+        validateFace(fileName);
         return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/" + fileName;
     }
 
@@ -43,6 +47,26 @@ public class FileUploadService {
     private void validateExist(MultipartFile file) {
         if (file.isEmpty()) {
             throw new FileUploadException(ApplicationError.FILE_NOT_EXIST);
+        }
+    }
+
+    private void validateFace(String fileName) {
+        DetectFacesRequest request = new DetectFacesRequest()
+                .withImage(new Image()
+                        .withS3Object(new S3Object()
+                                .withName(fileName)
+                                .withBucket(bucket)))
+                .withAttributes(Attribute.DEFAULT);
+        try {
+            AmazonRekognitionClientBuilder.defaultClient()
+                    .detectFaces(request)
+                    .getFaceDetails()
+                    .stream()
+                    .filter(face -> face.getConfidence() >= 90)
+                    .findFirst()
+                    .orElseThrow(() -> new BadRequestException(ApplicationError.PROFILE_IMAGE_NOT_FACE));
+        } catch (AmazonRekognitionException e) {
+            throw new BadRequestException(ApplicationError.AWS_REKOGNITION_ERROR);
         }
     }
 
