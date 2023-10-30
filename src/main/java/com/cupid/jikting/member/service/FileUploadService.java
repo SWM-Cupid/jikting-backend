@@ -16,14 +16,14 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class FileUploadService {
 
-    private static final String[] VALID_EXTENSIONS = {"jpeg", "png"};
+    private static final List<String> VALID_EXTENSIONS = List.of("jpeg", "png");
     private static final String FILE_DELIMITER = ".";
 
     private final AmazonS3Client amazonS3Client;
@@ -60,10 +60,9 @@ public class FileUploadService {
     }
 
     private void validateExtension(String extension) {
-        Arrays.stream(VALID_EXTENSIONS)
-                .filter(extension::equals)
-                .findAny()
-                .orElseThrow(() -> new BadRequestException(ApplicationError.INVALID_FILE_EXTENSION));
+        if (!VALID_EXTENSIONS.contains(extension)) {
+            throw new BadRequestException(ApplicationError.INVALID_FILE_EXTENSION);
+        }
     }
 
     private void validateFace(String fileName) {
