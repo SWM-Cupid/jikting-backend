@@ -51,7 +51,6 @@ public class MemberControllerTest extends ApiDocument {
     private static final String NICKNAME = "닉네임";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
     private static final String COMPANY = "직장";
-    private static final String IMAGE_URL = "사진 URL";
     private static final int HEIGHT = 168;
     private static final String ADDRESS = "거주지";
     private static final String COLLEGE = "출신학교(선택사항 - 없을 시 빈 문자열)";
@@ -134,11 +133,6 @@ public class MemberControllerTest extends ApiDocument {
                 .gender(Gender.MALE)
                 .build();
         member.addMemberProfile(NICKNAME);
-        ProfileImage profileImage = ProfileImage.builder()
-                .id(ID)
-                .sequence(Sequence.MAIN)
-                .url(IMAGE_URL)
-                .build();
         MemberProfile memberProfile = member.getMemberProfile();
         memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 memberPersonalities, memberHobbies);
