@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,8 +60,6 @@ public class MemberControllerTest extends ApiDocument {
     private static final String DESCRIPTION = "한줄 소개(선택사항 - 없을 시 빈 문자열)";
     private static final String NEW_PASSWORD = "새 비밀번호";
     private static final String MEMBER_PROFILE_UPDATE_REQUEST_PARAMETER_NAME = "memberProfileUpdateRequest";
-    private static final String MEMBER_PROFILE_UPDATE_REQUEST_FILENAME = "";
-    private static final String MEMBER_PROFILE_UPDATE_REQUEST_CONTENT_TYPE = "application/json";
     private static final String IMAGE_PARAMETER_NAME = "file";
     private static final String IMAGE_FILENAME = "image.png";
     private static final String IMAGE_CONTENT_TYPE = "image/png";
@@ -68,13 +67,11 @@ public class MemberControllerTest extends ApiDocument {
     private static final String VERIFICATION_CODE = "인증번호";
     private static final String COMPANY_EMAIL = "회사 이메일";
     private static final String COMPANY_VERIFICATION_REQUEST_PARAMETER_NAME = "companyVerificationRequest";
-    private static final String COMPANY_VERIFICATION_REQUEST_FILENAME = "";
-    private static final String COMPANY_VERIFICATION_CONTENT_TYPE = "application/json";
 
     private String accessToken;
     private SignupRequest signupRequest;
     private NicknameUpdateRequest nicknameUpdateRequest;
-    private MockMultipartFile memberProfileUpdateRequestPart;
+    private MockPart memberProfileUpdateRequestPart;
     private PasswordUpdateRequest passwordUpdateRequest;
     private WithdrawRequest withdrawRequest;
     private UsernameCheckRequest usernameCheckRequest;
@@ -90,7 +87,7 @@ public class MemberControllerTest extends ApiDocument {
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private UsernameResponse usernameResponse;
-    private MockMultipartFile companyVerificationRequestPart;
+    private MockPart companyVerificationRequestPart;
     private MockMultipartFile image;
     private ApplicationException invalidFormatException;
     private ApplicationException memberNotFoundException;
@@ -182,7 +179,10 @@ public class MemberControllerTest extends ApiDocument {
                 .hobbies(hobbies)
                 .description(DESCRIPTION)
                 .build();
-        memberProfileUpdateRequestPart = new MockMultipartFile(MEMBER_PROFILE_UPDATE_REQUEST_PARAMETER_NAME, MEMBER_PROFILE_UPDATE_REQUEST_FILENAME, MEMBER_PROFILE_UPDATE_REQUEST_CONTENT_TYPE, toJson(memberProfileUpdateRequest).getBytes());
+        memberProfileUpdateRequestPart = new MockPart(
+                MEMBER_PROFILE_UPDATE_REQUEST_PARAMETER_NAME,
+                toJson(memberProfileUpdateRequest).getBytes(StandardCharsets.UTF_8));
+        memberProfileUpdateRequestPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         passwordUpdateRequest = PasswordUpdateRequest.builder()
                 .password(PASSWORD)
                 .newPassword(NEW_PASSWORD)
@@ -227,11 +227,12 @@ public class MemberControllerTest extends ApiDocument {
                 .username(USERNAME)
                 .password(PASSWORD)
                 .build();
+        companyVerificationRequestPart = new MockPart(COMPANY_VERIFICATION_REQUEST_PARAMETER_NAME, toJson(companyVerificationRequest).getBytes(StandardCharsets.UTF_8));
+        companyVerificationRequestPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+        image = new MockMultipartFile(IMAGE_PARAMETER_NAME, IMAGE_FILENAME, IMAGE_CONTENT_TYPE, IMAGE_FILE.getBytes());
         memberResponse = MemberResponse.of(memberProfile);
         memberProfileResponse = MemberProfileResponse.of(memberProfile);
         usernameResponse = UsernameResponse.from(member);
-        companyVerificationRequestPart = new MockMultipartFile(COMPANY_VERIFICATION_REQUEST_PARAMETER_NAME, COMPANY_VERIFICATION_REQUEST_FILENAME, COMPANY_VERIFICATION_CONTENT_TYPE, toJson(companyVerificationRequest).getBytes(StandardCharsets.UTF_8));
-        image = new MockMultipartFile(IMAGE_PARAMETER_NAME, IMAGE_FILENAME, IMAGE_CONTENT_TYPE, IMAGE_FILE.getBytes());
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
         idOrPasswordNotEqualException = new NotEqualException(ApplicationError.NOT_EQUAL_ID_OR_PASSWORD);
@@ -834,7 +835,7 @@ public class MemberControllerTest extends ApiDocument {
     private ResultActions 회원_프로필_수정_요청() throws Exception {
         return mockMvc.perform(multipart(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/profile")
                 .file(image)
-                .file(memberProfileUpdateRequestPart)
+                .part(memberProfileUpdateRequestPart)
                 .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.MULTIPART_FORM_DATA));
@@ -1155,8 +1156,8 @@ public class MemberControllerTest extends ApiDocument {
 
     private ResultActions 회사_명함_인증_요청() throws Exception {
         return mockMvc.perform(multipart(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/company/card")
-                .file(companyVerificationRequestPart)
                 .file(image)
+                .part(companyVerificationRequestPart)
                 .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.MULTIPART_FORM_DATA));
