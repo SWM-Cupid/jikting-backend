@@ -55,7 +55,6 @@ public class TeamControllerTest extends ApiDocument {
     private static final String INVITATION_URL = "초대 URL";
     private static final String NICKNAME = "닉네임";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 22);
-    private static final String URL = "이미지 링크";
     private static final String ADDRESS = "거주지";
     private static final boolean LEADER = true;
     private static final int HEIGHT = 189;
@@ -89,12 +88,6 @@ public class TeamControllerTest extends ApiDocument {
                         .personality(Personality.builder()
                                 .keyword(KEYWORD)
                                 .build())
-                        .build())
-                .collect(Collectors.toList());
-        List<ProfileImage> profileImages = IntStream.range(0, 3)
-                .mapToObj(n -> ProfileImage.builder()
-                        .url(URL)
-                        .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
         Team team = Team.builder()
