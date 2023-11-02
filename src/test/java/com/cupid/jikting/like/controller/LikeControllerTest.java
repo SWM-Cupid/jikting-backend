@@ -10,7 +10,6 @@ import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.like.dto.LikeResponse;
-import com.cupid.jikting.like.dto.MemberProfileResponse;
 import com.cupid.jikting.like.dto.TeamDetailResponse;
 import com.cupid.jikting.like.service.LikeService;
 import com.cupid.jikting.member.entity.*;
@@ -45,27 +44,19 @@ public class LikeControllerTest extends ApiDocument {
     private static final String CONTEXT_PATH = "/v1";
     private static final String DOMAIN_ROOT_PATH = "/likes";
     private static final String PATH_DELIMITER = "/";
-    private static final String URL = "http://test-url";
     private static final String NAME = "팀명";
     private static final Long ID = 1L;
     private static final String NICKNAME = "닉네임";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
-    private static final int AGE = 20;
     private static final String ADDRESS = "거주지";
     private static final String COMPANY = "회사";
-    private static final String SMOKE_STATUS = "비흡연";
-    private static final String DRINK_STATUS = "자주 마심";
     private static final int HEIGHT = 180;
     private static final String DESCRIPTION = "소개";
-    private static final String KEYWORD = "키워드";
     private static final String PERSONALITY = "성격";
     private static final String HOBBY = "취미";
     private static final String COLLEGE = "대학";
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
-    private static final int YEAR = 1967;
-    private static final int MONTH = 4;
-    private static final int DATE = 19;
 
     private String accessToken;
     private List<LikeResponse> likeResponses;
@@ -111,26 +102,11 @@ public class LikeControllerTest extends ApiDocument {
                 .build();
         member.addMemberProfile(NICKNAME);
         MemberProfile memberProfile = member.getMemberProfile();
-        ProfileImage profileImage = ProfileImage.builder()
-                .id(ID)
-                .sequence(Sequence.MAIN)
-                .url(URL)
-                .build();
         memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 memberPersonalities, memberHobbies);
-        List<MemberProfileResponse> memberProfileResponses = IntStream.rangeClosed(1, 2)
-                .mapToObj(n -> MemberProfileResponse.from(memberProfile))
-                .collect(Collectors.toList());
         List<TeamPersonality> teamPersonalities = IntStream.rangeClosed(0, 2)
                 .mapToObj(n -> TeamPersonality.builder()
                         .personality(personality)
-                        .build())
-                .collect(Collectors.toList());
-        List<ProfileImage> profileImages = IntStream.range(0, 3)
-                .mapToObj(n -> ProfileImage.builder()
-                        .id(ID)
-                        .url(URL)
-                        .sequence(Sequence.MAIN)
                         .build())
                 .collect(Collectors.toList());
         Team team = Team.builder()
