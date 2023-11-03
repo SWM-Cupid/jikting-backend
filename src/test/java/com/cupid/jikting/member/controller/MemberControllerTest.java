@@ -86,6 +86,7 @@ public class MemberControllerTest extends ApiDocument {
     private PasswordResetVerificationCodeRequest passwordResetVerificationCodeRequest;
     private PasswordResetRequest passwordResetRequest;
     private CompanyVerificationCodeRequest companyVerificationCodeRequest;
+    private VerificationEmailRequest verificationEmailRequest;
     private LoginRequest loginRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
@@ -222,6 +223,10 @@ public class MemberControllerTest extends ApiDocument {
                 .build();
         companyVerificationCodeRequest = CompanyVerificationCodeRequest.builder()
                 .email(COMPANY_EMAIL)
+                .build();
+        verificationEmailRequest = VerificationEmailRequest.builder()
+                .email(COMPANY_EMAIL)
+                .verificationCode(VERIFICATION_CODE)
                 .build();
         loginRequest = LoginRequest.builder()
                 .username(USERNAME)
@@ -1130,7 +1135,7 @@ public class MemberControllerTest extends ApiDocument {
                 .header(AUTHORIZATION, BEARER + accessToken)
                 .contextPath(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(verificationPhoneRequest)));
+                .content(toJson(verificationEmailRequest)));
     }
 
     private void 회사_이메일_인증_요청_성공(ResultActions resultActions) throws Exception {
