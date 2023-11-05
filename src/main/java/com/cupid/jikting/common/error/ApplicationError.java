@@ -40,6 +40,7 @@ public enum ApplicationError {
     HOBBY_NOT_FOUND(HttpStatus.BAD_REQUEST, "U013", "취미 키워드를 찾을 수 없습니다."),
     PROFILE_IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "U014", "프로필 이미지를 찾을 수 없습니다."),
     PROFILE_IMAGE_NOT_FACE(HttpStatus.BAD_REQUEST, "U015", "프로필 이미지에 얼굴이 존재하지 않습니다."),
+    PHONE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "U016", "이미 회원가입된 전화번호입니다."),
 
     TEAM_NOT_FOUND(HttpStatus.BAD_REQUEST, "T001", "팀을 찾을 수 없습니다."),
     GENDER_MISMATCH(HttpStatus.BAD_REQUEST, "T002", "해당 성별은 팀에 참여할 수 없습니다."),

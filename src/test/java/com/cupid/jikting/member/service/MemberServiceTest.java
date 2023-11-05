@@ -526,6 +526,19 @@ public class MemberServiceTest {
     }
 
     @Test
+    void 전화번호_인증번호_발송_실패_존재하는_전화번호() {
+        // given
+        SignUpVerificationCodeRequest signUpVerificationCodeRequest = SignUpVerificationCodeRequest.builder()
+                .phone(PHONE)
+                .build();
+        willReturn(true).given(memberRepository).existsByPhone(anyString());
+        // when & then
+        assertThatThrownBy(() -> memberService.createVerificationCodeForSignup(signUpVerificationCodeRequest))
+                .isInstanceOf(DuplicateException.class)
+                .hasMessage(ApplicationError.PHONE_ALREADY_EXIST.getMessage());
+    }
+
+    @Test
     void 전화번호_인증_성공() {
         // given
         PhoneVerificationRequest phoneVerificationRequest = PhoneVerificationRequest.builder()

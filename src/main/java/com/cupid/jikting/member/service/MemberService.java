@@ -124,7 +124,9 @@ public class MemberService {
 
     public void createVerificationCodeForSignup(SignUpVerificationCodeRequest signUpVerificationCodeRequest)
             throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
-        smsService.sendSms(SendSmsRequest.from(signUpVerificationCodeRequest.getPhone()));
+        String phone = signUpVerificationCodeRequest.getPhone();
+        validateDuplicatedPhone(phone);
+        smsService.sendSms(SendSmsRequest.from(phone));
     }
 
     public void verifyPhoneForSignup(PhoneVerificationRequest verificationRequest) {
@@ -220,6 +222,12 @@ public class MemberService {
     private Hobby getHobbyByKeyword(String keyword) {
         return hobbyRepository.findByKeyword(keyword)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.HOBBY_NOT_FOUND));
+    }
+
+    private void validateDuplicatedPhone(String phone) {
+        if (memberRepository.existsByPhone(phone)) {
+            throw new DuplicateException(ApplicationError.PHONE_ALREADY_EXIST);
+        }
     }
 
     private void validateVerificationCode(String key, String verificationCode) {
