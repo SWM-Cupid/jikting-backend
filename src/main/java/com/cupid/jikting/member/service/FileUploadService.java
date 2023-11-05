@@ -16,11 +16,15 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class FileUploadService {
+
+    private static final List<String> VALID_EXTENSIONS = List.of("jpeg", "png");
+    private static final String FILE_DELIMITER = ".";
 
     private final AmazonS3Client amazonS3Client;
 
@@ -29,6 +33,7 @@ public class FileUploadService {
 
     public String save(MultipartFile file) throws IOException {
         validateExist(file);
+        validateExtension(extractExtension(file.getOriginalFilename()));
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
@@ -47,6 +52,16 @@ public class FileUploadService {
     private void validateExist(MultipartFile file) {
         if (file.isEmpty()) {
             throw new FileUploadException(ApplicationError.FILE_NOT_EXIST);
+        }
+    }
+
+    private String extractExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(FILE_DELIMITER) + 1);
+    }
+
+    private void validateExtension(String extension) {
+        if (!VALID_EXTENSIONS.contains(extension)) {
+            throw new BadRequestException(ApplicationError.INVALID_FILE_EXTENSION);
         }
     }
 
