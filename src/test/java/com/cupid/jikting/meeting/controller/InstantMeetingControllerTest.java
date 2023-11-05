@@ -42,7 +42,6 @@ public class InstantMeetingControllerTest extends ApiDocument {
     private static final LocalDateTime SCHEDULE = LocalDateTime.of(2023, Month.JUNE, 30, 18, 0);
     private static final String PLACE = "장소";
     private static final int MEMBER_COUNT = 3;
-    private static final boolean ATTEND = true;
 
     private String accessToken;
     private List<InstantMeetingResponse> instantMeetingResponses;

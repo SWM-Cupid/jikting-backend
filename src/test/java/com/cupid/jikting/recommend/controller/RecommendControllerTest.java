@@ -10,7 +10,6 @@ import com.cupid.jikting.common.error.ApplicationException;
 import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.*;
-import com.cupid.jikting.recommend.dto.MemberResponse;
 import com.cupid.jikting.recommend.dto.RecommendResponse;
 import com.cupid.jikting.recommend.entity.Recommend;
 import com.cupid.jikting.recommend.service.RecommendService;
@@ -50,7 +49,6 @@ public class RecommendControllerTest extends ApiDocument {
     private static final String NICKNAME = "닉네임";
     private static final String HOBBY = "취미";
     private static final String PERSONALITY = "성격";
-    private static final String URL = "http://test-url";
     private static final String COMPANY = "회사";
     private static final String DESCRIPTION = "소개";
     private static final String ADDRESS = "거주지";
@@ -70,16 +68,6 @@ public class RecommendControllerTest extends ApiDocument {
 
     @BeforeEach
     void setUp() {
-        MemberProfile tmpMemberProfile = MemberProfile.builder()
-                .id(ID)
-                .build();
-        List<ProfileImage> profileImages = IntStream.rangeClosed(0, 2)
-                .mapToObj(n -> ProfileImage.builder()
-                        .memberProfile(tmpMemberProfile)
-                        .sequence(Sequence.MAIN)
-                        .url(URL)
-                        .build())
-                .collect(Collectors.toList());
         Company company = Company.builder()
                 .name(COMPANY)
                 .build();
@@ -107,9 +95,6 @@ public class RecommendControllerTest extends ApiDocument {
                 .build();
         memberProfile.updateProfile(BIRTH, HEIGHT, Mbti.ENFJ, ADDRESS, COLLEGE, SmokeStatus.SMOKING, DrinkStatus.OFTEN, DESCRIPTION,
                 List.of(memberPersonality), List.of(memberHobby));
-        List<MemberResponse> memberResponses = IntStream.rangeClosed(0, 2)
-                .mapToObj(n -> MemberResponse.from(memberProfile))
-                .collect(Collectors.toList());
         TeamPersonality teamPersonality = TeamPersonality.builder().personality(personality).build();
         Team team = Team.builder()
                 .name(NAME)
