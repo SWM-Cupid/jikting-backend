@@ -437,6 +437,23 @@ include::{snippets}/block-company-fail/http-request.adoc[]
 .response
 include::{snippets}/block-company-fail/http-response.adoc[]
 
+==== 회원 신고
+----
+/v1/members/report/{reportMemberProfileId}
+----
+===== 성공
+.request
+include::{snippets}/report-member-success/http-request.adoc[]
+
+.response
+include::{snippets}/report-member-success/http-response.adoc[]
+===== 실패
+.request
+include::{snippets}/report-member-fail/http-request.adoc[]
+
+.response
+include::{snippets}/report-member-fail/http-response.adoc[]
+
 === 팀 관련 기능
 ==== 팀 등록
 ----
