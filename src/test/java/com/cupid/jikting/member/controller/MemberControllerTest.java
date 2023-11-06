@@ -750,6 +750,28 @@ public class MemberControllerTest extends ApiDocument {
         재직중인_회사_차단_요청_실패(resultActions);
     }
 
+    @WithMockUser
+    @Test
+    void 회원_신고_성공() throws Exception {
+        //given
+        willDoNothing().given(memberService).report(anyLong(), anyLong());
+        //when
+        ResultActions resultActions = 회원_신고_요청();
+        //then
+        회원_신고_요청_성공(resultActions);
+    }
+
+    @WithMockUser
+    @Test
+    void 회원_신고_실패() throws Exception {
+        //given
+        willThrow(memberNotFoundException).given(memberService).report(anyLong(), anyLong());
+        //when
+        ResultActions resultActions = 회원_신고_요청();
+        //then
+        회원_신고_요청_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -1218,5 +1240,24 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isForbidden())
                         .andExpect(content().json(toJson(ErrorResponse.from(companyNotFoundException)))),
                 "block-company-fail");
+    }
+
+    private ResultActions 회원_신고_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/report/" + ID)
+                .header(AUTHORIZATION, BEARER + accessToken)
+                .contextPath(CONTEXT_PATH));
+    }
+
+    private void 회원_신고_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "report-member-success");
+    }
+
+    private void 회원_신고_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "report-member-fail");
     }
 }
