@@ -66,6 +66,7 @@ public class MemberControllerTest extends ApiDocument {
     private static final String VERIFICATION_CODE = "인증번호";
     private static final String COMPANY_EMAIL = "회사 이메일";
     private static final String COMPANY_VERIFICATION_REQUEST_PARAMETER_NAME = "companyVerificationRequest";
+    private static final String REPORT_MESSAGE = "신고 내용";
 
     private String accessToken;
     private SignupRequest signupRequest;
@@ -84,6 +85,7 @@ public class MemberControllerTest extends ApiDocument {
     private CompanyVerificationCodeRequest companyVerificationCodeRequest;
     private VerificationEmailRequest verificationEmailRequest;
     private LoginRequest loginRequest;
+    private ReportMessageRequest reportMessageRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private UsernameResponse usernameResponse;
@@ -225,6 +227,9 @@ public class MemberControllerTest extends ApiDocument {
         loginRequest = LoginRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD)
+                .build();
+        reportMessageRequest = ReportMessageRequest.builder()
+                .message(REPORT_MESSAGE)
                 .build();
         companyVerificationRequestPart = new MockPart(COMPANY_VERIFICATION_REQUEST_PARAMETER_NAME, toJson(companyVerificationRequest).getBytes(StandardCharsets.UTF_8));
         companyVerificationRequestPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
@@ -750,6 +755,28 @@ public class MemberControllerTest extends ApiDocument {
         재직중인_회사_차단_요청_실패(resultActions);
     }
 
+    @WithMockUser
+    @Test
+    void 회원_신고_성공() throws Exception {
+        //given
+        willDoNothing().given(memberService).report(anyLong(), anyLong(), any(ReportMessageRequest.class));
+        //when
+        ResultActions resultActions = 회원_신고_요청();
+        //then
+        회원_신고_요청_성공(resultActions);
+    }
+
+    @WithMockUser
+    @Test
+    void 회원_신고_실패() throws Exception {
+        //given
+        willThrow(memberNotFoundException).given(memberService).report(anyLong(), anyLong(), any(ReportMessageRequest.class));
+        //when
+        ResultActions resultActions = 회원_신고_요청();
+        //then
+        회원_신고_요청_실패(resultActions);
+    }
+
     private ResultActions 회원_가입_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH)
                 .contextPath(CONTEXT_PATH)
@@ -1218,5 +1245,26 @@ public class MemberControllerTest extends ApiDocument {
                         .andExpect(status().isForbidden())
                         .andExpect(content().json(toJson(ErrorResponse.from(companyNotFoundException)))),
                 "block-company-fail");
+    }
+
+    private ResultActions 회원_신고_요청() throws Exception {
+        return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/report/" + ID)
+                .header(AUTHORIZATION, BEARER + accessToken)
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(reportMessageRequest)));
+    }
+
+    private void 회원_신고_요청_성공(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isOk()),
+                "report-member-success");
+    }
+
+    private void 회원_신고_요청_실패(ResultActions resultActions) throws Exception {
+        printAndMakeSnippet(resultActions
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json(toJson(ErrorResponse.from(memberNotFoundException)))),
+                "report-member-fail");
     }
 }

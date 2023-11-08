@@ -189,6 +189,9 @@ public class MemberService {
         getMemberProfileById(memberProfileId).getMember().blockCompanies();
     }
 
+    public void report(Long memberProfileId, Long reportMemberProfileId, ReportMessageRequest reportMessageRequest) {
+    }
+
     private MemberProfile getMemberProfileById(Long memberProfileId) {
         return memberProfileRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
