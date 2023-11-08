@@ -10,10 +10,7 @@ import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
-import com.cupid.jikting.member.repository.CompanyRepository;
-import com.cupid.jikting.member.repository.HobbyRepository;
-import com.cupid.jikting.member.repository.MemberProfileRepository;
-import com.cupid.jikting.member.repository.MemberRepository;
+import com.cupid.jikting.member.repository.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +42,7 @@ public class MemberService {
     private final CompanyRepository companyRepository;
     private final PersonalityRepository personalityRepository;
     private final HobbyRepository hobbyRepository;
+    private final ReportRepository reportRepository;
     private final RedisConnector redisConnector;
 
     public void signup(SignupRequest signupRequest) {
@@ -190,6 +188,12 @@ public class MemberService {
     }
 
     public void report(Long memberProfileId, Long reportMemberProfileId, ReportMessageRequest reportMessageRequest) {
+        Report report = Report.builder()
+                .reporter(getMemberProfileById(memberProfileId))
+                .reported(getMemberProfileById(reportMemberProfileId))
+                .message(reportMessageRequest.getMessage())
+                .build();
+        reportRepository.save(report);
     }
 
     private MemberProfile getMemberProfileById(Long memberProfileId) {
