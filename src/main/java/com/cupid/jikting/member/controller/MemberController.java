@@ -153,8 +153,8 @@ public class MemberController {
     }
 
     @PostMapping("/report/{reportMemberProfileId}")
-    public ResponseEntity<Void> report(@AuthorizedVariable Long memberProfileId, @PathVariable Long reportMemberProfileId) {
-        memberService.report(memberProfileId, reportMemberProfileId);
+    public ResponseEntity<Void> report(@AuthorizedVariable Long memberProfileId, @PathVariable Long reportMemberProfileId, @RequestBody ReportMessageRequest reportMessageRequest) {
+        memberService.report(memberProfileId, reportMemberProfileId, reportMessageRequest);
         return ResponseEntity.ok().build();
     }
 }

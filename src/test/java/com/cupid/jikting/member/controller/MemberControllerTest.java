@@ -70,6 +70,7 @@ public class MemberControllerTest extends ApiDocument {
     private static final String COMPANY_VERIFICATION_REQUEST_PARAMETER_NAME = "companyVerificationRequest";
     private static final String COMPANY_VERIFICATION_REQUEST_FILENAME = "";
     private static final String COMPANY_VERIFICATION_CONTENT_TYPE = "application/json";
+    private static final String REPORT_MESSAGE = "신고 내용";
 
     private String accessToken;
     private SignupRequest signupRequest;
@@ -87,6 +88,7 @@ public class MemberControllerTest extends ApiDocument {
     private PasswordResetRequest passwordResetRequest;
     private CompanyVerificationCodeRequest companyVerificationCodeRequest;
     private LoginRequest loginRequest;
+    private ReportMessageRequest reportMessageRequest;
     private MemberResponse memberResponse;
     private MemberProfileResponse memberProfileResponse;
     private UsernameResponse usernameResponse;
@@ -226,6 +228,9 @@ public class MemberControllerTest extends ApiDocument {
         loginRequest = LoginRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD)
+                .build();
+        reportMessageRequest = ReportMessageRequest.builder()
+                .message(REPORT_MESSAGE)
                 .build();
         memberResponse = MemberResponse.of(memberProfile);
         memberProfileResponse = MemberProfileResponse.of(memberProfile);
@@ -754,7 +759,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_신고_성공() throws Exception {
         //given
-        willDoNothing().given(memberService).report(anyLong(), anyLong());
+        willDoNothing().given(memberService).report(anyLong(), anyLong(), any(ReportMessageRequest.class));
         //when
         ResultActions resultActions = 회원_신고_요청();
         //then
@@ -765,7 +770,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_신고_실패() throws Exception {
         //given
-        willThrow(memberNotFoundException).given(memberService).report(anyLong(), anyLong());
+        willThrow(memberNotFoundException).given(memberService).report(anyLong(), anyLong(), any(ReportMessageRequest.class));
         //when
         ResultActions resultActions = 회원_신고_요청();
         //then
@@ -1245,7 +1250,9 @@ public class MemberControllerTest extends ApiDocument {
     private ResultActions 회원_신고_요청() throws Exception {
         return mockMvc.perform(post(CONTEXT_PATH + DOMAIN_ROOT_PATH + "/report/" + ID)
                 .header(AUTHORIZATION, BEARER + accessToken)
-                .contextPath(CONTEXT_PATH));
+                .contextPath(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(reportMessageRequest)));
     }
 
     private void 회원_신고_요청_성공(ResultActions resultActions) throws Exception {

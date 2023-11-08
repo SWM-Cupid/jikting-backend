@@ -187,7 +187,7 @@ public class MemberService {
         getMemberProfileById(memberProfileId).getMember().blockCompanies();
     }
 
-    public void report(Long memberProfileId, Long reportMemberProfileId) {
+    public void report(Long memberProfileId, Long reportMemberProfileId, ReportMessageRequest reportMessageRequest) {
     }
 
     private MemberProfile getMemberProfileById(Long memberProfileId) {
