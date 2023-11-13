@@ -7,10 +7,7 @@ import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.service.RedisConnector;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
-import com.cupid.jikting.member.repository.CompanyRepository;
-import com.cupid.jikting.member.repository.HobbyRepository;
-import com.cupid.jikting.member.repository.MemberProfileRepository;
-import com.cupid.jikting.member.repository.MemberRepository;
+import com.cupid.jikting.member.repository.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,6 +62,7 @@ public class MemberServiceTest {
     private static final int PROFILE_IMAGE_SIZE = 3;
     private static final String SMS_SEND_SUCCESS = "202";
     private static final String EMAIL = "email@soma.com";
+    private static final String MESSAGE = "신고 내용";
 
     private Member member;
     private MemberProfile memberProfile;
@@ -103,6 +101,9 @@ public class MemberServiceTest {
 
     @Mock
     private HobbyRepository hobbyRepository;
+
+    @Mock
+    private ReportRepository reportRepository;
 
     @Mock
     private RedisConnector redisConnector;
@@ -824,6 +825,35 @@ public class MemberServiceTest {
         willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
         // when & then
         assertThatThrownBy(() -> memberService.blockCompany(ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 신고하기_성공() {
+        // given
+        ReportMessageRequest reportMessageRequest = ReportMessageRequest.builder()
+                .message(MESSAGE)
+                .build();
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        // when
+        memberService.report(ID, ID, reportMessageRequest);
+        // then
+        assertAll(
+                () -> verify(memberProfileRepository, times(2)).findById(anyLong()),
+                () -> verify(reportRepository).save(any(Report.class))
+        );
+    }
+
+    @Test
+    void 신고하기_실패_회원_없음() {
+        // given
+        ReportMessageRequest reportMessageRequest = ReportMessageRequest.builder()
+                .message(MESSAGE)
+                .build();
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        // when & then
+        assertThatThrownBy(() -> memberService.report(ID, ID, reportMessageRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
