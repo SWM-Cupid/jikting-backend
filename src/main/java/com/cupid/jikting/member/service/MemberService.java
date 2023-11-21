@@ -60,7 +60,7 @@ public class MemberService {
     }
 
     public MemberResponse get(Long memberProfileId) {
-        return MemberResponse.of(getMemberProfileById(memberProfileId));
+        return MemberResponse.of(getMemberById(memberProfileId));
     }
 
     public MemberProfileResponse getProfile(Long memberProfileId) {
@@ -194,6 +194,11 @@ public class MemberService {
                 .message(reportMessageRequest.getMessage())
                 .build();
         reportRepository.save(report);
+    }
+
+    private Member getMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 
     private MemberProfile getMemberProfileById(Long memberProfileId) {
