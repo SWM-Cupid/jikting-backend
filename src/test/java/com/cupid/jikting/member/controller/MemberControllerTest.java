@@ -9,6 +9,7 @@ import com.cupid.jikting.common.error.*;
 import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.dto.*;
 import com.cupid.jikting.member.entity.*;
+import com.cupid.jikting.member.handler.LoginSuccessHandler;
 import com.cupid.jikting.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
@@ -108,6 +110,9 @@ public class MemberControllerTest extends ApiDocument {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private LoginSuccessHandler loginSuccessHandler;
 
     @BeforeEach
     void setUp() {
@@ -253,11 +258,26 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회원_가입_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).signup(any(SignupRequest.class));
+        MemberProfile memberProfile = MemberProfile.builder()
+                .id(ID)
+                .build();
+        Member member = Member.builder()
+                .id(ID)
+                .username(USERNAME)
+                .password(PASSWORD)
+                .gender(Gender.MALE)
+                .phone(PHONE)
+                .socialType(SocialType.NORMAL)
+                .role(Role.UNCERTIFIED)
+                .memberProfile(memberProfile)
+                .build();
+        LoginResponse loginResponse = LoginResponse.from(member);
+        willReturn(member).given(memberService).signup(any(SignupRequest.class));
+        willDoNothing().given(loginSuccessHandler).loginAfterSignup(any(HttpServletResponse.class), any(Member.class));
         // when
         ResultActions resultActions = 회원_가입_요청();
         // then
-        회원_가입_요청_성공(resultActions);
+        회원_가입_요청_성공(resultActions, loginResponse);
     }
 
     @Test
@@ -784,9 +804,10 @@ public class MemberControllerTest extends ApiDocument {
                 .content(toJson(signupRequest)));
     }
 
-    private void 회원_가입_요청_성공(ResultActions resultActions) throws Exception {
+    private void 회원_가입_요청_성공(ResultActions resultActions, LoginResponse loginResponse) throws Exception {
         printAndMakeSnippet(resultActions
-                        .andExpect(status().isOk()),
+                        .andExpect(status().isOk())
+                        .andExpect(content().json(toJson(loginResponse))),
                 "signup-success");
     }
 
