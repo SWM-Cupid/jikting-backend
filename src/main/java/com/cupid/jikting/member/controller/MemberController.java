@@ -2,6 +2,8 @@ package com.cupid.jikting.member.controller;
 
 import com.cupid.jikting.common.support.AuthorizedVariable;
 import com.cupid.jikting.member.dto.*;
+import com.cupid.jikting.member.entity.Member;
+import com.cupid.jikting.member.handler.LoginSuccessHandler;
 import com.cupid.jikting.member.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -21,11 +24,13 @@ import java.security.NoSuchAlgorithmException;
 public class MemberController {
 
     private final MemberService memberService;
+    private final LoginSuccessHandler loginSuccessHandler;
 
     @PostMapping
-    public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest signupRequest) {
-        memberService.signup(signupRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<LoginResponse> signup(@Valid @RequestBody SignupRequest signupRequest, HttpServletResponse response) throws IOException {
+        Member member = memberService.signup(signupRequest);
+        loginSuccessHandler.loginAfterSignup(response, member);
+        return ResponseEntity.ok().body(LoginResponse.from(member));
     }
 
     @GetMapping

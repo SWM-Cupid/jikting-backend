@@ -38,12 +38,12 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String username = extractUsername(authentication);
         Member member = getMemberByUsername(username);
         Long memberProfileId = member.getMemberProfileId();
-        String accessToken = jwtService.issueAccessToken(memberProfileId);
-        String refreshToken = jwtService.issueRefreshToken();
-        jwtService.setAccessAndRefreshToken(response, accessToken, refreshToken);
-        jwtRepository.save(memberProfileId.toString(), refreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
+        issueAndSetTokens(response, memberProfileId);
         setResponseBody(response, member);
-        log.info("로그인에 성공하였습니다. 아이디 : {} AccessToken : {}", username, accessToken);
+    }
+
+    public void loginAfterSignup(HttpServletResponse response, Member member) {
+        issueAndSetTokens(response, member.getMemberProfileId());
     }
 
     private String extractUsername(Authentication authentication) {
@@ -56,13 +56,16 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
     }
 
+    private void issueAndSetTokens(HttpServletResponse response, Long memberProfileId) {
+        String accessToken = jwtService.issueAccessToken(memberProfileId);
+        String refreshToken = jwtService.issueRefreshToken();
+        jwtService.setAccessAndRefreshToken(response, accessToken, refreshToken);
+        jwtRepository.save(memberProfileId.toString(), refreshToken, Duration.ofMillis(refreshTokenExpirationPeriod));
+    }
+
     private void setResponseBody(HttpServletResponse response, Member member) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        response.getWriter().write(objectMapper.writeValueAsString(LoginResponse.builder()
-                .memberProfileId(member.getMemberProfileId())
-                .role(member.getRole().getKey())
-                .socialType(member.getSocialType().name())
-                .build()));
+        response.getWriter().write(objectMapper.writeValueAsString(LoginResponse.from(member)));
     }
 }

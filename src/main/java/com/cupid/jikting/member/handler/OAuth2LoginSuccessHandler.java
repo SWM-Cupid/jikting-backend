@@ -63,10 +63,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private void setResponseBody(HttpServletResponse response, Member member) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        response.getWriter().write(objectMapper.writeValueAsString(LoginResponse.builder()
-                .memberProfileId(member.getMemberProfileId())
-                .role(member.getRole().getKey())
-                .socialType(member.getSocialType().name())
-                .build()));
+        response.getWriter().write(objectMapper.writeValueAsString(LoginResponse.from(member)));
     }
 }
