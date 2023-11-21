@@ -1,6 +1,6 @@
 package com.cupid.jikting.member.dto;
 
-import com.cupid.jikting.member.entity.MemberProfile;
+import com.cupid.jikting.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,10 +15,17 @@ public class MemberResponse {
     private String company;
     private String imageUrl;
 
-    public static MemberResponse of(MemberProfile memberProfile) {
+    public static MemberResponse of(Member member) {
+        if (member.isNotCertifiedCompany()) {
+            return new MemberResponse(
+                    member.getNickname(),
+                    "",
+                    member.getMainImageUrl()
+            );
+        }
         return new MemberResponse(
-                memberProfile.getNickname(),
-                memberProfile.getCompany(),
-                memberProfile.getMainImageUrl());
+                member.getNickname(),
+                member.getCompany(),
+                member.getMainImageUrl());
     }
 }
