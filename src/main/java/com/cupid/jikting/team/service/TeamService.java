@@ -9,7 +9,6 @@ import com.cupid.jikting.common.util.TeamNameGenerator;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
-import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.entity.Team;
@@ -36,7 +35,7 @@ public class TeamService {
     private final MemberProfileRepository memberProfileRepository;
     private final PersonalityRepository personalityRepository;
 
-    public TeamRegisterResponse register(Long memberProfileId, TeamRegisterRequest teamRegisterRequest) {
+    public void register(Long memberProfileId, TeamRegisterRequest teamRegisterRequest) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
         if (memberProfile.isInTeam()) {
             throw new BadRequestException(ApplicationError.ALREADY_IN_TEAM);
@@ -49,8 +48,7 @@ public class TeamService {
                 .build();
         team.addTeamPersonalities(toTeamPersonalities(toPersonalities(teamRegisterRequest.getKeywords()), team));
         TeamMember.of(LEADER, team, memberProfile);
-        Team savedTeam = teamRepository.save(team);
-        return TeamRegisterResponse.from(TEAM_URL + savedTeam.getId() + INVITE);
+        teamRepository.save(team);
     }
 
     public void attend(Long teamId, Long memberProfileId) {
