@@ -79,6 +79,10 @@ public class Member extends BaseEntity {
         memberCompanies.forEach(MemberCompany::block);
     }
 
+    public boolean isNotCertifiedCompany() {
+        return role == Role.UNCERTIFIED;
+    }
+
     private void validateCompanyExists() {
         if (memberCompanies.isEmpty()) {
             throw new BadRequestException(ApplicationError.FORBIDDEN_MEMBER);
