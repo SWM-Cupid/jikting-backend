@@ -52,7 +52,7 @@ public class MemberService {
                 .phone(signupRequest.getPhone())
                 .gender(Gender.find(signupRequest.getGender()))
                 .name(signupRequest.getName())
-                .role(Role.UNCERTIFIED)
+                .role(Role.GUEST)
                 .socialType(SocialType.NORMAL)
                 .build();
         member.addMemberProfile(signupRequest.getNickname());
