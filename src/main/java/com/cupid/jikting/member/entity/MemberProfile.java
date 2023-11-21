@@ -188,4 +188,8 @@ public class MemberProfile extends BaseEntity {
     public String getMemberName() {
         return member.getName();
     }
+
+    public boolean isNotFilled() {
+        return birth == null;
+    }
 }
