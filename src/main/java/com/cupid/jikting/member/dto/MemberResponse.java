@@ -17,15 +17,8 @@ public class MemberResponse {
 
     public static MemberResponse of(Member member) {
         if (member.isNotCertifiedCompany()) {
-            return new MemberResponse(
-                    member.getNickname(),
-                    "",
-                    member.getMainImageUrl()
-            );
+            return new MemberResponse(member.getNickname(), "", member.getMainImageUrl());
         }
-        return new MemberResponse(
-                member.getNickname(),
-                member.getCompany(),
-                member.getMainImageUrl());
+        return new MemberResponse(member.getNickname(), member.getCompany(), member.getMainImageUrl());
     }
 }
