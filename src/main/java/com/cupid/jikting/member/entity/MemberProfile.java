@@ -149,6 +149,7 @@ public class MemberProfile extends BaseEntity {
         this.description = description;
         this.memberPersonalities.update(memberPersonalities);
         this.memberHobbies.update(memberHobbies);
+        this.member.updateProfile();
     }
 
     public void updateProfileImage(List<ImageRequest> imageRequests) {
