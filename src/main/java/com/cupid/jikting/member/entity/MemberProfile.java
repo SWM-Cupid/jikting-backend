@@ -167,10 +167,6 @@ public class MemberProfile extends BaseEntity {
         instantMeetingMembers.add(instantMeetingMember);
     }
 
-    public Long getTeamId() {
-        return getTeam().getId();
-    }
-
     public void validatePassword(PasswordEncoder passwordEncoder, String password) {
         member.validatePassword(passwordEncoder, password);
     }
@@ -191,5 +187,9 @@ public class MemberProfile extends BaseEntity {
 
     public String getMemberName() {
         return member.getName();
+    }
+
+    public boolean isNotFilled() {
+        return birth == null;
     }
 }
