@@ -121,8 +121,7 @@ public class TeamControllerTest extends ApiDocument {
                 .description(DESCRIPTION)
                 .keywords(keywords)
                 .build();
-        teamRegisterResponse = TeamRegisterResponse.from(INVITATION_URL);
-        teamResponse = TeamResponse.from(team);
+        teamResponse = TeamResponse.of(team, INVITATION_URL);
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
