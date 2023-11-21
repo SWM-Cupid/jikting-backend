@@ -8,7 +8,6 @@ import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
-import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.entity.Team;
@@ -124,13 +123,12 @@ class TeamServiceTest {
         willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
         willReturn(team).given(teamRepository).save(any(Team.class));
         // when
-        TeamRegisterResponse teamRegisterResponse = teamService.register(ID, teamRegisterRequest);
+        teamService.register(ID, teamRegisterRequest);
         // then
         assertAll(
                 () -> verify(memberProfileRepository).findById(anyLong()),
                 () -> verify(personalityRepository).findByKeyword(anyString()),
-                () -> verify(teamRepository).save(any(Team.class)),
-                () -> assertThat(teamRegisterResponse.getInvitationUrl()).isEqualTo(INVITATION_URL)
+                () -> verify(teamRepository).save(any(Team.class))
         );
     }
 
