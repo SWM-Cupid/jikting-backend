@@ -50,7 +50,6 @@ class TeamServiceTest {
     private static final String ADDRESS = "서울시 강남구 테헤란로";
     private static final String COLLEGE = "대학";
     private static final int HEIGHT = 160;
-    private static final String IMAGE_URL = "이미지 URL";
     private static final String TYPE = "UNCERTIFIED";
 
     private MemberProfile leader;
@@ -74,12 +73,6 @@ class TeamServiceTest {
 
     @BeforeEach
     void setUp() {
-        List<ProfileImage> profileImages = IntStream.range(0, 3)
-                .mapToObj(n -> ProfileImage.builder()
-                        .url(IMAGE_URL)
-                        .sequence(Sequence.MAIN)
-                        .build())
-                .collect(Collectors.toList());
         Company company = Company.builder()
                 .build();
         MemberCompany memberCompany = MemberCompany.builder()
