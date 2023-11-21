@@ -45,7 +45,7 @@ public class MemberService {
     private final ReportRepository reportRepository;
     private final RedisConnector redisConnector;
 
-    public void signup(SignupRequest signupRequest) {
+    public Member signup(SignupRequest signupRequest) {
         Member member = Member.builder()
                 .username(signupRequest.getUsername())
                 .password(passwordEncoder.encode(signupRequest.getPassword()))
@@ -56,7 +56,7 @@ public class MemberService {
                 .socialType(SocialType.NORMAL)
                 .build();
         member.addMemberProfile(signupRequest.getNickname());
-        memberRepository.save(member);
+        return memberRepository.save(member);
     }
 
     public MemberResponse get(Long memberProfileId) {
