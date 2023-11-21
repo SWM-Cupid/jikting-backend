@@ -28,8 +28,7 @@ import java.util.stream.Collectors;
 public class TeamService {
 
     private static final boolean LEADER = true;
-    private static final String TEAM_URL = "https://jikting.com/teams/";
-    private static final String INVITE = "/invite";
+    private static final String TEAM_INVITE_URL = "https://jikting.com/invite?team=";
 
     private final TeamRepository teamRepository;
     private final MemberProfileRepository memberProfileRepository;
@@ -59,7 +58,8 @@ public class TeamService {
 
     @Transactional(readOnly = true)
     public TeamResponse get(Long memberProfileId) {
-        return TeamResponse.from(getMemberProfileById(memberProfileId).getTeam());
+        Team team = getMemberProfileById(memberProfileId).getTeam();
+        return TeamResponse.of(team, TEAM_INVITE_URL + team.getId());
     }
 
     public void update(Long teamId, TeamUpdateRequest teamUpdateRequest) {
