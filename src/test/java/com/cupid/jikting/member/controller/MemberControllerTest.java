@@ -239,7 +239,7 @@ public class MemberControllerTest extends ApiDocument {
         companyVerificationRequestPart = new MockPart(COMPANY_VERIFICATION_REQUEST_PARAMETER_NAME, toJson(companyVerificationRequest).getBytes(StandardCharsets.UTF_8));
         companyVerificationRequestPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         image = new MockMultipartFile(IMAGE_PARAMETER_NAME, IMAGE_FILENAME, IMAGE_CONTENT_TYPE, IMAGE_FILE.getBytes());
-        memberResponse = MemberResponse.of(memberProfile);
+        memberResponse = MemberResponse.of(member);
         memberProfileResponse = MemberProfileResponse.of(memberProfile);
         usernameResponse = UsernameResponse.from(member);
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);

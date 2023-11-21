@@ -186,12 +186,12 @@ public class MemberServiceTest {
     @Test
     void 회원_조회_성공() {
         // given
-        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(member)).given(memberRepository).findById(anyLong());
         // when
         MemberResponse memberResponse = memberService.get(ID);
         // then
         assertAll(
-                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> verify(memberRepository).findById(anyLong()),
                 () -> assertThat(memberResponse.getNickname()).isEqualTo(NICKNAME),
                 () -> assertThat(memberResponse.getCompany()).isEqualTo(COMPANY),
                 () -> assertThat(memberResponse.getImageUrl()).isEqualTo(IMAGE_URL)
@@ -201,7 +201,7 @@ public class MemberServiceTest {
     @Test
     void 회원_조회_실패_회원_없음() {
         //given
-        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
+        willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberRepository).findById(anyLong());
         //when & then
         assertThatThrownBy(() -> memberService.get(ID))
                 .isInstanceOf(NotFoundException.class)
