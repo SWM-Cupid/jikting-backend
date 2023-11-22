@@ -80,7 +80,7 @@ public class Member extends BaseEntity {
     }
 
     public boolean isNotCertifiedCompany() {
-        return role == Role.UNCERTIFIED;
+        return role != Role.CERTIFIED;
     }
 
     public String getNickname() {
