@@ -44,14 +44,12 @@ class TeamServiceTest {
     private static final String DESCRIPTION = "한줄소개";
     private static final int MEMBER_COUNT = 3;
     private static final boolean LEADER = true;
-    private static final String INVITATION_URL = "https://jikting.com/teams/" + ID + "/invite";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
     private static final String ADDRESS = "서울시 강남구 테헤란로";
     private static final String COLLEGE = "대학";
     private static final int HEIGHT = 160;
     private static final String TYPE = "UNCERTIFIED";
 
-    private MemberProfile leader;
     private MemberProfile memberProfile;
     private Personality personality;
     private List<TeamPersonality> teamPersonalities;
@@ -82,7 +80,7 @@ class TeamServiceTest {
                 .type(TYPE)
                 .build();
         member.addMemberProfile(NICKNAME);
-        leader = member.getMemberProfile();
+        MemberProfile leader = member.getMemberProfile();
         memberProfile = member.getMemberProfile();
         personality = Personality.builder()
                 .keyword(KEYWORD)
