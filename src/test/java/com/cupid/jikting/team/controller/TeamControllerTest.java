@@ -51,7 +51,7 @@ public class TeamControllerTest extends ApiDocument {
     private static final String TEAM_NAME = "팀명";
     private static final String KEYWORD = "키워드";
     private static final String DESCRIPTION = "한줄 소개";
-    private static final String INVITATION_URL = "초대 URL";
+    private static final String INVITATION_URL = "https://jikting.com/invite?team={teamId}";
     private static final String NICKNAME = "닉네임";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 22);
     private static final String ADDRESS = "거주지";
