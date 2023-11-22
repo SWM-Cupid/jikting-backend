@@ -43,7 +43,7 @@ public class Member extends BaseEntity {
     private MemberProfile memberProfile = new MemberProfile();
 
     @Builder.Default
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.MERGE)
     private List<MemberCompany> memberCompanies = new ArrayList<>();
 
     @Builder.Default
