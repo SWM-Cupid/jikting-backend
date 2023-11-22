@@ -78,6 +78,7 @@ class TeamServiceTest {
         Member member = Member.builder()
                 .memberCompanies(List.of(memberCompany))
                 .type(TYPE)
+                .role(Role.CERTIFIED)
                 .build();
         member.addMemberProfile(NICKNAME);
         MemberProfile leader = member.getMemberProfile();
@@ -114,9 +115,11 @@ class TeamServiceTest {
     @Test
     void 팀_등록_성공() {
         // given
-        MemberProfile memberProfile = MemberProfile.builder()
-                .id(ID)
+        Member member = Member.builder()
+                .role(Role.CERTIFIED)
                 .build();
+        member.addMemberProfile(NICKNAME);
+        MemberProfile memberProfile = member.getMemberProfile();
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
         willReturn(team).given(teamRepository).save(any(Team.class));
@@ -161,9 +164,11 @@ class TeamServiceTest {
     @Test
     void 팀_등록_실패_키워드_없음() {
         // given
-        MemberProfile memberProfile = MemberProfile.builder()
-                .id(ID)
+        Member member = Member.builder()
+                .role(Role.CERTIFIED)
                 .build();
+        member.addMemberProfile(NICKNAME);
+        MemberProfile memberProfile = member.getMemberProfile();
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willThrow(new NotFoundException(ApplicationError.PERSONALITY_NOT_FOUND)).given(personalityRepository).findByKeyword(anyString());
         // when & then
