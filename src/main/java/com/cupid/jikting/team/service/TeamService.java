@@ -4,6 +4,7 @@ import com.cupid.jikting.common.entity.Personality;
 import com.cupid.jikting.common.error.ApplicationError;
 import com.cupid.jikting.common.error.BadRequestException;
 import com.cupid.jikting.common.error.NotFoundException;
+import com.cupid.jikting.common.error.WrongAccessException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.util.TeamNameGenerator;
 import com.cupid.jikting.member.entity.MemberProfile;
@@ -36,6 +37,7 @@ public class TeamService {
 
     public void register(Long memberProfileId, TeamRegisterRequest teamRegisterRequest) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
+        validateCertified(memberProfile);
         if (memberProfile.isInTeam()) {
             throw new BadRequestException(ApplicationError.ALREADY_IN_TEAM);
         }
@@ -78,6 +80,12 @@ public class TeamService {
     private MemberProfile getMemberProfileById(Long memberProfileId) {
         return memberProfileRepository.findById(memberProfileId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.MEMBER_NOT_FOUND));
+    }
+
+    private void validateCertified(MemberProfile memberProfile) {
+        if (memberProfile.getMember().isNotCertifiedCompany()) {
+            throw new WrongAccessException(ApplicationError.UNCERTIFIED_MEMBER);
+        }
     }
 
     private String getRandomTeamName() {
