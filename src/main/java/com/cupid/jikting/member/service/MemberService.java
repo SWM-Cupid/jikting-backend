@@ -171,10 +171,13 @@ public class MemberService {
         mailService.sendMail(getMemberProfileById(memberProfileId).getMemberName(), email);
     }
 
-    public void verifyForCompany(VerificationEmailRequest verificationPhoneRequest) {
+    public void verifyForCompany(Long memberId, VerificationEmailRequest verificationPhoneRequest) {
         String email = verificationPhoneRequest.getEmail();
-        validateCompanyDomain(email);
         validateVerificationCode(email, verificationPhoneRequest.getVerificationCode());
+        Member member = getMemberById(memberId);
+        Company company = getCompanyByEmail(email);
+        MemberCompany.of(member, company);
+        memberRepository.save(member);
     }
 
     public void verifyCardForCompany(CompanyVerificationRequest companyVerificationRequest, MultipartFile multipartFile) {
@@ -257,6 +260,11 @@ public class MemberService {
         if (!companyRepository.existsByEmail(extractDomain(email))) {
             throw new NotFoundException(ApplicationError.INVALID_COMPANY);
         }
+    }
+
+    private Company getCompanyByEmail(String email) {
+        return companyRepository.findByEmail(extractDomain(email))
+                .orElseThrow(() -> new NotFoundException(ApplicationError.INVALID_COMPANY));
     }
 
     private String extractDomain(String email) {

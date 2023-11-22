@@ -29,4 +29,8 @@ public class Company extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "company")
     private List<MemberCompany> memberCompanies = new ArrayList<>();
+
+    public void add(MemberCompany memberCompany) {
+        memberCompanies.add(memberCompany);
+    }
 }

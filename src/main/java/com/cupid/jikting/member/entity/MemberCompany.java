@@ -31,6 +31,12 @@ public class MemberCompany extends BaseEntity {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    public static void of(Member member, Company company) {
+        MemberCompany memberCompany = new MemberCompany(false, member, company);
+        member.certify(memberCompany);
+        company.add(memberCompany);
+    }
+
     public void block() {
         isBlock = true;
     }

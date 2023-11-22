@@ -671,7 +671,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회사_이메일_인증_성공() throws Exception {
         // given
-        willDoNothing().given(memberService).verifyForCompany(any(VerificationEmailRequest.class));
+        willDoNothing().given(memberService).verifyForCompany(anyLong(), any(VerificationEmailRequest.class));
         // when
         ResultActions resultActions = 회사_이메일_인증_요청();
         // then
@@ -682,7 +682,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회사_이메일_인증_인증번호불일치_실패() throws Exception {
         // given
-        willThrow(verificationCodeNotEqualException).given(memberService).verifyForCompany(any(VerificationEmailRequest.class));
+        willThrow(verificationCodeNotEqualException).given(memberService).verifyForCompany(anyLong(), any(VerificationEmailRequest.class));
         // when
         ResultActions resultActions = 회사_이메일_인증_요청();
         // then
@@ -693,7 +693,7 @@ public class MemberControllerTest extends ApiDocument {
     @Test
     void 회사_이메일_인증_시간초과_실패() throws Exception {
         // given
-        willThrow(verificationCodeExpiredException).given(memberService).verifyForCompany(any(VerificationEmailRequest.class));
+        willThrow(verificationCodeExpiredException).given(memberService).verifyForCompany(anyLong(), any(VerificationEmailRequest.class));
         // when
         ResultActions resultActions = 회사_이메일_인증_요청();
         // then
