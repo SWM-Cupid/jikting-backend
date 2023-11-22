@@ -126,6 +126,7 @@ public class MemberServiceTest {
                 .gender(Gender.MALE)
                 .name(NAME)
                 .phone(PHONE)
+                .role(Role.CERTIFIED)
                 .memberCompanies(memberCompanies)
                 .build();
         member.addMemberProfile(NICKNAME);
