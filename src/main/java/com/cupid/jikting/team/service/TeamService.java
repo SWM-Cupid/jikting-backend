@@ -38,9 +38,7 @@ public class TeamService {
     public void register(Long memberProfileId, TeamRegisterRequest teamRegisterRequest) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
         validateCertified(memberProfile);
-        if (memberProfile.isInTeam()) {
-            throw new BadRequestException(ApplicationError.ALREADY_IN_TEAM);
-        }
+        validateTeamExists(memberProfile);
         Team team = Team.builder()
                 .name(getRandomTeamName())
                 .description(teamRegisterRequest.getDescription())
@@ -85,6 +83,12 @@ public class TeamService {
     private void validateCertified(MemberProfile memberProfile) {
         if (memberProfile.getMember().isNotCertifiedCompany()) {
             throw new WrongAccessException(ApplicationError.UNCERTIFIED_MEMBER);
+        }
+    }
+
+    private void validateTeamExists(MemberProfile memberProfile) {
+        if (memberProfile.isInTeam()) {
+            throw new BadRequestException(ApplicationError.ALREADY_IN_TEAM);
         }
     }
 
