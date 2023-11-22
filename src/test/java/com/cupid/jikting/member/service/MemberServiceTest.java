@@ -50,6 +50,7 @@ public class MemberServiceTest {
     private static final String IMAGE_URL = "https://cupid-images.s3.ap-northeast-2.amazonaws.com/default.png";
     private static final String NICKNAME = "닉네임";
     private static final String COMPANY = "회사";
+    private static final String COMPANY_EMAIL = "soma.com";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
     private static final int HEIGHT = 168;
     private static final String ADDRESS = "거주지";
@@ -755,19 +756,39 @@ public class MemberServiceTest {
     @Test
     void 회사_이메일_인증번호_인증_성공() {
         // given
+        Company company = Company.builder()
+                .email(COMPANY_EMAIL)
+                .build();
         VerificationEmailRequest verificationEmailRequest = VerificationEmailRequest.builder()
                 .email(EMAIL)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
-        willReturn(true).given(companyRepository).existsByEmail(anyString());
         willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
+        willReturn(Optional.of(member)).given(memberRepository).findById(anyLong());
+        willReturn(Optional.of(company)).given(companyRepository).findByEmail(anyString());
         // when
         memberService.verifyForCompany(ID, verificationEmailRequest);
         // then
         assertAll(
-                () -> verify(companyRepository).existsByEmail(anyString()),
-                () -> verify(redisConnector).get(anyString())
+                () -> verify(redisConnector).get(anyString()),
+                () -> verify(memberRepository).findById(anyLong()),
+                () -> verify(companyRepository).findByEmail(anyString())
         );
+    }
+
+    @Test
+    void 회사_이메일_인증번호_인증_실패_회원정보_없음() {
+        // given
+        VerificationEmailRequest verificationEmailRequest = VerificationEmailRequest.builder()
+                .email(EMAIL)
+                .verificationCode(VERIFICATION_CODE)
+                .build();
+        willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
+        willReturn(Optional.empty()).given(memberRepository).findById(anyLong());
+        // when & then
+        assertThatThrownBy(() -> memberService.verifyForCompany(ID, verificationEmailRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ApplicationError.MEMBER_NOT_FOUND.getMessage());
     }
 
     @Test
@@ -777,7 +798,9 @@ public class MemberServiceTest {
                 .email(EMAIL)
                 .verificationCode(VERIFICATION_CODE)
                 .build();
-        willReturn(false).given(companyRepository).existsByEmail(anyString());
+        willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
+        willReturn(Optional.of(member)).given(memberRepository).findById(anyLong());
+        willReturn(Optional.empty()).given(companyRepository).findByEmail(anyString());
         // when & then
         assertThatThrownBy(() -> memberService.verifyForCompany(ID, verificationEmailRequest))
                 .isInstanceOf(NotFoundException.class)
@@ -791,7 +814,6 @@ public class MemberServiceTest {
                 .email(EMAIL)
                 .verificationCode(WRONG_VERIFICATION_CODE)
                 .build();
-        willReturn(true).given(companyRepository).existsByEmail(anyString());
         willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
         // when & then
         assertThatThrownBy(() -> memberService.verifyForCompany(ID, verificationEmailRequest))
