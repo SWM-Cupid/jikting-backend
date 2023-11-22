@@ -762,7 +762,7 @@ public class MemberServiceTest {
         willReturn(true).given(companyRepository).existsByEmail(anyString());
         willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
         // when
-        memberService.verifyForCompany(verificationEmailRequest);
+        memberService.verifyForCompany(ID, verificationEmailRequest);
         // then
         assertAll(
                 () -> verify(companyRepository).existsByEmail(anyString()),
@@ -779,7 +779,7 @@ public class MemberServiceTest {
                 .build();
         willReturn(false).given(companyRepository).existsByEmail(anyString());
         // when & then
-        assertThatThrownBy(() -> memberService.verifyForCompany(verificationEmailRequest))
+        assertThatThrownBy(() -> memberService.verifyForCompany(ID, verificationEmailRequest))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.INVALID_COMPANY.getMessage());
     }
@@ -794,7 +794,7 @@ public class MemberServiceTest {
         willReturn(true).given(companyRepository).existsByEmail(anyString());
         willReturn(VERIFICATION_CODE).given(redisConnector).get(anyString());
         // when & then
-        assertThatThrownBy(() -> memberService.verifyForCompany(verificationEmailRequest))
+        assertThatThrownBy(() -> memberService.verifyForCompany(ID, verificationEmailRequest))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(ApplicationError.VERIFICATION_CODE_NOT_EQUAL.getMessage());
     }
