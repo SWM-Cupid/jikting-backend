@@ -61,7 +61,6 @@ public class MemberServiceTest {
     private static final String VERIFICATION_CODE = "인증번호";
     private static final String WRONG_VERIFICATION_CODE = "잘못된" + VERIFICATION_CODE;
     private static final int PROFILE_IMAGE_SIZE = 3;
-    private static final String SMS_SEND_SUCCESS = "202";
     private static final String EMAIL = "email@soma.com";
     private static final String MESSAGE = "신고 내용";
 
@@ -650,9 +649,6 @@ public class MemberServiceTest {
                 .username(USERNAME)
                 .name(NAME)
                 .phone(PHONE)
-                .build();
-        SmsResponse smsResponse = SmsResponse.builder()
-                .statusCode(SMS_SEND_SUCCESS)
                 .build();
         willReturn(true).given(memberRepository).existsByUsernameAndNameAndPhone(anyString(), anyString(), anyString());
         willDoNothing().given(smsService).sendSms(any(SendSmsRequest.class));
