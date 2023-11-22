@@ -103,6 +103,11 @@ public class Member extends BaseEntity {
         role = Role.UNCERTIFIED;
     }
 
+    public void certify(MemberCompany memberCompany) {
+        memberCompanies.add(memberCompany);
+        role = Role.CERTIFIED;
+    }
+
     private void validateCompanyExists() {
         if (memberCompanies.isEmpty()) {
             throw new BadRequestException(ApplicationError.FORBIDDEN_MEMBER);
