@@ -39,7 +39,7 @@ public class FileUploadService {
         metadata.setContentLength(file.getSize());
         String fileName = UUID.randomUUID().toString();
         amazonS3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
-//        validateFace(fileName);
+        validateFace(fileName);
         return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/" + fileName;
     }
 
