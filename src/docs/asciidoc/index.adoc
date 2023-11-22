@@ -147,29 +147,6 @@ include::{snippets}/update-member-password-not-equal-password-fail/http-response
 .response - 비밀번호 양식 불일치
 include::{snippets}/update-member-password-wrong-form-fail/http-response.adoc[]
 
-==== 회원 이미지 수정
-----
-/v1/members/image
-----
-===== 성공
-.request
-include::{snippets}/update-member-image-success/http-request.adoc[]
-
-.response
-include::{snippets}/update-member-image-success/http-response.adoc[]
-===== 실패
-.request
-include::{snippets}/update-member-image-not-found-member-fail/http-request.adoc[]
-
-.response - 회원을 찾을 수 없음
-include::{snippets}/update-member-image-not-found-member-fail/http-response.adoc[]
-
-.response - 파일 형식 미지원
-include::{snippets}/update-member-image-invalid-file-extension-fail/http-response.adoc[]
-
-.response - 파일 크기 미지원
-include::{snippets}/update-member-image-invalid-file-size-fail/http-response.adoc[]
-
 ==== 회원 탈퇴
 ----
 /v1/members/withdraw
