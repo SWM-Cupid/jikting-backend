@@ -80,7 +80,7 @@ public class Member extends BaseEntity {
     }
 
     public boolean isNotCertifiedCompany() {
-        return role == Role.UNCERTIFIED;
+        return role != Role.CERTIFIED;
     }
 
     public String getNickname() {
@@ -93,6 +93,10 @@ public class Member extends BaseEntity {
 
     public String getMainImageUrl() {
         return memberProfile.getMainImageUrl();
+    }
+
+    public boolean isGuest() {
+        return role == Role.GUEST;
     }
 
     public void updateProfile() {

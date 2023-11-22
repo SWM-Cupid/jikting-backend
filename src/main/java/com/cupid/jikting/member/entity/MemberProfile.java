@@ -139,6 +139,9 @@ public class MemberProfile extends BaseEntity {
     public void updateProfile(LocalDate birth, int height, Mbti mbti, String address, String college,
                               SmokeStatus smokeStatus, DrinkStatus drinkStatus, String description,
                               List<MemberPersonality> memberPersonalities, List<MemberHobby> memberHobbies) {
+        if (member.isGuest()) {
+            this.member.updateProfile();
+        }
         this.birth = birth;
         this.height = height;
         this.mbti = mbti;
@@ -149,7 +152,6 @@ public class MemberProfile extends BaseEntity {
         this.description = description;
         this.memberPersonalities.update(memberPersonalities);
         this.memberHobbies.update(memberHobbies);
-        this.member.updateProfile();
     }
 
     public void updateProfileImage(List<ImageRequest> imageRequests) {
