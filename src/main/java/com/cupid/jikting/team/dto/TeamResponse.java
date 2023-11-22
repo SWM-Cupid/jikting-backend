@@ -17,10 +17,11 @@ public class TeamResponse {
 
     private String name;
     private String description;
+    private String invitationUrl;
     private List<String> keywords;
     private List<MemberProfileResponse> members;
 
-    public static TeamResponse from(Team team) {
+    public static TeamResponse of(Team team, String invitationUrl) {
         List<MemberProfileResponse> memberProfileResponses = team.getTeamMembers()
                 .stream()
                 .map(TeamMember::getMemberProfile)
@@ -29,6 +30,7 @@ public class TeamResponse {
         return new TeamResponse(
                 team.getName(),
                 team.getDescription(),
+                invitationUrl,
                 team.getPersonalities(),
                 memberProfileResponses);
     }

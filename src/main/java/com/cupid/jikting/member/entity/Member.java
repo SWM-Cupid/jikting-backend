@@ -95,6 +95,10 @@ public class Member extends BaseEntity {
         return memberProfile.getMainImageUrl();
     }
 
+    public void updateProfile() {
+        role = Role.UNCERTIFIED;
+    }
+
     private void validateCompanyExists() {
         if (memberCompanies.isEmpty()) {
             throw new BadRequestException(ApplicationError.FORBIDDEN_MEMBER);

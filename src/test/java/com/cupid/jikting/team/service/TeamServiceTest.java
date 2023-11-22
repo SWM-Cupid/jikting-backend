@@ -8,7 +8,6 @@ import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
-import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.entity.Team;
@@ -45,15 +44,12 @@ class TeamServiceTest {
     private static final String DESCRIPTION = "한줄소개";
     private static final int MEMBER_COUNT = 3;
     private static final boolean LEADER = true;
-    private static final String INVITATION_URL = "https://jikting.com/teams/" + ID + "/invite";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 10);
     private static final String ADDRESS = "서울시 강남구 테헤란로";
     private static final String COLLEGE = "대학";
     private static final int HEIGHT = 160;
-    private static final String IMAGE_URL = "이미지 URL";
     private static final String TYPE = "UNCERTIFIED";
 
-    private MemberProfile leader;
     private MemberProfile memberProfile;
     private Personality personality;
     private List<TeamPersonality> teamPersonalities;
@@ -74,12 +70,6 @@ class TeamServiceTest {
 
     @BeforeEach
     void setUp() {
-        List<ProfileImage> profileImages = IntStream.range(0, 3)
-                .mapToObj(n -> ProfileImage.builder()
-                        .url(IMAGE_URL)
-                        .sequence(Sequence.MAIN)
-                        .build())
-                .collect(Collectors.toList());
         Company company = Company.builder()
                 .build();
         MemberCompany memberCompany = MemberCompany.builder()
@@ -90,7 +80,7 @@ class TeamServiceTest {
                 .type(TYPE)
                 .build();
         member.addMemberProfile(NICKNAME);
-        leader = member.getMemberProfile();
+        MemberProfile leader = member.getMemberProfile();
         memberProfile = member.getMemberProfile();
         personality = Personality.builder()
                 .keyword(KEYWORD)
@@ -131,13 +121,12 @@ class TeamServiceTest {
         willReturn(Optional.of(personality)).given(personalityRepository).findByKeyword(anyString());
         willReturn(team).given(teamRepository).save(any(Team.class));
         // when
-        TeamRegisterResponse teamRegisterResponse = teamService.register(ID, teamRegisterRequest);
+        teamService.register(ID, teamRegisterRequest);
         // then
         assertAll(
                 () -> verify(memberProfileRepository).findById(anyLong()),
                 () -> verify(personalityRepository).findByKeyword(anyString()),
-                () -> verify(teamRepository).save(any(Team.class)),
-                () -> assertThat(teamRegisterResponse.getInvitationUrl()).isEqualTo(INVITATION_URL)
+                () -> verify(teamRepository).save(any(Team.class))
         );
     }
 

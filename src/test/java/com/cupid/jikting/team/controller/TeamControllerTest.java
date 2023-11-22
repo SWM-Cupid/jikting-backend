@@ -11,7 +11,6 @@ import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.jwt.service.JwtService;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
-import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.entity.Team;
@@ -52,7 +51,7 @@ public class TeamControllerTest extends ApiDocument {
     private static final String TEAM_NAME = "팀명";
     private static final String KEYWORD = "키워드";
     private static final String DESCRIPTION = "한줄 소개";
-    private static final String INVITATION_URL = "초대 URL";
+    private static final String INVITATION_URL = "https://jikting.com/invite?team={teamId}";
     private static final String NICKNAME = "닉네임";
     private static final LocalDate BIRTH = LocalDate.of(1996, 5, 22);
     private static final String ADDRESS = "거주지";
@@ -65,7 +64,6 @@ public class TeamControllerTest extends ApiDocument {
     private String accessToken;
     private TeamRegisterRequest teamRegisterRequest;
     private TeamUpdateRequest teamUpdateRequest;
-    private TeamRegisterResponse teamRegisterResponse;
     private TeamResponse teamResponse;
     private ApplicationException invalidFormatException;
     private ApplicationException teamNotFoundException;
@@ -123,8 +121,7 @@ public class TeamControllerTest extends ApiDocument {
                 .description(DESCRIPTION)
                 .keywords(keywords)
                 .build();
-        teamRegisterResponse = TeamRegisterResponse.from(INVITATION_URL);
-        teamResponse = TeamResponse.from(team);
+        teamResponse = TeamResponse.of(team, INVITATION_URL);
         invalidFormatException = new BadRequestException(ApplicationError.INVALID_FORMAT);
         teamNotFoundException = new NotFoundException(ApplicationError.TEAM_NOT_FOUND);
         memberNotFoundException = new NotFoundException(ApplicationError.MEMBER_NOT_FOUND);
@@ -134,7 +131,7 @@ public class TeamControllerTest extends ApiDocument {
     @Test
     void 팀_등록_성공() throws Exception {
         // given
-        willReturn(teamRegisterResponse).given(teamService).register(anyLong(), any(TeamRegisterRequest.class));
+        willDoNothing().given(teamService).register(anyLong(), any(TeamRegisterRequest.class));
         // when
         ResultActions resultActions = 팀_등록_요청();
         // then
@@ -283,8 +280,7 @@ public class TeamControllerTest extends ApiDocument {
 
     private void 팀_등록_요청_성공(ResultActions resultActions) throws Exception {
         printAndMakeSnippet(resultActions
-                        .andExpect(status().isOk())
-                        .andExpect(content().json(toJson(teamRegisterResponse))),
+                        .andExpect(status().isOk()),
                 "register-team-success");
     }
 

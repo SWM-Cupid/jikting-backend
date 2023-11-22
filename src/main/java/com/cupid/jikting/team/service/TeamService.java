@@ -9,7 +9,6 @@ import com.cupid.jikting.common.util.TeamNameGenerator;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
-import com.cupid.jikting.team.dto.TeamRegisterResponse;
 import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
 import com.cupid.jikting.team.entity.Team;
@@ -29,14 +28,13 @@ import java.util.stream.Collectors;
 public class TeamService {
 
     private static final boolean LEADER = true;
-    private static final String TEAM_URL = "https://jikting.com/teams/";
-    private static final String INVITE = "/invite";
+    private static final String TEAM_INVITE_URL = "https://jikting.com/invite?team=";
 
     private final TeamRepository teamRepository;
     private final MemberProfileRepository memberProfileRepository;
     private final PersonalityRepository personalityRepository;
 
-    public TeamRegisterResponse register(Long memberProfileId, TeamRegisterRequest teamRegisterRequest) {
+    public void register(Long memberProfileId, TeamRegisterRequest teamRegisterRequest) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
         if (memberProfile.isInTeam()) {
             throw new BadRequestException(ApplicationError.ALREADY_IN_TEAM);
@@ -49,8 +47,7 @@ public class TeamService {
                 .build();
         team.addTeamPersonalities(toTeamPersonalities(toPersonalities(teamRegisterRequest.getKeywords()), team));
         TeamMember.of(LEADER, team, memberProfile);
-        Team savedTeam = teamRepository.save(team);
-        return TeamRegisterResponse.from(TEAM_URL + savedTeam.getId() + INVITE);
+        teamRepository.save(team);
     }
 
     public void attend(Long teamId, Long memberProfileId) {
@@ -61,7 +58,8 @@ public class TeamService {
 
     @Transactional(readOnly = true)
     public TeamResponse get(Long memberProfileId) {
-        return TeamResponse.from(getMemberProfileById(memberProfileId).getTeam());
+        Team team = getMemberProfileById(memberProfileId).getTeam();
+        return TeamResponse.of(team, TEAM_INVITE_URL + team.getId());
     }
 
     public void update(Long teamId, TeamUpdateRequest teamUpdateRequest) {
