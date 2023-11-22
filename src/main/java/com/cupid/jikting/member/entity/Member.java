@@ -95,6 +95,10 @@ public class Member extends BaseEntity {
         return memberProfile.getMainImageUrl();
     }
 
+    public boolean isGuest() {
+        return role == Role.GUEST;
+    }
+
     public void updateProfile() {
         role = Role.UNCERTIFIED;
     }
