@@ -134,8 +134,8 @@ public class MemberController {
     }
 
     @PostMapping("/company/verification")
-    public ResponseEntity<Void> verifyForCompany(@RequestBody VerificationEmailRequest verificationEmailRequest) {
-        memberService.verifyForCompany(verificationEmailRequest);
+    public ResponseEntity<Void> verifyForCompany(@AuthorizedVariable Long memberProfileId, @RequestBody VerificationEmailRequest verificationEmailRequest) {
+        memberService.verifyForCompany(memberProfileId, verificationEmailRequest);
         return ResponseEntity.ok().build();
     }
 
