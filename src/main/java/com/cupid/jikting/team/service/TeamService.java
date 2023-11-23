@@ -9,6 +9,8 @@ import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.util.TeamNameGenerator;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
+import com.cupid.jikting.recommend.entity.Recommend;
+import com.cupid.jikting.recommend.repository.RecommendRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
@@ -34,6 +36,7 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final MemberProfileRepository memberProfileRepository;
     private final PersonalityRepository personalityRepository;
+    private final RecommendRepository recommendRepository;
 
     public void register(Long memberProfileId, TeamRegisterRequest teamRegisterRequest) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
@@ -56,6 +59,10 @@ public class TeamService {
         Team team = getTeamById(teamId);
         validateAttendable(team);
         TeamMember.of(!LEADER, team, memberProfile);
+        if (team.isCompleted()) {
+            Team recommendingTeam = teamRepository.findRecommendingTeamFor(team);
+            recommendRepository.save(Recommend.builder().from(recommendingTeam).to(team).build());
+        }
         memberProfileRepository.save(memberProfile);
     }
 
