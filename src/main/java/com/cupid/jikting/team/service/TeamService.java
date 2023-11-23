@@ -53,7 +53,9 @@ public class TeamService {
     public void attend(Long teamId, Long memberProfileId) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
         validateTeamExists(memberProfile);
-        TeamMember.of(!LEADER, getTeamById(teamId), memberProfile);
+        Team team = getTeamById(teamId);
+        validateAttendable(team);
+        TeamMember.of(!LEADER, team, memberProfile);
         memberProfileRepository.save(memberProfile);
     }
 
@@ -128,5 +130,11 @@ public class TeamService {
     private Team getTeamById(Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.TEAM_NOT_FOUND));
+    }
+
+    private void validateAttendable(Team team) {
+        if (team.isCompleted()) {
+            throw new BadRequestException(ApplicationError.TEAM_ALREADY_FULL);
+        }
     }
 }
