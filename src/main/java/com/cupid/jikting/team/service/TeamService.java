@@ -9,6 +9,8 @@ import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.common.util.TeamNameGenerator;
 import com.cupid.jikting.member.entity.MemberProfile;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
+import com.cupid.jikting.recommend.entity.Recommend;
+import com.cupid.jikting.recommend.repository.RecommendRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
@@ -34,6 +36,7 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final MemberProfileRepository memberProfileRepository;
     private final PersonalityRepository personalityRepository;
+    private final RecommendRepository recommendRepository;
 
     public void register(Long memberProfileId, TeamRegisterRequest teamRegisterRequest) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
@@ -53,7 +56,13 @@ public class TeamService {
     public void attend(Long teamId, Long memberProfileId) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
         validateTeamExists(memberProfile);
-        TeamMember.of(!LEADER, getTeamById(teamId), memberProfile);
+        Team team = getTeamById(teamId);
+        validateAttendable(team);
+        TeamMember.of(!LEADER, team, memberProfile);
+        if (team.isCompleted()) {
+            Team recommendingTeam = teamRepository.findRecommendingTeamFor(team);
+            recommendRepository.save(Recommend.builder().from(recommendingTeam).to(team).build());
+        }
         memberProfileRepository.save(memberProfile);
     }
 
@@ -128,5 +137,11 @@ public class TeamService {
     private Team getTeamById(Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(() -> new NotFoundException(ApplicationError.TEAM_NOT_FOUND));
+    }
+
+    private void validateAttendable(Team team) {
+        if (team.isCompleted()) {
+            throw new BadRequestException(ApplicationError.TEAM_ALREADY_FULL);
+        }
     }
 }

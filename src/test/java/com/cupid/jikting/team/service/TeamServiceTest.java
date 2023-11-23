@@ -7,6 +7,8 @@ import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
+import com.cupid.jikting.recommend.entity.Recommend;
+import com.cupid.jikting.recommend.repository.RecommendRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
@@ -67,6 +69,9 @@ class TeamServiceTest {
 
     @Mock
     private PersonalityRepository personalityRepository;
+
+    @Mock
+    private RecommendRepository recommendRepository;
 
     @BeforeEach
     void setUp() {
@@ -195,6 +200,24 @@ class TeamServiceTest {
     }
 
     @Test
+    void 팀_참여_시_팀원_구성_완료_성공() {
+        // given
+        MemberProfile memberProfile = MemberProfile.builder().build();
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        willReturn(memberProfile).given(memberProfileRepository).save(any(MemberProfile.class));
+        // when
+        teamService.attend(ID, ID);
+        // then
+        assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> verify(teamRepository).findById(anyLong()),
+                () -> verify(recommendRepository).save(any(Recommend.class)),
+                () -> verify(memberProfileRepository).save(any(MemberProfile.class))
+        );
+    }
+
+    @Test
     void 팀_참여_실패_회원_없음() {
         // given
         willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
@@ -224,6 +247,24 @@ class TeamServiceTest {
         assertThatThrownBy(() -> teamService.attend(ID, ID))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage(ApplicationError.TEAM_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 팀_참여_실패_팀원_구성_완료() {
+        TeamMember teamMember1 = TeamMember.of(true, team, memberProfile);
+        TeamMember teamMember2 = TeamMember.of(false, team, memberProfile);
+        Team team = Team.builder()
+                .teamMembers(List.of(teamMember1, teamMember2))
+                .memberCount(2)
+                .build();
+        // given
+        MemberProfile memberProfile = MemberProfile.builder().build();
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        // when & then
+        assertThatThrownBy(() -> teamService.attend(ID, ID))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.TEAM_ALREADY_FULL.getMessage());
     }
 
     @Test
