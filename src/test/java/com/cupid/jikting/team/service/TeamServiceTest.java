@@ -250,6 +250,24 @@ class TeamServiceTest {
     }
 
     @Test
+    void 팀_참여_실패_팀원_구성_완료() {
+        TeamMember teamMember1 = TeamMember.of(true, team, memberProfile);
+        TeamMember teamMember2 = TeamMember.of(false, team, memberProfile);
+        Team team = Team.builder()
+                .teamMembers(List.of(teamMember1, teamMember2))
+                .memberCount(2)
+                .build();
+        // given
+        MemberProfile memberProfile = MemberProfile.builder().build();
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        // when & then
+        assertThatThrownBy(() -> teamService.attend(ID, ID))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.TEAM_ALREADY_FULL.getMessage());
+    }
+
+    @Test
     void 팀_조회_성공() {
         // given
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
