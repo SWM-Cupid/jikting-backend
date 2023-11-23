@@ -7,6 +7,8 @@ import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
+import com.cupid.jikting.recommend.entity.Recommend;
+import com.cupid.jikting.recommend.repository.RecommendRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamResponse;
 import com.cupid.jikting.team.dto.TeamUpdateRequest;
@@ -67,6 +69,9 @@ class TeamServiceTest {
 
     @Mock
     private PersonalityRepository personalityRepository;
+
+    @Mock
+    private RecommendRepository recommendRepository;
 
     @BeforeEach
     void setUp() {
@@ -190,6 +195,24 @@ class TeamServiceTest {
         assertAll(
                 () -> verify(memberProfileRepository).findById(anyLong()),
                 () -> verify(teamRepository).findById(anyLong()),
+                () -> verify(memberProfileRepository).save(any(MemberProfile.class))
+        );
+    }
+
+    @Test
+    void 팀_참여_시_팀원_구성_완료_성공() {
+        // given
+        MemberProfile memberProfile = MemberProfile.builder().build();
+        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
+        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        willReturn(memberProfile).given(memberProfileRepository).save(any(MemberProfile.class));
+        // when
+        teamService.attend(ID, ID);
+        // then
+        assertAll(
+                () -> verify(memberProfileRepository).findById(anyLong()),
+                () -> verify(teamRepository).findById(anyLong()),
+                () -> verify(recommendRepository).save(any(Recommend.class)),
                 () -> verify(memberProfileRepository).save(any(MemberProfile.class))
         );
     }
