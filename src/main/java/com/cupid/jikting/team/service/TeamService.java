@@ -52,6 +52,7 @@ public class TeamService {
 
     public void attend(Long teamId, Long memberProfileId) {
         MemberProfile memberProfile = getMemberProfileById(memberProfileId);
+        validateTeamExists(memberProfile);
         TeamMember.of(!LEADER, getTeamById(teamId), memberProfile);
         memberProfileRepository.save(memberProfile);
     }
