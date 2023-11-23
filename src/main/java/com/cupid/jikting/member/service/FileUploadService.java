@@ -1,6 +1,8 @@
 package com.cupid.jikting.member.service;
 
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.auth.*;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.rekognition.AmazonRekognitionClientBuilder;
 import com.amazonaws.services.rekognition.model.*;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -30,6 +32,12 @@ public class FileUploadService {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    @Value("${cloud.aws.credentials.accessKey}")
+    private String accessKey;
+
+    @Value("${cloud.aws.credentials.secretKey}")
+    private String secretKey;
 
     public String save(MultipartFile file) throws IOException {
         validateExist(file);
@@ -66,6 +74,8 @@ public class FileUploadService {
     }
 
     private void validateFace(String fileName) {
+        AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+
         DetectFacesRequest request = new DetectFacesRequest()
                 .withImage(new Image()
                         .withS3Object(new S3Object()
@@ -73,7 +83,10 @@ public class FileUploadService {
                                 .withBucket(bucket)))
                 .withAttributes(Attribute.DEFAULT);
         try {
-            AmazonRekognitionClientBuilder.defaultClient()
+            AmazonRekognitionClientBuilder.standard()
+                    .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                    .withRegion(Regions.AP_NORTHEAST_2)
+                    .build()
                     .detectFaces(request)
                     .getFaceDetails()
                     .stream()
