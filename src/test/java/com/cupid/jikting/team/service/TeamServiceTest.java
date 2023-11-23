@@ -180,6 +180,7 @@ class TeamServiceTest {
     @Test
     void 팀_참여_성공() {
         // given
+        MemberProfile memberProfile = MemberProfile.builder().build();
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
         willReturn(memberProfile).given(memberProfileRepository).save(any(MemberProfile.class));
@@ -204,8 +205,19 @@ class TeamServiceTest {
     }
 
     @Test
+    void 팀_참여_실패_이미_가입된_팀_있음() {
+        // given
+        willThrow(new BadRequestException(ApplicationError.ALREADY_IN_TEAM)).given(memberProfileRepository).findById(anyLong());
+        // when & then
+        assertThatThrownBy(() -> teamService.attend(ID, ID))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ApplicationError.ALREADY_IN_TEAM.getMessage());
+    }
+
+    @Test
     void 팀_참여_실패_팀_없음() {
         // given
+        MemberProfile memberProfile = MemberProfile.builder().build();
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willThrow(new NotFoundException(ApplicationError.TEAM_NOT_FOUND)).given(teamRepository).findById(anyLong());
         // when & then
