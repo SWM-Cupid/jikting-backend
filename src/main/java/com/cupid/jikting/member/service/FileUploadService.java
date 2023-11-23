@@ -23,7 +23,7 @@ import java.util.UUID;
 @Service
 public class FileUploadService {
 
-    private static final List<String> VALID_EXTENSIONS = List.of("jpeg", "png");
+    private static final List<String> VALID_EXTENSIONS = List.of("jpg", "jpeg", "png");
     private static final String FILE_DELIMITER = ".";
 
     private final AmazonS3Client amazonS3Client;
@@ -60,7 +60,7 @@ public class FileUploadService {
     }
 
     private void validateExtension(String extension) {
-        if (!VALID_EXTENSIONS.contains(extension)) {
+        if (!VALID_EXTENSIONS.contains(extension.toLowerCase())) {
             throw new BadRequestException(ApplicationError.INVALID_FILE_EXTENSION);
         }
     }
