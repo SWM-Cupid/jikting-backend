@@ -1,9 +1,16 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.13'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
     id 'jacoco'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.cupid'
@@ -42,6 +49,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.session:spring-session-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'com.querydsl:querydsl-jpa:5.0.0'
+    implementation 'com.querydsl:querydsl-apt:5.0.0'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -113,4 +122,26 @@ tasks.register('copyDocument', Copy) {
 
 build {
     dependsOn copyDocument
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
 }
