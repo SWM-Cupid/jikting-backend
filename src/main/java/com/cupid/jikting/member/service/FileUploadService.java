@@ -74,8 +74,6 @@ public class FileUploadService {
     }
 
     private void validateFace(String fileName) {
-        AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-
         DetectFacesRequest request = new DetectFacesRequest()
                 .withImage(new Image()
                         .withS3Object(new S3Object()
@@ -84,7 +82,7 @@ public class FileUploadService {
                 .withAttributes(Attribute.DEFAULT);
         try {
             AmazonRekognitionClientBuilder.standard()
-                    .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                    .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
                     .withRegion(Regions.AP_NORTHEAST_2)
                     .build()
                     .detectFaces(request)
