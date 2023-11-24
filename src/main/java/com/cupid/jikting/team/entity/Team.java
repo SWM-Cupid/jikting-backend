@@ -92,8 +92,4 @@ public class Team extends BaseEntity {
         this.description = description;
         this.teamPersonalities.update(teamPersonalities);
     }
-
-    public boolean isCompleted() {
-        return teamMembers.size() == memberCount;
-    }
 }
