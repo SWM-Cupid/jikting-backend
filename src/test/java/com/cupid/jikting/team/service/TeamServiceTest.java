@@ -7,7 +7,6 @@ import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
-import com.cupid.jikting.recommend.entity.Recommend;
 import com.cupid.jikting.recommend.repository.RecommendRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamResponse;
@@ -243,6 +242,7 @@ class TeamServiceTest {
         MemberProfile memberProfile = MemberProfile.builder().build();
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        willReturn(true).given(teamRepository).isCompleted(any(Team.class));
         // when & then
         assertThatThrownBy(() -> teamService.attend(ID, ID))
                 .isInstanceOf(BadRequestException.class)
