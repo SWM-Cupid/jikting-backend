@@ -59,7 +59,7 @@ public class TeamService {
         Team team = getTeamById(teamId);
         validateAttendable(team);
         TeamMember.of(!LEADER, team, memberProfile);
-        if (team.isCompleted()) {
+        if (teamRepository.isCompleted(team)) {
             Team recommendingTeam = teamRepository.findRecommendingTeamFor(team);
             recommendRepository.save(Recommend.builder().from(recommendingTeam).to(team).build());
         }
@@ -140,7 +140,7 @@ public class TeamService {
     }
 
     private void validateAttendable(Team team) {
-        if (team.isCompleted()) {
+        if (teamRepository.isCompleted(team)) {
             throw new BadRequestException(ApplicationError.TEAM_ALREADY_FULL);
         }
     }

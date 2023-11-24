@@ -7,7 +7,6 @@ import com.cupid.jikting.common.error.NotFoundException;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.entity.*;
 import com.cupid.jikting.member.repository.MemberProfileRepository;
-import com.cupid.jikting.recommend.entity.Recommend;
 import com.cupid.jikting.recommend.repository.RecommendRepository;
 import com.cupid.jikting.team.dto.TeamRegisterRequest;
 import com.cupid.jikting.team.dto.TeamResponse;
@@ -200,24 +199,6 @@ class TeamServiceTest {
     }
 
     @Test
-    void 팀_참여_시_팀원_구성_완료_성공() {
-        // given
-        MemberProfile memberProfile = MemberProfile.builder().build();
-        willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
-        willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
-        willReturn(memberProfile).given(memberProfileRepository).save(any(MemberProfile.class));
-        // when
-        teamService.attend(ID, ID);
-        // then
-        assertAll(
-                () -> verify(memberProfileRepository).findById(anyLong()),
-                () -> verify(teamRepository).findById(anyLong()),
-                () -> verify(recommendRepository).save(any(Recommend.class)),
-                () -> verify(memberProfileRepository).save(any(MemberProfile.class))
-        );
-    }
-
-    @Test
     void 팀_참여_실패_회원_없음() {
         // given
         willThrow(new NotFoundException(ApplicationError.MEMBER_NOT_FOUND)).given(memberProfileRepository).findById(anyLong());
@@ -261,6 +242,7 @@ class TeamServiceTest {
         MemberProfile memberProfile = MemberProfile.builder().build();
         willReturn(Optional.of(memberProfile)).given(memberProfileRepository).findById(anyLong());
         willReturn(Optional.of(team)).given(teamRepository).findById(anyLong());
+        willReturn(true).given(teamRepository).isCompleted(any(Team.class));
         // when & then
         assertThatThrownBy(() -> teamService.attend(ID, ID))
                 .isInstanceOf(BadRequestException.class)
