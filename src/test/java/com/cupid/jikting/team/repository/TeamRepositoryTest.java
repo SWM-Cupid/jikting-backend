@@ -1,5 +1,6 @@
 package com.cupid.jikting.team.repository;
 
+import com.cupid.jikting.common.config.TestQuerydslConfiguration;
 import com.cupid.jikting.common.repository.PersonalityRepository;
 import com.cupid.jikting.member.entity.Gender;
 import com.cupid.jikting.team.entity.Team;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
+@Testcontainers
+@Import({TestQuerydslConfiguration.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class TeamRepositoryTest {
 
