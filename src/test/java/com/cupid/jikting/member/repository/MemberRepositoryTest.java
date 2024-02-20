@@ -1,5 +1,6 @@
 package com.cupid.jikting.member.repository;
 
+import com.cupid.jikting.common.config.TestQuerydslConfiguration;
 import com.cupid.jikting.member.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,6 +9,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -17,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @DataJpaTest
+@Testcontainers
+@Import({TestQuerydslConfiguration.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class MemberRepositoryTest {
 
